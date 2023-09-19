@@ -1,0 +1,404 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="320dp"
+    android:layout_height="250dp"
+    android:background="@color/bottom_nav_background"
+    android:padding="10dp"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/txtclose"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:textColor="@color/white"
+        android:text="X"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:gravity="center"
+        android:background="@color/black"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Content of your scrollable layout -->
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Content inside the CardView -->
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        android:padding="1dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/birdcv"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background"
+                            android:clickable="true"
+                            android:foreground="@drawable/effect">
+
+                            <!-- Content inside the CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Birds"
+                                    android:textColor="@color/appbar"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pb1"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone" />
+
+                        </androidx.cardview.widget.CardView>
+
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/paircv"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background"
+                            android:clickable="true"
+                            android:foreground="@drawable/effect">
+
+                            <!-- Content inside the second CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pairs"
+                                    android:textColor="@color/appbar"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pb2"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone" />
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cagescv"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background"
+                            android:clickable="true"
+                            android:foreground="@drawable/effect">
+
+                            <!-- Content inside the first CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cages"
+                                    android:textColor="@color/appbar"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pb3"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone" />
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/eggcv"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background"
+                            android:clickable="true"
+                            android:foreground="@drawable/effect">
+
+                            <!-- Content inside the first CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Eggs"
+                                    android:textColor="@color/appbar"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pb15"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone" />
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Content inside the CardView -->
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        android:padding="1dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/salescv"
+                            android:foreground="@drawable/effect"
+                            android:clickable="true"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background">
+
+                            <!-- Content inside the first CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Sales"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/appbar" />
+
+                            </LinearLayout>
+                            <ProgressBar
+                                android:id="@+id/pb5"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/purchasescv"
+                            android:foreground="@drawable/effect"
+                            android:clickable="true"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background">
+
+                            <!-- Content inside the second CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Purchases"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/appbar" />
+
+                            </LinearLayout>
+                            <ProgressBar
+                                android:id="@+id/pb6"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone"/>
+                        </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/incubatingcv"
+                            android:foreground="@drawable/effect"
+                            android:clickable="true"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background">
+
+                            <!-- Content inside the first CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Incubating"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/appbar"/>
+
+                            </LinearLayout>
+                            <ProgressBar
+                                android:id="@+id/pb7"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/maturingcv"
+                            android:foreground="@drawable/effect"
+                            android:clickable="true"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/bottom_nav_background">
+
+                            <!-- Content inside the second CardView -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Maturing"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/appbar" />
+
+                            </LinearLayout>
+                            <ProgressBar
+                                android:id="@+id/pb8"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:indeterminateTint="@color/white"
+                                android:visibility="gone"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

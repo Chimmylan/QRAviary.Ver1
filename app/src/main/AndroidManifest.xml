@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.qraviaryapp" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_logo"
+        android:label="QRAviary"
+        android:roundIcon="@mipmap/ic_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.QRAviaryApp"
+        tools:targetApi="31" >
+        <activity
+            android:name=".activities.mainactivities.NavHomeActivity"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.AddActivities.ChooseCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddActivities.AddExpensesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.HomeMutationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.ClutchesDetailedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.NurseryCagesListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.FlightCagesListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.MaleBirdListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.FemaleBirdListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.CageListActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.BirdsDetailedActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBar" />
+        <activity
+            android:name=".activities.detailedactivities.IncubatingDetailedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.StatisticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.BalanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.SalesPurchasesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.ExpensesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.MaturingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.IncubatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.MutationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.BreedingCagesListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.PairListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.BirdListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.detailedactivities.PairsDetailedActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddMaturingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddIncubatingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddPurchaseActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddSaleActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddEggActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddCageActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddPairActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird"
+            android:parentActivityName=".activities.dashboards.PairListActivity" />
+        <activity
+            android:name=".activities.AddActivities.AddBirdActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird" />
+        <activity
+            android:name=".activities.AddActivities.AddBirdFlightActivity"
+            android:exported="false"
+            android:label="@string/title_activity_addbird" />
+        <activity
+            android:name=".activities.mainactivities.NameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.mainactivities.GetStartActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" />
+        <activity
+            android:name=".activities.mainactivities.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" />
+        <activity
+            android:name=".activities.mainactivities.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.mainactivities.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.mainactivities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+        <activity
+            android:name=".activities.mainactivities.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

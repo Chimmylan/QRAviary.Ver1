@@ -1,0 +1,74 @@
+<resources>
+
+    <string-array name="dark_mode_entries">
+        <item>Device System Settings </item>
+        <item>Off</item>
+        <item>On</item>
+
+    </string-array>
+
+    <string-array name="dark_mode_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+
+    </string-array>
+    <string-array name="Status">
+        <item>Available</item>
+        <item>For Sale</item>
+        <item>Sold</item>
+        <item>Deceased</item>
+        <item>Exchanged</item>
+        <item>Lost</item>
+        <item>Donated</item>
+        <item>Other</item>
+
+    </string-array>
+
+    <string-array name="Genes">
+
+        <item>Opaline</item>
+        <item>Parblue</item>
+        <item>Lutino</item>
+        <item>Albino</item>
+        <item>Creamino</item>
+        <item>Decino</item>
+        <item>White Bull</item>
+        <item>Yellow Bull</item>
+        <item>Euwing</item>
+        <item>Greywing</item>
+        <item>Edge</item>
+        <item>Pale Fallow</item>
+        <item>Bronze Fallow</item>
+        <item>Dun Fallow</item>
+        <item>Dilute</item>
+        <item>Aqua</item>
+        <item>Aqua V2</item>
+        <item>Yellow Face</item>
+        <item>Red Factor</item>
+    </string-array>
+
+    <string-array name="OtherGene">
+
+        <item>Opaline</item>
+        <item>Parblue</item>
+        <item>Lutino</item>
+        <item>Albino</item>
+        <item>Creamino</item>
+        <item>Decino</item>
+        <item>White Bull</item>
+        <item>Yellow Bull</item>
+        <item>Euwing</item>
+        <item>Greywing</item>
+        <item>Edge</item>
+        <item>Pale Fallow</item>
+        <item>Bronze Fallow</item>
+        <item>Dun Fallow</item>
+        <item>Dilute</item>
+        <item>Aqua</item>
+        <item>Aqua V2</item>
+        <item>Yellow Face</item>
+        <item>Red Factor</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="background">
+        <item name="background">@drawable/logonight</item>
+    </style>
+
+    <style name="StatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- ... other theme attributes ... -->
+        <item name="android:statusBarColor">@color/bottom_nav_background</item>
+    </style>
+</resources>

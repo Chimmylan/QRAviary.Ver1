@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/new_appbar_color"
+    android:orientation="vertical"
+    tools:context=".activities.dashboards.CageListActivity2">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBreeding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/bottom_nav_background"
+        android:text="Breeding Cages"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:icon="@drawable/cage"
+        app:iconSize="60dp"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNursery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:backgroundTint="@color/bottom_nav_background"
+        android:text="Nursery Cages"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+
+        app:icon="@drawable/cage"
+        app:iconSize="60dp"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFlight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/bottom_nav_background"
+        android:text="Flight Cages"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:icon="@drawable/cage"
+        app:iconSize="60dp"
+        app:iconTint="@color/black" />
+
+</LinearLayout>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.dashboards.BalanceActivity">
+
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btndatefrom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="From"
+            android:layout_margin="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            style="?android:spinnerStyle"
+            android:onClick="openDatefromPicker"/>
+        <Button
+            android:id="@+id/btndateto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="To"
+            android:layout_margin="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            style="?android:spinnerStyle"
+            android:onClick="openDatetoPicker"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvexpenses"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Expenses"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+            <TextView
+                android:id="@+id/tvtotalexpenses"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Total of Expenses"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvbirdpurchases"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Bird Purchases"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/tvtotalbirdpurchases"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Total of Bird Purchases"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvbirdsales"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Bird Sales"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/tvtotalbirdsales"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Total of Bird Sales"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvtotal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Total "
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/tvtotalamount"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Total Amount"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

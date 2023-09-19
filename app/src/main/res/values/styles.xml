@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="background">
+        <item name="background">@drawable/logolight</item>
+    </style>
+    <style name="BottomNavStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:textSize">2sp</item> <!-- Adjust the text size as desired -->
+        <item name="android:maxLines">1</item> <!-- Restrict the label to a single line -->
+        <item name="android:scaleType">fitCenter</item> <!-- Scale the icon to fit within the allocated space -->
+    </style>
+
+    <style name="StatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- ... other theme attributes ... -->
+        <item name="android:statusBarColor">@color/bottom_nav_background</item>
+
+    </style>
+
+
+    <style name="roundImageView" parent="">
+
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+        <item name="color">#FDFDFD</item>
+
+    </style>
+
+
+</resources>

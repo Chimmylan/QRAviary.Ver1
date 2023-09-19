@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "915083579137",
+    "project_id": "qraviary-3b5f3",
+    "storage_bucket": "qraviary-3b5f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915083579137:android:401a5bbb9f28673dca5500",
+        "android_client_info": {
+          "package_name": "com.example.qraviaryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915083579137-6lb9o9msho10r6lt18682i2lup5hhm4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5MGATIhKs3XNGE9gOOsOUp-XY_yVl5MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915083579137-6lb9o9msho10r6lt18682i2lup5hhm4e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

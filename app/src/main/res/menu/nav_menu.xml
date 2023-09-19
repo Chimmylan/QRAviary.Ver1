@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_item_0">
+    <item
+        android:id="@+id/nav_monitoring"
+        android:icon="@drawable/monitoring"
+        android:title="Monitoring" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_item_1">
+        <item
+            android:id="@+id/nav_birds"
+            android:icon="@drawable/bird"
+            android:title="Birds" />
+        <item
+            android:id="@+id/nav_pairs"
+            android:icon="@drawable/pairs"
+            android:title="Pairs" />
+        <item
+            android:id="@+id/nav_cages"
+            android:icon="@drawable/cages"
+            android:title="Cages" />
+        <item
+            android:id="@+id/nav_sales"
+            android:icon="@drawable/sales"
+            android:title="Sales" />
+        <item
+            android:id="@+id/nav_purchases"
+            android:icon="@drawable/purchases"
+            android:title="Purchases" />
+        <item
+            android:id="@+id/nav_statistics"
+            android:icon="@drawable/nav_statistic"
+            android:title="Statistics" />
+        <item
+            android:id="@+id/nav_mutations"
+            android:icon="@drawable/dna"
+            android:title="Mutations" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/gallery"
+            android:title="Gallery"/>
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_item_2">
+        <item
+            android:id="@+id/nav_incubating"
+            android:icon="@drawable/incubator"
+            android:title="Incubating" />
+        <item
+            android:id="@+id/nav_aldulting"
+            android:icon="@drawable/up"
+            android:title="Adulting" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_item_3">
+        <item
+            android:id="@+id/nav_expenses"
+            android:icon="@drawable/expenses"
+            android:title="Expenses" />
+        <item
+            android:id="@+id/nav_balance"
+            android:icon="@drawable/balance"
+            android:title="Balance" />
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@drawable/application"
+            android:title="Categories" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_item_4">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/nav_settings"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
+        <item
+            android:id="@+id/nav_space"
+            android:title=""
+            android:enabled="false"/>
+    </group>
+</menu>

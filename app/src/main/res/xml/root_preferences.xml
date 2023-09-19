@@ -1,0 +1,57 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Contact Us">
+
+        <Preference
+            android:summary="Click to Open my website"
+            app:title="Our Website">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://th.bing.com/th/id/OIP.twO4CG6kCOxnVhn_jA5-6AHaHT" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Basics">
+        <CheckBoxPreference
+            android:title="icheck mo to kase wala lang"
+            app:key="checkbox"
+            app:summary="Tap to Check if On or Off" />
+
+        <EditTextPreference
+            android:dialogTitle="Enter Text"
+            android:inputType="text"
+            android:title="Tao kaba?"
+            app:key="text"
+            app:summary="Click to show a text entry dialog"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Advanced">
+
+        <ListPreference
+            app:defaultValue="@string/dark_mode_def_value"
+            app:entries="@array/dark_mode_entries"
+            app:entryValues="@array/dark_mode_values"
+            app:key="@string/dark_mode"
+            app:title="@string/dark_mode"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:summary="Click to On or Off"
+            android:title="Notification"
+            app:key="switch" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:summary="Click to On or Off"
+            android:title="Auto Increment ID"
+            app:key="auto_increment_switch" />
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

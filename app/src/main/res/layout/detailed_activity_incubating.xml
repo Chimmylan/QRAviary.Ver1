@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".activities.detailedactivities.PairsDetailedActivity">
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnmaleid"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/bottom_nav_background"
+                android:text="Male ID"
+                android:textColor="@color/appbar"
+                android:textSize="10sp"
+                app:iconTint="@color/black_white"
+                app:icon="@drawable/male_icon"
+                app:iconGravity="start"
+                app:iconSize="24dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnfemaleid"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="20dp"
+                android:text="Female ID"
+                android:backgroundTint="@color/bottom_nav_background"
+                android:textColor="@color/appbar"
+                android:textSize="10sp"
+                app:iconTint="@color/black_white"
+                app:icon="@drawable/female_icon"
+                app:iconGravity="start"
+                app:iconSize="24dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+
+            android:background="@color/new_appbar_color">
+            <TextView
+                android:id="@+id/tvClutches"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
+                android:text="Total of Eggs"
+                android:textColor="@color/appbar"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Add your content here -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="50dp"
+        app:backgroundTint="@color/new_appbar_color"
+        app:srcCompat="@drawable/ic_add"
+        tools:ignore="SpeakableTextPresentCheck" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
