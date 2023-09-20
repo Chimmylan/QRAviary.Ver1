@@ -2,6 +2,9 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import EggData
 import android.content.ContentValues
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.EggAdapter
+import com.google.android.material.snackbar.Snackbar
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -31,7 +35,9 @@ class IncubatingFragment : Fragment() {
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var adapter: EggAdapter
-
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,7 +56,39 @@ class IncubatingFragment : Fragment() {
 
         loadDataFromDatabase()
 
+        snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
+        connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Set up NetworkCallback to detect network changes
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isNetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSnackbar("Your Internet connection was restored")
+                }
+                isNetworkAvailable = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSnackbar("You are currently offline")
+                isNetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+
+
+
         return view
+    }
+    private fun showSnackbar(message: String) {
+        snackbar.setText(message)
+        snackbar.show()
     }
 
     private fun loadDataFromDatabase() {

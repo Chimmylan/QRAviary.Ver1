@@ -9,6 +9,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatDelegate
 
 import com.example.qraviaryapp.R
+import com.google.firebase.database.FirebaseDatabase
 
 
 class SplashActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         sharedPreferencess = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         onSaveDarkModeReference()
         Handler().postDelayed({
             val intent =

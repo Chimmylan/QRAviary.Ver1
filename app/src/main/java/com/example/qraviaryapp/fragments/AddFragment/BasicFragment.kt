@@ -82,10 +82,10 @@ class BasicFragment : Fragment() {
     private lateinit var btnLostDate: MaterialButton
     private lateinit var btnDeathDate: MaterialButton
     private lateinit var btnSoldSaleDate: Button
-    private lateinit var btnExDate: Button
-    private lateinit var datebandButton: Button
-    private lateinit var datebirthButton: Button
-    private lateinit var btnDonatedDate: Button
+    private lateinit var btnExDate: MaterialButton
+    private lateinit var datebandButton: MaterialButton
+    private lateinit var datebirthButton: MaterialButton
+    private lateinit var btnDonatedDate: MaterialButton
 
     private lateinit var addBtn: Button
     private lateinit var removeBtn: Button
@@ -99,8 +99,8 @@ class BasicFragment : Fragment() {
     private lateinit var etExReason: EditText
     private lateinit var etDeathReason: EditText
     private lateinit var etSoldSalePrice: EditText
-    private lateinit var etAvailCage: EditText
-    private lateinit var etForSaleCage: EditText
+    private lateinit var etAvailCage: MaterialButton
+    private lateinit var etForSaleCage: MaterialButton
     private lateinit var etForSaleReqPrice: EditText
     lateinit var etIdentifier: EditText
     private lateinit var etLostDetails: EditText
@@ -401,7 +401,13 @@ class BasicFragment : Fragment() {
             ""
         }
     }
-
+    private fun getTextFromVisibleMaterialButton(materialbtn: MaterialButton, layout: View): String {
+        return if (layout.visibility == View.VISIBLE) {
+            materialbtn.text.toString()
+        } else {
+            ""
+        }
+    }
     private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
         return if (layout.visibility == View.VISIBLE) {
             Button.text.toString()
@@ -485,8 +491,8 @@ class BasicFragment : Fragment() {
         val stat = status
 
         /*Uses a function for comparison of visibility layouts*/
-        val dataAvailCage = getTextFromVisibleEditText(etAvailCage, availableLayout)
-        val dataSaleCage = getTextFromVisibleEditText(etForSaleCage, forSaleLayout)
+        val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
+        val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
         val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
         val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
         val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)

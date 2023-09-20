@@ -2,6 +2,9 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
 import android.content.ContentValues
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.BirdDescendantsAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -36,7 +40,9 @@ class SalesFragment : Fragment() {
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var adapter: SoldAdapter
     private var flightKey: String? = null
-
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +68,39 @@ class SalesFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
+        connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Set up NetworkCallback to detect network changes
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isNetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSnackbar("Your Internet connection was restored")
+                }
+                isNetworkAvailable = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSnackbar("You are currently offline")
+                isNetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+
+
+
         return view
+    }
+    private fun showSnackbar(message: String) {
+        snackbar.setText(message)
+        snackbar.show()
     }
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO){
         val currentUserId = mAuth.currentUser?.uid

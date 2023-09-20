@@ -2,8 +2,11 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
@@ -28,6 +31,7 @@ import com.example.qraviaryapp.activities.dashboards.BalanceActivity
 import com.example.qraviaryapp.adapter.BirdListAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -46,7 +50,9 @@ class BirdsFragment : Fragment() {
     private lateinit var fab: FloatingActionButton
     private lateinit var totalBirds: TextView
     private var birdCount = 0
-
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +64,7 @@ class BirdsFragment : Fragment() {
             activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
 
+
         totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
@@ -68,25 +75,61 @@ class BirdsFragment : Fragment() {
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
-        lifecycleScope.launch {
-            try {
 
-                val data = getDataFromDatabase()
-                dataList.clear()
-                dataList.addAll(data)
-
-                adapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
             }
-        }
-
         fab.setOnClickListener{
             showOptionDialog()
         }
+
+        snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
+        connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Set up NetworkCallback to detect network changes
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isNetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSnackbar("Your Internet connection was restored")
+                }
+                isNetworkAvailable = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSnackbar("You are currently offline")
+                isNetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+
+
+
         return rootView
     }
-
+    private fun showSnackbar(message: String) {
+        snackbar.setText(message)
+        snackbar.show()
+    }
+    /*private fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }*/
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")

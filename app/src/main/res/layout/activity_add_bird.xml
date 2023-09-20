@@ -10,10 +10,11 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
+        android:background="@color/new_appbar_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/purple_500"
-        app:tabSelectedTextColor="@color/purple_700"
+        app:tabIndicatorColor="@color/black_white"
+        app:tabSelectedTextColor="@color/black_white"
         app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabTextColor="@color/black"/>
 
@@ -21,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/viewPager"
-        android:background="@color/white"
+        android:background="#EBEBEB"
         android:layout_weight="1"/>
 
 </LinearLayout>

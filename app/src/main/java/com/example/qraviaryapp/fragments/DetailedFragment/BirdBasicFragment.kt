@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.fragments.DetailedFragment
 
 import BirdData
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import java.text.SimpleDateFormat
@@ -93,6 +95,9 @@ class BirdBasicFragment : Fragment() {
     private lateinit var bird_exchangedate: TextView
     private lateinit var bird_donatedcontact: TextView
     private lateinit var bird_legband: TextView
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
