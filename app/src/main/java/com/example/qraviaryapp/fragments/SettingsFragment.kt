@@ -21,7 +21,7 @@ import com.example.qraviaryapp.R
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencess: SharedPreferences
     private var DARK_MODE: Int = 1
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -30,16 +30,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        sharedPreferencess = PreferenceManager.getDefaultSharedPreferences(context)
+        sharedPreferencess.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val darkModeString = getString(R.string.dark_mode)
-        val editor: SharedPreferences.Editor = sharedPreferences!!.edit()
+        sharedPreferencess = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+
+        val editor: SharedPreferences.Editor = sharedPreferencess.edit()
 
         if (key == darkModeString) {
-            val pref = sharedPreferences.getString(key, "1")
+            val pref = sharedPreferences?.getString(key, "1")
 
             when (pref?.toInt()) {
                 1 -> {
@@ -62,18 +64,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         when (key) {
             "notification_switch" -> {
-                val isChecked = sharedPreferences.getBoolean(key, true)
+                val isChecked = sharedPreferences?.getBoolean(key, true)
 
-                if (isChecked) {
+                if (isChecked == true) {
                     // Handle notification switch ON
                 } else {
                     // Handle notification switch OFF
                 }
             }
             "auto_increment_switch" -> {
-                val isChecked = sharedPreferences.getBoolean(key, true)
+                val isChecked = sharedPreferences?.getBoolean(key, true)
 
-                if (isChecked) {
+                if (isChecked == true) {
                     editor.putBoolean("Check", true)
                     editor.apply()
                 } else {
@@ -87,6 +89,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onDetach() {
         super.onDetach()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        sharedPreferencess.unregisterOnSharedPreferenceChangeListener(this)
     }
 }

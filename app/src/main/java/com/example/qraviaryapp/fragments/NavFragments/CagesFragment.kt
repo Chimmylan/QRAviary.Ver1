@@ -42,7 +42,8 @@ class CagesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
        val rootView = inflater.inflate(R.layout.fragment_cages, container, false)
-        snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
+
+        /*snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -68,14 +69,14 @@ class CagesFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-
+*/
 
         return rootView
     }
-    private fun showSnackbar(message: String) {
+    /*private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
-    }
+    }*/
 
     companion object {
         /**

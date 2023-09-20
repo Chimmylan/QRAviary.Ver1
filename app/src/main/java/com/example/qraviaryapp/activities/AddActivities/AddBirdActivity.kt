@@ -113,7 +113,8 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                         originFragment.addOirigin(birdId, NurseryId, newBundle)
                         galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
 
-
+                        onBackPressed()
+                        finish()
 
                     }
 

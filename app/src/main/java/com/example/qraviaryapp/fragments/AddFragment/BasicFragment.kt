@@ -679,7 +679,7 @@ class BasicFragment : Fragment() {
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
                 )
@@ -703,7 +703,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Cage" to birdData.forSaleCage,
                     "Requested Price" to birdData.reqPrice,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
 
@@ -729,7 +729,7 @@ class BasicFragment : Fragment() {
                     "Sold Date" to birdData.soldDate,
                     "Sale Price" to birdData.soldPrice,
                     "Sale Contact" to birdData.saleContact,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Sold Id" to soldId,
                     "Bird Key" to birdId
 
@@ -758,7 +758,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Death Date" to birdData.deathDate,
                     "Death Reason" to birdData.deathReason,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
 
@@ -783,7 +783,7 @@ class BasicFragment : Fragment() {
                     "Exchange Date" to birdData.exDate,
                     "Exchange Reason" to birdData.exReason,
                     "Exchange Contact" to birdData.exContact,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
 
@@ -807,7 +807,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Lost Date" to birdData.lostDate,
                     "Lost Details" to birdData.lostDetails,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
                 )
@@ -829,7 +829,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Donated Date" to birdData.donatedDate,
                     "Donated Contact" to birdData.donatedContact,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
                 )
@@ -850,7 +850,7 @@ class BasicFragment : Fragment() {
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Comments" to birdData.otherComments,
-                    "Flight Key" to flightKey,
+                    "Nursery Key" to flightKey,
                     "Bird Key" to birdId
 
                 )
