@@ -4,6 +4,8 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -39,5 +41,30 @@ class BirdFilterActivity : AppCompatActivity() {
             // Set the black back button for non-night mode
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
         }
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_filters, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.ic_done -> {
+                // Handle the click event for your menu item here
+                // You can add your logic here.
+                return true
+            }
+            R.id.ic_erase -> {
+                // Handle the click event for your menu item here
+                // You can add your logic here.
+                return true
+            }
+            android.R.id.home -> {
+                // Handle the up button click event here
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/ic_done"
+        android:title="Done"
+        app:showAsAction="always"
+        android:icon="@drawable/check"/>
+    <item
+        android:id="@+id/ic_erase"
+        android:title="Erase"
+        app:showAsAction="always"
+        android:icon="@drawable/eraser"/>
+</menu>
