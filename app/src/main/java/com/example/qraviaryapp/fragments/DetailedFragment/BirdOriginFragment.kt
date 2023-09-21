@@ -4,6 +4,7 @@ import BirdData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.adapter.DetailedAdapter.BirdSiblingsAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.launch
@@ -70,7 +72,9 @@ class BirdOriginFragment : Fragment() {
     private lateinit var parentlinear: LinearLayout
     private lateinit var fatherLinearLayout: LinearLayout
     private lateinit var motherLinearLayout: LinearLayout
-
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

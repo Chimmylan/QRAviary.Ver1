@@ -5,6 +5,7 @@ import ClickListener
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -40,7 +41,14 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
             window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
         }
         setContentView(R.layout.activity_male_bird_list)
-
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.new_appbar_color
+                )
+            )
+        )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Cages</font>",

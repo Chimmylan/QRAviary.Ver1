@@ -1,11 +1,15 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.google.android.material.snackbar.Snackbar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,7 +25,9 @@ class AdultingFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,8 +41,41 @@ class AdultingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_adulting, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_adulting, container, false)
+      /*  snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
+        connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Set up NetworkCallback to detect network changes
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isNetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSnackbar("Your Internet connection was restored")
+                }
+                isNetworkAvailable = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSnackbar("You are currently offline")
+                isNetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+
+*/
+
+        return rootView
     }
+   /* private fun showSnackbar(message: String) {
+        snackbar.setText(message)
+        snackbar.show()
+    }*/
 
     companion object {
         /**

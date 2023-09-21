@@ -29,6 +29,9 @@ import com.example.qraviaryapp.fragments.DetailedFragment.BirdPairingFragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 
 class BirdsDetailedActivity : AppCompatActivity() {
@@ -75,19 +78,27 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var currentUser: String
+    private lateinit var Auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
 //        }
         setContentView(R.layout.activity_birds_detailed)
-
+        Auth = FirebaseAuth.getInstance()
+        currentUser = Auth.currentUser?.uid.toString()
         toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val bundle = intent.extras
+        database = FirebaseDatabase.getInstance()
+        databaseReference = database.getReference("Users")
 
         val newBundle = Bundle()
+
 
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
@@ -272,9 +283,12 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_remove -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
-                true
+                databaseReference.child("ID: $currentUser").child("Birds").child(BirdKey).removeValue()
+                databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey).removeValue()
+                databaseReference.child("ID: $currentUser").child("Nursery Birds").child(FlightKey).removeValue()
+                finish() // Close the activity or navigate back to the previous screen
+                return true
+
             }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment

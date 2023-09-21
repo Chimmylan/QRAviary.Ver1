@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.DetailedFragment
 import BirdData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.BirdDescendantsAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -39,6 +41,9 @@ class BirdBabiesFragment : Fragment() {
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var adapter: BirdDescendantsAdapter
     private var flightKey: String? = null
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
