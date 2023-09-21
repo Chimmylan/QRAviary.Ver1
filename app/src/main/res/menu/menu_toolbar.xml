@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/ic_notification"
-        android:title="Notification"
+        android:id="@+id/ic_filter"
+        android:title="Filter"
         app:showAsAction="always"
-        android:icon="@drawable/notif"/>
+        android:icon="@drawable/filters"/>
 
 </menu>

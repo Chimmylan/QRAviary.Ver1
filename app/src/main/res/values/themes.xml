@@ -30,7 +30,7 @@
 
     </style>
     <style name="AppTheme">
-        <item name="android:windowBackground">@drawable/logolight</item>
+        <item name="android:windowBackground">@drawable/logonight</item>
         <item name="android:background">@drawable/loginlight</item>
     </style>
 

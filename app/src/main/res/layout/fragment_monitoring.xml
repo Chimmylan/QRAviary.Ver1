@@ -8,6 +8,414 @@
 
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/totalbirds"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:textColor="@color/black"
 
+            android:layout_height="match_parent"
+            android:text="Temperature and Humidity Sensor"
+            android:textSize="20sp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <!-- Content inside the CardView -->
+
+    <LinearLayout
+        android:id="@+id/linearLayou"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tempandhumicv"
+            android:foreground="@drawable/effect"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1">
+
+            <!-- Content inside the CardView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:weightSum="2">
+
+                <!-- Temperature Image and TextView -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+
+                    <!-- Temperature Value and Icon -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:weightSum="5"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:padding="5dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/temperature"
+                            android:scaleType="centerCrop" />
+                        <TextView
+                            android:id="@+id/tvtemperature"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+
+                            android:text="0"
+                            android:layout_gravity="center"
+                            android:textSize="55sp" />
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <!-- Humidity Image and TextView -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                <!-- Humidity Value and Icon -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:weightSum="5"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:padding="5dp"
+                            android:layout_gravity="end"
+                            android:src="@drawable/humidity"
+                            android:scaleType="centerCrop" />
+                        <TextView
+                            android:id="@+id/tvhumidity"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="match_parent"
+                            android:text="0"
+
+                            android:layout_gravity="center"
+                            android:textSize="55sp" />
+
+
+                    </LinearLayout>
+
+                    <!-- Set Alerts CardView -->
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/pbtempandhumid"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/white"
+                android:visibility="gone"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+        <TextView
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:layout_height="match_parent"
+            android:text="Fan1"
+            android:textSize="20sp" />
+            <TextView
+                android:layout_width="0dp"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:layout_height="match_parent"
+                android:text="Fan2"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Content inside the CardView -->
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/fan"
+                    android:foreground="@drawable/effect"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1">
+
+                    <!-- Content inside the CardView -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:weightSum="2">
+
+                        <!-- Temperature Image and TextView -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+
+                            <!-- Temperature Value and Icon -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:weightSum="3"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:padding="10dp"
+                                    android:layout_gravity="end"
+                                    android:src="@drawable/fan"
+                                    android:scaleType="centerCrop" />
+                                <TextView
+                                    android:id="@+id/tvfan1"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="2"
+                                    android:layout_height="match_parent"
+                                    android:text="OFF"
+                                    android:gravity="center"
+                                    android:textSize="30sp" />
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <!-- Humidity Image and TextView -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+                            <!-- Humidity Value and Icon -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:weightSum="3"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:padding="10dp"
+                                    android:layout_gravity="end"
+                                    android:src="@drawable/fan"
+                                    android:scaleType="centerCrop" />
+                                <TextView
+                                    android:id="@+id/tvfan2"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="2"
+                                    android:layout_height="match_parent"
+                                    android:text="OFF"
+                                    android:gravity="center"
+                                    android:textSize="30sp" />
+
+
+                            </LinearLayout>
+
+                            <!-- Set Alerts CardView -->
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbincubator"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/white"
+                        android:visibility="gone"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:layout_height="match_parent"
+            android:text="Incubator Temperature"
+            android:textSize="20sp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Content inside the CardView -->
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/incubator"
+                    android:foreground="@drawable/effect"
+                    android:clickable="true"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <!-- Content inside the CardView -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:weightSum="1">
+
+                        <!-- Temperature Image and TextView -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+
+                            <!-- Temperature Value and Icon -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:weightSum="3"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:layout_weight="1"
+                                    android:padding="30dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/incubator" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:layout_weight="2"
+                                    android:weightSum="2">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:padding="5dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="match_parent"
+                                        android:text="OFF"
+                                        android:textSize="20sp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal"
+                                        android:layout_weight="1"
+                                        android:weightSum="5">
+                                        <ImageView
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:padding="10dp"
+                                            android:scaleType="centerCrop"
+                                            android:src="@drawable/temperature" />
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:padding="5dp"
+                                            android:layout_weight="4"
+
+                                            android:layout_height="match_parent"
+                                            android:text="0"
+                                            android:textSize="25sp" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbfan"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/white"
+                        android:visibility="gone"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 </FrameLayout>

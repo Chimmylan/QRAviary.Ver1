@@ -20,6 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="Monitoring"
             android:elevation="4dp"
+            app:menu="@menu/menu_toolbar"
             android:background="@color/bottom_nav_background"
             app:titleTextColor="@color/black_white" />
 
