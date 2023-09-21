@@ -182,7 +182,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         this.menu = menu
-
+        hideMenuItems()
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
