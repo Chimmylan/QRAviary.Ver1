@@ -1,0 +1,23 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="1dp"
+    app:cardUseCompatPadding="true"
+
+    android:backgroundTint="@color/new_appbar_color">
+
+    <CheckBox
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:textColor="@color/black_white"
+        android:text="Your text here" />
+
+</androidx.cardview.widget.CardView>
+
+

@@ -329,7 +329,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     }
     private fun showDeleteConfirmation() {
         val builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Delate")
+        builder.setTitle("Delete")
         builder.setMessage("Are you sure you want to delete this pair?")
         builder.setPositiveButton("Yes") { _, _ ->
             delete()
