@@ -285,10 +285,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_remove -> {
-                databaseReference.child("ID: $currentUser").child("Birds").child(BirdKey).removeValue()
-                databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey).removeValue()
-                databaseReference.child("ID: $currentUser").child("Nursery Birds").child(FlightKey).removeValue()
-                finish() // Close the activity or navigate back to the previous screen
+                showDeleteConfirmation()
+
                 return true
 
             }
@@ -298,5 +296,24 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+    private fun showDeleteConfirmation() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Delete")
+        builder.setMessage("Are you sure you want to delete this bird?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            delete()
+            onBackPressed()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: android.app.AlertDialog = builder.create()
+        dialog.show()
+    }
+    fun delete() {
+        databaseReference.child("ID: $currentUser").child("Birds").child(BirdKey).removeValue()
+        databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey).removeValue()
+        databaseReference.child("ID: $currentUser").child("Nursery Birds").child(FlightKey).removeValue()
     }
 }

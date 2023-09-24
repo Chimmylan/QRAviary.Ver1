@@ -41,12 +41,12 @@ class BirdListAdapter(
         val bird = dataList[position]
 
         if (bird.img.isNullOrEmpty()) {
-
             Glide.with(context)
                 .load(R.drawable.noimage)
                 .placeholder(R.drawable.noimage)
                 .error(R.drawable.noimage)
                 .into(holder.imageView)
+
         } else {
 
             Glide.with(context)

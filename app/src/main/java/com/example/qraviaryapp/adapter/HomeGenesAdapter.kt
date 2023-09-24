@@ -22,10 +22,6 @@ class HomeGenesAdapter(
     : RecyclerView.Adapter<HomeGeneViewHolder>() {
 
 
-    companion object {
-        private const val VIEW_TYPE_HEADER = 0
-        private const val VIEW_TYPE_GENE = 1
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeGeneViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_gene,parent,false)
@@ -44,13 +40,7 @@ class HomeGenesAdapter(
     }
 
 
-  /*  class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val headerTextView: TextView = itemView.findViewById(R.id.headerTextView)
 
-        fun bind(header: String) {
-            headerTextView.text = header
-        }
-    }*/
 }
 class HomeGeneViewHolder(itemView: View, private val dataList: MutableList<MutationData>) : RecyclerView.ViewHolder(itemView) {
     val geneTextView: TextView = itemView.findViewById(R.id.geneTextView)

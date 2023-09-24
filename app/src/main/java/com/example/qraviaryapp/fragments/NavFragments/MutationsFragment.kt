@@ -15,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -145,7 +147,7 @@ class MutationsFragment : Fragment() {
             dataList.sortBy { it.mutations }
             dataList
         }
-    fun showAddMutationsDialog() {
+    /*fun showAddMutationsDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_mutation, null)
 
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -193,7 +195,71 @@ class MutationsFragment : Fragment() {
         }
 
         alertDialog.show()
+    }*/
+    fun showAddMutationsDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+
+        // Inflate the custom layout
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView = inflater.inflate(R.layout.dialog_mutation, null)
+
+        alertDialogBuilder.setView(dialogView)
+
+        // Set the title for the AlertDialog
+        alertDialogBuilder.setTitle("Add Mutations")
+
+        val alertDialog = alertDialogBuilder.create()
+
+        // Find your custom EditText fields in the custom layout
+        val mutationNameEditText = dialogView.findViewById<EditText>(R.id.mutationName)
+        val incubationEditText = dialogView.findViewById<EditText>(R.id.incubation)
+        val maturedEditText = dialogView.findViewById<EditText>(R.id.matured)
+
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+        val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
+
+        btnCancel.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnSave.setOnClickListener {
+            val mutationNameValue = mutationNameEditText.text.toString()
+            val incubationValue = incubationEditText.text.toString()
+            val maturedValue = maturedEditText.text.toString()
+
+            if (TextUtils.isEmpty(mutationNameValue)) {
+                mutationNameEditText.error = "Enter a name"
+            } else {
+                // Handle saving the data as you did before
+                val currentUserId = mAuth.currentUser?.uid
+                val newDb = FirebaseDatabase.getInstance().reference.child("Users")
+                    .child("ID: ${currentUserId.toString()}").child("Mutations")
+                val newMutationRef = newDb.push()
+
+                val data: Map<String, Any?> = hashMapOf(
+                    "Mutation" to mutationNameValue,
+                    "Incubating Days" to incubationValue,
+                    "Maturing Days" to maturedValue
+                )
+
+                newMutationRef.updateChildren(data)
+                val newMutation = MutationData()
+                newMutation.mutations = mutationNameValue
+
+                dataList.add(newMutation)
+                adapter.notifyItemInserted(dataList.size - 1)
+                dataList.sortBy { it.mutations }
+                adapter.notifyDataSetChanged()
+                alertDialog.dismiss()
+            }
+
+        }
+
+        alertDialog.show()
     }
+
+
+
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed
 }
