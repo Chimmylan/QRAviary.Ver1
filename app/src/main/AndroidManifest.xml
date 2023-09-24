@@ -24,6 +24,12 @@
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.dashboards.PairFemaleBirdListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.dashboards.PairMaleBirdListActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.detailedactivities.SellActivity"
             android:exported="false" />
         <activity

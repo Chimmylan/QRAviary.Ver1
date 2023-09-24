@@ -3,12 +3,15 @@ package com.example.qraviaryapp.activities.AddActivities
 import PairData
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,11 +21,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
-import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
-import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
-import com.example.qraviaryapp.activities.dashboards.PairListActivity
+import com.example.qraviaryapp.activities.dashboards.*
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -43,15 +44,18 @@ class AddPairActivity : AppCompatActivity() {
     private lateinit var btnBeginningDate: Button
     private lateinit var btnMale: MaterialButton
     private lateinit var btnFemale: MaterialButton
+    private lateinit var switchMaterial: SwitchMaterial
 
-    private lateinit var maleMutation: String
-    private lateinit var femaleMutation: String
+    private var maleMutation: String? = null
+    private var femaleMutation: String? = null
 
     private var beginningFormattedDate: String? = null
     private var btnMaleIdValue: String? = null
     private var btnFemaleIdValue: String? = null
     private var btnMaleValueKey: String? = null
     private var btnFemaleValueKey: String? = null
+
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -81,6 +85,13 @@ class AddPairActivity : AppCompatActivity() {
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
         }
 
+        sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        editor.putBoolean("Hybridization", false)
+        editor.apply()
+
+        switchMaterial = findViewById(R.id.switchHybridization)
         etCage = findViewById(R.id.etcage)
         etNest = findViewById(R.id.etnest)
         etComment = findViewById(R.id.etcomment)
@@ -92,20 +103,50 @@ class AddPairActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
 
+        var hybridizationCheck = switchMaterial.isChecked
+
+        switchMaterial.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            hybridizationCheck = isChecked
+
+            editor.putBoolean("Hybridization", isChecked)
+            editor.apply()
+        }
         initDatePickers()
         showDatePickerDialog(this, btnBeginningDate, datePickerDialogBeginning)
 
         btnMale.setOnClickListener {
             val requestCode = 1
-            val i = Intent(this, MaleBirdListActivity::class.java)
-            startActivityForResult(i, requestCode)
-        }
+            val i = Intent(this, PairMaleBirdListActivity::class.java)
+            if (hybridizationCheck) {
+                if (femaleMutation?.isNotEmpty() == true) {
+                    i.putExtra("FemaleMutation", femaleMutation)
+                } else {
+                    Log.d(ContentValues.TAG, "Empty Mutation")
+                }
+            } else {
+                Log.d(ContentValues.TAG, "Hybridization is Off")
+            }
 
-        btnFemale.setOnClickListener {
-            val requestCode = 2
-            val i = Intent(this, FemaleBirdListActivity::class.java)
             startActivityForResult(i, requestCode)
         }
+            btnFemale.setOnClickListener {
+                val requestCode = 2
+                val i = Intent(this, PairFemaleBirdListActivity::class.java)
+                if (hybridizationCheck) {
+                    if (maleMutation?.isNotEmpty() == true) {
+                        i.putExtra("MaleMutation", maleMutation)
+                    } else {
+                        Log.d(ContentValues.TAG, "Empty Mutation")
+                    }
+                } else {
+                    Log.d(ContentValues.TAG, "Hybridization is off")
+                }
+                startActivityForResult(i, requestCode)
+            }
+
+
+
 
         etCage.setOnClickListener {
             val requestCode = 3
@@ -135,12 +176,16 @@ class AddPairActivity : AppCompatActivity() {
         val userId = mAuth.currentUser?.uid.toString()
         val userBird = db.child("Users").child("ID: $userId")
             .child("Pairs")
-        val newMaleBirdPref = db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
+        val newMaleBirdPref =
+            db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
+                .child("Pairs").push()
+        val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds")
+            .child(btnFemaleValueKey.toString())
             .child("Pairs").push()
-        val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds").child(btnFemaleValueKey.toString())
-            .child("Pairs").push()
-        val newMaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
-        val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds").child(btnFemaleValueKey.toString())
+        val newMaleBirdsPref =
+            db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
+        val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
+            .child(btnFemaleValueKey.toString())
 
         val newPairPref = userBird.push()
         val pairId = newPairPref.key
@@ -252,7 +297,7 @@ class AddPairActivity : AppCompatActivity() {
             }
         }
         if (requestCode == 3) {
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 val etcageValue = data?.getStringExtra("CageName").toString()
                 etCage.setText(etcageValue)
             }
