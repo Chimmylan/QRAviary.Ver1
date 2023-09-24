@@ -139,6 +139,8 @@ class AddPairActivity : AppCompatActivity() {
             .child("Pairs").push()
         val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds").child(btnFemaleValueKey.toString())
             .child("Pairs").push()
+        val newMaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
+        val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds").child(btnFemaleValueKey.toString())
 
         val newPairPref = userBird.push()
         val pairId = newPairPref.key
@@ -181,7 +183,8 @@ class AddPairActivity : AppCompatActivity() {
                 "Identifier" to btnMaleIdValue,
                 "Bird Key" to btnMaleValueKey
             )
-
+            newMaleBirdsPref.child("Status").setValue("Paired")
+            newFemaleBirdsPref.child("Status").setValue("Paired")
             newFemaleBirdPref.updateChildren(femaleBirdPair)
             newMaleBirdPref.updateChildren(maleBirdPair)
             newPairPref.updateChildren(data)

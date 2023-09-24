@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.mainactivities.LoginActivity
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -311,6 +312,10 @@ class PairsDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_remove -> {
+                showDeleteConfirmation()
+                true
+            }
+            R.id.menu_separate -> {
                 // Handle the Remove button click here
                 // Implement the logic to remove the item or perform any action you need.
                 true
@@ -322,4 +327,20 @@ class PairsDetailedActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+    private fun showDeleteConfirmation() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Delate")
+        builder.setMessage("Are you sure you want to delete this pair?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            delete()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: android.app.AlertDialog = builder.create()
+        dialog.show()
+    }
+    fun delete() {
+
+        }
 }
