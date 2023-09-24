@@ -51,45 +51,86 @@
     </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/incubationDateLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="5dp"
-            android:orientation="horizontal">
-
-
+            android:orientation="vertical"
+            android:visibility="gone">
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Incubation start date"
 
                 android:textSize="15sp"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_incubatingstartdate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:minHeight="48dp"
-                android:textSize="10sp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:icon="@drawable/drop_down"
-                app:iconGravity="end"
-                app:iconTint="@color/black"
-                android:text="Today"
-                android:textColor="@color/black" />
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:padding="2dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/x"/>
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_incubatingstartdate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="48dp"
+                    android:textSize="10sp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:text="Today"
+                    android:textColor="@color/black" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/x"/>
+            </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hatchedDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hatched start date"
+
+                android:textSize="15sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_hatchedstartdate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="48dp"
+                    android:textSize="10sp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:text="Today"
+                    android:textColor="@color/black" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/x"/>
+            </LinearLayout>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
