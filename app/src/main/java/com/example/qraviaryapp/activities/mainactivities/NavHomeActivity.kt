@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 
@@ -13,11 +14,15 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
+import com.example.qraviaryapp.fragments.NavFragments.AdultingFragment
 import com.example.qraviaryapp.fragments.NavFragments.BalanceFragment
 import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
 import com.example.qraviaryapp.fragments.NavFragments.CagesFragment
+import com.example.qraviaryapp.fragments.NavFragments.CategoriesFragment
 import com.example.qraviaryapp.fragments.NavFragments.ExpensesFragment
+import com.example.qraviaryapp.fragments.NavFragments.GalleryFragment
 import com.example.qraviaryapp.fragments.NavFragments.IncubatingFragment
 import com.example.qraviaryapp.monitoring.MonitoringFragment
 import com.example.qraviaryapp.fragments.NavFragments.MutationsFragment
@@ -41,6 +46,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
+    private lateinit var menu: Menu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -53,8 +59,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this, gso)
-        /*toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)*/
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
         toolbar = binding.toolbar
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
@@ -80,6 +86,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_birds -> {
                 fragment = BirdsFragment()
                 title = "Birds"
+
             }
             R.id.nav_pairs -> {
                 fragment = PairsFragment()
@@ -98,7 +105,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 title = "Mutations"
             }
             R.id.nav_aldulting -> {
-                fragment = CagesFragment()
+                fragment = AdultingFragment()
                 title = "Adulting"
             }
             R.id.nav_expenses -> {
@@ -116,6 +123,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
                 title = "Balance"
+
+            }
+            R.id.nav_gallery -> {
+                fragment = GalleryFragment()
+                title = "Gallery"
+
             }
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
@@ -129,13 +142,25 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 showLogoutConfirmationDialog()
                 return true // Early return, no need to continue
             }
+            R.id.nav_categories -> {
+                fragment = CategoriesFragment() // Default fragment
+                title = "Categories" // Default title
+            }
             else -> {
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
+                hideMenuItems()
+
             }
         }
 
-
+        if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
+                title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
+                title == "Categories") {
+            hideMenuItems()
+        } else {
+            showMenuItems()
+        }
 
         // Set the toolbar title
         replaceFragment(fragment)
@@ -145,20 +170,31 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         toolbar.title = title
         return true
     }
-   /* override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.home_menu, menu)
+    private fun hideMenuItems() {
+        menu.findItem(R.id.ic_filter).isVisible = false
+        // Add more menu items to hide if needed
+    }
+
+    private fun showMenuItems() {
+        menu.findItem(R.id.ic_filter).isVisible = true
+        // Add more menu items to show if needed
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        this.menu = menu
+        hideMenuItems()
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
+            R.id.ic_filter -> {
+                val intent = Intent(this, BirdFilterActivity::class.java)
                 startActivity(intent)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }*/
+    }
 
     private fun showLogoutConfirmationDialog() {
         val builder = AlertDialog.Builder(this)

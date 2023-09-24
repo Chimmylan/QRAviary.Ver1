@@ -44,6 +44,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
         setContentView(R.layout.activity_add_bird)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.elevation = 0f
         supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.new_appbar_color)))
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Nursery Bird</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)

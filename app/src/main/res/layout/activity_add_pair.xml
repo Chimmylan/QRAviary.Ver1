@@ -23,6 +23,13 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchHybridization"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Enable Hybridization"
+                    />
+
                 <TextView
                     android:id="@+id/tvfather"
                     android:layout_width="match_parent"

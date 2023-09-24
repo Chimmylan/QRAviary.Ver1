@@ -24,17 +24,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.mainactivities.LoginActivity
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PairsDetailedActivity : AppCompatActivity() {
 
@@ -50,6 +57,9 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<EggData>
 
     private lateinit var pairKey: String
+    private lateinit var pairMaleKey: String
+    private lateinit var pairFemaleKey: String
+    private lateinit var currentUserId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,16 +113,42 @@ class PairsDetailedActivity : AppCompatActivity() {
             showEggDialog()
         }
 
-
         //Bundle from PairListActivity
         if (bundle != null) {
             val maleId = bundle.getString("MaleID")
             val femaleId = bundle.getString("FemaleID")
             val beginningDate = bundle.getString("BeginningDate")
+            val separateDate = bundle.getString("SeparateDate")
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
+            pairFemaleKey = bundle.getString("PairFemaleKey").toString()
+            pairMaleKey = bundle.getString("PairMaleKey").toString()
             pairKey = bundle.getString("PairKey").toString()
-            tvDate.text = beginningDate.toString()
+
+            currentUserId = mAuth.currentUser?.uid.toString()
+            val db = FirebaseDatabase.getInstance().reference.child("Users")
+                .child("ID: ${currentUserId.toString()}").child("Pairs")
+                .child(pairKey)
+
+
+            db.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.child("Separate Date").exists()){
+                        tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
+                    }else
+                    {
+                        tvDate.text = beginningDate.toString()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+
+
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
             btnFemale.text = femaleId.toString()
             btnMale.text = maleId.toString()
@@ -136,7 +172,7 @@ class PairsDetailedActivity : AppCompatActivity() {
 
     //Gets data from database and display it
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
-        val currentUserId = mAuth.currentUser?.uid
+
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches")
@@ -209,6 +245,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         builder.setNegativeButton("Cancel") { dialog, which ->
             Toast.makeText(this@PairsDetailedActivity, "Cancel", Toast.LENGTH_SHORT).show()
         }
+
         builder.setView(dialogLayout)
 
         val alertDialog = builder.create()
@@ -306,20 +343,75 @@ class PairsDetailedActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_edit -> {
-                // Handle the Edit button click here
-                // Implement the logic to edit the item or perform any action you need.
+
                 true
             }
+
+            R.id.menu_seperate ->{
+                showSeparateConfirmation()
+                true
+            }
+
             R.id.menu_remove -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
+                showDeleteConfirmation()
                 true
             }
+
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+    private fun showDeleteConfirmation() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Delete")
+        builder.setMessage("Are you sure you want to delete this pair?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            delete()
+            onBackPressed()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: android.app.AlertDialog = builder.create()
+        dialog.show()
+    }
+    fun delete() {
+        val currentUserId = mAuth.currentUser?.uid
+        val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
+            .child(pairKey).removeValue()
+        }
+    private fun showSeparateConfirmation() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Separate")
+        builder.setMessage("Are you sure you want to separate this pair?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            separate()
+            onBackPressed()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: android.app.AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    fun separate(){
+        val pairMaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairMaleKey).child("Status").setValue("Available")
+        val pairFemaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairFemaleKey).child("Status").setValue("Available")
+
+        val milliSecons = System.currentTimeMillis()
+        val DateFormat = SimpleDateFormat("MMM dd yyyy", Locale.US)
+        val date = Date(milliSecons)
+        val formattedDate = DateFormat.format(date)
+
+        val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
+            .child(pairKey).child("Separate Date").setValue(formattedDate)
+
+
     }
 }
