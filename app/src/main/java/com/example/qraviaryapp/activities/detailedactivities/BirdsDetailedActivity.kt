@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.media.Image
 import android.os.Build
@@ -20,6 +21,7 @@ import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBabiesFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
@@ -268,8 +270,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_sell -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
+                val i = Intent(this, SellActivity::class.java)
+                startActivity(i)
                 true
             }
             R.id.menu_edit -> {
