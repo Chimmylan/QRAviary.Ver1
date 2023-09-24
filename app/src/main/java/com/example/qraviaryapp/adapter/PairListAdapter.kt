@@ -51,10 +51,13 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
         itemView.setOnClickListener {
             val bundle = Bundle()
 
+            bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
+            bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
             bundle.putString("MaleID", dataList[adapterPosition].pairMale)
             bundle.putString("FemaleID", dataList[adapterPosition].pairFemale)
             bundle.putString("BeginningDate", dataList[adapterPosition].pairDateBeg)
+            bundle.putString("SeparateDate", dataList[adapterPosition].pairDateSep)
             bundle.putString("MaleGender", dataList[adapterPosition].pairMaleMutation)
             bundle.putString("FemaleGender", dataList[adapterPosition].pairFemaleMutation)
             val i = Intent(itemView.context, PairsDetailedActivity::class.java)

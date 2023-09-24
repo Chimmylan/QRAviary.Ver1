@@ -6,16 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -122,7 +118,12 @@ class PairsFragment : Fragment() {
                 val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
                 val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
                 val beginningDate = itemSnapshot.child("Beginning").value.toString()
+                val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
+                val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
+                val separateDate = itemSnapshot.child("Separate Date").value.toString()
 
+                data.pairMaleKey = pairMaleKey
+                data.pairFemaleKey = pairFemaleKey
                 data.pairKey = key
                 data.pairFemale = female
                 data.pairMale = male
@@ -130,6 +131,7 @@ class PairsFragment : Fragment() {
                 data.pairMaleMutation = maleMutation
                 data.pairFemaleMutation = femaleMutation
                 data.pairDateBeg = beginningDate
+                data.pairDateSep = separateDate
 
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
