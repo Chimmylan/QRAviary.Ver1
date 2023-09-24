@@ -4,7 +4,7 @@ package com.example.qraviaryapp.adapter.DetailedAdapter
 
 
 import ExpensesData
-import MutationData
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.HomeGeneViewHolder
+
 
 class ExpensesAdapter(
     private val context: Context,

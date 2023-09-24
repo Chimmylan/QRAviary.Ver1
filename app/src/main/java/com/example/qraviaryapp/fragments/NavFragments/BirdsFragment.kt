@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -53,6 +54,8 @@ class BirdsFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,7 +64,8 @@ class BirdsFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_birds, container, false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
+            activity?.window?.statusBarColor =
+                ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
 
 
@@ -75,18 +79,17 @@ class BirdsFragment : Fragment() {
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
-
-            lifecycleScope.launch {
-                try {
-                    val data = getDataFromDatabase()
-                    dataList.clear()
-                    dataList.addAll(data)
-                    adapter.notifyDataSetChanged()
-                } catch (e: Exception) {
-                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-                }
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }
-        fab.setOnClickListener{
+        }
+        fab.setOnClickListener {
             showOptionDialog()
         }
 
@@ -120,10 +123,12 @@ class BirdsFragment : Fragment() {
 
         return rootView
     }
+
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
     }
+
     /*private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -302,6 +307,7 @@ class BirdsFragment : Fragment() {
                 activity?.onBackPressed() // Navigate back to the previous fragment
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -331,6 +337,7 @@ class BirdsFragment : Fragment() {
 
         alertDialog.show()
     }
+
     override fun onResume() {
         super.onResume()
 
@@ -338,6 +345,7 @@ class BirdsFragment : Fragment() {
         reloadDataFromDatabase()
 
     }
+
     private fun reloadDataFromDatabase() {
         lifecycleScope.launch {
             try {
