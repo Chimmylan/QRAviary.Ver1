@@ -3,10 +3,14 @@
     <item
         android:id="@+id/menu_edit"
         android:title="Edit"/>
+
     <item
-        android:id="@+id/menu_separate"
-        android:title="Separate"/>
+        android:id="@+id/menu_seperate"
+        android:title="Seperate"/>
+
     <item
         android:id="@+id/menu_remove"
         android:title="Delete"/>
+
+
 </menu>
