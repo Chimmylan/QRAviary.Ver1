@@ -23,7 +23,7 @@ class BirdListAdapter(
     private val context: android.content.Context,
     private var dataList: MutableList<BirdData>
 ) :
-    RecyclerView.Adapter<MyViewHolder>() {
+    RecyclerView.Adapter<MyViewHolder>(), Filterable {
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -37,6 +37,43 @@ class BirdListAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val filteredList = mutableListOf<BirdData>()
+
+                if (constraint.isNullOrBlank()) {
+                    filteredList.addAll(dataList)
+                } else {
+                    val filterPattern = constraint.toString().toLowerCase().trim()
+                    for (bird in dataList) {
+                        // Implement your custom filtering logic here
+                        val identifierMatch = bird.identifier?.toLowerCase()?.contains(filterPattern) == true
+                        val mutationMatch = bird.mutation1?.toLowerCase()?.contains(filterPattern) == true
+                        val statusMatch = bird.status?.toLowerCase()?.contains(filterPattern) == true
+                        // Add more criteria as needed
+
+                        // Combine filter results based on your logic (e.g., AND or OR)
+                        if (identifierMatch || mutationMatch || statusMatch) {
+                            filteredList.add(bird)
+                        }
+                    }
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = filteredList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                dataList.clear()
+                dataList.addAll(results?.values as List<BirdData>)
+                notifyDataSetChanged()
+            }
+        }
+    }
+
 
 
 

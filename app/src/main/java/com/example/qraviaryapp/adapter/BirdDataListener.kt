@@ -1,3 +1,6 @@
+import android.os.Parcel
+import android.os.Parcelable
+
 interface BirdDataListener {
 
     fun onBirdDataSaved(id: String?)
@@ -118,3 +121,41 @@ data class EggData(
     var eggIncubationStartDate: String? = null,
     var eggMaturingStartDate: String? = null,
     )
+
+data class BirdFilterData(
+    val mutations: List<String>,
+    val identifier: String,
+    val selectedCage: String,
+    val selectedGenders: List<String>,
+    val selectedStatus: List<String>
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.createStringArrayList() ?: emptyList(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.createStringArrayList() ?: emptyList(),
+        parcel.createStringArrayList() ?: emptyList()
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeStringList(mutations)
+        parcel.writeString(identifier)
+        parcel.writeString(selectedCage)
+        parcel.writeStringList(selectedGenders)
+        parcel.writeStringList(selectedStatus)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<BirdFilterData> {
+        override fun createFromParcel(parcel: Parcel): BirdFilterData {
+            return BirdFilterData(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BirdFilterData?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

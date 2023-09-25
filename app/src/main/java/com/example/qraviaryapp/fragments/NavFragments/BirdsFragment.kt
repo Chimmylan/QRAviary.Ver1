@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
+import BirdFilterData
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -68,6 +69,8 @@ class BirdsFragment : Fragment() {
                 ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
 
+        val filterData = arguments?.getParcelable("birdFilterData") as BirdFilterData?
+
 
         totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
@@ -77,7 +80,10 @@ class BirdsFragment : Fragment() {
         dataList = ArrayList()
         adapter = BirdListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        if (filterData != null) {
+            applyFilters(filterData)
+            Log.d(ContentValues.TAG, filterData.toString())
+        }
         mAuth = FirebaseAuth.getInstance()
         lifecycleScope.launch {
             try {
@@ -300,6 +306,30 @@ class BirdsFragment : Fragment() {
 
         dataList
     }
+
+    private fun applyFilters(filterData: BirdFilterData) {
+        // Clear the existing data in dataList
+        dataList.clear()
+
+        // Apply filters based on the filterData object
+        val filteredData = dataList.filter { bird ->
+            // Check each filter criteria and return true if it matches
+            val mutationFilter = filterData.mutations.isEmpty() || filterData.mutations.contains(bird.mutation1)
+            val identifierFilter = filterData.identifier.isBlank() || bird.identifier?.contains(filterData.identifier, ignoreCase = true) ?: false
+            val cageFilter = filterData.selectedCage.isBlank() || bird.availCage.equals(filterData.selectedCage, ignoreCase = true)
+            // Add more filter criteria as needed
+
+            // Return true if all criteria match
+            mutationFilter && identifierFilter && cageFilter
+        }
+
+        // Add the filtered data to dataList
+        dataList.addAll(filteredData)
+
+        // Update the RecyclerView adapter
+        adapter.notifyDataSetChanged()
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

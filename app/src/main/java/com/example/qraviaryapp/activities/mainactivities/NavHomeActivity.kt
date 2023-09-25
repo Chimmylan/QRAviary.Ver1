@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.mainactivities
 
+import BirdFilterData
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
@@ -74,6 +75,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, MonitoringFragment()).commit()
             navigationView.menu.getItem(0).isChecked = true
+        }
+
+        if (intent.getBooleanExtra("openBirdsFragment", false)) {
+            val filterData = intent.getParcelableExtra<BirdFilterData>("birdFilterData")
+            navigateToBirdsFragment(filterData)
         }
 
     }
@@ -170,6 +176,16 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         toolbar.title = title
         return true
     }
+    private fun navigateToBirdsFragment(filterData: BirdFilterData?) {
+        val fragment = BirdsFragment()
+        val args = Bundle()
+        args.putParcelable("birdFilterData", filterData)
+        fragment.arguments = args // Pass filterData as fragment arguments
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, fragment)
+            .commit()
+    }
+
     private fun hideMenuItems() {
         menu.findItem(R.id.ic_filter).isVisible = false
         // Add more menu items to hide if needed

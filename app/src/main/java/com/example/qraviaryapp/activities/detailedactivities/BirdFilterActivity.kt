@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import BirdFilterData
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -20,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
+import com.example.qraviaryapp.activities.mainactivities.NavHomeActivity
+import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
 import com.google.android.material.button.MaterialButton
 
 class BirdFilterActivity : AppCompatActivity() {
@@ -315,7 +318,41 @@ class BirdFilterActivity : AppCompatActivity() {
     }
 
     fun done(){
+        val filterData = BirdFilterData(
+            mutations = listOf(
+                btnMutation1.text.toString(),
+                btnMutation2.text.toString(),
+                btnMutation3.text.toString(),
+                btnMutation4.text.toString(),
+                btnMutation5.text.toString(),
+                btnMutation6.text.toString()
+            ),
+            identifier = etIdentifier.text.toString(),
+            selectedCage = if (btnFlightCage.isChecked) "Flight Cage" else "Nursery Cage",
+            selectedGenders = mutableListOf<String>().apply {
+                if (cbMale.isChecked) add("Male")
+                if (cbFemale.isChecked) add("Female")
+                if (cbUnknown.isChecked) add("Unknown")
+            },
+            selectedStatus = mutableListOf<String>().apply {
+                if (cbAvail.isChecked) add("Available")
+                if (cbPaired.isChecked) add("Paired")
+                if (cbForSale.isChecked) add("For Sale")
+                if (cbSold.isChecked) add("Sold")
+                if (cbDeceased.isChecked) add("Deceased")
+                if (cbExchange.isChecked) add("Exchange")
+                if (cbLost.isChecked) add("Lost")
+                if (cbDonated.isChecked) add("Donated")
+                if (cbOther.isChecked) add("Other")
+            }
+        )
 
+        // Create an Intent to start the BirdsFragment
+        val intent = Intent(this, NavHomeActivity::class.java)
+        // Pass the filter data as an extra
+        intent.putExtra("birdFilterData", filterData)
+        intent.putExtra("openBirdsFragment", true)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
