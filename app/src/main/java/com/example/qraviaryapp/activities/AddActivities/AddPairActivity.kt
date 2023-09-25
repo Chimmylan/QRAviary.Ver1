@@ -125,7 +125,7 @@ class AddPairActivity : AppCompatActivity() {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
             } else {
-                Log.d(ContentValues.TAG, "Hybridization is Off")
+                Log.d(ContentValues.TAG, "Hybridization is On")
             }
 
             startActivityForResult(i, requestCode)
@@ -140,7 +140,7 @@ class AddPairActivity : AppCompatActivity() {
                         Log.d(ContentValues.TAG, "Empty Mutation")
                     }
                 } else {
-                    Log.d(ContentValues.TAG, "Hybridization is off")
+                    Log.d(ContentValues.TAG, "Hybridization is On")
                 }
                 startActivityForResult(i, requestCode)
             }

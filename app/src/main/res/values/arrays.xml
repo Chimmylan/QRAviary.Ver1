@@ -22,7 +22,16 @@
         <item>Lost</item>
         <item>Donated</item>
         <item>Other</item>
+    </string-array>
 
+    <string-array name="EggStatus">
+        <item>Hatched</item>
+        <item>Incubating</item>
+        <item>Not Fertilized</item>
+        <item>Broken</item>
+        <item>Abandon</item>
+        <item>Dead in Shell</item>
+        <item>Dead Before Ringing</item>
     </string-array>
 
     <string-array name="Genes">
