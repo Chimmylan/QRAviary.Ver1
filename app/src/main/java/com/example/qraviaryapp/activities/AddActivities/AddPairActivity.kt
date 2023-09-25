@@ -118,7 +118,7 @@ class AddPairActivity : AppCompatActivity() {
         btnMale.setOnClickListener {
             val requestCode = 1
             val i = Intent(this, PairMaleBirdListActivity::class.java)
-            if (hybridizationCheck) {
+            if (!hybridizationCheck) {
                 if (femaleMutation?.isNotEmpty() == true) {
                     i.putExtra("FemaleMutation", femaleMutation)
                 } else {
@@ -133,7 +133,7 @@ class AddPairActivity : AppCompatActivity() {
             btnFemale.setOnClickListener {
                 val requestCode = 2
                 val i = Intent(this, PairFemaleBirdListActivity::class.java)
-                if (hybridizationCheck) {
+                if (!hybridizationCheck) {
                     if (maleMutation?.isNotEmpty() == true) {
                         i.putExtra("MaleMutation", maleMutation)
                     } else {

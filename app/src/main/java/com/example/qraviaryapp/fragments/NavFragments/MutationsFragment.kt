@@ -147,55 +147,7 @@ class MutationsFragment : Fragment() {
             dataList.sortBy { it.mutations }
             dataList
         }
-    /*fun showAddMutationsDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_mutation, null)
 
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setView(dialogView)
-        alertDialogBuilder.setTitle("Add Mutations")
-
-        val alertDialog = alertDialogBuilder.create()
-
-        val currentUserId = mAuth.currentUser?.uid
-        val newDb = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Mutations")
-        val newMutationRef = newDb.push()
-        val mutationName = dialogView.findViewById<EditText>(R.id.mutationName)
-
-
-        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
-        val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
-
-        btnCancel.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        btnSave.setOnClickListener {
-
-            val mutationNameValue = mutationName.text.toString()
-            if (TextUtils.isEmpty(mutationNameValue)){
-                mutationName.error = "Enter mutation name"
-            }else{
-
-                val data: Map<String, Any?> = hashMapOf(
-                    "Mutation" to mutationNameValue
-                )
-                newMutationRef.updateChildren(data)
-                val newMutation = MutationData()
-                newMutation.mutations = mutationNameValue
-                dataList.add(newMutation)
-                adapter.notifyItemInserted(dataList.size - 1)
-                dataList.sortBy { it.mutations }
-                adapter.notifyDataSetChanged()
-
-                alertDialog.dismiss()
-            }
-
-
-        }
-
-        alertDialog.show()
-    }*/
     fun showAddMutationsDialog() {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
 

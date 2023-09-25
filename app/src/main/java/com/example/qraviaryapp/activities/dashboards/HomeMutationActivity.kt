@@ -76,7 +76,7 @@ class HomeMutationActivity : AppCompatActivity(){
         val gridLayoutManager = GridLayoutManager(this,1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = HomeGenesAdapter(this,dataList)
+//        adapter = HomeGenesAdapter(this,dataList)
         recyclerView.adapter = adapter
 
         lifecycleScope.launch {
