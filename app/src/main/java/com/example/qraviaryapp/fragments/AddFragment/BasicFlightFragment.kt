@@ -105,6 +105,7 @@ class BasicFlightFragment : Fragment() {
     private lateinit var tvLegband: TextView
     private lateinit var tvIdentifier: TextView
     private lateinit var etLegband: EditText
+
     /*Layouts*/
     private lateinit var editTextContainer: LinearLayout
     private lateinit var availableLayout: LinearLayout
@@ -126,6 +127,20 @@ class BasicFlightFragment : Fragment() {
     private var lostFormattedDate: String? = null
     private var donatedFormattedDate: String? = null
 
+    private var mutation1IncubatingDays: String? = null
+    private var mutation1MaturingDays: String? = null
+    private var mutation2IncubatingDays: String? = null
+    private var mutation2MaturingDays: String? = null
+    private var mutation3IncubatingDays: String? = null
+    private var mutation3MaturingDays: String? = null
+    private var mutation4IncubatingDays: String? = null
+    private var mutation4MaturingDays: String? = null
+    private var mutation5IncubatingDays: String? = null
+    private var mutation5MaturingDays: String? = null
+    private var mutation6IncubatingDays: String? = null
+    private var mutation6MaturingDays: String? = null
+
+
     private var status: String? = null
     //endregion
 
@@ -133,8 +148,7 @@ class BasicFlightFragment : Fragment() {
     var birdData = BirdData()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         // Inflate the layout for this fragment
@@ -385,13 +399,17 @@ class BasicFlightFragment : Fragment() {
             ""
         }
     }
-    private fun getTextFromVisibleMaterialButton(materialbtn: MaterialButton, layout: View): String {
+
+    private fun getTextFromVisibleMaterialButton(
+        materialbtn: MaterialButton, layout: View
+    ): String {
         return if (layout.visibility == View.VISIBLE) {
             materialbtn.text.toString()
         } else {
             ""
         }
     }
+
     private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
         return if (layout.visibility == View.VISIBLE) {
             Button.text.toString()
@@ -409,6 +427,11 @@ class BasicFlightFragment : Fragment() {
 
                 val btnMutation1Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation1MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation1IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+
                 btnMutation1.text = btnMutation1Value
 
 
@@ -418,6 +441,10 @@ class BasicFlightFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation2Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation2MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation2IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation2.text = btnMutation2Value
             }
         }
@@ -425,6 +452,10 @@ class BasicFlightFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation3Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation3MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation3IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation3.text = btnMutation3Value
             }
         }
@@ -432,6 +463,10 @@ class BasicFlightFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation4Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation4MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation4IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation4.text = btnMutation4Value
             }
         }
@@ -439,6 +474,10 @@ class BasicFlightFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation5Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation5MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation5IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation5.text = btnMutation5Value
             }
         }
@@ -446,6 +485,10 @@ class BasicFlightFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation6Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation6MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation6IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation6.text = btnMutation6Value
             }
         }
@@ -496,12 +539,7 @@ class BasicFlightFragment : Fragment() {
         /*==++==*/
         val selectedMutations = mutableListOf<String?>()
         val spinners = arrayOf(
-            btnMutation1,
-            btnMutation2,
-            btnMutation3,
-            btnMutation4,
-            btnMutation5,
-            btnMutation6
+            btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
         )
 
         for (i in spinners.indices) {
@@ -592,7 +630,7 @@ class BasicFlightFragment : Fragment() {
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Flight Birds")
 
         val newBirdPref = userBird.push()
-        val SoldRef =  dbase.child("Users").child("ID: $userId").child("Sold Items")
+        val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
         val SoldBirdRef = SoldRef.push()
         val soldId = SoldBirdRef.key
 
@@ -644,10 +682,42 @@ class BasicFlightFragment : Fragment() {
         newBundle.putString("BirdMutation6", birdData.mutation6)
         newBundle.putString("BirdFather", birdData.father)
         newBundle.putString("BirdFatherKey", birdData.fatherKey)
-        newBundle.putString("BirdMother",birdData.mother)
+        newBundle.putString("BirdMother", birdData.mother)
         newBundle.putString("BirdMotherKey", birdData.motherKey)
 
         Log.d(TAG, userId)
+
+        val mutation1 = mapOf(
+            "Mutation Name" to birdData.mutation1,
+            "Maturing Days" to mutation1MaturingDays,
+            "Incubating Days" to mutation1IncubatingDays
+        )
+        val mutation2 = mapOf(
+            "Mutation Name" to birdData.mutation2,
+            "Maturing Days" to mutation2MaturingDays,
+            "Incubating Days" to mutation2IncubatingDays
+        )
+        val mutation3 = mapOf(
+            "Mutation Name" to birdData.mutation3,
+            "Maturing Days" to mutation3MaturingDays,
+            "Incubating Days" to mutation3IncubatingDays
+        )
+        val mutation4 = mapOf(
+            "Mutation Name" to birdData.mutation4,
+            "Maturing Days" to mutation4MaturingDays,
+            "Incubating Days" to mutation4IncubatingDays
+        )
+        val mutation5 = mapOf(
+            "Mutation Name" to birdData.mutation5,
+            "Maturing Days" to mutation5MaturingDays,
+            "Incubating Days" to mutation5IncubatingDays
+        )
+        val mutation6 = mapOf(
+            "Mutation Name" to birdData.mutation6,
+            "Maturing Days" to mutation6MaturingDays,
+            "Incubating Days" to mutation6IncubatingDays
+        )
+
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
@@ -656,12 +726,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -678,12 +748,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -702,12 +772,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -730,12 +800,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -752,12 +822,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -775,12 +845,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -797,12 +867,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -819,12 +889,12 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -1020,12 +1090,11 @@ class BasicFlightFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BasicFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance(param1: String, param2: String) = BasicFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 }
