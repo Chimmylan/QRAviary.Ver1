@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/new_appbar_color"
     tools:context=".fragments.NavFragments.PurchasesFragment">
 
 
@@ -15,13 +16,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation ="horizontal"
+            android:background="#E9E8E8"
             android:weightSum="2">
+
             <TextView
                 android:id="@+id/tvChildren"
-                android:padding="10dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:padding="10dp" />
+
             <TextView
                 android:id="@+id/tvtotal"
                 android:padding="10dp"

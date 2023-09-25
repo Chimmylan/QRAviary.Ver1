@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddPairActivity
 import com.example.qraviaryapp.adapter.PairListAdapter
+import com.example.qraviaryapp.adapter.PreviousPairAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -34,7 +35,10 @@ class PairsFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var dataList: ArrayList<PairData>
+    private lateinit var dataList1: ArrayList<PairData>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView1: RecyclerView
+    private lateinit var adapter1: PreviousPairAdapter
     private lateinit var adapter: PairListAdapter
     private lateinit var fab: FloatingActionButton
     private lateinit var snackbar: Snackbar
@@ -48,8 +52,15 @@ class PairsFragment : Fragment() {
         fab = view.findViewById(R.id.fab)
         mAuth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView1 = view.findViewById(R.id.recyclerView1)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
+
+        val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
+        recyclerView1.layoutManager = gridLayoutManager1
+        dataList1 = ArrayList()
+        adapter1 = PreviousPairAdapter(requireContext(), dataList1)
+        recyclerView1.adapter = adapter1
         dataList = ArrayList()
         adapter = PairListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
@@ -59,6 +70,15 @@ class PairsFragment : Fragment() {
                 val data = getDataFromDatabase()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList1.addAll(data)
+                adapter1.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }

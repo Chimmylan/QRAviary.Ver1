@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     app:cardElevation="1dp"
     app:cardCornerRadius="1dp"
-    app:cardUseCompatPadding="true"
-
-    android:backgroundTint="@color/new_appbar_color">
+    app:cardUseCompatPadding="true">
 
     <TextView
         android:id="@+id/geneTextView"
