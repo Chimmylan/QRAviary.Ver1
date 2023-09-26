@@ -130,6 +130,20 @@ class BasicFragment : Fragment() {
     private var lostFormattedDate: String? = null
     private var donatedFormattedDate: String? = null
 
+    private var mutation1IncubatingDays: String? = null
+    private var mutation1MaturingDays: String? = null
+    private var mutation2IncubatingDays: String? = null
+    private var mutation2MaturingDays: String? = null
+    private var mutation3IncubatingDays: String? = null
+    private var mutation3MaturingDays: String? = null
+    private var mutation4IncubatingDays: String? = null
+    private var mutation4MaturingDays: String? = null
+    private var mutation5IncubatingDays: String? = null
+    private var mutation5MaturingDays: String? = null
+    private var mutation6IncubatingDays: String? = null
+    private var mutation6MaturingDays: String? = null
+
+
     private var status: String? = null
     //endregion
     private lateinit var sharedPreferences: SharedPreferences
@@ -425,6 +439,11 @@ class BasicFragment : Fragment() {
 
                 val btnMutation1Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation1MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation1IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+
                 btnMutation1.text = btnMutation1Value
 
 
@@ -434,6 +453,10 @@ class BasicFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation2Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation2MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation2IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation2.text = btnMutation2Value
             }
         }
@@ -441,6 +464,10 @@ class BasicFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation3Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation3MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation3IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation3.text = btnMutation3Value
             }
         }
@@ -448,6 +475,10 @@ class BasicFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation4Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation4MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation4IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation4.text = btnMutation4Value
             }
         }
@@ -455,6 +486,10 @@ class BasicFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation5Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation5MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation5IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation5.text = btnMutation5Value
             }
         }
@@ -462,6 +497,10 @@ class BasicFragment : Fragment() {
             if (resultCode == RESULT_OK) {
                 val btnMutation6Value: String =
                     data?.getStringExtra("selectedMutationId").toString()
+                mutation6MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation6IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation6.text = btnMutation6Value
             }
         }
@@ -659,7 +698,36 @@ class BasicFragment : Fragment() {
         newBundle.putString("BirdMother",birdData.mother)
         newBundle.putString("BirdMotherKey", birdData.motherKey)
 
-
+        val mutation1 = mapOf(
+            "Mutation Name" to birdData.mutation1,
+            "Maturing Days" to mutation1MaturingDays,
+            "Incubating Days" to mutation1IncubatingDays
+        )
+        val mutation2 = mapOf(
+            "Mutation Name" to birdData.mutation2,
+            "Maturing Days" to mutation2MaturingDays,
+            "Incubating Days" to mutation2IncubatingDays
+        )
+        val mutation3 = mapOf(
+            "Mutation Name" to birdData.mutation3,
+            "Maturing Days" to mutation3MaturingDays,
+            "Incubating Days" to mutation3IncubatingDays
+        )
+        val mutation4 = mapOf(
+            "Mutation Name" to birdData.mutation4,
+            "Maturing Days" to mutation4MaturingDays,
+            "Incubating Days" to mutation4IncubatingDays
+        )
+        val mutation5 = mapOf(
+            "Mutation Name" to birdData.mutation5,
+            "Maturing Days" to mutation5MaturingDays,
+            "Incubating Days" to mutation5IncubatingDays
+        )
+        val mutation6 = mapOf(
+            "Mutation Name" to birdData.mutation6,
+            "Maturing Days" to mutation6MaturingDays,
+            "Incubating Days" to mutation6IncubatingDays
+        )
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
@@ -669,12 +737,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -692,12 +760,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -717,12 +785,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -747,12 +815,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -771,12 +839,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -796,12 +864,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -818,12 +886,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
@@ -840,12 +908,12 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
-                    "Mutation1" to birdData.mutation1,
-                    "Mutation2" to birdData.mutation2,
-                    "Mutation3" to birdData.mutation3,
-                    "Mutation4" to birdData.mutation4,
-                    "Mutation5" to birdData.mutation5,
-                    "Mutation6" to birdData.mutation6,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
                     "Date of Banding" to birdData.dateOfBanding,
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,

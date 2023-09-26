@@ -1,10 +1,8 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import EggData
-import PairData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -24,7 +22,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.mainactivities.LoginActivity
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -159,6 +156,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
+                dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
             } catch (e: java.lang.Exception) {
@@ -183,6 +181,12 @@ class PairsDetailedActivity : AppCompatActivity() {
             val key = clutchSnapshot.key.toString()
             var incubatingCount = 0
             var laidCount = 0
+            var hatchedCount = 0
+            var notFertilizedCount = 0
+            var brokenCount = 0
+            var abandonCount = 0
+            var deadInShellCount = 0
+            var deadBeforeMovingToNurseryCount = 0
             var eggsCount = 0
             if (data != null) {
                 for (eggSnapshot in clutchSnapshot.children) {
@@ -212,14 +216,81 @@ class PairsDetailedActivity : AppCompatActivity() {
                         data.eggLaidStartDate = eggDate
 
                     }
+                    if (eggStatus == "Hatched") {
+
+                        hatchedCount++
+                        Log.d(TAG, laidCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggHatched = hatchedCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Not Fertilized") {
+
+                        notFertilizedCount++
+                        Log.d(TAG, notFertilizedCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggNotFertilized = notFertilizedCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Broken") {
+
+                        brokenCount++
+                        Log.d(TAG, brokenCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggBroken = brokenCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Abandon") {
+
+                        abandonCount++
+                        Log.d(TAG, abandonCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggAbandon = abandonCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Dead in Shell") {
+
+                        deadInShellCount++
+                        Log.d(TAG, laidCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggDeadInShell = deadInShellCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Dead Before Moving To Nursery") {
+
+                        deadBeforeMovingToNurseryCount++
+                        Log.d(TAG, laidCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+
 
                 }
             }
             if (data != null) {
                 dataList.add(data)
             }
+
         }
-        dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
 
@@ -233,6 +304,8 @@ class PairsDetailedActivity : AppCompatActivity() {
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches")
+
+        checkBox.isChecked = true
 
         val newClutchRef = db.push()
 
@@ -254,11 +327,13 @@ class PairsDetailedActivity : AppCompatActivity() {
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             var eggValue: Int
             var defaultStatus = "Incubating"
+            var incubatingDays = "21"
+            var maturingDays = "50"
             var currentDate = LocalDate.now()
             var eggCount = 0
             var incubatingCount = 0
             var laidCount = 0
-            val formatter = DateTimeFormatter.ofPattern("MM/dd/yy")
+            val formatter = DateTimeFormatter.ofPattern("MMM/dd/yy", Locale.US)
             val formattedDate = currentDate.format(formatter)
             addButton.setOnClickListener {
                 val newEggs = EggData()
@@ -272,16 +347,16 @@ class PairsDetailedActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-
                     for (i in 0 until eggValue) {
                         val clutches = newClutchRef.push()
                         eggCount++
                         incubatingCount++
                         val data: Map<String, Any?> = hashMapOf(
                             "Status" to defaultStatus,
-                            "Date" to formattedDate
+                            "Date" to formattedDate,
+                            "Incubating Days" to incubatingDays,
+                            "Maturing Days" to maturingDays
                         )
-
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggIncubating = incubatingCount.toString()
@@ -291,7 +366,7 @@ class PairsDetailedActivity : AppCompatActivity() {
 
                     }
                     dataList.add(newEggs)
-                    adapter.notifyDataSetChanged()
+
 
                 } else if (!checkBox.isChecked) {
                     Toast.makeText(
@@ -307,9 +382,10 @@ class PairsDetailedActivity : AppCompatActivity() {
                         laidCount++
                         val data: Map<String, Any?> = hashMapOf(
                             "Status" to defaultStatus,
-                            "Date" to formattedDate
+                            "Date" to formattedDate,
+                            "Incubating Days" to incubatingDays,
+                            "Maturing Days" to maturingDays
                         )
-
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggLaid = laidCount.toString()
@@ -319,7 +395,17 @@ class PairsDetailedActivity : AppCompatActivity() {
 
                     }
                     dataList.add(newEggs)
-                    adapter.notifyDataSetChanged()
+
+                }
+                lifecycleScope.launch {
+                    try {
+                        val data = getDataFromDatabase()
+                        dataList.clear()
+                        dataList.addAll(data)
+                        adapter.notifyDataSetChanged()
+                    } catch (e: java.lang.Exception) {
+                        Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                    }
                 }
 
                 alertDialog.dismiss()
@@ -412,6 +498,22 @@ class PairsDetailedActivity : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).child("Separate Date").setValue(formattedDate)
 
-
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+            } catch (e: java.lang.Exception) {
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+    }
+
+
 }

@@ -10,6 +10,7 @@ interface ClickListener{
     fun onClick(nameValue: String, id: String)
     fun onClick(nameValue: String, id: String, mutation: String)
 
+
 }
 
 
@@ -69,6 +70,9 @@ data class CageData(
 data class MutationData(
     var mutations: String? = null,
     var mutationsId: String? = null,
+    var mutationsIncubateDays: String? =null,
+    var mutationsMaturingDays: String? =null
+
 )
 data class ExpensesData(
     var expenses: String? = null,
@@ -100,9 +104,17 @@ data class EggData(
     var eggDate: String? = null,
     var pairKey: String? = null,
     var eggKey: String? = null,
+    var individualEggKey: String? = null,
     var eggCount: String? = null,
     var eggIncubating: String? = null,
     var eggLaid: String? = null,
+    var eggHatched: String? = null,
+    var eggNotFertilized: String? = null,
+    var eggBroken: String? = null,
+    var eggAbandon: String? = null,
+    var eggDeadInShell: String? = null,
+    var eggDeadBeforeMovingToNursery: String? = null,
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
+    var eggMaturingStartDate: String? = null,
     )

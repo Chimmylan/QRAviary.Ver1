@@ -42,36 +42,34 @@ class GetStartActivity : AppCompatActivity() {
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Mutations")
         val mutations = arrayOf(
-            arrayOf("Opaline", 30, 14),
-            arrayOf("Parblue", 20, 23),
-            arrayOf("Lutino", 15, 12),
-            arrayOf("Albino", 32, 18),
-            arrayOf("Creamino", 35, 19),
-            arrayOf("Decino", 64, 10),
-            arrayOf("White Bull", 21, 29),
-            arrayOf("Yellow Bull", 43, 23),
-            arrayOf("Euwing", 9, 20),
-            arrayOf("Greywing", 15, 24),
-            arrayOf("Edge", 24, 29),
-            arrayOf("Pale Fallow", 19, 43),
-            arrayOf("Bronze Fallow", 29, 28),
-            arrayOf("Dun Fallow", 18, 30),
-            arrayOf("Dilute", 28, 22),
-            arrayOf("Aqua", 43, 21),
-            arrayOf("Aqua V2", 20, 32),
-            arrayOf("Yellow Face", 34, 38),
-            arrayOf("Red Factor", 14, 35),
+            arrayOf("Opaline", 50, 21),
+            arrayOf("Parblue", 50, 21),
+            arrayOf("Lutino", 50, 21),
+            arrayOf("Albino", 50, 21),
+            arrayOf("Creamino", 50, 21),
+            arrayOf("Decino", 50, 21),
+            arrayOf("White Bull", 50, 21),
+            arrayOf("Yellow Bull", 50, 21),
+            arrayOf("Euwing", 50, 21),
+            arrayOf("Greywing", 50, 21),
+            arrayOf("Edge", 50, 21),
+            arrayOf("Pale Fallow", 50, 21),
+            arrayOf("Bronze Fallow", 50, 21),
+            arrayOf("Dun Fallow", 50, 21),
+            arrayOf("Dilute", 50, 21),
+            arrayOf("Aqua", 50, 21),
+            arrayOf("Aqua V2", 50, 21),
+            arrayOf("Yellow Face", 50, 21),
+            arrayOf("Red Factor", 50, 21),
         )
 
         for (mutation in mutations) {
             // Create a unique key for each mutation (optional, you can use your own key structure)
             val key = db.push().key
 
-
             val mutationName = mutation[0]
             val mutationMaturingDay = mutation[1]
             val mutationIncubatingDay = mutation[2];
-
 
             // Store the mutation data with the generated key
             key?.let {

@@ -82,6 +82,34 @@
                 android:text="Number of Broken"
                 android:textSize="15sp"
                 android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvNotFertilized"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Not Fertilized"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvAbandon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Broken"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvDeadInShell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Dead In Shell"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvDeadBeforeRinging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Dead Before Ringing"
+                android:textSize="15sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

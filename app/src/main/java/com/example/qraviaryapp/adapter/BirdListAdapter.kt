@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +37,8 @@ class BirdListAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
+
+
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -129,6 +133,8 @@ class BirdListAdapter(
             holder.tvLegband.text = bird.legband
         }
     }
+
+
 }
 
 class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :

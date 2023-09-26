@@ -1,11 +1,9 @@
 package com.example.qraviaryapp.activities.dashboards
 
-import BirdData
 import ClickListener
 import MutationData
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -25,10 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.adapter.GenesAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -117,8 +113,12 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                     val key = itemSnapshot.key.toString()
                     data.mutationsId = key
                     val mutationName = itemSnapshot.child("Mutation").value
+                    val mutationIncubatingDays = itemSnapshot.child("Incubating Days").value
+                    val mutationMaturingDays = itemSnapshot.child("Maturing Days").value
                     val mutationNameValue = mutationName.toString()
                     data.mutations = mutationNameValue
+                    data.mutationsIncubateDays = mutationIncubatingDays.toString()
+                    data.mutationsMaturingDays = mutationMaturingDays.toString()
 
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
@@ -215,10 +215,7 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
     }
 
     override fun onClick(nameValue: String) {
-        val intent = Intent()
-        intent.putExtra("selectedMutationId", nameValue)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+
     }
 
     override fun onClick(nameValue: String, id: String) {
@@ -226,7 +223,14 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
     }
 
     override fun onClick(nameValue: String, id: String, mutation: String) {
-        TODO("Not yet implemented")
+        val intent = Intent()
+        intent.putExtra("selectedMutationId", nameValue)
+        intent.putExtra("selectedMutationMaturingDays", id)
+        intent.putExtra("selectedMutationIncubatingDays", mutation)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
+
+
 
 }

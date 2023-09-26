@@ -26,6 +26,18 @@ class EggClutchesListAdapter(
 
         holder.tvStatus.text = eggs.eggStatus
         holder.tvDate.text = eggs.eggDate
+        // Check the egg status and set the date TextView visibility accordingly
+        when (eggs.eggStatus) {
+            "Incubating", "Laid", "Hatched" -> {
+                holder.tvTime.text = eggs.eggDate
+                holder.tvTime.visibility = View.VISIBLE
+            }
+            else -> {
+                // Hide the date TextView for other statuses
+                holder.tvTime.visibility = View.GONE
+            }
+        }
+
 
     }
 
@@ -34,16 +46,31 @@ class EggClutchesListAdapter(
     }
 }
 
-class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggData>):
+class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggData>) :
     RecyclerView.ViewHolder(itemvView) {
     val tvStatus: TextView = itemvView.findViewById(R.id.tvStatus)
     val tvDate: TextView = itemvView.findViewById(R.id.tvDate)
+    val tvTime: TextView = itemvView.findViewById(R.id.tvTime)
 
     init {
+
+
         itemView.setOnClickListener {
+            val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
+            val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
+            val eggKey = dataList[adapterPosition].eggKey
+            val individualEggKey = dataList[adapterPosition].individualEggKey
+            val pairKey = dataList[adapterPosition].pairKey
+
+
             val i = Intent(itemvView.context, EditEggActivity::class.java)
+            i.putExtra("IncubatingStartDate", incubatingStartDate)
+            i.putExtra("MaturingStartDate", maturingStartDate)
+            i.putExtra("EggKey", eggKey)
+            i.putExtra("IndividualEggKey", individualEggKey)
+            i.putExtra("PairKey", pairKey)
             itemvView.context.startActivity(i)
-            
+
         }
     }
 }

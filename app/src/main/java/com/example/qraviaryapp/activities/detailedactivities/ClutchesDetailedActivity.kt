@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.detailedactivities
 import EggData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -34,6 +37,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var recyclerView: RecyclerView
 
+    private lateinit var fab: FloatingActionButton
+
     private lateinit var eggKey: String
     private lateinit var pairKey: String
 
@@ -46,6 +51,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
         supportActionoBar()
 
+        fab = findViewById(R.id.fab)
+
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         dataList = ArrayList()
@@ -57,17 +64,24 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
         val bundle = intent.extras
 
-        if (bundle != null){
+        fab.setOnClickListener {
+            val i = Intent(this, AddEggActivity::class.java)
+
+            startActivity(i)
+        }
+
+        if (bundle != null) {
             eggKey = bundle.getString("EggKey").toString()
             pairKey = bundle.getString("PairKey").toString()
         }
 
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
+                dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
-            }catch (e: java.lang.Exception){
+            } catch (e: java.lang.Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
@@ -75,7 +89,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO){
+    private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
         val currenUserId = mAuth.currentUser?.uid
         db = FirebaseDatabase.getInstance().reference.child("Users")
@@ -83,26 +97,33 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             .child(pairKey).child("Clutches").child(eggKey)
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
-        Log.d(TAG,"Egg key: $eggKey")
-        Log.d(TAG,"Pair key: $pairKey")
-        for (eggSnapshot in snapshot.children){
+
+        for (eggSnapshot in snapshot.children) {
             val data = eggSnapshot.getValue(EggData::class.java)
-            if (data != null){
+            if (data != null) {
+                val individualEggKey = eggSnapshot.key.toString()
 
                 val statusValue = eggSnapshot.child("Status").value.toString()
                 val dateValue = eggSnapshot.child("Date").value.toString()
+                val incubatingDateValue = eggSnapshot.child("Incubating Days").value.toString()
+                val maturingDateValue = eggSnapshot.child("Maturing Days").value.toString()
 
-                if (statusValue == "Incubating"){
+                if (statusValue == "Incubating") {
                     data.eggIncubating = statusValue
                     data.eggIncubationStartDate = dateValue
                 }
-                if (statusValue == "Laid"){
+                if (statusValue == "Laid") {
                     data.eggLaid = statusValue
                     data.eggLaidStartDate = dateValue
                 }
 
+                data.pairKey = pairKey
+                data.eggKey = eggKey
+                data.individualEggKey = individualEggKey
                 data.eggStatus = statusValue
                 data.eggDate = dateValue
+                data.eggIncubationStartDate = incubatingDateValue
+                data.eggMaturingStartDate = maturingDateValue
 
                 dataList.add(data)
             }
@@ -144,6 +165,20 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         } else {
             // Set the black back button for non-night mode
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+            } catch (e: java.lang.Exception) {
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
         }
     }
 

@@ -57,9 +57,14 @@ class GeneViewHolder(itemView: View, private val dataList: MutableList<MutationD
     init {
         itemView.setOnClickListener {
             val mutationName = dataList[adapterPosition].mutations
+            val mutationIncubatingDays = dataList[adapterPosition].mutationsIncubateDays
+            val mutationMaturingDays = dataList[adapterPosition].mutationsMaturingDays
 
             val intent = Intent()
             intent.putExtra("selectedMutationId", mutationName)
+            intent.putExtra("selectedMutationMaturingDays", mutationMaturingDays)
+            intent.putExtra("selectedMutationIncubatingDays", mutationIncubatingDays)
+
             activity.setResult(Activity.RESULT_OK, intent)
             activity.finish()
 
