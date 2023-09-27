@@ -643,6 +643,11 @@ class BasicFragment : Fragment() {
 
 
         val userId = mAuth.currentUser?.uid.toString()
+
+        val cageReference = dbase.child("Users").child("ID: $userId").child("Cages")
+            .child("Nuresry Cages").child(cageKeyValue).child("Birds").push()
+
+
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
         val SoldRef =  dbase.child("Users").child("ID: $userId").child("Sold Items")
@@ -752,7 +757,7 @@ class BasicFragment : Fragment() {
                     "Bird Key" to birdId
 
                 )
-
+                cageReference.updateChildren(data)
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
@@ -777,6 +782,7 @@ class BasicFragment : Fragment() {
 
 
                 )
+                cageReference.updateChildren(data)
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (soldLayout.visibility == View.VISIBLE) {

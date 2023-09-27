@@ -497,6 +497,7 @@ class BasicFlightFragment : Fragment() {
                 cageNameValue = data?.getStringExtra("CageName").toString()
                 cageKeyValue = data?.getStringExtra("CageKey").toString()
                 Log.d(TAG, "cage name : $cageNameValue")
+                Log.d(TAG, "cage Key : $cageKeyValue")
                 if (availableLayout.visibility == View.VISIBLE) {
                     etAvailCage.setText(cageNameValue)
                 } else if (forSaleLayout.visibility == View.VISIBLE) {
@@ -625,7 +626,12 @@ class BasicFlightFragment : Fragment() {
         //
 
 
+
         val userId = mAuth.currentUser?.uid.toString()
+
+        val cageReference = dbase.child("Users").child("ID: $userId").child("Cages")
+            .child("Flight Cages").child(cageKeyValue).child("Birds").push()
+
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Flight Birds")
 
@@ -739,6 +745,8 @@ class BasicFlightFragment : Fragment() {
                     "Flight Key" to FlightId,
                     "Bird Key" to birdId
                 )
+
+                cageReference.updateChildren(data)
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
@@ -764,6 +772,7 @@ class BasicFlightFragment : Fragment() {
 
 
                 )
+                cageReference.updateChildren(data)
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 

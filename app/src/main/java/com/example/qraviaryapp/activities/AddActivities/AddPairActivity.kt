@@ -55,6 +55,8 @@ class AddPairActivity : AppCompatActivity() {
     private var btnMaleValueKey: String? = null
     private var btnFemaleValueKey: String? = null
 
+    private var cageKeyValue: String? = null
+
     private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,6 +176,10 @@ class AddPairActivity : AppCompatActivity() {
         )
 
         val userId = mAuth.currentUser?.uid.toString()
+
+        val cageReference = db.child("Users").child("ID: $userId").child("Cages").child("Breeding Cages")
+            .child(cageKeyValue.toString()).child("Pair Birds").push()
+
         val userBird = db.child("Users").child("ID: $userId")
             .child("Pairs")
         val newMaleBirdPref =
@@ -228,8 +234,10 @@ class AddPairActivity : AppCompatActivity() {
                 "Identifier" to btnMaleIdValue,
                 "Bird Key" to btnMaleValueKey
             )
+
             newMaleBirdsPref.child("Status").setValue("Paired")
             newFemaleBirdsPref.child("Status").setValue("Paired")
+            cageReference.updateChildren(data)
             newFemaleBirdPref.updateChildren(femaleBirdPair)
             newMaleBirdPref.updateChildren(maleBirdPair)
             newPairPref.updateChildren(data)
@@ -299,6 +307,7 @@ class AddPairActivity : AppCompatActivity() {
         if (requestCode == 3) {
             if (resultCode == RESULT_OK) {
                 val etcageValue = data?.getStringExtra("CageName").toString()
+                cageKeyValue = data?.getStringExtra("CageKey").toString()
                 etCage.setText(etcageValue)
             }
 
