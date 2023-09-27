@@ -1,15 +1,19 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
-import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +29,10 @@ class CagesFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var btnBreeding: MaterialButton
+    private lateinit var btnNursery: MaterialButton
+    private lateinit var btnFlight: MaterialButton
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
@@ -41,8 +49,26 @@ class CagesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-       val rootView = inflater.inflate(R.layout.fragment_cages, container, false)
+       val view = inflater.inflate(R.layout.fragment_cages, container, false)
 
+        mAuth = FirebaseAuth.getInstance()
+        btnBreeding = view.findViewById(R.id.btnBreeding)
+        btnNursery = view.findViewById(R.id.btnNursery)
+        btnFlight = view.findViewById(R.id.btnFlight)
+
+        // Set up click listeners for buttons
+        btnBreeding.setOnClickListener {
+            val i = Intent(requireContext(), BreedingCagesListActivity::class.java)
+            startActivity(i)
+        }
+        btnNursery.setOnClickListener {
+            val i = Intent(requireContext(), NurseryCagesListActivity::class.java)
+            startActivity(i)
+        }
+        btnFlight.setOnClickListener {
+            val i = Intent(requireContext(), FlightCagesListActivity::class.java)
+            startActivity(i)
+        }
         /*snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -71,7 +97,7 @@ class CagesFragment : Fragment() {
 
 */
 
-        return rootView
+        return view
     }
     /*private fun showSnackbar(message: String) {
         snackbar.setText(message)
