@@ -419,7 +419,7 @@ class BasicFlightFragment : Fragment() {
     }
 
     private lateinit var cageNameValue: String
-
+    private lateinit var cageKeyValue: String
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -495,7 +495,7 @@ class BasicFlightFragment : Fragment() {
         if (requestCode == 7) {
             if (resultCode == RESULT_OK) {
                 cageNameValue = data?.getStringExtra("CageName").toString()
-
+                cageKeyValue = data?.getStringExtra("CageKey").toString()
                 Log.d(TAG, "cage name : $cageNameValue")
                 if (availableLayout.visibility == View.VISIBLE) {
                     etAvailCage.setText(cageNameValue)
