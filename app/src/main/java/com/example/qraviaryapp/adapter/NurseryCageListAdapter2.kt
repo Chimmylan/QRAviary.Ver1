@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
+import com.example.qraviaryapp.activities.CagesActivity.NurseryListActivity
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -74,7 +76,15 @@ class NurseryCageViewHolder2(itemView: View, private val dataList: MutableList<C
 
     init {
         itemView.setOnClickListener {
+            val cageName =
+                dataList[adapterPosition].cage // Retrieve the cage name from the data list
+            val cageKey =
+                dataList[adapterPosition].cageId
 
+            val intent = Intent(itemView.context, NurseryListActivity::class.java)
+            intent.putExtra("CageName", cageName)
+            intent.putExtra("CageKey", cageKey)
+            itemView.context.startActivity(intent)
 
         }
 
