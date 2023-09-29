@@ -1,7 +1,9 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
 import CageData
+import ClickListener
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.CageListActivity2
+import com.example.qraviaryapp.activities.dashboards.BreedingCagesList2Activity
+import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -18,10 +22,10 @@ class CageListAdapter2(
     private var dataList: MutableList<CageData>,
 ) : RecyclerView.Adapter<CageViewHolder2>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CageViewHolder2 {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist_category, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist, parent, false)
 
 
-        return CageViewHolder2(view, dataList, context as CageListActivity2)
+        return CageViewHolder2(view, dataList)
     }
 
     override fun getItemCount(): Int {
@@ -42,7 +46,7 @@ class CageListAdapter2(
 
 
 
-        /*holder.cageDel.setOnClickListener{
+        holder.cageDel.setOnClickListener{
             val alertDialog = AlertDialog.Builder(holder.itemView.context)
                 .setTitle("Delete Cage")
                 .setMessage("Are you sure you want to delete this Cage?")
@@ -55,21 +59,26 @@ class CageListAdapter2(
                 .create()
             alertDialog.show()
             true
-        }*/
+        }
 
     }
 
 
 }
 
-class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData>, private val activity: CageListActivity2) :
+class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData>) :
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
-    /*val cageDel: TextView = itemView.findViewById(R.id.cageDelete)*/
+    val cageDel: TextView = itemView.findViewById(R.id.cageDelete)
 
 
+    init {
+        itemView.setOnClickListener {
 
+        }
+
+    }
 
 
 }

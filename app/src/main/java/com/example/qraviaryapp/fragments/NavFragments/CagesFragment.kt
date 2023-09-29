@@ -8,8 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.dashboards.BreedingCagesList2Activity
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.FlightCagesList2Activity
 import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.NurseryCagesList2Activity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -58,15 +61,15 @@ class CagesFragment : Fragment() {
 
         // Set up click listeners for buttons
         btnBreeding.setOnClickListener {
-            val i = Intent(requireContext(), BreedingCagesListActivity::class.java)
+            val i = Intent(requireContext(), BreedingCagesList2Activity::class.java)
             startActivity(i)
         }
         btnNursery.setOnClickListener {
-            val i = Intent(requireContext(), NurseryCagesListActivity::class.java)
+            val i = Intent(requireContext(), NurseryCagesList2Activity::class.java)
             startActivity(i)
         }
         btnFlight.setOnClickListener {
-            val i = Intent(requireContext(), FlightCagesListActivity::class.java)
+            val i = Intent(requireContext(), FlightCagesList2Activity::class.java)
             startActivity(i)
         }
         /*snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
