@@ -144,6 +144,7 @@ class BasicFlightFragment : Fragment() {
 
 
     private var status: String? = null
+    private lateinit var cageReference: DatabaseReference
     //endregion
 
 
@@ -421,7 +422,7 @@ class BasicFlightFragment : Fragment() {
     }
 
     private lateinit var cageNameValue: String
-    private lateinit var cageKeyValue: String
+    private var cageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -647,8 +648,12 @@ class BasicFlightFragment : Fragment() {
 
         val userId = mAuth.currentUser?.uid.toString()
 
-        val cageReference = dbase.child("Users").child("ID: $userId").child("Cages")
-            .child("Flight Cages").child(cageKeyValue).child("Birds").push()
+        if (!cageKeyValue.isNullOrEmpty()) {
+            cageReference = cageKeyValue?.let {
+                dbase.child("Users").child("ID: $userId").child("Cages")
+                    .child("Flight Cages").child(it).child("Birds").push()
+            }!!
+        }
 
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Flight Birds")
@@ -764,7 +769,9 @@ class BasicFlightFragment : Fragment() {
                     "Bird Key" to birdId
                 )
 
-                cageReference.updateChildren(data)
+                if (!cageKeyValue.isNullOrEmpty()){
+                    cageReference.updateChildren(data)
+                }
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
@@ -790,7 +797,9 @@ class BasicFlightFragment : Fragment() {
 
 
                 )
-                cageReference.updateChildren(data)
+                if (!cageKeyValue.isNullOrEmpty()){
+                    cageReference.updateChildren(data)
+                }
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 

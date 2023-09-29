@@ -147,6 +147,7 @@ class BasicFragment : Fragment() {
 
 
     private var status: String? = null
+    private lateinit var cageReference: DatabaseReference
     //endregion
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -433,7 +434,7 @@ class BasicFragment : Fragment() {
     }
 
     private lateinit var cageNameValue: String
-    private lateinit var cageKeyValue: String
+    private var cageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -659,9 +660,12 @@ class BasicFragment : Fragment() {
 
         val userId = mAuth.currentUser?.uid.toString()
 
-        val cageReference = dbase.child("Users").child("ID: $userId").child("Cages")
-            .child("Nuresry Cages").child(cageKeyValue).child("Birds").push()
-
+        if (!cageKeyValue.isNullOrEmpty()) {
+            cageReference = cageKeyValue?.let {
+                dbase.child("Users").child("ID: $userId").child("Cages")
+                    .child("Nursery Cages").child(it).child("Birds").push()
+            }!!
+        }
 
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
@@ -772,7 +776,9 @@ class BasicFragment : Fragment() {
                     "Bird Key" to birdId
 
                 )
-                cageReference.updateChildren(data)
+                if (!cageKeyValue.isNullOrEmpty()){
+                    cageReference.updateChildren(data)
+                }
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
@@ -797,7 +803,9 @@ class BasicFragment : Fragment() {
 
 
                 )
-                cageReference.updateChildren(data)
+                if (!cageKeyValue.isNullOrEmpty()){
+                    cageReference.updateChildren(data)
+                }
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (soldLayout.visibility == View.VISIBLE) {
