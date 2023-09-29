@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListAdapter
 import com.example.qraviaryapp.adapter.PairListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -33,7 +34,7 @@ class BreedingListActivity : AppCompatActivity() {
     private lateinit var dbase: DatabaseReference
     private lateinit var dataList: ArrayList<PairData>
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: PairListAdapter
+    private lateinit var adapter: BreedingListAdapter
     private lateinit var fab: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,7 @@ class BreedingListActivity : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = PairListAdapter(this, dataList)
+        adapter = BreedingListAdapter(this, dataList)
         recyclerView.adapter = adapter
 
 
