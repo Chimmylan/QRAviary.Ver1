@@ -28,7 +28,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -51,7 +53,7 @@ class BasicFragment : Fragment() {
 
     /*DatePicker*/
     private lateinit var datePickerDialogBirth: DatePickerDialog
-    private lateinit var datePickerDialogBanding: DatePickerDialog
+  /*  private lateinit var datePickerDialogBanding: DatePickerDialog*/
     private lateinit var datePickerDialogSoldDate: DatePickerDialog
     private lateinit var datePickerDialogDeathDate: DatePickerDialog
     private lateinit var datePickerDialogExDate: DatePickerDialog
@@ -159,7 +161,7 @@ class BasicFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_basic, container, false)
 
 
-        datebandButton = view.findViewById(R.id.btndateband)
+       /* datebandButton = view.findViewById(R.id.btndateband)*/
         datebirthButton = view.findViewById(R.id.btndatebirth)
         btnSoldSaleDate = view.findViewById(R.id.soldSaleDate)
         btnDonatedDate = view.findViewById(R.id.btnDonatedDate)
@@ -175,7 +177,7 @@ class BasicFragment : Fragment() {
 //        datebirthButton.text = getTodaysDate()
 
         showDatePickerDialog(requireContext(), datebirthButton, datePickerDialogBirth)
-        showDatePickerDialog(requireContext(), datebandButton, datePickerDialogBanding)
+        /*showDatePickerDialog(requireContext(), datebandButton, datePickerDialogBanding)*/
         showDatePickerDialog(requireContext(), btnDeathDate, datePickerDialogDeathDate)
         showDatePickerDialog(requireContext(), btnSoldSaleDate, datePickerDialogSoldDate)
         showDatePickerDialog(requireContext(), btnExDate, datePickerDialogExDate)
@@ -521,7 +523,7 @@ class BasicFragment : Fragment() {
 
     fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle ) -> Unit) {
 
-        val dataDateOfBanding = bandFormattedDate
+        /*val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
         /*==++==*/
         val dataSelectedGen: RadioButton
@@ -575,7 +577,7 @@ class BasicFragment : Fragment() {
         birdData = BirdData(
             legband = dataLegband,
             identifier = dataIdentifier,
-            dateOfBanding = dataDateOfBanding,
+           /* dateOfBanding = dataDateOfBanding,*/
             dateOfBirth = dataDateOfBirth,
             mutation1 = selectedMutations[0],
             mutation2 = selectedMutations[1],
@@ -606,7 +608,7 @@ class BasicFragment : Fragment() {
         var validInputs = false
         var validIdentifier = false
         var validMutation = false
-        var validDateOfBanding = false
+        /*var validDateOfBanding = false*/
         var validDateOfBirth = false
 
         //Validation
@@ -622,21 +624,34 @@ class BasicFragment : Fragment() {
             validMutation = true
         }
 
-        if (TextUtils.isEmpty(dataDateOfBanding)) {
-            datebandButton.error = "Date of banding must not be empty..."
-        } else {
-            validDateOfBanding = true
-        }
+//        if (TextUtils.isEmpty(dataDateOfBanding)) {
+//            datebandButton.error = "Date of banding must not be empty..."
+//        } else {
+//            validDateOfBanding = true
+//        }
 
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
+            Toast.makeText(requireContext(), "Date of birth must not be empty...", Toast.LENGTH_SHORT).show()
         } else {
-            validDateOfBirth = true
+            val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+            val birthDate = dateFormat.parse(dataDateOfBirth)
+            val currentDate = Calendar.getInstance().time
+
+            val ageInMillis = currentDate.time - birthDate.time
+            val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+
+            if (ageInDays > 50) {
+                // Age is less than 50 days, show an error message
+                datebirthButton.error = "Age must be less than 50 days"
+                Toast.makeText(requireContext(), "Age must be less than 50 days", Toast.LENGTH_SHORT).show()
+            } else {
+                validDateOfBirth = true
+            }
         }
 
 
-
-        if (validDateOfBirth && validMutation && validIdentifier && validDateOfBanding) {
+        if (validDateOfBirth && validMutation && validIdentifier) {
             validInputs = true
         }
         //
@@ -749,7 +764,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                 /*   "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
@@ -772,7 +787,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                  /*  "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Cage" to birdData.forSaleCage,
@@ -798,7 +813,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                   /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Sold Date" to birdData.soldDate,
@@ -828,7 +843,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                   /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Death Date" to birdData.deathDate,
@@ -852,7 +867,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                  /*  "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Exchange Date" to birdData.exDate,
@@ -877,7 +892,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                 /*   "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Lost Date" to birdData.lostDate,
@@ -899,7 +914,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                   /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Donated Date" to birdData.donatedDate,
@@ -921,7 +936,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                    "Date of Banding" to birdData.dateOfBanding,
+                   /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Comments" to birdData.otherComments,
@@ -1017,11 +1032,11 @@ class BasicFragment : Fragment() {
                 datebirthButton.text = birthFormattedDate
             }
 
-        val dateSetListenerBanding =
+        /*val dateSetListenerBanding =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                 bandFormattedDate = makeDateString(day, month + 1, year)
                 datebandButton.text = bandFormattedDate
-            }
+            }*/
         val dateSetListenerSoldDate =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                 soldFormattedDate = makeDateString(day, month + 1, year)
@@ -1058,8 +1073,8 @@ class BasicFragment : Fragment() {
 
         datePickerDialogBirth =
             DatePickerDialog(requireContext(), style, dateSetListenerBirth, year, month, day)
-        datePickerDialogBanding =
-            DatePickerDialog(requireContext(), style, dateSetListenerBanding, year, month, day)
+       /* datePickerDialogBanding =
+            DatePickerDialog(requireContext(), style, dateSetListenerBanding, year, month, day)*/
         datePickerDialogSoldDate =
             DatePickerDialog(requireContext(), style, dateSetListenerSoldDate, year, month, day)
         datePickerDialogDeathDate =
