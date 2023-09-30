@@ -14,6 +14,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -42,6 +43,8 @@ class BreedingCagesList2Activity : AppCompatActivity(){
     private lateinit var dataList: ArrayList<CageData>
     private lateinit var adapter: CageListAdapter2
     private lateinit var fabBtn: FloatingActionButton
+    private lateinit var totalBirds: TextView
+    private var cageCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -70,7 +73,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
             // Set the black back button for non-night mode
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
         }
-
+        totalBirds = findViewById(R.id.tvBirdCount)
         recyclerView = findViewById(R.id.cageRecyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -196,6 +199,8 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
 
+                cageCount++
+                data.cageCount = cageCount.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {
@@ -206,6 +211,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
             }
 
         }
+        totalBirds.text = "Total Cages: $cageCount"
         dataList.sortBy { it.cage }
         dataList
     }

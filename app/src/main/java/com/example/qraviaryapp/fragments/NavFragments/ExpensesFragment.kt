@@ -9,18 +9,12 @@ import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,6 +43,8 @@ class ExpensesFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var totalBirds: TextView
+    private var expensesCount = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -85,7 +81,7 @@ class ExpensesFragment : Fragment() {
             val i = Intent(requireContext(), AddExpensesActivity::class.java)
             startActivity(i)
         }
-
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -141,6 +137,8 @@ class ExpensesFragment : Fragment() {
                     val priceNameValue = PriceName.toString()
                     val dateValue = date.toString()
                     val commentValue = comment.toString()
+                    expensesCount++
+                    data.expensesCount = expensesCount.toString()
                     data.expenses = mutationNameValue
                     data.price = priceNameValue
                     data.expensesComment = commentValue
@@ -154,6 +152,7 @@ class ExpensesFragment : Fragment() {
                     dataList.add(data)
                 }
             }
+            totalBirds.text = "Total Expenses: $expensesCount"
             dataList.sortBy { it.expenses }
             dataList
         }

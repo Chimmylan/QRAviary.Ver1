@@ -157,6 +157,7 @@ class IncubatingFragment : Fragment() {
                 }
             }
         }
+
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
 

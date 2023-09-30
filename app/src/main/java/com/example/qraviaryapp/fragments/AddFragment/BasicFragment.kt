@@ -629,7 +629,7 @@ class BasicFragment : Fragment() {
 //        } else {
 //            validDateOfBanding = true
 //        }
-
+        var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
             Toast.makeText(requireContext(), "Date of birth must not be empty...", Toast.LENGTH_SHORT).show()
@@ -639,7 +639,8 @@ class BasicFragment : Fragment() {
             val currentDate = Calendar.getInstance().time
 
             val ageInMillis = currentDate.time - birthDate.time
-            val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+            ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
 
             if (ageInDays > 50) {
                 // Age is less than 50 days, show an error message
@@ -774,8 +775,8 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
                 )
                 if (!cageKeyValue.isNullOrEmpty()){
                     cageReference.updateChildren(data)
@@ -800,8 +801,8 @@ class BasicFragment : Fragment() {
                     "Cage" to birdData.forSaleCage,
                     "Requested Price" to birdData.reqPrice,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
 
                 )
                 if (!cageKeyValue.isNullOrEmpty()){
@@ -830,8 +831,8 @@ class BasicFragment : Fragment() {
                     "Sale Contact" to birdData.saleContact,
                     "Nursery Key" to flightKey,
                     "Sold Id" to soldId,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
 
                 )
                 val solddata: Map<String, Any?> = hashMapOf(
@@ -858,8 +859,8 @@ class BasicFragment : Fragment() {
                     "Death Date" to birdData.deathDate,
                     "Death Reason" to birdData.deathReason,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
 
 
                 )
@@ -883,8 +884,8 @@ class BasicFragment : Fragment() {
                     "Exchange Reason" to birdData.exReason,
                     "Exchange Contact" to birdData.exContact,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
 
 
                 )
@@ -907,8 +908,8 @@ class BasicFragment : Fragment() {
                     "Lost Date" to birdData.lostDate,
                     "Lost Details" to birdData.lostDetails,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
                 )
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
@@ -929,8 +930,8 @@ class BasicFragment : Fragment() {
                     "Donated Date" to birdData.donatedDate,
                     "Donated Contact" to birdData.donatedContact,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
                 )
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
@@ -950,8 +951,8 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Comments" to birdData.otherComments,
                     "Nursery Key" to flightKey,
-                    "Bird Key" to birdId
-
+                    "Bird Key" to birdId,
+                    "Age" to ageInDays
                 )
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)

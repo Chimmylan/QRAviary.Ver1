@@ -14,6 +14,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -43,6 +44,8 @@ class NurseryCagesList2Activity : AppCompatActivity(){
     private lateinit var dataList: ArrayList<CageData>
     private lateinit var adapter: NurseryCageListAdapter2
     private lateinit var fabBtn: FloatingActionButton
+    private lateinit var totalBirds: TextView
+    private var cageCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -58,6 +61,7 @@ class NurseryCagesList2Activity : AppCompatActivity(){
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Nursery Cages</font>",
@@ -196,7 +200,8 @@ class NurseryCagesList2Activity : AppCompatActivity(){
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
-
+                cageCount++
+                data.cageCount = cageCount.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {
@@ -207,6 +212,7 @@ class NurseryCagesList2Activity : AppCompatActivity(){
             }
 
         }
+        totalBirds.text = "Total Cages: $cageCount"
         dataList.sortBy { it.cage }
         dataList
     }
