@@ -5,6 +5,7 @@ import BirdData
 import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
 import android.media.Image
 import android.os.Bundle
 import android.util.Log
@@ -99,34 +100,43 @@ class NurseryListAdapter(
 
         if (ageInDays >= maturingDays) {
             holder.layoutmovebtn.visibility = View.VISIBLE
-           /* holder.tvprogressbar.visibility = View.GONE
-            holder.tvpercentage.visibility = View.GONE*/
             var progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
 
-            if (progressPercentage > 100) {
+            if (progressPercentage >= 100) {
                 progressPercentage = 100
+
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+                holder.teenImg.setImageResource(R.drawable.chickcolor)
+                holder.adultImg.setImageResource(R.drawable.adultcolor)
             }
             holder.tvpercentage.text = "$progressPercentage%"
-            // Start the ProgressBar animation
+
+
             val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
-            animator.duration = 1000 // You can adjust the duration as needed
+            animator.duration = 1000
             animator.start()
+
         } else {
             holder.layoutmovebtn.visibility = View.GONE
             holder.tvprogressbar.visibility = View.VISIBLE
 
             val progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
 
-// Limit progressPercentage to 100 if it's greater than 100
 
             holder.tvpercentage.text = "$progressPercentage%"
 
 
-            // Start the ProgressBar animation
             val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
-            animator.duration = 1000 // You can adjust the duration as needed
+            animator.duration = 1000
             animator.start()
+            if (progressPercentage in 1..49) {
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+            } else if (progressPercentage in 50..99) {
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+                holder.teenImg.setImageResource(R.drawable.chickcolor)
+            }
         }
+
 
 
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
@@ -185,6 +195,9 @@ class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
     var tvprogressbar: ProgressBar = itemView.findViewById(R.id.progressBar)
     var tvpercentage: TextView = itemView.findViewById(R.id.tvpercentage)
+    var chickImg: ImageView = itemView.findViewById(R.id.chickImageView)
+    var teenImg: ImageView = itemView.findViewById(R.id.teenImageView)
+    var adultImg: ImageView = itemView.findViewById(R.id.adultImageView)
     init {
 
         itemView.setOnClickListener {
