@@ -570,7 +570,6 @@ class BasicFragment : Fragment() {
             }
         }
 
-
         val selectedOption: Int = rgGender.checkedRadioButtonId
 
         dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
@@ -651,7 +650,6 @@ class BasicFragment : Fragment() {
             }
         }
 
-
         if (validDateOfBirth && validMutation && validIdentifier) {
             validInputs = true
         }
@@ -659,12 +657,13 @@ class BasicFragment : Fragment() {
 
 
         val userId = mAuth.currentUser?.uid.toString()
-
+        var cageBirdKey = ""
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
                     .child("Nursery Cages").child(it).child("Birds").push()
             }!!
+            cageBirdKey = cageReference.key.toString()
         }
 
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
@@ -722,6 +721,8 @@ class BasicFragment : Fragment() {
         newBundle.putString("BirdFatherKey", birdData.fatherKey)
         newBundle.putString("BirdMother",birdData.mother)
         newBundle.putString("BirdMotherKey", birdData.motherKey)
+        newBundle.putString("CageKeyValue", cageKeyValue)
+        newBundle.putString("CageBirdKeyValue", cageBirdKey)
 
         val mutation1 = mapOf(
             "Mutation Name" to birdData.mutation1,

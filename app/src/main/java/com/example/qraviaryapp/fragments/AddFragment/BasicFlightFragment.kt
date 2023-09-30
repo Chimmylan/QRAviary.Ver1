@@ -647,12 +647,14 @@ class BasicFlightFragment : Fragment() {
 
 
         val userId = mAuth.currentUser?.uid.toString()
-
+        var cageBirdKey = ""
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
                     .child("Flight Cages").child(it).child("Birds").push()
             }!!
+
+            cageBirdKey = cageReference.key.toString()
         }
 
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
@@ -713,6 +715,8 @@ class BasicFlightFragment : Fragment() {
         newBundle.putString("BirdFatherKey", birdData.fatherKey)
         newBundle.putString("BirdMother", birdData.mother)
         newBundle.putString("BirdMotherKey", birdData.motherKey)
+        newBundle.putString("CageKeyValue", cageKeyValue)
+        newBundle.putString("CageBirdKeyValue", cageBirdKey)
 
         Log.d(TAG, userId)
 

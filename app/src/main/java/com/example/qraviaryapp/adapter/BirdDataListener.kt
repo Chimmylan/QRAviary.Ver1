@@ -5,14 +5,13 @@ interface BirdDataListener {
     fun onBirdDateSaved(birdData: BirdData)
 }
 
-interface ClickListener{
+interface ClickListener {
     fun onClick(nameValue: String)
     fun onClick(nameValue: String, id: String)
     fun onClick(nameValue: String, id: String, mutation: String)
 
 
 }
-
 
 
 data class BirdData(
@@ -59,7 +58,8 @@ data class BirdData(
     var buyPrice: String? = null,
     var boughtDate: String? = null,
     var otOtherContact: String? = null,
-    var birdCount: String? = null
+    var birdCount: String? = null,
+    var cageKey: String? = null
 )
 
 data class CageData(
@@ -70,10 +70,11 @@ data class CageData(
 data class MutationData(
     var mutations: String? = null,
     var mutationsId: String? = null,
-    var mutationsIncubateDays: String? =null,
-    var mutationsMaturingDays: String? =null
+    var mutationsIncubateDays: String? = null,
+    var mutationsMaturingDays: String? = null
 
 )
+
 data class ExpensesData(
     var expenses: String? = null,
     var price: String? = null,
@@ -81,6 +82,7 @@ data class ExpensesData(
     var expensesComment: String? = null,
     var expensesDate: String? = null
 )
+
 data class PairData(
     var pairKey: String? = null,
     var pairId: String? = null,
@@ -117,4 +119,4 @@ data class EggData(
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
     var eggMaturingStartDate: String? = null,
-    )
+)

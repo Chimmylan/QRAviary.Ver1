@@ -199,6 +199,8 @@ class FlightListActivity : AppCompatActivity() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
                 birdCount++
+
+                data.cageKey = CageKey
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey

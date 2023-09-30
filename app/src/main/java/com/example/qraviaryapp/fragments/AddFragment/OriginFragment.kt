@@ -67,6 +67,7 @@ class OriginFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     var birdData = BirdData()
+    private lateinit var cageReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -200,6 +201,8 @@ class OriginFragment : Fragment() {
         val birdMutation6 = newBundle.getString("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
+        val cageKeyValue = newBundle.getString("CageKeyValue")
+        val cageBirdKey = newBundle.getString("CageBirdKeyValue")
 
         dataSelectedProvenence = view?.findViewById(dataProvenence)
             ?: throw IllegalStateException("RadioButton not found")
@@ -215,6 +218,15 @@ class OriginFragment : Fragment() {
         )
 
         val userId = mAuth.currentUser?.uid.toString()
+
+
+
+        if (!cageKeyValue.isNullOrEmpty()) {
+            cageReference = cageKeyValue?.let {
+                dbase.child("Users").child("ID: $userId").child("Cages")
+                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+            }!!
+        }
 
         val birdRef = dbase.child("Users").child("ID: $userId").child("Birds").child(birdId)
         val relationshipRef =
@@ -279,9 +291,12 @@ class OriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey,
                     "Bird Key" to birdId
                 )
+
                 purchasesRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
+
+
             } else if (btnFather.text != "None" && btnMother.text == "None") {
                 // Update descendantsFatherRef
                 val descendantdata: Map<String, Any?> = hashMapOf(
@@ -325,6 +340,7 @@ class OriginFragment : Fragment() {
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey
                 )
+
                 purchasesRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
@@ -432,6 +448,11 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey
             )
+
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(parentdata)
+            }
+
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
             val data: Map<String, Any?> = hashMapOf(
@@ -589,6 +610,11 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey
             )
+
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(parentdata)
+            }
+
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -746,6 +772,9 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey
             )
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(data)
+            }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
 
@@ -815,9 +844,19 @@ class OriginFragment : Fragment() {
         val birdMutation6 = newBundle.getString("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
+        val cageKeyValue = newBundle.getString("CageKeyValue")
+        val cageBirdKey = newBundle.getString("CageBirdKeyValue")
 
         Log.d(TAG, birdIdentifier.toString())
         val userId = mAuth.currentUser?.uid.toString()
+
+        if (!cageKeyValue.isNullOrEmpty()) {
+            cageReference = cageKeyValue?.let {
+                dbase.child("Users").child("ID: $userId").child("Cages")
+                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+            }!!
+        }
+
 
         val birdRef = dbase.child("Users").child("ID: $userId").child("Birds").child(birdId)
         val relationshipRef =
@@ -932,6 +971,7 @@ class OriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey,
                     "Bird Key" to birdId
                 )
+
                 purchasesRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
@@ -1044,6 +1084,9 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey,
             )
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1213,6 +1256,9 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey
             )
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1231,6 +1277,9 @@ class OriginFragment : Fragment() {
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey
             )
+            if (!cageKeyValue.isNullOrEmpty()){
+                cageReference.updateChildren(data)
+            }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
 
