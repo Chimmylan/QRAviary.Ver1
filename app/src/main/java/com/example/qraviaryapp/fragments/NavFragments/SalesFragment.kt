@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -43,12 +44,15 @@ class SalesFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var totalBirds: TextView
+    private var birdCount = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sales, container, false)
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         flightKey = arguments?.getString("FlightKey")
         mAuth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -208,6 +212,8 @@ class SalesFragment : Fragment() {
                 val boughtBreeder = breederContactValue.toString() ?: ""
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
+                birdCount++
+                data.birdCount = birdCount.toString()
                 data.img = mainPic
                 data.birdKey = key
                 data.flightKey = flightKey
@@ -254,7 +260,7 @@ class SalesFragment : Fragment() {
             }
 
         }
-
+        totalBirds.text = "Total Sales: $birdCount"
         dataList
     }
 

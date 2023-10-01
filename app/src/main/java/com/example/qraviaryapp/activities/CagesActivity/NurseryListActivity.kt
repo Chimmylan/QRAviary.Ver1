@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import BirdData
 import android.content.ContentValues
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
@@ -23,9 +25,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+
 
 class NurseryListActivity : AppCompatActivity() {
     private lateinit var CageKey: String
@@ -55,12 +59,17 @@ class NurseryListActivity : AppCompatActivity() {
         )
         totalBirds = findViewById(R.id.tvBirdCount)
 
+        val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+
+
 
         recyclerView = findViewById(R.id.recyclerView_bird_list)
         val gridLayoutManager = GridLayoutManager(this,1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = NurseryListAdapter(this,dataList)
+        adapter = NurseryListAdapter(this,dataList, maturingDays)
         recyclerView.adapter = adapter
 
         CageName = intent?.getStringExtra("CageName").toString()

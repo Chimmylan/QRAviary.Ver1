@@ -72,6 +72,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     // Handle notification switch OFF
                 }
             }
+            "incubating" -> {
+                val incubatingValue = sharedPreferences?.getString(key, "")
+                // Do something with the incubatingValue
+            }
+            "maturing" -> {
+                val maturingValue = sharedPreferences?.getString(key, "")
+                val editor: SharedPreferences.Editor = sharedPreferencess.edit()
+                editor.putString("maturingValue", maturingValue)
+                editor.apply()
+            }
+
             "auto_increment_switch" -> {
                 val isChecked = sharedPreferences?.getBoolean(key, true)
 

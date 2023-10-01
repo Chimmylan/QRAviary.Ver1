@@ -24,6 +24,9 @@
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.CagesActivity.MoveNurseryActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.CagesActivity.BreedingListActivity"
             android:exported="false" />
         <activity

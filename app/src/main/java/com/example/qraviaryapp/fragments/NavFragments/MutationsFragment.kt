@@ -48,6 +48,8 @@ class MutationsFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var totalBirds: TextView
+    private var mutationCount = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +60,7 @@ class MutationsFragment : Fragment() {
             requireActivity().window.statusBarColor =
                 ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
-
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -134,7 +136,8 @@ class MutationsFragment : Fragment() {
                     val mutationName = itemSnapshot.child("Mutation").value
                     val mutationNameValue = mutationName.toString()
                     data.mutations = mutationNameValue
-
+                    mutationCount++
+                    data.mutationCount = mutationCount.toString()
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
                     } else {
@@ -144,6 +147,7 @@ class MutationsFragment : Fragment() {
                     dataList.add(data)
                 }
             }
+            totalBirds.text = "Total Mutations: $mutationCount"
             dataList.sortBy { it.mutations }
             dataList
         }

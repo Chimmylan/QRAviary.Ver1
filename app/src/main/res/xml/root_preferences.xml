@@ -20,10 +20,18 @@
             app:summary="Tap to Check if On or Off" />
 
         <EditTextPreference
-            android:dialogTitle="Enter Text"
-            android:inputType="text"
-            android:title="Tao kaba?"
-            app:key="text"
+            android:dialogTitle="Enter Days"
+            android:inputType="number"
+            android:title="Incubating Days"
+            app:key="incubating"
+            app:summary="Click to show a text entry dialog"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:dialogTitle="Enter Days"
+            android:inputType="number"
+            android:title="Maturing Days"
+            app:key="maturing"
             app:summary="Click to show a text entry dialog"
             app:useSimpleSummaryProvider="true" />
 

@@ -59,17 +59,20 @@ data class BirdData(
     var boughtDate: String? = null,
     var otOtherContact: String? = null,
     var birdCount: String? = null,
-    var cageKey: String? = null
+    var cageKey: String? = null,
+    var ageindays: String? = null
 )
 
 data class CageData(
     var cage: String? = null,
     var cageId: String? = null,
+    var cageCount: String? = null,
 )
 
 data class MutationData(
     var mutations: String? = null,
     var mutationsId: String? = null,
+    var mutationCount: String? = null,
     var mutationsIncubateDays: String? = null,
     var mutationsMaturingDays: String? = null
 
@@ -79,6 +82,7 @@ data class ExpensesData(
     var expenses: String? = null,
     var price: String? = null,
     var expensesId: String? = null,
+    var expensesCount: String? = null,
     var expensesComment: String? = null,
     var expensesDate: String? = null
 )

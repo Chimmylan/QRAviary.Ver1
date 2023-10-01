@@ -2,25 +2,38 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 
 import BirdData
+import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
 import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class NurseryListAdapter(
     private val context: android.content.Context,
-    private var dataList: MutableList<BirdData>
+    private var dataList: MutableList<BirdData>,
+    private val maturingDays: Int // Add this parameter
 ) :
     RecyclerView.Adapter<MyViewHolder2>() {
     companion object {
@@ -28,7 +41,7 @@ class NurseryListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder2 {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_nurserylist, parent, false)
 
         return MyViewHolder2(view, dataList)
     }
@@ -76,6 +89,56 @@ class NurseryListAdapter(
             bird.mutation6
         )
 
+        val datebirth = bird.dateOfBirth
+        Log.d(TAG,"$maturingDays")
+        val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+        val birthDate = dateFormat.parse(datebirth)
+        val currentDate = Calendar.getInstance().time
+
+        val ageInMillis = currentDate.time - birthDate.time
+        val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+
+        if (ageInDays >= maturingDays) {
+            holder.layoutmovebtn.visibility = View.VISIBLE
+            var progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
+
+            if (progressPercentage >= 100) {
+                progressPercentage = 100
+
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+                holder.teenImg.setImageResource(R.drawable.chickcolor)
+                holder.adultImg.setImageResource(R.drawable.adultcolor)
+            }
+            holder.tvpercentage.text = "$progressPercentage%"
+
+
+            val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
+            animator.duration = 1000
+            animator.start()
+
+        } else {
+            holder.layoutmovebtn.visibility = View.GONE
+            holder.tvprogressbar.visibility = View.VISIBLE
+
+            val progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
+
+
+            holder.tvpercentage.text = "$progressPercentage%"
+
+
+            val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
+            animator.duration = 1000
+            animator.start()
+            if (progressPercentage in 1..49) {
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+            } else if (progressPercentage in 50..99) {
+                holder.chickImg.setImageResource(R.drawable.hatchcolor)
+                holder.teenImg.setImageResource(R.drawable.chickcolor)
+            }
+        }
+
+
+
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
@@ -90,22 +153,7 @@ class NurseryListAdapter(
         holder.tvStatus.text = bird.status
 
 
-        if (bird.status == "Available" || bird.status == "For Sale") {
-            val cageInfo = when {
-                bird.status == "Available" -> bird.availCage
-                bird.status == "For Sale" -> bird.forSaleCage
-                else -> ""
-            }
 
-            if (cageInfo.isNullOrBlank()) {
-                holder.tvCage.visibility = View.GONE
-            } else {
-                holder.tvCage.visibility = View.VISIBLE
-                holder.tvCage.text = "Cage: $cageInfo"
-            }
-        } else {
-            holder.tvCage.visibility = View.GONE
-        }
 
         val genderIcon = when (bird.gender) {
             "Male" -> {
@@ -120,6 +168,7 @@ class NurseryListAdapter(
                 R.drawable.unknown
             }
         }
+
 
         holder.imageGender.setImageResource(genderIcon)
         holder.tvGender.text = bird.gender
@@ -140,9 +189,15 @@ class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
-    var tvCage: TextView = itemView.findViewById(R.id.tvCage)
+    var layoutmovebtn: LinearLayout = itemView.findViewById(R.id.layoutmovebtn)
+    var movebtn: Button = itemView.findViewById(R.id.movebtn)
+   /* var tvCage: TextView = itemView.findViewById(R.id.tvCage)*/
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
-
+    var tvprogressbar: ProgressBar = itemView.findViewById(R.id.progressBar)
+    var tvpercentage: TextView = itemView.findViewById(R.id.tvpercentage)
+    var chickImg: ImageView = itemView.findViewById(R.id.chickImageView)
+    var teenImg: ImageView = itemView.findViewById(R.id.teenImageView)
+    var adultImg: ImageView = itemView.findViewById(R.id.adultImageView)
     init {
 
         itemView.setOnClickListener {

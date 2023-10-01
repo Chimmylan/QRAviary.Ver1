@@ -1,10 +1,7 @@
 package com.example.qraviaryapp.activities.dashboards
 
 import CageData
-import ClickListener
-import android.app.Activity
 import android.content.ContentValues
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +11,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -23,10 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.CageListAdapter
-import com.example.qraviaryapp.adapter.FlightCageListAdapter
 import com.example.qraviaryapp.adapter.FlightCageListAdapter2
-import com.example.qraviaryapp.adapter.NurseryCageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -44,6 +39,8 @@ class FlightCagesList2Activity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<CageData>
     private lateinit var adapter: FlightCageListAdapter2
     private lateinit var fabBtn: FloatingActionButton
+    private lateinit var totalBirds: TextView
+    private var cageCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -59,6 +56,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Flight Cages</font>",
@@ -197,7 +195,8 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
-
+                cageCount++
+                data.cageCount = cageCount.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {
@@ -208,6 +207,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
             }
 
         }
+        totalBirds.text = "Total Cages: $cageCount"
         dataList.sortBy { it.cage }
         dataList
     }
