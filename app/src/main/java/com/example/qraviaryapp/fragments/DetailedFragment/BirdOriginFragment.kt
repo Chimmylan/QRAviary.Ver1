@@ -49,7 +49,12 @@ class BirdOriginFragment : Fragment() {
     private var birdFatherCage: String? = null
     private var birdFatherKey: String? = null
     private var birdMotherKey: String? = null
+
     private var birdKey: String? = null
+    private var fromFlightAdapter: Boolean = false
+    private var fromNurseryAdapter: Boolean = false
+
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<BirdData>
@@ -75,6 +80,12 @@ class BirdOriginFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+
+
+    private lateinit var ParentRef: DatabaseReference
+    private lateinit var cageKey: String
+    private var nurseryCageValue: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -117,17 +128,38 @@ class BirdOriginFragment : Fragment() {
 
         birdFatherKey = arguments?.getString("BirdFatherKey")
         birdMotherKey = arguments?.getString("BirdMotherKey")
+
+        cageKey = arguments?.getString("CageKey").toString()
+
+        fromFlightAdapter = arguments?.getBoolean("fromFlightListAdapter") == true
+        fromNurseryAdapter = arguments?.getBoolean("fromNurseryListAdapter") == true
         birdKey = arguments?.getString("BirdKey")
 
         Log.d(TAG, "FatherKey ORIGIN: ${birdFatherKey.toString()}")
         Log.d(TAG, "MotherKey ORIGIN: ${birdMotherKey.toString()}")
         Log.d(TAG, "birdKey ORIGIN: ${birdKey.toString()}")
+        Log.d(TAG, "From flight: ${fromFlightAdapter}")
+        Log.d(TAG, "From Nursery: ${fromNurseryAdapter}")
+        Log.d(TAG, "birdCageKey ORIGIN: ${cageKey}")
 
         val fatherRef =
             dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Flight Birds")
                 .child(birdFatherKey.toString())
-        val ParentRef = dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Birds")
-            .child(birdKey.toString()).child("Parents")
+        if (fromFlightAdapter) {
+//FlightCage
+            ParentRef =
+                dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Cages").child("Flight Cages")
+                    .child(cageKey.toString()).child("Birds").child(birdKey.toString()).child("Parents")
+        }else if(fromNurseryAdapter){
+            ParentRef =
+                dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Cages").child("Nursery Cages")
+                    .child(cageKey).child("Birds").child(birdKey.toString()).child("Parents")
+        }
+        else {
+            ParentRef = dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Birds")
+                .child(birdKey.toString()).child("Parents")
+        }
+
         val motherRef =
             dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Flight Birds")
                 .child(birdMotherKey.toString())
@@ -174,12 +206,18 @@ class BirdOriginFragment : Fragment() {
                 if (snapshot.exists()) {
                     fatherIdValue = snapshot.child("Identifier").value.toString()
                     fatherLegbandValue = snapshot.child("Legband").value.toString()
-                    fatherMutation1Value = snapshot.child("Mutation1").value.toString()
-                    fatherMutation2Value = snapshot.child("Mutation2").value.toString()
-                    fatherMutation3Value = snapshot.child("Mutation3").value.toString()
-                    fatherMutation4Value = snapshot.child("Mutation4").value.toString()
-                    fatherMutation5Value = snapshot.child("Mutation5").value.toString()
-                    fatherMutation6Value = snapshot.child("Mutation6").value.toString()
+                    fatherMutation1Value =
+                        snapshot.child("Mutation1").child("Mutation Name").value.toString()
+                    fatherMutation2Value =
+                        snapshot.child("Mutation2").child("Mutation Name").value.toString()
+                    fatherMutation3Value =
+                        snapshot.child("Mutation3").child("Mutation Name").value.toString()
+                    fatherMutation4Value =
+                        snapshot.child("Mutation4").child("Mutation Name").value.toString()
+                    fatherMutation5Value =
+                        snapshot.child("Mutation5").child("Mutation Name").value.toString()
+                    fatherMutation6Value =
+                        snapshot.child("Mutation6").child("Mutation Name").value.toString()
                     fatherCageValue = snapshot.child("Cage").value.toString()
                     fatherStatusValue = snapshot.child("Status").value.toString()
                     newbirdFatherKey = snapshot.child("Flight Key").value.toString()
@@ -272,12 +310,18 @@ class BirdOriginFragment : Fragment() {
                 if (snapshot.exists()) {
                     motherIdValue = snapshot.child("Identifier").value.toString()
                     motherLegbandValue = snapshot.child("Legband").value.toString()
-                    motherMutation1Value = snapshot.child("Mutation1").value.toString()
-                    motherMutation2Value = snapshot.child("Mutation2").value.toString()
-                    motherMutation3Value = snapshot.child("Mutation3").value.toString()
-                    motherMutation4Value = snapshot.child("Mutation4").value.toString()
-                    motherMutation5Value = snapshot.child("Mutation5").value.toString()
-                    motherMutation6Value = snapshot.child("Mutation6").value.toString()
+                    motherMutation1Value =
+                        snapshot.child("Mutation1").child("Mutation Name").value.toString()
+                    motherMutation2Value =
+                        snapshot.child("Mutation2").child("Mutation Name").value.toString()
+                    motherMutation3Value =
+                        snapshot.child("Mutation3").child("Mutation Name").value.toString()
+                    motherMutation4Value =
+                        snapshot.child("Mutation4").child("Mutation Name").value.toString()
+                    motherMutation5Value =
+                        snapshot.child("Mutation5").child("Mutation Name").value.toString()
+                    motherMutation6Value =
+                        snapshot.child("Mutation6").child("Mutation Name").value.toString()
                     newbirdMotherKey = snapshot.child("Flight Key").value.toString()
                     birdMotherKey = snapshot.child("Bird Key").value.toString()
                     motherCageValue = snapshot.child("Cage").value.toString()
@@ -326,7 +370,7 @@ class BirdOriginFragment : Fragment() {
                     val father = snapshot.child("Father").value.toString()
                     val mother = snapshot.child("Mother").value.toString()
 
-                    if (father != "None" && mother != "None") {
+                    if (father.isNotEmpty() && mother.isNotEmpty()) {
                         Log.d(TAG, "IF!!")
                         if (motherCageValue.isNullOrEmpty()) {
                             tvMotherCage.visibility = GONE
@@ -582,7 +626,6 @@ class BirdOriginFragment : Fragment() {
             bundle.putString("BirdMutation6", motherMutation6Value)
 
 
-
             val i = Intent(motherLinearLayout.context, BirdsDetailedActivity::class.java)
             i.putExtras(bundle)
             motherLinearLayout.context.startActivity(i)
@@ -634,41 +677,43 @@ class BirdOriginFragment : Fragment() {
                         val siblingIdentifier = itemSnapshot.child("Identifier").value.toString()
                         val siblingGender = itemSnapshot.child("Gender").value.toString()
                         val siblingMutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
-                            itemSnapshot.child("Mutation1").value.toString()
+                            itemSnapshot.child("Mutation1").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
                         val siblingMutation2Value = if (itemSnapshot.hasChild("Mutation2")) {
-                            itemSnapshot.child("Mutation2").value.toString()
+                            itemSnapshot.child("Mutation2").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
                         val siblingMutation3Value = if (itemSnapshot.hasChild("Mutation3")) {
-                            itemSnapshot.child("Mutation3").value.toString()
+                            itemSnapshot.child("Mutation3").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
                         val siblingMutation4Value = if (itemSnapshot.hasChild("Mutation4")) {
-                            itemSnapshot.child("Mutation4").value.toString()
+                            itemSnapshot.child("Mutation4").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
                         val siblingMutation5Value = if (itemSnapshot.hasChild("Mutation5")) {
-                            itemSnapshot.child("Mutation5").value.toString()
+                            itemSnapshot.child("Mutation5").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
                         val siblingMutation6Value = if (itemSnapshot.hasChild("Mutation6")) {
-                            itemSnapshot.child("Mutation6").value.toString()
+                            itemSnapshot.child("Mutation6").child("Mutation Name").value.toString()
                         } else {
                             ""
                         }
-                        val dateOfBandingValue = itemSnapshot.child("Date of Banding").value.toString()
+                        val dateOfBandingValue =
+                            itemSnapshot.child("Date of Banding").value.toString()
                         val dateOfBirthValue = itemSnapshot.child("Date of Birth").value.toString()
                         val statusValue = itemSnapshot.child("Status").value.toString()
                         val availCageValue = itemSnapshot.child("Cage").value.toString()
                         val forSaleCageValue = itemSnapshot.child("Cage").value.toString()
-                        val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value.toString()
+                        val forSaleRequestedPriceValue =
+                            itemSnapshot.child("Requested Price").value.toString()
                         val soldDateValue = itemSnapshot.child("Sold Date").value.toString()
                         val soldPriceValue = itemSnapshot.child("Sale Price").value.toString()
                         val soldContactValue = itemSnapshot.child("Sale Contact").value.toString()
@@ -680,13 +725,17 @@ class BirdOriginFragment : Fragment() {
                         val lostDateValue = itemSnapshot.child("Lost Date").value.toString()
                         val lostDetailsValue = itemSnapshot.child("Lost Details").value.toString()
                         val donatedDateValue = itemSnapshot.child("Donated Date").value.toString()
-                        val donatedContactValue = itemSnapshot.child("Donated Contact").value.toString()
+                        val donatedContactValue =
+                            itemSnapshot.child("Donated Contact").value.toString()
                         val otherCommentsValue = itemSnapshot.child("Comments").value.toString()
                         val buyPriceValue = itemSnapshot.child("Buy Price").value.toString()
                         val boughtDateValue = itemSnapshot.child("Bought Date").value.toString()
-                        val breederContactValue = itemSnapshot.child("Breeder Contact").value.toString()
-                        val FatherValue = itemSnapshot.child("Parents").child("Father").value.toString()
-                        val MotherValue = itemSnapshot.child("Parents").child("Mother").value.toString()
+                        val breederContactValue =
+                            itemSnapshot.child("Breeder Contact").value.toString()
+                        val FatherValue =
+                            itemSnapshot.child("Parents").child("Father").value.toString()
+                        val MotherValue =
+                            itemSnapshot.child("Parents").child("Mother").value.toString()
                         val parentRef = itemSnapshot.child("Parents")
                         val siblingsFatherKey = parentRef.child("FatherKey")
                         val siblingsFatherKeyValue = siblingsFatherKey.value.toString()
@@ -730,7 +779,7 @@ class BirdOriginFragment : Fragment() {
                         data.fatherKey = fatherkey
                         data.motherKey = motherkey
 
-                        if (birdKey == itemSnapshot.key){
+                        if (birdKey == itemSnapshot.key) {
                             continue
                         }
                         Log.d(TAG, "loop $fatherkey")
@@ -745,7 +794,7 @@ class BirdOriginFragment : Fragment() {
                                 data.identifier = identifier
                                 tvSiblings.visibility = View.VISIBLE
                                 dataList.add(data)
-                            }else if (fatherkey != siblingsFatherKeyValue && motherkey == siblingsMotherKeyValue) {
+                            } else if (fatherkey != siblingsFatherKeyValue && motherkey == siblingsMotherKeyValue) {
                                 // Sibling has the same father and mother as the selected bird
                                 Log.d(TAG, "Both parents!")
                                 val identifier = itemSnapshot.child("Identifier").value.toString()
@@ -781,7 +830,7 @@ class BirdOriginFragment : Fragment() {
                                 dataList.add(data)
                                 tvSiblings.visibility = VISIBLE
                             }
-                        }else{
+                        } else {
                             //GONE SIBLING TV
                         }
 

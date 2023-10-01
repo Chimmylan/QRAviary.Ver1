@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+    android:background="@color/new_appbar_color"
     tools:context=".fragments.NavFragments.BirdsFragment">
 
         <FrameLayout
@@ -22,7 +23,7 @@
                 android:id="@+id/tvBirdCount"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:background="@color/totalbirds"
+                android:background="#E9E8E8"
                 android:gravity="center"
                 android:text=" "
                 android:textSize="16sp" />

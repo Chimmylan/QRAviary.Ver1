@@ -11,28 +11,31 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
+
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+
+import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
-class CageListAdapter(
+class CageListAdapter2(
     private val context: android.content.Context,
     private var dataList: MutableList<CageData>,
-    private val clickListener: ClickListener
-) : RecyclerView.Adapter<CageViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CageViewHolder {
+) : RecyclerView.Adapter<CageViewHolder2>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CageViewHolder2 {
         val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist, parent, false)
 
 
-        return CageViewHolder(view, dataList, context as BreedingCagesListActivity)
+        return CageViewHolder2(view, dataList)
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    override fun onBindViewHolder(holder: CageViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CageViewHolder2, position: Int) {
         val cage = dataList[position]
 
         val cageId = cage.cageId
@@ -66,7 +69,7 @@ class CageListAdapter(
 
 }
 
-class CageViewHolder(itemView: View, private val dataList: MutableList<CageData>, private val activity: BreedingCagesListActivity) :
+class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData>) :
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
@@ -75,17 +78,15 @@ class CageViewHolder(itemView: View, private val dataList: MutableList<CageData>
 
     init {
         itemView.setOnClickListener {
-
             val cageName =
                 dataList[adapterPosition].cage // Retrieve the cage name from the data list
             val cageKey =
                 dataList[adapterPosition].cageId
 
-            val intent = Intent()
+            val intent = Intent(itemView.context, BreedingListActivity::class.java)
             intent.putExtra("CageName", cageName)
             intent.putExtra("CageKey", cageKey)
-            activity.setResult(Activity.RESULT_OK, intent)
-            activity.finish()
+            itemView.context.startActivity(intent)
         }
 
     }

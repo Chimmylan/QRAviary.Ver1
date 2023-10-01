@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/new_appbar_color"
-    tools:context=".fragments.NavFragments.PairsFragment">
+    android:background="@color/new_appbar_color">
 
 
     <FrameLayout
@@ -31,7 +30,7 @@
             android:id="@+id/tvCurrent"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-           android:padding="5dp"
+            android:padding="5dp"
             android:gravity="center|left"
             android:text="Current"
             android:textSize="16sp" />

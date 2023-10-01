@@ -89,6 +89,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
         lifecycleScope.launch {
             try {
                 val data = getDataFromDataBase()
+                dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
@@ -155,7 +156,16 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
                     dataList.add(newCage)
                     adapter.notifyItemInserted(dataList.size - 1)
                     dataList.sortBy { it.cage }
-                    adapter.notifyDataSetChanged()
+                    lifecycleScope.launch {
+                        try {
+                            val data = getDataFromDataBase()
+                            dataList.clear()
+                            dataList.addAll(data)
+                            adapter.notifyDataSetChanged()
+                        } catch (e: Exception) {
+                            Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                        }
+                    }
 
 
                     alertDialog.dismiss()

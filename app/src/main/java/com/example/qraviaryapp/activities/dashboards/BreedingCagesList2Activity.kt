@@ -24,8 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CageListAdapter
-import com.example.qraviaryapp.adapter.FlightCageListAdapter
-import com.example.qraviaryapp.adapter.NurseryCageListAdapter
+import com.example.qraviaryapp.adapter.CageListAdapter2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -35,13 +34,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class FlightCagesListActivity : AppCompatActivity(), ClickListener {
+class BreedingCagesList2Activity : AppCompatActivity(){
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<CageData>
-    private lateinit var adapter: FlightCageListAdapter
+    private lateinit var adapter: CageListAdapter2
     private lateinit var fabBtn: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +59,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Flight Cages</font>",
+            "<font color='$abcolortitle'>Breeding Cages</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
@@ -76,7 +75,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = FlightCageListAdapter(this, dataList, this)
+        adapter = CageListAdapter2(this, dataList)
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
@@ -121,7 +120,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
-            .child("Flight Cages")
+            .child("Breeding Cages")
         val newCageRef = db.push()
 
 
@@ -129,7 +128,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         builder.setPositiveButton("Add", null)
 
         builder.setNegativeButton("Cancel") { dialog, which ->
-            Toast.makeText(this@FlightCagesListActivity, "Cancel", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@BreedingCagesList2Activity, "Cancel", Toast.LENGTH_SHORT).show()
         }
         builder.setView(dialogLayout)
 
@@ -143,7 +142,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
                 if (TextUtils.isEmpty(cageName)) {
                     editText.error = "Enter cage name"
                     Toast.makeText(
-                        this@FlightCagesListActivity,
+                        this@BreedingCagesList2Activity,
                         "Please enter cage name before adding",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -185,7 +184,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
 
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Cages").child("Flight Cages")
+            .child("ID: ${currentUserId.toString()}").child("Cages").child("Breeding Cages")
         val dataList = ArrayList<CageData>()
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
@@ -223,18 +222,4 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         }
     }
 
-    override fun onClick(nameValue: String) {
-        val intent = Intent()
-        intent.putExtra("selectedCageId", nameValue)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-    }
-
-    override fun onClick(nameValue: String, id: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClick(nameValue: String, id: String, mutation: String) {
-        TODO("Not yet implemented")
-    }
 }

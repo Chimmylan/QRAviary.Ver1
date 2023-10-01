@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CageListAdapter
 import com.example.qraviaryapp.adapter.FlightCageListAdapter
+import com.example.qraviaryapp.adapter.FlightCageListAdapter2
 import com.example.qraviaryapp.adapter.NurseryCageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -35,13 +36,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class FlightCagesListActivity : AppCompatActivity(), ClickListener {
+class FlightCagesList2Activity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<CageData>
-    private lateinit var adapter: FlightCageListAdapter
+    private lateinit var adapter: FlightCageListAdapter2
     private lateinit var fabBtn: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +77,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = FlightCageListAdapter(this, dataList, this)
+        adapter = FlightCageListAdapter2(this, dataList)
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
@@ -129,7 +130,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         builder.setPositiveButton("Add", null)
 
         builder.setNegativeButton("Cancel") { dialog, which ->
-            Toast.makeText(this@FlightCagesListActivity, "Cancel", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@FlightCagesList2Activity, "Cancel", Toast.LENGTH_SHORT).show()
         }
         builder.setView(dialogLayout)
 
@@ -143,7 +144,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
                 if (TextUtils.isEmpty(cageName)) {
                     editText.error = "Enter cage name"
                     Toast.makeText(
-                        this@FlightCagesListActivity,
+                        this@FlightCagesList2Activity,
                         "Please enter cage name before adding",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -223,18 +224,5 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
         }
     }
 
-    override fun onClick(nameValue: String) {
-        val intent = Intent()
-        intent.putExtra("selectedCageId", nameValue)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-    }
 
-    override fun onClick(nameValue: String, id: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClick(nameValue: String, id: String, mutation: String) {
-        TODO("Not yet implemented")
-    }
 }

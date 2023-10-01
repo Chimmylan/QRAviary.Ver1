@@ -2,33 +2,24 @@ package com.example.qraviaryapp.activities.detailedactivities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
-import android.media.Image
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.View.GONE
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBabiesFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdOriginFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdPairingFragment
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -80,6 +71,14 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+
+    //cages
+    private var fromFlightAdapter: Boolean = false
+    private var fromNurseryAdapter: Boolean = false
+    private lateinit var cageKeyValue: String
+
+
+
     private lateinit var databaseReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var currentUser: String
@@ -140,8 +139,15 @@ class BirdsDetailedActivity : AppCompatActivity() {
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        if (bundle != null) {
+            fromFlightAdapter = bundle.getBoolean("fromFlightListAdapter", false)
+            fromNurseryAdapter = bundle.getBoolean("fromNurseryListAdapter", false)
+        }
+        cageKeyValue = bundle?.getString("CageKeyValue").toString()
+
         Log.d(TAG, "BIRDKEY NEW $BirdKey")
 
+        newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
         newBundle.putString("FlightKey", FlightKey)
         newBundle.putString("BirdId", BirdId)
@@ -180,6 +186,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdFatherKey", BirdFatherKey)
         newBundle.putString("BirdMother", BirdMother)
         newBundle.putString("BirdMotherKey", BirdMotherKey)
+        newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
+        newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
         val birdGalleryFragment = BirdGalleryFragment()
         val birdBasicFragment = BirdBasicFragment()
         val birdOriginFragment = BirdOriginFragment()

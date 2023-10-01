@@ -79,9 +79,10 @@ class FlightCageViewHolder(itemView: View, private val dataList: MutableList<Cag
 
             val cageName =
                 dataList[adapterPosition].cage // Retrieve the cage name from the data list
-
+            val cageKey = dataList[adapterPosition].cageId
             val intent = Intent()
             intent.putExtra("CageName", cageName)
+            intent.putExtra("CageKey", cageKey)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()

@@ -78,9 +78,10 @@ class NurseryCageViewHolder(itemView: View, private val dataList: MutableList<Ca
 
             val cageName =
                 dataList[adapterPosition].cage // Retrieve the cage name from the data list
-
+            val cagekey = dataList[adapterPosition].cageId
             val intent = Intent()
             intent.putExtra("CageName", cageName)
+            intent.putExtra("CageKey", cagekey)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()
