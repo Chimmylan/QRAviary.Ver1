@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.detailedactivities
 import EggData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -307,6 +308,16 @@ class PairsDetailedActivity : AppCompatActivity() {
 
         checkBox.isChecked = true
 
+
+        val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+
+        val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
+        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
+
+
+
         val newClutchRef = db.push()
 
         numberPicker.minValue = 0
@@ -327,8 +338,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             var eggValue: Int
             var defaultStatus = "Incubating"
-            var incubatingDays = "21"
-            var maturingDays = "50"
+
             var currentDate = LocalDate.now()
             var eggCount = 0
             var incubatingCount = 0

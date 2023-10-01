@@ -28,6 +28,9 @@ class EggClutchesListAdapter(
 
         holder.tvStatus.text = eggs.eggStatus
         holder.tvDate.text = eggs.eggDate
+        val maturingDay = eggs.eggMaturingStartDate
+        val incubatingDays = eggs.eggIncubationStartDate
+
         // Check the egg status and set the date TextView visibility accordingly
         when (eggs.eggStatus) {
             "Laid" -> {
@@ -83,7 +86,6 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
             val eggKey = dataList[adapterPosition].eggKey
             val individualEggKey = dataList[adapterPosition].individualEggKey
             val pairKey = dataList[adapterPosition].pairKey
-
 
             val i = Intent(itemvView.context, EditEggActivity::class.java)
             i.putExtra("IncubatingStartDate", incubatingStartDate)
