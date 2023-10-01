@@ -1,22 +1,10 @@
 package com.example.qraviaryapp.fragments
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
-import androidx.preference.CheckBoxPreference
-import androidx.preference.EditTextPreference
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreference
 import com.example.qraviaryapp.R
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -74,7 +62,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             }
             "incubating" -> {
                 val incubatingValue = sharedPreferences?.getString(key, "")
-                // Do something with the incubatingValue
+                val editor: SharedPreferences.Editor = sharedPreferencess.edit()
+                editor.putString("incubatingValue", incubatingValue)
+                editor.apply()
             }
             "maturing" -> {
                 val maturingValue = sharedPreferences?.getString(key, "")

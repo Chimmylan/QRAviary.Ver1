@@ -26,6 +26,7 @@ class PreviousPairAdapter(
 
     override fun onBindViewHolder(holder: PreviousViewHolder, position: Int) {
         val pairs = dataList[position]
+
         holder.dateId.text = pairs.pairDateBeg
         holder.femaleBird.text = pairs.pairFemale
         holder.femaleMutation.text = pairs.pairFemaleMutation
