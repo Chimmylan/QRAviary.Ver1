@@ -46,6 +46,8 @@ class EditEggActivity : AppCompatActivity() {
     private var incubatingFormattedDate: String? = null
 
     private lateinit var spinnerStatus: Spinner
+    private lateinit var save: Button
+    private lateinit var edit: Button
     private var status: String? = null
 
     private var incubatingStartDate: String? = null
@@ -53,7 +55,6 @@ class EditEggActivity : AppCompatActivity() {
     private var eggKey: String? = null
     private var pairKey: String? = null
     private var individualEggKey: String? = null
-
     private var currentUserId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +90,8 @@ class EditEggActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference
 
         currentUserId = mAuth.currentUser?.uid
-
+        save = findViewById(R.id.save)
+        edit = findViewById(R.id.edit)
         etIncubatingDate = findViewById(R.id.etincubationdays)
         etMaturingDate = findViewById(R.id.etmaturingdays)
         btnHatched = findViewById(R.id.btn_hatchedstartdate)
@@ -98,14 +100,45 @@ class EditEggActivity : AppCompatActivity() {
         hatchedLinearLayout = findViewById(R.id.hatchedDateLayout)
         spinnerStatus = findViewById(R.id.spinnerstatus)
 
-        incubatingStartDate = intent.getStringExtra("IncubatingStartDate")
-        maturingStartDate = intent.getStringExtra("MaturingStartDate")
+       /* incubatingStartDate = intent.getStringExtra("IncubatingStartDate")
+        maturingStartDate = intent.getStringExtra("MaturingStartDate")*/
         eggKey = intent.getStringExtra("EggKey")
         individualEggKey = intent.getStringExtra("IndividualEggKey")
         pairKey = intent.getStringExtra("PairKey")
 
-        etMaturingDate.setText(maturingStartDate)
-        etIncubatingDate.setText(incubatingStartDate)
+
+        val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+
+        val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
+        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
+
+
+            etMaturingDate.setText(maturingDays.toString())
+            etIncubatingDate.setText(incubatingDays.toString())
+
+        var maturingDateText = ""
+        var incubatingDateText = ""
+        edit.setOnClickListener{
+            etMaturingDate.isEnabled = true
+            etIncubatingDate.isEnabled = true
+
+
+            save.setOnClickListener{
+
+                val newPrefs = getSharedPreferences("newPrefs", Context.MODE_PRIVATE)
+                val editor = newPrefs.edit()
+                editor.putString("newMaturingValue", etMaturingDate.text.toString())
+                editor.putString("newIncubatingValue", etIncubatingDate.text.toString())
+                editor.apply()
+
+                // Disable the EditText fields after saving
+                etMaturingDate.isEnabled = false
+                etIncubatingDate.isEnabled = false
+            }
+        }
+
 
         OnActiveSpinner()
         initDatePickers()
@@ -115,6 +148,7 @@ class EditEggActivity : AppCompatActivity() {
 
 
     }
+
 
     fun saveEdit() {
         val eggRef =

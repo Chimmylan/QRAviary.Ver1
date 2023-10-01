@@ -28,7 +28,7 @@ class FlightListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_flightlist, parent, false)
 
         return MyViewHolder(view, dataList)
     }
@@ -90,22 +90,6 @@ class FlightListAdapter(
         holder.tvStatus.text = bird.status
 
 
-        if (bird.status == "Available" || bird.status == "For Sale") {
-            val cageInfo = when {
-                bird.status == "Available" -> bird.availCage
-                bird.status == "For Sale" -> bird.forSaleCage
-                else -> ""
-            }
-
-            if (cageInfo.isNullOrBlank()) {
-                holder.tvCage.visibility = View.GONE
-            } else {
-                holder.tvCage.visibility = View.VISIBLE
-                holder.tvCage.text = "Cage: $cageInfo"
-            }
-        } else {
-            holder.tvCage.visibility = View.GONE
-        }
 
         val genderIcon = when (bird.gender) {
             "Male" -> {

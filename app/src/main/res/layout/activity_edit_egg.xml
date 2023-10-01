@@ -194,15 +194,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
+            android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="EDIT"
             android:backgroundTint="@color/zxing_transparent"
             android:textColor="@color/black_white"/>
-
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="SAVE"
+            android:backgroundTint="@color/zxing_transparent"
+            android:textColor="@color/black_white"/>
     </LinearLayout>
 
     </LinearLayout>

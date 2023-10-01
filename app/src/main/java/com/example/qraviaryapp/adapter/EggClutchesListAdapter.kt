@@ -6,6 +6,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
@@ -28,15 +30,33 @@ class EggClutchesListAdapter(
         holder.tvDate.text = eggs.eggDate
         // Check the egg status and set the date TextView visibility accordingly
         when (eggs.eggStatus) {
-            "Incubating", "Laid", "Hatched" -> {
+            "Laid" -> {
                 holder.tvTime.text = eggs.eggDate
                 holder.tvTime.visibility = View.VISIBLE
+                holder.layoutmove.visibility = View.GONE // Hide layoutmove
+                holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
+            }
+            "Incubating" -> {
+                holder.tvTime.text = eggs.eggDate
+                holder.tvTime.visibility = View.VISIBLE
+                holder.layoutmove.visibility = View.GONE // Show layoutmove
+                holder.layoutprogressbar.visibility = View.VISIBLE // Show layoutmove
+            }
+            "Hatched" -> {
+                holder.tvTime.text = eggs.eggDate
+                holder.tvTime.visibility = View.VISIBLE
+                holder.layoutmove.visibility = View.VISIBLE // Show layoutmove
+                holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
             }
             else -> {
-                // Hide the date TextView for other statuses
+                // Hide the date TextView and layoutmove for other statuses
                 holder.tvTime.visibility = View.GONE
+                holder.layoutmove.visibility = View.GONE
+                holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
             }
         }
+
+
 
 
     }
@@ -51,7 +71,9 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     val tvStatus: TextView = itemvView.findViewById(R.id.tvStatus)
     val tvDate: TextView = itemvView.findViewById(R.id.tvDate)
     val tvTime: TextView = itemvView.findViewById(R.id.tvTime)
-
+    val layoutmove: LinearLayout = itemvView.findViewById(R.id.layoutMove)
+    val movebtn: Button = itemvView.findViewById(R.id.movebtn)
+    val layoutprogressbar: LinearLayout = itemvView.findViewById(R.id.layoutprogressbar)
     init {
 
 

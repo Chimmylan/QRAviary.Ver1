@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
 
@@ -36,6 +37,22 @@ class FemaleBirdListAdapter(
 
     override fun onBindViewHolder(holder: FemaleViewHolder, position: Int) {
         val bird = dataList[position]
+
+        if (bird.img.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+
+        } else {
+
+            Glide.with(context)
+                .load(bird.img)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+        }
 
         val maxIdentifierLength = 5 // Define your desired maximum length here
         val identifierText = if (bird.identifier?.length!! > maxIdentifierLength) {
@@ -72,7 +89,26 @@ class FemaleBirdListAdapter(
             holder.tvMutation.text = "Mutations: $combinedMutations"
         }
 
+
         holder.tvStatus.text = bird.status
+
+        if (bird.status == "Available" || bird.status == "For Sale") {
+            val cageInfo = when {
+                bird.status == "Available" -> bird.availCage
+                bird.status == "For Sale" -> bird.forSaleCage
+                else -> ""
+            }
+
+            if (cageInfo.isNullOrBlank()) {
+                holder.tvCage.visibility = View.GONE
+            } else {
+                holder.tvCage.visibility = View.VISIBLE
+                holder.tvCage.text = "Cage: $cageInfo"
+            }
+        } else {
+            holder.tvCage.visibility = View.GONE
+        }
+
         val genderIcon = if(bird.gender == "Male"){
             R.drawable.baseline_male_24
         } else if (bird.gender == "Female") {
@@ -84,6 +120,11 @@ class FemaleBirdListAdapter(
         holder.imageGender.setImageResource(genderIcon)
         holder.tvGender.text = bird.gender
 
+        if (bird.legband.isNullOrEmpty()) {
+            holder.tvLegband.visibility = View.GONE
+        } else {
+            holder.tvLegband.text = bird.legband
+        }
     }
 
     override fun getItemCount(): Int {
@@ -96,11 +137,13 @@ class FemaleViewHolder(
     private val dataList: MutableList<BirdData>,
     private val activity: FemaleBirdListActivity
 ) : RecyclerView.ViewHolder(itemView) {
-
+    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
+    var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
+    var tvCage: TextView = itemView.findViewById(R.id.tvCage)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
 
 
