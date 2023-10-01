@@ -124,6 +124,8 @@ class OriginFragment : Fragment() {
 
     private var birdFatherKey: String? = null
     private var birdMotherKey: String? = null
+    private var birdBirdsFatherKey: String? = null
+    private var birdBirdsMotherKey: String? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -133,6 +135,7 @@ class OriginFragment : Fragment() {
                 val btnFatherMutationValue: String =
                     data?.getStringExtra("MaleBirdMutation").toString()
                 birdFatherKey = data?.getStringExtra("MaleFlightKey").toString()
+                birdBirdsFatherKey = data?.getStringExtra("MaleBirdKey").toString()
                 btnFather.text = btnFatherValue
             }
         }
@@ -142,6 +145,7 @@ class OriginFragment : Fragment() {
                 val btnMotherMutationValue: String =
                     data?.getStringExtra("FemaleBirdMutation").toString()
                 birdMotherKey = data?.getStringExtra("FemaleFlightKey").toString()
+                birdBirdsMotherKey = data?.getStringExtra("FemaleBirdKey").toString()
                 btnMother.text = btnMotherValue
             }
         }
@@ -288,6 +292,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey,
                     "Bird Key" to birdId
                 )
@@ -338,6 +344,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
 
@@ -386,6 +394,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 purchasesRef.updateChildren(motherRefdata)
@@ -433,6 +443,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 purchasesRef.updateChildren(motherRefdata)
@@ -446,6 +458,8 @@ class OriginFragment : Fragment() {
                 "Father" to birdData.father,
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
 
@@ -508,6 +522,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 fatherRef.updateChildren(fatherRefdata)
@@ -553,6 +569,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 motherRef.updateChildren(motherRefdata)
@@ -598,6 +616,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 motherRef.updateChildren(motherRefdata)
@@ -608,6 +628,8 @@ class OriginFragment : Fragment() {
                 "Father" to birdData.father,
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
 
@@ -670,6 +692,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 fatherRef.updateChildren(fatherRefdata)
@@ -715,6 +739,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 motherRef.updateChildren(motherRefdata)
@@ -760,6 +786,8 @@ class OriginFragment : Fragment() {
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
                 motherRef.updateChildren(motherRefdata)
@@ -770,6 +798,8 @@ class OriginFragment : Fragment() {
                 "Father" to birdData.father,
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
             if (!cageKeyValue.isNullOrEmpty()){
@@ -921,6 +951,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
                 purchasesRef.updateChildren(fatherRefdata)
@@ -969,6 +1001,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
 
@@ -1019,6 +1053,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
                 purchasesRef.updateChildren(motherRefdata)
@@ -1068,6 +1104,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
                 purchasesRef.updateChildren(motherRefdata)
@@ -1083,6 +1121,8 @@ class OriginFragment : Fragment() {
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
                 "MotherKey" to birdMotherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
             )
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
@@ -1146,6 +1186,8 @@ class OriginFragment : Fragment() {
                         "Mother" to birdData.mother,
                         "FatherKey" to birdFatherKey,
                         "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
                     fatherRef.updateChildren(fatherRefdata)
@@ -1195,6 +1237,8 @@ class OriginFragment : Fragment() {
                         "Mother" to birdData.mother,
                         "FatherKey" to birdFatherKey,
                         "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
                     motherRef.updateChildren(motherRefdata)
@@ -1243,6 +1287,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
                 fatherRef.updateChildren(motherRefdata)
@@ -1254,6 +1300,8 @@ class OriginFragment : Fragment() {
                 "Father" to birdData.father,
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
             if (!cageKeyValue.isNullOrEmpty()){
@@ -1275,6 +1323,8 @@ class OriginFragment : Fragment() {
                 "Father" to birdData.father,
                 "Mother" to birdData.mother,
                 "FatherKey" to birdFatherKey,
+                "BirdFatherKey" to birdBirdsFatherKey,
+                "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
             if (!cageKeyValue.isNullOrEmpty()){
@@ -1328,6 +1378,8 @@ class OriginFragment : Fragment() {
                         "Mother" to birdData.mother,
                         "FatherKey" to birdFatherKey,
                         "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
                     fatherRef.updateChildren(fatherRefdata)
@@ -1377,6 +1429,8 @@ class OriginFragment : Fragment() {
                         "Mother" to birdData.mother,
                         "FatherKey" to birdFatherKey,
                         "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
                     motherRef.updateChildren(motherRefdata)
@@ -1425,6 +1479,8 @@ class OriginFragment : Fragment() {
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
                     "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
                 fatherRef.updateChildren(motherRefdata)

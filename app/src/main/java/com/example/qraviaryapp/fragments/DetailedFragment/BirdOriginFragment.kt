@@ -153,7 +153,7 @@ class BirdOriginFragment : Fragment() {
         }else if(fromNurseryAdapter){
             ParentRef =
                 dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Cages").child("Nursery Cages")
-                    .child(cageKey.toString()).child("Birds").child(birdKey.toString()).child("Parents")
+                    .child(cageKey).child("Birds").child(birdKey.toString()).child("Parents")
         }
         else {
             ParentRef = dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Birds")
