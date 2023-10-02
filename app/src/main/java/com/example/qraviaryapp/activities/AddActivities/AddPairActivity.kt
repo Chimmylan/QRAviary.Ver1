@@ -49,7 +49,9 @@ class AddPairActivity : AppCompatActivity() {
     private var btnMaleIdValue: String? = null
     private var btnFemaleIdValue: String? = null
     private var btnMaleValueKey: String? = null
+    private var btnMaleFlightValueKey: String? = null
     private var btnFemaleValueKey: String? = null
+    private var btnFemaleFlightValueKey: String? = null
 
     private var cageKeyValue: String? = null
 
@@ -287,7 +289,9 @@ class AddPairActivity : AppCompatActivity() {
                 "MaleIdentifier" to btnMaleIdValue,
                 "FemaleIdentifier" to btnFemaleIdValue,
                 "Male Bird Key" to btnMaleValueKey,
-                "Female Bird Key" to btnFemaleValueKey
+                "Female Bird Key" to btnFemaleValueKey,
+                "Male Flight Key" to btnMaleFlightValueKey,
+                "Female Flight Key" to btnFemaleFlightValueKey
             )
 
             val maleBirdPair: Map<String, Any?> = hashMapOf(
@@ -395,6 +399,7 @@ class AddPairActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 btnMaleValueKey = data?.getStringExtra("MaleBirdKey").toString()
                 btnMaleIdValue = data?.getStringExtra("MaleBirdId").toString()
+                btnMaleFlightValueKey = data?.getStringExtra("MaleFlightKey").toString()
                 maleMutation = data?.getStringExtra("MaleMutation").toString()
                 btnMale.text = btnMaleIdValue
             }
@@ -403,6 +408,7 @@ class AddPairActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 btnFemaleValueKey = data?.getStringExtra("FemaleBirdKey").toString()
                 btnFemaleIdValue = data?.getStringExtra("FemaleBirdId").toString()
+                btnFemaleFlightValueKey = data?.getStringExtra("FemaleFlightKey").toString()
                 femaleMutation = data?.getStringExtra("FemaleBirdMutation").toString()
                 btnFemale.text = btnFemaleIdValue
             }

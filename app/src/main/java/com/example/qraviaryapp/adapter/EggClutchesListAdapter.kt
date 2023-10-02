@@ -161,6 +161,18 @@ class EggClutchesListAdapter(
 
         holder.movebtn.setOnClickListener{
             val intent = Intent(context, MoveEggActivity::class.java)
+            intent.putExtra("IncubatingStartDate", eggs.eggIncubationStartDate)
+            intent.putExtra("MaturingStartDate", eggs.eggMaturingStartDate)
+            intent.putExtra("EggKey", eggs.eggKey)
+            intent.putExtra("IndividualEggKey", eggs.individualEggKey)
+            intent.putExtra("PairKey", eggs.pairKey)
+            intent.putExtra("PairFlightMaleKey", eggs.pairFlightMaleKey)
+            intent.putExtra("PairFlightFemaleKey", eggs.pairFlightFemaleKey)
+            intent.putExtra("PairMaleKey", eggs.pairBirdMaleKey)
+            intent.putExtra("PairFemaleKey", eggs.pairBirdFemaleKey)
+            intent.putExtra("PairMaleID", eggs.pairMaleId)
+            intent.putExtra("PairFemaleID", eggs.pairFemaleId)
+            intent.putExtra("DateOfBirth", eggs.eggDate)
             context.startActivity(intent)
         }
 

@@ -42,6 +42,12 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     private lateinit var eggKey: String
     private lateinit var pairKey: String
+    private lateinit var pairFlightMaleKey: String
+    private lateinit var pairFlightFemaleKey: String
+    private lateinit var pairBirdMaleKey: String
+    private lateinit var pairBirdFemaleKey: String
+    private lateinit var pairMaleID: String
+    private lateinit var pairFemaleID: String
 
     private lateinit var totalegg: TextView
     private var eggCount = 0
@@ -77,6 +83,13 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         if (bundle != null) {
             eggKey = bundle.getString("EggKey").toString()
             pairKey = bundle.getString("PairKey").toString()
+            pairFlightMaleKey = bundle.getString("PairFlightMaleKey").toString()
+            pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
+            pairBirdMaleKey = bundle.getString("PairMaleKey").toString()
+            pairBirdFemaleKey = bundle.getString("PairFemaleKey").toString()
+            pairFemaleID = bundle.getString("PairFemaleID").toString()
+            pairMaleID = bundle.get("PairMaleID").toString()
+
         }
 
         lifecycleScope.launch {
@@ -128,6 +141,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.eggDate = dateValue
                 data.eggIncubationStartDate = incubatingDateValue
                 data.eggMaturingStartDate = maturingDateValue
+                data.pairFlightMaleKey = pairFlightMaleKey
+                data.pairFlightFemaleKey = pairFlightFemaleKey
+                data.pairMaleId = pairMaleID
+                data.pairFemaleId = pairFemaleID
 
                 dataList.add(data)
             }

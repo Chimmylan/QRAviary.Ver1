@@ -56,7 +56,12 @@ class PairsDetailedActivity : AppCompatActivity() {
 
     private lateinit var pairKey: String
     private lateinit var pairMaleKey: String
+    private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
+    private lateinit var pairFlightFemaleKey: String
+    private lateinit var pairMale: String
+    private lateinit var pairFemale: String
+
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
@@ -115,12 +120,14 @@ class PairsDetailedActivity : AppCompatActivity() {
 
         //Bundle from PairListActivity
         if (bundle != null) {
-            val maleId = bundle.getString("MaleID")
-            val femaleId = bundle.getString("FemaleID")
+            pairMale = bundle.getString("MaleID").toString()
+            pairFemale = bundle.getString("FemaleID").toString()
             val beginningDate = bundle.getString("BeginningDate")
             val separateDate = bundle.getString("SeparateDate")
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
+            pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
+            pairFlightMaleKey = bundle.getString("PairFlightMaleKey").toString()
             pairFemaleKey = bundle.getString("PairFemaleKey").toString()
             pairMaleKey = bundle.getString("PairMaleKey").toString()
             pairKey = bundle.getString("PairKey").toString()
@@ -150,8 +157,8 @@ class PairsDetailedActivity : AppCompatActivity() {
 
 
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
-            btnFemale.text = femaleId.toString()
-            btnMale.text = maleId.toString()
+            btnFemale.text = pairFemale.toString()
+            btnMale.text = pairMale.toString()
         }
 
 
@@ -291,8 +298,16 @@ class PairsDetailedActivity : AppCompatActivity() {
                     }
 
 
+                    data.pairFlightMaleKey = pairFlightMaleKey
+                    data.pairFlightFemaleKey = pairFlightFemaleKey
+                    data.pairBirdFemaleKey = pairFemaleKey
+                    data.pairBirdMaleKey = pairMaleKey
+                    data.pairFemaleId = pairFemale
+                    data.pairMaleId = pairMale
+
                 }
             }
+
             if (data != null) {
                 dataList.add(data)
             }
