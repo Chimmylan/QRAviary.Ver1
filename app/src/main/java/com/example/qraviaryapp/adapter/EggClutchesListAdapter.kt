@@ -4,6 +4,7 @@ import EggData
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
+import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import java.util.logging.Handler
 
 class EggClutchesListAdapter(
     private val context: Context,
@@ -129,7 +132,15 @@ class EggClutchesListAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
+
+    fun updateDataSet(newData: MutableList<EggData>){
+        dataList.clear()
+        dataList.addAll(newData)
+        notifyDataSetChanged()
+    }
+
 }
+
 
 class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggData>) :
     RecyclerView.ViewHolder(itemvView) {

@@ -5,14 +5,12 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.nfc.Tag
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -40,15 +38,17 @@ class MoveNurseryActivity : AppCompatActivity() {
     private var gender = ""
     private var id = ""
     private var legband = ""
-    private var mutation1 = ""
-    private var mutation2 = ""
-    private var mutation3 = ""
-    private var mutation4 = ""
-    private var mutation5 = ""
-    private var mutation6 = ""
-    private var father= ""
+    private lateinit var mutation1: Map<String, String>
+    private lateinit var mutation2: Map<String, String>
+    private lateinit var mutation3: Map<String, String>
+    private lateinit var mutation4: Map<String, String>
+    private lateinit var mutation5: Map<String, String>
+    private lateinit var mutation6: Map<String, String>
+    private var father = ""
     private var mother = ""
     private var status = ""
+    private lateinit var dataToCopy: Any
+    var userId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -69,16 +69,13 @@ class MoveNurseryActivity : AppCompatActivity() {
         choosecage = findViewById(R.id.btnflightcage)
 
 
-        choosecage.setOnClickListener{
+        choosecage.setOnClickListener {
             val requestCode = 7
             val intent = Intent(this, FlightCagesListActivity::class.java)
             startActivityForResult(intent, requestCode)
 
 
-
         }
-
-
 
 
         val abcolortitle = resources.getColor(R.color.appbar)
@@ -96,13 +93,16 @@ class MoveNurseryActivity : AppCompatActivity() {
         }
 
         nurseryKey = intent.getStringExtra("Nursery Key")
-        val userId = mAuth.currentUser?.uid.toString()
+        userId = mAuth.currentUser?.uid.toString()
         val nurseryref =
-            db.child("Users").child("ID: $userId").child("Nursery Birds").child(nurseryKey.toString())
+            db.child("Users").child("ID: $userId").child("Nursery Birds")
+                .child(nurseryKey.toString())
 
 
-        nurseryref.addListenerForSingleValueEvent(object : ValueEventListener{
+        nurseryref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+
+                dataToCopy = snapshot.value!!
 
                 age = snapshot.child("Age").value.toString()
                 birdkey = snapshot.child("Bird Key").value.toString()
@@ -111,17 +111,61 @@ class MoveNurseryActivity : AppCompatActivity() {
                 gender = snapshot.child("Gender").value.toString()
                 id = snapshot.child("Identifier").value.toString()
                 legband = snapshot.child("Legband").value.toString()
-                mutation1 = snapshot.child("Mutation1").value.toString()
-                mutation2 = snapshot.child("Mutation2").value.toString()
-                mutation3 = snapshot.child("Mutation3").value.toString()
-                mutation4 = snapshot.child("Mutation4").value.toString()
-                mutation5 = snapshot.child("Mutation5").value.toString()
-                mutation6 = snapshot.child("Mutation6").value.toString()
+                mutation1 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation1")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation1")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation1")
+                        .child("Incubating Days").value.toString()
+                )
+                mutation2 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation2")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation2")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation2")
+                        .child("Incubating Days").value.toString()
+                )
+                mutation3 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation3")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation3")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation3")
+                        .child("Incubating Days").value.toString()
+                )
+                mutation4 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation4")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation4")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation4")
+                        .child("Incubating Days").value.toString()
+                )
+                mutation5 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation5")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation5")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation5")
+                        .child("Incubating Days").value.toString()
+                )
+                mutation6 = mapOf(
+                    "Mutation Name" to snapshot.child("Mutation6")
+                        .child("Mutation Name").value.toString(),
+                    "Maturing Days" to snapshot.child("Mutation6")
+                        .child("Maturing Days").value.toString(),
+                    "Incubating Days" to snapshot.child("Mutation6")
+                        .child("Incubating Days").value.toString()
+                )
+
+
                 father = snapshot.child("Father").value.toString()
                 mother = snapshot.child("Mother").value.toString()
                 status = snapshot.child("Status").value.toString()
 
-                TODO("Not yet implemented")
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -129,7 +173,6 @@ class MoveNurseryActivity : AppCompatActivity() {
             }
 
         })
-
 
 
     }
@@ -156,6 +199,7 @@ class MoveNurseryActivity : AppCompatActivity() {
 
         return true
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 7) {
@@ -169,27 +213,34 @@ class MoveNurseryActivity : AppCompatActivity() {
         }
     }
 
-    fun save(){
-       Log.d(TAG,"$age")
-        Log.d(TAG,"$birdkey")
-        Log.d(TAG,"$cage")
-        Log.d(TAG,"$datebirth")
-        Log.d(TAG,"$gender")
-        Log.d(TAG,"$id")
-        Log.d(TAG,"$legband")
-        Log.d(TAG,"$mutation1")
-        Log.d(TAG,"$mutation2")
-        Log.d(TAG,"$mutation3")
-        Log.d(TAG,"$mutation4")
-        Log.d(TAG,"$mutation5")
-        Log.d(TAG,"$mutation6")
-        Log.d(TAG,"$father")
-        Log.d(TAG,"$mother")
-        Log.d(TAG,"$status")
+    fun save() {
+
+        val newFlightRef =
+            db.child("Users").child("ID: $userId").child("Flight Birds").push()
+
+        val birdPref = db.child("Users").child("ID: $userId").child("Birds").child(birdkey)
+        val flightCageRef = db.child("Users").child("ID: $userId").child("Cages")
+            .child("Flight Cages").child(cageKeyValue.toString()).child("Birds").push()
+
+        val nurseryref =
+            db.child("Users").child("ID: $userId").child("Nursery Birds")
+                .child(nurseryKey.toString())
+
+        nurseryref.removeValue()
 
 
+        val key = newFlightRef.key
+
+        newFlightRef.setValue(dataToCopy)
+        val updateData = hashMapOf<String, Any?>("Flight Key" to key)
+
+
+        birdPref.updateChildren(updateData)
+        newFlightRef.updateChildren(updateData)
+        flightCageRef.setValue(dataToCopy)
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {

@@ -33,7 +33,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
-    private lateinit var adapter: EggClutchesListAdapter
+    public lateinit var adapter: EggClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var recyclerView: RecyclerView
 
@@ -41,6 +41,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     private lateinit var eggKey: String
     private lateinit var pairKey: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +53,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         supportActionoBar()
 
         fab = findViewById(R.id.fab)
+
 
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -87,7 +89,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         }
 
     }
-
 
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
