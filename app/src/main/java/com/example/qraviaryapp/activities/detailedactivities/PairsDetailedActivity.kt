@@ -343,7 +343,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             var eggCount = 0
             var incubatingCount = 0
             var laidCount = 0
-            val formatter = DateTimeFormatter.ofPattern("MMM/dd/yy", Locale.US)
+            val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
             val formattedDate = currentDate.format(formatter)
             addButton.setOnClickListener {
                 val newEggs = EggData()
