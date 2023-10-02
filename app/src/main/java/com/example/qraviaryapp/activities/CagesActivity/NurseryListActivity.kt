@@ -205,7 +205,7 @@ class NurseryListActivity : AppCompatActivity() {
                 val boughtBreeder = breederContactValue.toString() ?: ""
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
-                birdCount++
+                birdCount = snapshot.childrenCount.toInt()
 
                 data.cageKey = CageKey
                 data.img = mainPic
@@ -265,6 +265,21 @@ class NurseryListActivity : AppCompatActivity() {
 
 
         dataList
+
+    }
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

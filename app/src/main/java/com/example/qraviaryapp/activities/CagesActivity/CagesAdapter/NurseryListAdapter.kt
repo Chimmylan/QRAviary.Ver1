@@ -123,6 +123,8 @@ class NurseryListAdapter(
 
                 val intent = Intent(context, MoveNurseryActivity::class.java)
                 intent.putExtra("Nursery Key", bird.nurseryKey)
+                intent.putExtra("CageKeyValue", bird.cageKey)
+                intent.putExtra("BirdKey", bird.birdKey)
                 context.startActivity(intent)
             }
 

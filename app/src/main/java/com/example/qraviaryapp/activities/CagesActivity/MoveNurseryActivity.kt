@@ -2,12 +2,12 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -31,6 +31,8 @@ class MoveNurseryActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private var nurseryKey: String? = null
+    private var cageKey: String? = null
+    private var nurseryBirdKey: String? = null
     private var age = ""
     private var birdkey = ""
     private var cage = ""
@@ -93,6 +95,8 @@ class MoveNurseryActivity : AppCompatActivity() {
         }
 
         nurseryKey = intent.getStringExtra("Nursery Key")
+        cageKey = intent.getStringExtra("CageKeyValue")
+        nurseryBirdKey = intent.getStringExtra("BirdKey")
         userId = mAuth.currentUser?.uid.toString()
         val nurseryref =
             db.child("Users").child("ID: $userId").child("Nursery Birds")
@@ -215,30 +219,40 @@ class MoveNurseryActivity : AppCompatActivity() {
 
     fun save() {
 
-        val newFlightRef =
-            db.child("Users").child("ID: $userId").child("Flight Birds").push()
+        if (TextUtils.isEmpty(choosecage.text)){
+            choosecage.error = "Cage must not be Empty"
+        }
+        else {
+            val newFlightRef =
+                db.child("Users").child("ID: $userId").child("Flight Birds").push()
 
-        val birdPref = db.child("Users").child("ID: $userId").child("Birds").child(birdkey)
-        val flightCageRef = db.child("Users").child("ID: $userId").child("Cages")
-            .child("Flight Cages").child(cageKeyValue.toString()).child("Birds").push()
+            val birdPref = db.child("Users").child("ID: $userId").child("Birds").child(birdkey)
+            val flightCageRef = db.child("Users").child("ID: $userId").child("Cages")
+                .child("Flight Cages").child(cageKeyValue.toString()).child("Birds").push()
 
-        val nurseryref =
-            db.child("Users").child("ID: $userId").child("Nursery Birds")
-                .child(nurseryKey.toString())
+            val nurseryref =
+                db.child("Users").child("ID: $userId").child("Nursery Birds")
+                    .child(nurseryKey.toString())
+            val NurseryCageRef = db.child("Users").child("ID: $userId").child("Cages")
+                .child("Nursery Cages").child(cageKey.toString()).child("Birds")
+                .child(nurseryBirdKey.toString())
+            nurseryref.removeValue()
+            NurseryCageRef.removeValue()
 
-        nurseryref.removeValue()
+            val key = newFlightRef.key
+
+            newFlightRef.setValue(dataToCopy)
+            val updateData = hashMapOf<String, Any?>("Flight Key" to key)
 
 
-        val key = newFlightRef.key
 
-        newFlightRef.setValue(dataToCopy)
-        val updateData = hashMapOf<String, Any?>("Flight Key" to key)
-
-
-        birdPref.updateChildren(updateData)
-        newFlightRef.updateChildren(updateData)
-        flightCageRef.setValue(dataToCopy)
-
+            birdPref.updateChildren(updateData)
+            newFlightRef.updateChildren(updateData)
+            flightCageRef.setValue(dataToCopy)
+            flightCageRef.updateChildren(updateData)
+            onBackPressed()
+            finish()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
