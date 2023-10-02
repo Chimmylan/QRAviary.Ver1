@@ -19,8 +19,7 @@ import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import java.util.*
 
 class EditEggActivity : AppCompatActivity() {
@@ -100,38 +99,66 @@ class EditEggActivity : AppCompatActivity() {
         hatchedLinearLayout = findViewById(R.id.hatchedDateLayout)
         spinnerStatus = findViewById(R.id.spinnerstatus)
 
-       /* incubatingStartDate = intent.getStringExtra("IncubatingStartDate")
-        maturingStartDate = intent.getStringExtra("MaturingStartDate")*/
+        /* incubatingStartDate = intent.getStringExtra("IncubatingStartDate")
+         maturingStartDate = intent.getStringExtra("MaturingStartDate")*/
         eggKey = intent.getStringExtra("EggKey")
         individualEggKey = intent.getStringExtra("IndividualEggKey")
         pairKey = intent.getStringExtra("PairKey")
 
 
         val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val edited = sharedPrefs.getBoolean("Edited", false)
         val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
 
         val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
         val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
+        val currentUserId = mAuth.currentUser?.uid
 
+        val dbase = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
+            .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString()).child(individualEggKey.toString())
+
+        if (!edited){
             etMaturingDate.setText(maturingDays.toString())
             etIncubatingDate.setText(incubatingDays.toString())
+        }else{
+            dbase.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot!=null){
+                        val maturingDaysValue =  snapshot.child("Maturing Days").value.toString()
+                        val incubatingDaysValue = snapshot.child("Incubating Days").value.toString()
+
+                        etIncubatingDate.setText(incubatingDaysValue)
+                        etMaturingDate.setText(maturingDaysValue)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
 
         var maturingDateText = ""
         var incubatingDateText = ""
-        edit.setOnClickListener{
+        edit.setOnClickListener {
             etMaturingDate.isEnabled = true
             etIncubatingDate.isEnabled = true
 
 
-            save.setOnClickListener{
+            save.setOnClickListener {
 
-                val newPrefs = getSharedPreferences("newPrefs", Context.MODE_PRIVATE)
+                val newPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
                 val editor = newPrefs.edit()
-                editor.putString("newMaturingValue", etMaturingDate.text.toString())
-                editor.putString("newIncubatingValue", etIncubatingDate.text.toString())
+                editor.putBoolean("Edited", true)
                 editor.apply()
+
+                dbase.child("Incubating Days").setValue(etIncubatingDate.text.toString())
+                dbase.child("Maturing Days").setValue(etMaturingDate.text.toString())
+
 
                 // Disable the EditText fields after saving
                 etMaturingDate.isEnabled = false
@@ -164,6 +191,11 @@ class EditEggActivity : AppCompatActivity() {
         if (hatchedLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnHatched.text)
         }
+
+
+
+
+
         onBackPressed()
 
 
@@ -250,18 +282,18 @@ class EditEggActivity : AppCompatActivity() {
 
     private fun getMonthFormat(month: Int): String {
         return when (month) {
-            1 -> "Jan"
-            2 -> "Feb"
-            3 -> "Mar"
-            4 -> "Apr"
-            5 -> "May"
-            6 -> "Jun"
-            7 -> "Jul"
-            8 -> "Aug"
-            9 -> "Sep"
-            10 -> "Oct"
-            11 -> "Nov"
-            12 -> "Dec"
+            1 -> "JAN"
+            2 -> "FEB"
+            3 -> "MAR"
+            4 -> "APR"
+            5 -> "MAY"
+            6 -> "JUN"
+            7 -> "JUL"
+            8 -> "AUG"
+            9 -> "SEP"
+            10 -> "OCT"
+            11 -> "NOV"
+            12 -> "DEC"
             else -> "JAN" // Default should never happen
         }
     }
