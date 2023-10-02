@@ -20,6 +20,7 @@ data class BirdData(
     var img: String? = null,
     var birdKey: String? = null,
     var flightKey: String? = null,
+    var nurseryKey: String? = null,
     var id: String? = null,
     var legband: String? = null,
     var identifier: String? = null,
