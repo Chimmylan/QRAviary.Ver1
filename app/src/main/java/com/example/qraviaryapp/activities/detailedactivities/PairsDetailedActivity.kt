@@ -58,7 +58,8 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var pairMaleKey: String
     private lateinit var pairFemaleKey: String
     private lateinit var currentUserId: String
-
+    private lateinit var totalclutch: TextView
+    private var clutchCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -75,6 +76,7 @@ class PairsDetailedActivity : AppCompatActivity() {
                 )
             )
         )
+        totalclutch =findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Clutch</font>",
@@ -189,6 +191,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             var deadInShellCount = 0
             var deadBeforeMovingToNurseryCount = 0
             var eggsCount = 0
+
             if (data != null) {
                 for (eggSnapshot in clutchSnapshot.children) {
                     val eggData = eggSnapshot.getValue(EggData::class.java)
@@ -196,6 +199,9 @@ class PairsDetailedActivity : AppCompatActivity() {
                     val eggStatus = eggSnapshot.child("Status").value.toString()
                     val eggDate = eggSnapshot.child("Date").value.toString()
                     eggsCount++
+
+                    clutchCount = snapshot.childrenCount.toInt()
+                    data.clutchCount = clutchCount.toString()
                     if (eggStatus == "Incubating") {
 
                         incubatingCount++
@@ -292,6 +298,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             }
 
         }
+        totalclutch.text = "Total Clutch: $clutchCount"
         dataList
     }
 

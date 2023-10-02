@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -42,7 +43,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var eggKey: String
     private lateinit var pairKey: String
 
-
+    private lateinit var totalegg: TextView
+    private var eggCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -51,7 +53,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         setContentView(R.layout.detailed_activity_clutches)
 
         supportActionoBar()
-
+        totalegg = findViewById(R.id.tvBirdCount)
         fab = findViewById(R.id.fab)
 
 
@@ -117,7 +119,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                     data.eggLaid = statusValue
                     data.eggLaidStartDate = dateValue
                 }
-
+                eggCount = snapshot.childrenCount.toInt()
+                data.eggCount = eggCount.toString()
                 data.pairKey = pairKey
                 data.eggKey = eggKey
                 data.individualEggKey = individualEggKey
@@ -129,7 +132,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 dataList.add(data)
             }
         }
-
+        totalegg.text = "Total Eggs: $eggCount"
         dataList
     }
 

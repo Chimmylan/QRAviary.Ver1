@@ -2,6 +2,7 @@ package com.example.qraviaryapp.adapter
 
 import EggData
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Looper
@@ -15,8 +16,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.MoveEggActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -42,6 +45,7 @@ class EggClutchesListAdapter(
         return EggClutchesHolder(view, dataList)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: EggClutchesHolder, position: Int) {
         val eggs = dataList[position]
 
@@ -66,7 +70,7 @@ class EggClutchesListAdapter(
                 holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
             }
             "Incubating" -> {
-                holder.tvTime.text = eggs.eggDate
+
                 holder.tvTime.visibility = View.VISIBLE
                 holder.layoutmove.visibility = View.GONE // Show layoutmove
                 holder.layoutprogressbar.visibility = View.VISIBLE // Show layoutmove
@@ -76,20 +80,24 @@ class EggClutchesListAdapter(
                 val eggDate = dateFormat.parse(eggdate)
                 val currentDate = Calendar.getInstance().time
 
+                val formattedDate = dateFormat.format(currentDate)
                 val ageInMillis = currentDate.time - eggDate.time
                 val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
                 if (ageInDays >= incubatedays!!) {
                     var progressPercentage = (ageInDays.toFloat() / incubatedays.toFloat() * 100).toInt()
 
                     if (progressPercentage >= 100) {
+                        progressPercentage = 100
                         val eggRef =
                             db.child("Users").child("ID: $currentUserId").child("Pairs").child(eggs.pairKey.toString())
                                 .child("Clutches")
                                 .child(eggs.eggKey.toString()).child(eggs.individualEggKey.toString())
 
                         eggRef.child("Status").setValue("Hatched")
-
+                        eggRef.child("Date").setValue(formattedDate)
                     }
+
+                    holder.tvpercentage.text = "$progressPercentage%"
 
                     val animator = ObjectAnimator.ofInt(holder.progressBar, "progress", progressPercentage)
                     animator.duration = 1000
@@ -102,16 +110,43 @@ class EggClutchesListAdapter(
                     val animator = ObjectAnimator.ofInt(holder.progressBar, "progress", progressPercentage)
                     animator.duration = 1000
                     animator.start()
-                    if (progressPercentage in 1..49) {
+                    if (progressPercentage in 1..99) {
                         holder.eggImg.setImageResource(R.drawable.hatchcolor)
                     }
+
+                    val remainingDays = incubatedays - ageInDays
+
+
+                    if (remainingDays > 0) {
+                        val daysText = if (remainingDays.toInt() == 1) "day" else "days"
+                        holder.tvTime.text = "$remainingDays $daysText left"
+                    }
                 }
+
             }
             "Hatched" -> {
-                holder.tvTime.text = eggs.eggDate
-                holder.tvTime.visibility = View.VISIBLE
+//                holder.tvTime.text = "ready to move in nursery cage!"
+                holder.tvTime.visibility = View.GONE
                 holder.layoutmove.visibility = View.VISIBLE // Show layoutmove
                 holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
+
+
+
+
+                val eggdate = eggs.eggDate
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val eggDate = dateFormat.parse(eggdate)
+                val currentDate = Calendar.getInstance().time
+
+                val ageInMillis = currentDate.time - eggDate.time
+                val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt() // Convert to Int
+
+                // Check if the date is the current date
+                if (ageInDays == 0) {
+                    holder.tvDate.text = "TODAY"
+                } else {
+                    holder.tvDate.text = eggs.eggDate
+                }
 
 
 
@@ -124,7 +159,10 @@ class EggClutchesListAdapter(
             }
         }
 
-
+        holder.movebtn.setOnClickListener{
+            val intent = Intent(context, MoveEggActivity::class.java)
+            context.startActivity(intent)
+        }
 
 
     }
@@ -151,7 +189,7 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     val movebtn: Button = itemvView.findViewById(R.id.movebtn)
     val layoutprogressbar: LinearLayout = itemvView.findViewById(R.id.layoutprogressbar)
     val progressBar: ProgressBar = itemvView.findViewById(R.id.progressBar)
-    val tvpercentage: TextView = itemvView.findViewById(R.id.tvpercentage)
+    var tvpercentage: TextView = itemvView.findViewById(R.id.tvpercentage)
     var chickImg: ImageView = itemView.findViewById(R.id.chickImageView)
     var eggImg: ImageView = itemView.findViewById(R.id.eggImageView)
     init {

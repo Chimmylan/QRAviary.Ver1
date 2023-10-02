@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_appbar_color">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="5"
+            tools:ignore="MissingConstraints">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white_black"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Identifier (*)"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etIdentifier"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white_black"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="5">
+                    <TextView
+                        android:id="@+id/tvmutation"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="match_parent"
+                        android:text="Mutation (*) "
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/addBtn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:text="add +"
+                        android:textSize="10sp"
+                        android:textColor="@color/black_white"
+                        android:backgroundTint="@color/new_appbar_color"
+                        android:textAlignment="center"
+
+                        app:iconGravity="textEnd" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/removeBtn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:text="Del -"
+                        android:textSize="10sp"
+                        android:textColor="@color/black_white"
+                        android:backgroundTint="@color/new_appbar_color"
+                        android:textAlignment="center"
+                        app:iconGravity="textEnd" />
+
+                </LinearLayout>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <GridLayout
+                        android:id="@+id/spinnerContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:rowCount="3"
+                        android:padding="5dp">
+                        <com.google.android.material.button.MaterialButton
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:id="@+id/mutationBtn1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/mutationBtn2"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/mutationBtn3"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/mutationBtn4"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/mutationBtn5"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/mutationBtn6"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_val"
+                            app:icon="@drawable/drop_down"
+                            app:iconGravity="textEnd"
+                            app:iconTint="@color/black"
+                            android:text="None"
+                            android:textColor="#000000"/>
+
+                    </GridLayout>
+                </HorizontalScrollView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:background="@color/white_black"
+                android:layout_marginTop="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Nursery Cage (*)"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnnurserycage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="48dp"
+                        android:textSize="10sp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:icon="@drawable/drop_down"
+                        app:iconGravity="end"
+                        app:iconTint="@color/black"
+                        android:text="Choose One"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

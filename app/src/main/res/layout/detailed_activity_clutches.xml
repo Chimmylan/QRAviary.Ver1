@@ -8,41 +8,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.detailedactivities.ClutchesDetailedActivity">
+
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:orientation="horizontal"
-            android:background="@color/new_appbar_color"
-            android:padding="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
-                android:id="@+id/tvEggs"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="16dp"
-                android:text="EGGS"
-                android:textColor="@color/appbar"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/tvTotalEggs"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="16dp"
-                android:text="0"
-                android:textColor="@color/appbar"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:id="@+id/tvBirdCount"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="#E9E8E8"
+                android:gravity="center"
+                android:text=" "
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -55,10 +46,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="none"/>
 
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

@@ -189,6 +189,13 @@ class EditEggActivity : AppCompatActivity() {
 
         eggRef.child("Status").setValue(status)
 
+        if (btnHatched.text.toString() == "TODAY") {
+            // Set the incubating date to the current date and time
+            val currentDateTime = LocalDateTime.now()
+            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+
+            btnHatched.text = formattedDate
+        }
         if (btnIncubating.text.toString() == "TODAY") {
             // Set the incubating date to the current date and time
             val currentDateTime = LocalDateTime.now()
