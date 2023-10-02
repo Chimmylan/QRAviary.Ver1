@@ -21,6 +21,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlin.math.log
 
 class MoveEggActivity : AppCompatActivity() {
     private lateinit var choosecage: MaterialButton
@@ -285,8 +286,8 @@ class MoveEggActivity : AppCompatActivity() {
 
     fun saveNursery(){
         val birdRef = db.child("Users").child("ID: $currentUserId").child("Birds")
-            .push()
-        val birdKey = birdRef.key
+        val newPrefBird = birdRef.push()
+        val birdKey = newPrefBird.key
 
         //toDeleteRef
         val eggRef = db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey)
@@ -357,9 +358,11 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation6" to mutation6,
         )
 
-        birdRef.updateChildren(data)
-        nurseryCageRef.updateChildren(data)
-        nurseryRef.updateChildren(data)
+//        newPrefBird.setValue(data)
+//        nurseryCageRef.setValue(data)
+//        nurseryRef.setValue(data)
+
+        Log.d(ContentValues.TAG, data.toString())
 
 
 
