@@ -15,6 +15,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -22,8 +25,14 @@ import java.util.concurrent.TimeUnit
 
 class EggClutchesListAdapter(
     private val context: Context,
-    private val dataList: MutableList<EggData>
+    private val dataList: MutableList<EggData>,
+
 ) : RecyclerView.Adapter<EggClutchesHolder>() {
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var db: DatabaseReference
+
+    private var currentUserId: String? = null
+    private var status: String? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EggClutchesHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_eggclutch, parent, false)
 
@@ -40,7 +49,10 @@ class EggClutchesListAdapter(
 
         val incubatedays: Int? = incubatingDays?.toInt()
 
+        mAuth = FirebaseAuth.getInstance()
+        db = FirebaseDatabase.getInstance().reference
 
+        currentUserId = mAuth.currentUser?.uid
 
         // Check the egg status and set the date TextView visibility accordingly
         when (eggs.eggStatus) {
@@ -67,11 +79,14 @@ class EggClutchesListAdapter(
                     var progressPercentage = (ageInDays.toFloat() / incubatedays.toFloat() * 100).toInt()
 
                     if (progressPercentage >= 100) {
-                        progressPercentage = 100
-                        holder.chickImg.setImageResource(R.drawable.hatchcolor)
-                        holder.eggImg.setImageResource(R.drawable.eggcolor)
+                        val eggRef =
+                            db.child("Users").child("ID: $currentUserId").child("Pairs").child(eggs.pairKey.toString())
+                                .child("Clutches")
+                                .child(eggs.eggKey.toString()).child(eggs.individualEggKey.toString())
+
+                        eggRef.child("Status").setValue("Hatched")
+
                     }
-                    holder.tvpercentage.text = "$progressPercentage%"
 
                     val animator = ObjectAnimator.ofInt(holder.progressBar, "progress", progressPercentage)
                     animator.duration = 1000

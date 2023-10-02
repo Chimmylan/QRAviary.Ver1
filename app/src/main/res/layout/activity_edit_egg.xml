@@ -79,7 +79,7 @@
                     app:icon="@drawable/drop_down"
                     app:iconGravity="end"
                     app:iconTint="@color/black"
-                    android:text="Today"
+                    android:text="TODAY"
                     android:textColor="@color/black" />
                 <ImageView
                     android:layout_width="0dp"
