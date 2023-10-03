@@ -19,7 +19,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         sharedPreferencess = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         onSaveDarkModeReference()
         Handler().postDelayed({
             val intent =
