@@ -770,7 +770,9 @@ class BasicFlightFragment : Fragment() {
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
                     "Flight Key" to FlightId,
-                    "Bird Key" to birdId
+                    "Bird Key" to birdId,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageBirdKey
                 )
 
                 if (!cageKeyValue.isNullOrEmpty()){
@@ -797,7 +799,9 @@ class BasicFlightFragment : Fragment() {
                     "Cage" to birdData.forSaleCage,
                     "Requested Price" to birdData.reqPrice,
                     "Flight Key" to FlightId,
-                    "Bird Key" to birdId
+                    "Bird Key" to birdId,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageBirdKey
 
 
                 )

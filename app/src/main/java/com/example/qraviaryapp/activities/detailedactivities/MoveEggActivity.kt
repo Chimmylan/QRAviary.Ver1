@@ -9,7 +9,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -71,7 +75,13 @@ class MoveEggActivity : AppCompatActivity() {
     private var mutation6IncubatingDays = ""
     private var mutation6MaturingDays = ""
 
+    /*RadioGroup*/
+    private lateinit var rgGender: RadioGroup
 
+    /*RadioGroup*/
+    private lateinit var rbFemale: RadioButton
+    private lateinit var rbMale: RadioButton
+    private lateinit var rbUnknown: RadioButton
 
 
 
@@ -104,6 +114,12 @@ class MoveEggActivity : AppCompatActivity() {
             // Set the black back button for non-night mode
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
         }
+        /*RadioGroup*/
+        rgGender = findViewById(R.id.radioGroupGender)
+        /*RadioButtons*/
+        rbMale = findViewById(R.id.radioButtonMale)
+        rbFemale = findViewById(R.id.radioButtonFemale)
+        rbUnknown = findViewById(R.id.radioButtonUnknown)
 
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -133,6 +149,8 @@ class MoveEggActivity : AppCompatActivity() {
         pairFemaleID = intent.getStringExtra("PairFemaleID").toString()
         eggDate = intent.getStringExtra("DateOfBirth").toString()
 
+
+        rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(this, MutationsActivity::class.java)
@@ -177,10 +195,96 @@ class MoveEggActivity : AppCompatActivity() {
 
 
         }
-
+        AddMutation()
+        RemoveLastMutation()
     }
-    fun save(){
+    private var spinnerCount = 0
 
+
+    fun AddMutation() {
+
+        btnMutation2.visibility = View.GONE
+        btnMutation3.visibility = View.GONE
+        btnMutation4.visibility = View.GONE
+        btnMutation5.visibility = View.GONE
+        btnMutation6.visibility = View.GONE
+
+        addBtn.setOnClickListener {
+
+            when (spinnerCount) {
+
+                0 -> {
+                    btnMutation2.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                1 -> {
+                    btnMutation3.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                2 -> {
+                    btnMutation4.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                3 -> {
+                    btnMutation5.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                4 -> {
+                    btnMutation6.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                else -> {
+                    Toast.makeText(this, "added $spinnerCount", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        }
+    }
+
+    fun RemoveLastMutation() {
+        removeBtn.setOnClickListener {
+
+            when (spinnerCount) {
+                0 -> {
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                1 -> {
+                    spinnerCount--
+                    btnMutation2.visibility = View.GONE
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                2 -> {
+                    spinnerCount--
+                    btnMutation3.visibility = View.GONE
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                3 -> {
+
+                    spinnerCount--
+                    btnMutation4.visibility = View.GONE
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                4 -> {
+
+                    spinnerCount--
+                    btnMutation5.visibility = View.GONE
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                else -> {
+                    spinnerCount--
+                    btnMutation6.visibility = View.GONE
+
+                    Toast.makeText(this, spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -289,16 +393,29 @@ class MoveEggActivity : AppCompatActivity() {
         val newPrefBird = birdRef.push()
         val birdKey = newPrefBird.key
 
+        val selectedOption: Int = rgGender.checkedRadioButtonId
+        val dataSelectedGen = findViewById<RadioButton>(selectedOption)!!
+
+
+
         //toDeleteRef
         val eggRef = db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey)
             .child("Clutches").child(eggKey).child(individualEggKey)
 
+        val descendantsfatherRef = db.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightMaleKey).child("Descendants").push()
+        val descendantsmotherRef = db.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightFemaleKey).child("Descendants").push()
         //nurseryCageRef
         val nurseryCageRef = db.child("Users").child("ID: $currentUserId").child("Cages")
-            .child("Nursery Cages").child(cageKeyValue.toString())
-
+            .child("Nursery Cages").child(cageKeyValue.toString()).child("Birds").push()
+        val descendantsbirdfatherRef = db.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairBirdMaleKey).child("Descendants").push()
+        val descendantsbirdmotherRef = db.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairBirdFemaleKey).child("Descendants").push()
         val nurseryRef = db.child("Users").child("ID: $currentUserId").child("Nursery Birds")
             .push()
+
         val nurseryKey = nurseryRef.key
 
 
@@ -356,12 +473,17 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation4" to mutation4,
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
+            "Gender" to dataSelectedGen.text.toString()
         )
 
         newPrefBird.updateChildren(data)
         nurseryCageRef.updateChildren(data)
         nurseryRef.updateChildren(data)
-
+        descendantsmotherRef.updateChildren(data)
+        descendantsfatherRef.updateChildren(data)
+        descendantsbirdmotherRef.updateChildren(data)
+        descendantsbirdfatherRef.updateChildren(data)
+        eggRef.removeValue()
         Log.d(ContentValues.TAG, data.toString())
 
 

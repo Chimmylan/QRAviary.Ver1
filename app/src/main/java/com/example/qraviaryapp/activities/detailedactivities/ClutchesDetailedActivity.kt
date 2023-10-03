@@ -145,7 +145,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.pairFlightFemaleKey = pairFlightFemaleKey
                 data.pairMaleId = pairMaleID
                 data.pairFemaleId = pairFemaleID
-
+                data.pairBirdFemaleKey = pairBirdFemaleKey
+                data.pairBirdMaleKey = pairBirdMaleKey
                 dataList.add(data)
             }
         }
