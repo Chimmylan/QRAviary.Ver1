@@ -418,7 +418,7 @@ class MoveEggActivity : AppCompatActivity() {
 
         val nurseryKey = nurseryRef.key
 
-
+//        cute
         val mutation1 = mapOf(
             "Mutation Name" to btnMutation1.text,
             "Maturing Days" to mutation1MaturingDays,
