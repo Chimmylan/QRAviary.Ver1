@@ -145,7 +145,12 @@ class PairsFragment : Fragment() {
                     val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
                     val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
                     val separateDate = itemSnapshot.child("Separate Date").value.toString()
+                    val pairMaleFlightKey = itemSnapshot.child("Male Flight Key").value.toString()
+                    val pairFemaleFlightKey = itemSnapshot.child("Female Flight Key").value.toString()
 
+
+                    data.pairFlightMaleKey = pairMaleFlightKey
+                    data.pairFlightFemaleKey = pairFemaleFlightKey
                     data.pairMaleKey = pairMaleKey
                     data.pairFemaleKey = pairFemaleKey
                     data.pairKey = key
@@ -164,6 +169,7 @@ class PairsFragment : Fragment() {
                     }
 
                     dataList.add(data)
+
                 }
 
             }

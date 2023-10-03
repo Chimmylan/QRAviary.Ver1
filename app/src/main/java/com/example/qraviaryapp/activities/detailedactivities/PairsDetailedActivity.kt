@@ -56,9 +56,15 @@ class PairsDetailedActivity : AppCompatActivity() {
 
     private lateinit var pairKey: String
     private lateinit var pairMaleKey: String
+    private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
-    private lateinit var currentUserId: String
+    private lateinit var pairFlightFemaleKey: String
+    private lateinit var pairMale: String
+    private lateinit var pairFemale: String
 
+    private lateinit var currentUserId: String
+    private lateinit var totalclutch: TextView
+    private var clutchCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -75,6 +81,7 @@ class PairsDetailedActivity : AppCompatActivity() {
                 )
             )
         )
+        totalclutch =findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Clutch</font>",
@@ -113,12 +120,14 @@ class PairsDetailedActivity : AppCompatActivity() {
 
         //Bundle from PairListActivity
         if (bundle != null) {
-            val maleId = bundle.getString("MaleID")
-            val femaleId = bundle.getString("FemaleID")
+            pairMale = bundle.getString("MaleID").toString()
+            pairFemale = bundle.getString("FemaleID").toString()
             val beginningDate = bundle.getString("BeginningDate")
             val separateDate = bundle.getString("SeparateDate")
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
+            pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
+            pairFlightMaleKey = bundle.getString("PairFlightMaleKey").toString()
             pairFemaleKey = bundle.getString("PairFemaleKey").toString()
             pairMaleKey = bundle.getString("PairMaleKey").toString()
             pairKey = bundle.getString("PairKey").toString()
@@ -148,8 +157,8 @@ class PairsDetailedActivity : AppCompatActivity() {
 
 
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
-            btnFemale.text = femaleId.toString()
-            btnMale.text = maleId.toString()
+            btnFemale.text = pairFemale.toString()
+            btnMale.text = pairMale.toString()
         }
 
 
@@ -189,6 +198,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             var deadInShellCount = 0
             var deadBeforeMovingToNurseryCount = 0
             var eggsCount = 0
+
             if (data != null) {
                 for (eggSnapshot in clutchSnapshot.children) {
                     val eggData = eggSnapshot.getValue(EggData::class.java)
@@ -196,6 +206,9 @@ class PairsDetailedActivity : AppCompatActivity() {
                     val eggStatus = eggSnapshot.child("Status").value.toString()
                     val eggDate = eggSnapshot.child("Date").value.toString()
                     eggsCount++
+
+                    clutchCount = snapshot.childrenCount.toInt()
+                    data.clutchCount = clutchCount.toString()
                     if (eggStatus == "Incubating") {
 
                         incubatingCount++
@@ -285,13 +298,22 @@ class PairsDetailedActivity : AppCompatActivity() {
                     }
 
 
+                    data.pairFlightMaleKey = pairFlightMaleKey
+                    data.pairFlightFemaleKey = pairFlightFemaleKey
+                    data.pairBirdFemaleKey = pairFemaleKey
+                    data.pairBirdMaleKey = pairMaleKey
+                    data.pairFemaleId = pairFemale
+                    data.pairMaleId = pairMale
+
                 }
             }
+
             if (data != null) {
                 dataList.add(data)
             }
 
         }
+        totalclutch.text = "Total Clutch: $clutchCount"
         dataList
     }
 

@@ -7,7 +7,9 @@
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background = "@color/bottom_nav_background"
     tools:context=".activities.detailedactivities.PairsDetailedActivity">
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"
@@ -22,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="#E9E8E8"
             android:padding="10dp">
 
             <TextView
@@ -50,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="1dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnmaleid"
@@ -60,7 +63,7 @@
                 android:backgroundTint="@color/bottom_nav_background"
                 android:text="Male ID"
                 android:textColor="@color/appbar"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 app:iconTint="@color/black_white"
                 app:icon="@drawable/male_icon"
                 app:iconGravity="start"
@@ -71,11 +74,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="2dp"
                 android:text="Female ID"
                 android:backgroundTint="@color/bottom_nav_background"
                 android:textColor="@color/appbar"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 app:iconTint="@color/black_white"
                 app:icon="@drawable/female_icon"
                 app:iconGravity="start"
@@ -86,18 +89,15 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="@color/new_appbar_color"
+        android:background="#E9E8E8"
         android:padding="10dp">
         <TextView
-            android:id="@+id/tvClutches"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="16dp"
-            android:text="CLUTCHES"
-            android:textColor="@color/appbar"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:id="@+id/tvBirdCount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=" "
+            android:textSize="16sp" />
          </LinearLayout>
 
 

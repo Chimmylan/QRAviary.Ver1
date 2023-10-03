@@ -656,7 +656,6 @@ class BasicFragment : Fragment() {
         }
         //
 
-
         val userId = mAuth.currentUser?.uid.toString()
         var cageBirdKey = ""
         if (!cageKeyValue.isNullOrEmpty()) {

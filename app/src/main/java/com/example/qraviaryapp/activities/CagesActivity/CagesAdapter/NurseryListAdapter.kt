@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 import java.text.SimpleDateFormat
@@ -100,6 +101,7 @@ class NurseryListAdapter(
 
         if (ageInDays >= maturingDays) {
             holder.layoutmovebtn.visibility = View.VISIBLE
+
             var progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
 
             if (progressPercentage >= 100) {
@@ -115,6 +117,17 @@ class NurseryListAdapter(
             val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
             animator.duration = 1000
             animator.start()
+
+            holder.movebtn.setOnClickListener{
+
+
+                val intent = Intent(context, MoveNurseryActivity::class.java)
+                intent.putExtra("Nursery Key", bird.nurseryKey)
+                intent.putExtra("CageKeyValue", bird.cageKey)
+                intent.putExtra("BirdKey", bird.birdKey)
+                context.startActivity(intent)
+            }
+
 
         } else {
             holder.layoutmovebtn.visibility = View.GONE

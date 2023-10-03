@@ -124,7 +124,6 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
-    var tvCage: TextView = itemView.findViewById(R.id.tvCage)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
 
     init {

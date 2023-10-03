@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -20,6 +21,8 @@ import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class EditEggActivity : AppCompatActivity() {
@@ -142,6 +145,7 @@ class EditEggActivity : AppCompatActivity() {
         }
 
 
+
         var maturingDateText = ""
         var incubatingDateText = ""
         edit.setOnClickListener {
@@ -185,12 +189,28 @@ class EditEggActivity : AppCompatActivity() {
 
         eggRef.child("Status").setValue(status)
 
+        if (btnHatched.text.toString() == "TODAY") {
+            // Set the incubating date to the current date and time
+            val currentDateTime = LocalDateTime.now()
+            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+
+            btnHatched.text = formattedDate
+        }
+        if (btnIncubating.text.toString() == "TODAY") {
+            // Set the incubating date to the current date and time
+            val currentDateTime = LocalDateTime.now()
+            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+
+            btnIncubating.text = formattedDate
+        }
+
         if (incubatingLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnIncubating.text)
         }
         if (hatchedLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnHatched.text)
         }
+
 
 
 

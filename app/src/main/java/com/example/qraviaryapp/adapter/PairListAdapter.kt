@@ -53,6 +53,8 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
 
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
+            bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)
+            bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
             bundle.putString("MaleID", dataList[adapterPosition].pairMale)
             bundle.putString("FemaleID", dataList[adapterPosition].pairFemale)

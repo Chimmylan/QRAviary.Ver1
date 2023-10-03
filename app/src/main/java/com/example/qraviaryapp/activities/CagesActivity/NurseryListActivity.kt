@@ -15,11 +15,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.FlightListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -118,7 +116,7 @@ class NurseryListActivity : AppCompatActivity() {
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
 
 
-                val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                val nurserykey = itemSnapshot.child("Nursery Key").value.toString()
                 val birdKey = itemSnapshot.key
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
@@ -207,13 +205,13 @@ class NurseryListActivity : AppCompatActivity() {
                 val boughtBreeder = breederContactValue.toString() ?: ""
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
-                birdCount++
+                birdCount = snapshot.childrenCount.toInt()
 
                 data.cageKey = CageKey
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
-                data.flightKey = flightKey
+                data.nurseryKey = nurserykey
                 data.legband = legband
                 data.identifier = identifier
                 data.gender = gender
@@ -267,6 +265,21 @@ class NurseryListActivity : AppCompatActivity() {
 
 
         dataList
+
+    }
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

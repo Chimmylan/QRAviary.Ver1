@@ -128,6 +128,12 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
 
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
             bundle.putString("EggKey", dataList[adapterPosition].eggKey)
+            bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)
+            bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)
+            bundle.putString("PairMaleKey", dataList[adapterPosition].pairBirdMaleKey)
+            bundle.putString("PairFemaleKey", dataList[adapterPosition].pairBirdFemaleKey)
+            bundle.putString("PairMaleID", dataList[adapterPosition].pairMaleId)
+            bundle.putString("PairFemaleID", dataList[adapterPosition].pairFemaleId)
             val i = Intent(itemView.context, ClutchesDetailedActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

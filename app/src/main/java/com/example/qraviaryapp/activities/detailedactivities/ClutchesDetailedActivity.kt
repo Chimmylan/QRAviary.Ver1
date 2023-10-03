@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -33,7 +34,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
-    private lateinit var adapter: EggClutchesListAdapter
+    public lateinit var adapter: EggClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var recyclerView: RecyclerView
 
@@ -41,7 +42,15 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     private lateinit var eggKey: String
     private lateinit var pairKey: String
+    private lateinit var pairFlightMaleKey: String
+    private lateinit var pairFlightFemaleKey: String
+    private lateinit var pairBirdMaleKey: String
+    private lateinit var pairBirdFemaleKey: String
+    private lateinit var pairMaleID: String
+    private lateinit var pairFemaleID: String
 
+    private lateinit var totalegg: TextView
+    private var eggCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -50,8 +59,9 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         setContentView(R.layout.detailed_activity_clutches)
 
         supportActionoBar()
-
+        totalegg = findViewById(R.id.tvBirdCount)
         fab = findViewById(R.id.fab)
+
 
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -73,6 +83,13 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         if (bundle != null) {
             eggKey = bundle.getString("EggKey").toString()
             pairKey = bundle.getString("PairKey").toString()
+            pairFlightMaleKey = bundle.getString("PairFlightMaleKey").toString()
+            pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
+            pairBirdMaleKey = bundle.getString("PairMaleKey").toString()
+            pairBirdFemaleKey = bundle.getString("PairFemaleKey").toString()
+            pairFemaleID = bundle.getString("PairFemaleID").toString()
+            pairMaleID = bundle.get("PairMaleID").toString()
+
         }
 
         lifecycleScope.launch {
@@ -87,7 +104,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         }
 
     }
-
 
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
@@ -116,7 +132,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                     data.eggLaid = statusValue
                     data.eggLaidStartDate = dateValue
                 }
-
+                eggCount = snapshot.childrenCount.toInt()
+                data.eggCount = eggCount.toString()
                 data.pairKey = pairKey
                 data.eggKey = eggKey
                 data.individualEggKey = individualEggKey
@@ -124,11 +141,16 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.eggDate = dateValue
                 data.eggIncubationStartDate = incubatingDateValue
                 data.eggMaturingStartDate = maturingDateValue
-
+                data.pairFlightMaleKey = pairFlightMaleKey
+                data.pairFlightFemaleKey = pairFlightFemaleKey
+                data.pairMaleId = pairMaleID
+                data.pairFemaleId = pairFemaleID
+                data.pairBirdFemaleKey = pairBirdFemaleKey
+                data.pairBirdMaleKey = pairBirdMaleKey
                 dataList.add(data)
             }
         }
-
+        totalegg.text = "Total Eggs: $eggCount"
         dataList
     }
 
