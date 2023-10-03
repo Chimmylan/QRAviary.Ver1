@@ -48,8 +48,12 @@ class PairMaleBirdListAdapter
 
         holder.tvIdentifier.text = "ID: $identifierText"
 
-
-        val mutationList = mutableListOf(
+        if (bird.legband.isNullOrEmpty()) {
+            holder.tvLegband.visibility = View.GONE
+        } else {
+            holder.tvLegband.text = bird.legband
+        }
+        val mutationList = listOf(
             bird.mutation1,
             bird.mutation2,
             bird.mutation3,
@@ -57,22 +61,31 @@ class PairMaleBirdListAdapter
             bird.mutation5,
             bird.mutation6
         )
+        if (bird.status == "Available" || bird.status == "For Sale") {
+            val cageInfo = when {
+                bird.status == "Available" -> bird.availCage
+                bird.status == "For Sale" -> bird.forSaleCage
+                else -> ""
+            }
 
-
+            if (cageInfo.isNullOrBlank()) {
+                holder.tvCage.visibility = View.GONE
+            } else {
+                holder.tvCage.visibility = View.VISIBLE
+                holder.tvCage.text = "Cage: $cageInfo"
+            }
+        } else {
+            holder.tvCage.visibility = View.GONE
+        }
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
-
-        val combinedMutations = nonNullMutations.joinToString("\nMutation: ")
-
-
-        if (combinedMutations.length > BirdListAdapter.MAX_MUTATION_LENGTH) {
-            val trimmedMutations = combinedMutations.substring(0,
-                BirdListAdapter.MAX_MUTATION_LENGTH
-            ) + "..." // Add ellipsis
-            holder.tvMutation.text = "Mutations: $trimmedMutations"
+        val combinedMutations = if (nonNullMutations.isNotEmpty()) {
+            "Mutation: " + nonNullMutations.joinToString(" x ")
         } else {
-            holder.tvMutation.text = "Mutations: $combinedMutations"
+            "Mutation: None"
         }
+
+        holder.tvMutation.text = combinedMutations
 
         holder.tvStatus.text = bird.status
         val genderIcon = if(bird.gender == "Male"){
@@ -101,6 +114,8 @@ class PairMaleBirdViewHolder(
 
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
+    var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
+    var tvCage: TextView = itemView.findViewById(R.id.tvCage)
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
