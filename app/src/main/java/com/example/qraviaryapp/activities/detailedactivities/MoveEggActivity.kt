@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import BirdData
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -62,18 +63,18 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var btnMutation5: MaterialButton
     private lateinit var btnMutation6: MaterialButton
 
-    private var mutation1IncubatingDays = ""
-    private var mutation1MaturingDays = ""
-    private var mutation2IncubatingDays = ""
-    private var mutation2MaturingDays = ""
-    private var mutation3IncubatingDays = ""
-    private var mutation3MaturingDays = ""
-    private var mutation4IncubatingDays = ""
-    private var mutation4MaturingDays = ""
-    private var mutation5IncubatingDays = ""
-    private var mutation5MaturingDays = ""
-    private var mutation6IncubatingDays = ""
-    private var mutation6MaturingDays = ""
+    private var mutation1IncubatingDays: String? = null
+    private var mutation1MaturingDays: String? = null
+    private var mutation2IncubatingDays: String? = null
+    private var mutation2MaturingDays: String? = null
+    private var mutation3IncubatingDays: String? = null
+    private var mutation3MaturingDays: String? = null
+    private var mutation4IncubatingDays: String? = null
+    private var mutation4MaturingDays: String? = null
+    private var mutation5IncubatingDays: String? = null
+    private var mutation5MaturingDays: String? = null
+    private var mutation6IncubatingDays: String? = null
+    private var mutation6MaturingDays: String? = null
 
     /*RadioGroup*/
     private lateinit var rgGender: RadioGroup
@@ -397,6 +398,29 @@ class MoveEggActivity : AppCompatActivity() {
         val dataSelectedGen = findViewById<RadioButton>(selectedOption)!!
 
 
+        val selectedMutations = mutableListOf<String?>()
+        val spinners = arrayOf(
+            btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
+        )
+
+        for (i in spinners.indices) {
+            if (spinners[i].visibility == View.VISIBLE) {
+                selectedMutations.add(spinners[i].text.toString())
+            } else {
+                selectedMutations.add(null)
+            }
+        }
+
+        val birds = BirdData(
+            mutation1 = selectedMutations[0],
+            mutation2 = selectedMutations[1],
+            mutation3 = selectedMutations[2],
+            mutation4 = selectedMutations[3],
+            mutation5 = selectedMutations[4],
+            mutation6 = selectedMutations[5],
+        )
+
+
 
         //toDeleteRef
         val eggRef = db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey)
@@ -420,32 +444,32 @@ class MoveEggActivity : AppCompatActivity() {
 
 //        cute
         val mutation1 = mapOf(
-            "Mutation Name" to btnMutation1.text,
+            "Mutation Name" to birds.mutation1,
             "Maturing Days" to mutation1MaturingDays,
             "Incubating Days" to mutation1IncubatingDays
         )
         val mutation2 = mapOf(
-            "Mutation Name" to btnMutation2.text,
+            "Mutation Name" to birds.mutation2,
             "Maturing Days" to mutation2MaturingDays,
             "Incubating Days" to mutation2IncubatingDays
         )
         val mutation3 = mapOf(
-            "Mutation Name" to btnMutation3.text,
+            "Mutation Name" to birds.mutation3,
             "Maturing Days" to mutation3MaturingDays,
             "Incubating Days" to mutation3IncubatingDays
         )
         val mutation4 = mapOf(
-            "Mutation Name" to btnMutation4.text,
+            "Mutation Name" to birds.mutation4,
             "Maturing Days" to mutation4MaturingDays,
             "Incubating Days" to mutation4IncubatingDays
         )
         val mutation5 = mapOf(
-            "Mutation Name" to btnMutation5.text,
+            "Mutation Name" to birds.mutation5,
             "Maturing Days" to mutation5MaturingDays,
             "Incubating Days" to mutation5IncubatingDays
         )
         val mutation6 = mapOf(
-            "Mutation Name" to btnMutation6.text,
+            "Mutation Name" to birds.mutation6,
             "Maturing Days" to mutation6MaturingDays,
             "Incubating Days" to mutation6IncubatingDays
         )
