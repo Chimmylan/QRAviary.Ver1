@@ -349,7 +349,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Date of Birth" to eggDate,
             "Nursery Key" to nurseryKey,
             "Status" to "Available",
-            "Identifier" to etIdentifier.text,
+            "Identifier" to etIdentifier.text.toString(),
             "Mutation1" to mutation1,
             "Mutation2" to mutation2,
             "Mutation3" to mutation3,
@@ -358,9 +358,9 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation6" to mutation6,
         )
 
-//        newPrefBird.setValue(data)
-//        nurseryCageRef.setValue(data)
-//        nurseryRef.setValue(data)
+        newPrefBird.updateChildren(data)
+        nurseryCageRef.updateChildren(data)
+        nurseryRef.updateChildren(data)
 
         Log.d(ContentValues.TAG, data.toString())
 
