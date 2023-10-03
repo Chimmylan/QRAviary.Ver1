@@ -163,5 +163,5 @@ data class EggData(
     var mother: String? = null,
     var fatherkey: String? = null,
     var motherkey: String? = null,
-
+    var status1: String? = null,
 )

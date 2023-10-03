@@ -134,9 +134,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 val maturingDateValue = eggSnapshot.child("Maturing Days").value.toString()
                 val birdkey = eggSnapshot.child("Bird Key").value.toString()
                 val cage = eggSnapshot.child("Cage").value.toString()
-                val Datebirth = eggSnapshot.child("Cage").value.toString()
+                val Datebirth = eggSnapshot.child("Date of Birth").value.toString()
                 val gender = eggSnapshot.child("Gender").value.toString()
                 val Identifier = eggSnapshot.child("Identifier").value.toString()
+                val statusAvailable = eggSnapshot.child("Status1").value.toString()
                 val Legband = eggSnapshot.child("Legband").value.toString()
                 val NurseryKey = eggSnapshot.child("Cage").value.toString()
                 val mutation1Value = if (eggSnapshot.hasChild("Mutation1")) {
@@ -207,6 +208,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.datebirth = Datebirth
                 data.legband = Legband
                 data.identifier = Identifier
+                data.cage = cage
+                data.nurserykey = NurseryKey
                 data.gender = gender
                 data.mutation2 = mutation2Value
                 data.mutation1 = mutation1Value
@@ -218,6 +221,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.fatherkey = fatherKeyValue
                 data.mother= motherKeyValue
                 data.motherkey = MotherValue
+                data.status1 = statusAvailable
                 dataList.add(data)
             }
         }

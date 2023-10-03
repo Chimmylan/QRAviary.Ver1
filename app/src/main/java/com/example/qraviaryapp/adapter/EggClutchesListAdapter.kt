@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
@@ -224,8 +225,28 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
 
             itemView.setOnClickListener {
                 if (dataList[adapterPosition].eggStatus == "Moved") {
-                    val i = Intent(itemvView.context, BirdsDetailedActivity::class.java)
-                    itemvView.context.startActivity(i)
+                    val bundle = Bundle()
+                    bundle.putString("BirdKey", dataList[adapterPosition].birdkey)
+                    bundle.putString("NurseryKey", dataList[adapterPosition].nurserykey)
+                    bundle.putString("BirdLegband", dataList[adapterPosition].legband)
+                    bundle.putString("BirdId", dataList[adapterPosition].identifier)
+                    bundle.putString("BirdGender", dataList[adapterPosition].gender)
+                    bundle.putString("BirdStatus", dataList[adapterPosition].status1)
+                    bundle.putString("BirdDateBirth", dataList[adapterPosition].datebirth)
+                    bundle.putString("BirdAvailCage", dataList[adapterPosition].cage)
+                    bundle.putString("BirdMutation1", dataList[adapterPosition].mutation1)
+                    bundle.putString("BirdMutation2", dataList[adapterPosition].mutation2)
+                    bundle.putString("BirdMutation3", dataList[adapterPosition].mutation3)
+                    bundle.putString("BirdMutation4", dataList[adapterPosition].mutation4)
+                    bundle.putString("BirdMutation5", dataList[adapterPosition].mutation5)
+                    bundle.putString("BirdMutation6", dataList[adapterPosition].mutation6)
+                    bundle.putString("BirdFather", dataList[adapterPosition].father)
+                    bundle.putString("BirdFatherKey", dataList[adapterPosition].fatherkey)
+                    bundle.putString("BirdMother", dataList[adapterPosition].mother)
+                    bundle.putString("BirdMotherKey", dataList[adapterPosition].motherkey)
+                    val i = Intent(itemView.context, BirdsDetailedActivity::class.java)
+                    i.putExtras(bundle)
+                    itemView.context.startActivity(i)
                 }else {
                     val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
                     val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate

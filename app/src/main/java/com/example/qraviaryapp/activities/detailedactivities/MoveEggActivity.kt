@@ -506,23 +506,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Parents" to parent,
             "Date of Birth" to eggDate,
             "Nursery Key" to nurseryKey,
-            "Status" to "Available",
-            "Identifier" to etIdentifier.text.toString(),
-            "Mutation1" to mutation1,
-            "Mutation2" to mutation2,
-            "Mutation3" to mutation3,
-            "Mutation4" to mutation4,
-            "Mutation5" to mutation5,
-            "Mutation6" to mutation6,
-            "Gender" to dataSelectedGen.text.toString(),
-            "Cage" to cageNameValue,
-            "Legband" to "",
-        )
-        val data1: Map<String, Any?> = hashMapOf(
-            "Bird Key" to birdKey,
-            "Parents" to parent,
-            "Date of Birth" to eggDate,
-            "Nursery Key" to nurseryKey,
+            "Status1" to "Available",
             "Identifier" to etIdentifier.text.toString(),
             "Mutation1" to mutation1,
             "Mutation2" to mutation2,
@@ -553,7 +537,7 @@ class MoveEggActivity : AppCompatActivity() {
 
         eggRef.child("Status").setValue("Moved")
         eggRef.child("Date").setValue(movedate)
-        eggRef.updateChildren(data1)
+        eggRef.updateChildren(data)
         Log.d(ContentValues.TAG, data.toString())
 
 
