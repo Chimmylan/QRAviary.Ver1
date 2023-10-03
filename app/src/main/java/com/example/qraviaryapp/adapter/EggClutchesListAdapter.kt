@@ -220,28 +220,30 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     var eggImg: ImageView = itemView.findViewById(R.id.eggImageView)
     init {
 
-        if (dataList[adapterPosition].eggStatus == "Moved") {
-            itemView.setOnClickListener {
-                val i = Intent(itemvView.context, BirdsDetailedActivity::class.java)
-                itemvView.context.startActivity(i)
-            }
-        } else {
-            itemView.setOnClickListener {
-                val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
-                val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
-                val eggKey = dataList[adapterPosition].eggKey
-                val individualEggKey = dataList[adapterPosition].individualEggKey
-                val pairKey = dataList[adapterPosition].pairKey
 
-                val i = Intent(itemvView.context, EditEggActivity::class.java)
-                i.putExtra("IncubatingStartDate", incubatingStartDate)
-                i.putExtra("MaturingStartDate", maturingStartDate)
-                i.putExtra("EggKey", eggKey)
-                i.putExtra("IndividualEggKey", individualEggKey)
-                i.putExtra("PairKey", pairKey)
-                itemvView.context.startActivity(i)
 
+            itemView.setOnClickListener {
+                if (dataList[adapterPosition].eggStatus == "Moved") {
+                    val i = Intent(itemvView.context, BirdsDetailedActivity::class.java)
+                    itemvView.context.startActivity(i)
+                }else {
+                    val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
+                    val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
+                    val eggKey = dataList[adapterPosition].eggKey
+                    val individualEggKey = dataList[adapterPosition].individualEggKey
+                    val pairKey = dataList[adapterPosition].pairKey
+
+                    val i = Intent(itemvView.context, EditEggActivity::class.java)
+                    i.putExtra("IncubatingStartDate", incubatingStartDate)
+                    i.putExtra("MaturingStartDate", maturingStartDate)
+                    i.putExtra("EggKey", eggKey)
+                    i.putExtra("IndividualEggKey", individualEggKey)
+                    i.putExtra("PairKey", pairKey)
+                    itemvView.context.startActivity(i)
+                }
             }
-        }
+
+
+
     }
 }
