@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -44,6 +45,9 @@ class PairsFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var current: TextView
+    private lateinit var previous: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,12 +68,19 @@ class PairsFragment : Fragment() {
         dataList = ArrayList()
         adapter = PairListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        current = view.findViewById(R.id.tvCurrent)
+        previous = view.findViewById(R.id.tvPrevious)
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
+                dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
+                if (dataList.isEmpty()) {
+                    current.visibility = View.GONE
+                } else {
+                    current.visibility = View.VISIBLE
+                }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
@@ -77,8 +88,14 @@ class PairsFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabasePrevious()
+                dataList1.clear()
                 dataList1.addAll(data)
                 adapter1.notifyDataSetChanged()
+                if (dataList1.isEmpty()) {
+                    previous.visibility = View.GONE
+                } else {
+                    previous.visibility = View.VISIBLE
+                }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
@@ -137,6 +154,10 @@ class PairsFragment : Fragment() {
                 } else {
                     val key = itemSnapshot.key.toString()
                     val cageName = itemSnapshot.child("Cage").value.toString()
+                    val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
+                    val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
+                    val cageBirdFemale = itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
+                    val cageBirdMale = itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
                     val male = itemSnapshot.child("Male").value.toString()
                     val female = itemSnapshot.child("Female").value.toString()
                     val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
@@ -161,7 +182,10 @@ class PairsFragment : Fragment() {
                     data.pairFemaleMutation = femaleMutation
                     data.pairDateBeg = beginningDate
                     data.pairDateSep = separateDate
-
+                    data.paircagebirdFemale =cageBirdFemale
+                    data.paircagebirdMale = cageBirdMale
+                    data.paircagekeyFemale = cageKeyFemale
+                    data.paircagekeyMale = cageKeyMale
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
                     } else {
@@ -192,6 +216,10 @@ class PairsFragment : Fragment() {
                     if (itemSnapshot.child("Separate Date").exists()) {
                         val key = itemSnapshot.key.toString()
                         val cageName = itemSnapshot.child("Cage").value.toString()
+                        val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
+                        val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
+                        val cageBirdFemale = itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
+                        val cageBirdMale = itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
                         val male = itemSnapshot.child("Male").value.toString()
                         val female = itemSnapshot.child("Female").value.toString()
                         val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
@@ -211,6 +239,10 @@ class PairsFragment : Fragment() {
                         data.pairFemaleMutation = femaleMutation
                         data.pairDateBeg = beginningDate
                         data.pairDateSep = separateDate
+                        data.paircagebirdFemale =cageBirdFemale
+                        data.paircagebirdMale = cageBirdMale
+                        data.paircagekeyFemale = cageKeyFemale
+                        data.paircagekeyMale = cageKeyMale
 
                         if (Looper.myLooper() != Looper.getMainLooper()) {
                             Log.d(ContentValues.TAG, "Code is running on a background thread")
@@ -225,6 +257,7 @@ class PairsFragment : Fragment() {
                 }
 
             }
+
             dataList.sortBy { it.pairDateBeg }
             dataList
         }
@@ -243,6 +276,26 @@ class PairsFragment : Fragment() {
                 dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
+                if (!dataList.isEmpty()) {
+                    current.visibility = View.VISIBLE
+                } else {
+                    current.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            }
+        }
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabasePrevious()
+                dataList1.clear()
+                dataList1.addAll(data)
+                adapter1.notifyDataSetChanged()
+                if (!dataList1.isEmpty()) {
+                    previous.visibility = View.VISIBLE
+                } else {
+                    previous.visibility = View.GONE
+                }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }

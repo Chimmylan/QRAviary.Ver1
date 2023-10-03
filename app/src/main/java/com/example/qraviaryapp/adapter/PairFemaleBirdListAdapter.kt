@@ -113,12 +113,15 @@ class PairFemaleViewHolder(
             val femaleMutation = dataList[adapterPosition].mutation1
             val femaleBirdId =
                 dataList[adapterPosition].identifier // Retrieve the cage name from the data list
-
+            val cagekey = dataList[adapterPosition].cagekeyvalue
+            val cagebirdkey = dataList[adapterPosition].cagebirdkey
             val intent = Intent()
             intent.putExtra("FemaleBirdId", femaleBirdId)
             intent.putExtra("FemaleBirdKey", femaleBirdKey)
             intent.putExtra("FemaleFlightKey", femaleFlightKey)
             intent.putExtra("FemaleBirdMutation", femaleMutation)
+            intent.putExtra("CageKeyFemale",cagekey)
+            intent.putExtra("CageBirdKeyFemale",cagebirdkey)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()

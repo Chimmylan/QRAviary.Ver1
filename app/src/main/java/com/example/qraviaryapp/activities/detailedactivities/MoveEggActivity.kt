@@ -26,6 +26,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.log
 
 class MoveEggActivity : AppCompatActivity() {
@@ -45,7 +48,7 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var pairMaleID: String
     private lateinit var pairFemaleID: String
     private lateinit var eggDate: String
-
+    private lateinit var movedate: String
     private lateinit var incubatingStartDate: String
     private lateinit var maturingStartDate: String
 
@@ -84,7 +87,10 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var rbMale: RadioButton
     private lateinit var rbUnknown: RadioButton
 
-
+    private lateinit var pairCageKeyMale: String
+    private lateinit var pairCageKeyFemale: String
+    private lateinit var pairCageBirdMale: String
+    private lateinit var pairCageBirdFemale: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,7 +155,10 @@ class MoveEggActivity : AppCompatActivity() {
         pairMaleID = intent.getStringExtra("PairMaleID").toString()
         pairFemaleID = intent.getStringExtra("PairFemaleID").toString()
         eggDate = intent.getStringExtra("DateOfBirth").toString()
-
+        pairCageBirdFemale = intent.getStringExtra("CageBirdFemale").toString()
+        pairCageBirdMale= intent.getStringExtra("CageBirdMale").toString()
+        pairCageKeyMale= intent.getStringExtra("CageKeyMale").toString()
+        pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
@@ -440,8 +449,16 @@ class MoveEggActivity : AppCompatActivity() {
         val nurseryRef = db.child("Users").child("ID: $currentUserId").child("Nursery Birds")
             .push()
 
+        val descendantscagefather = db.child("Users").child("ID: $currentUserId").child("Cages")
+            .child("Flight Cages").child(pairCageBirdMale.toString()).child("Birds").child(pairCageKeyMale).child("Descendants").push()
+        val descendantscagemother = db.child("Users").child("ID: $currentUserId").child("Cages")
+        .child("Flight Cages").child(pairCageBirdFemale.toString()).child("Birds").child(pairCageKeyFemale).child("Descendants").push()
         val nurseryKey = nurseryRef.key
 
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+        val formattedDate = dateFormat.format(currentDate)
+        movedate = formattedDate
 //        cute
         val mutation1 = mapOf(
             "Mutation Name" to birds.mutation1,
@@ -497,8 +514,28 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation4" to mutation4,
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
-            "Gender" to dataSelectedGen.text.toString()
+            "Gender" to dataSelectedGen.text.toString(),
+            "Cage" to cageNameValue,
+            "Legband" to "",
         )
+        val data1: Map<String, Any?> = hashMapOf(
+            "Bird Key" to birdKey,
+            "Parents" to parent,
+            "Date of Birth" to eggDate,
+            "Nursery Key" to nurseryKey,
+            "Identifier" to etIdentifier.text.toString(),
+            "Mutation1" to mutation1,
+            "Mutation2" to mutation2,
+            "Mutation3" to mutation3,
+            "Mutation4" to mutation4,
+            "Mutation5" to mutation5,
+            "Mutation6" to mutation6,
+            "Gender" to dataSelectedGen.text.toString(),
+            "Cage" to cageNameValue,
+            "Legband" to "",
+        )
+
+
 
         newPrefBird.updateChildren(data)
         nurseryCageRef.updateChildren(data)
@@ -507,7 +544,16 @@ class MoveEggActivity : AppCompatActivity() {
         descendantsfatherRef.updateChildren(data)
         descendantsbirdmotherRef.updateChildren(data)
         descendantsbirdfatherRef.updateChildren(data)
-        eggRef.removeValue()
+        descendantscagefather.updateChildren(data)
+        descendantscagemother.updateChildren(data)
+
+//        eggRef.removeValue()
+
+
+
+        eggRef.child("Status").setValue("Moved")
+        eggRef.child("Date").setValue(movedate)
+        eggRef.updateChildren(data1)
         Log.d(ContentValues.TAG, data.toString())
 
 

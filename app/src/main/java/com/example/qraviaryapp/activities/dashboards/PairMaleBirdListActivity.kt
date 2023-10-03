@@ -129,6 +129,8 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                         val maleKey = itemSnapshot.key
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                        val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
+                        val cagebirdkeyvalue = itemSnapshot.child("Cage Bird Key").value.toString()
                         val identifierValue = itemSnapshot.child("Identifier").value
                         val genderValue = itemSnapshot.child("Gender").value
                         val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
@@ -233,7 +235,8 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                         data.donatedDate = donatedDate
                         data.donatedContact = donatedContact
                         data.otherComments = otherComments
-
+                        data.cagekeymalevalue = cagekeyvalue
+                        data.cagebirdmalekey = cagebirdkeyvalue
 
                         if (Looper.myLooper() != Looper.getMainLooper()) {
                             Log.d(ContentValues.TAG, "Code is running on a background thread")
@@ -249,6 +252,8 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                         val maleKey = itemSnapshot.key
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                        val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
+                        val cagebirdkeyvalue = itemSnapshot.child("Cage Bird Key").value.toString()
                         val identifierValue = itemSnapshot.child("Identifier").value
                         val genderValue = itemSnapshot.child("Gender").value
                         val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
@@ -353,7 +358,8 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                         data.donatedDate = donatedDate
                         data.donatedContact = donatedContact
                         data.otherComments = otherComments
-
+                        data.cagekeymalevalue = cagekeyvalue
+                        data.cagebirdmalekey = cagebirdkeyvalue
 
                         if (Looper.myLooper() != Looper.getMainLooper()) {
                             Log.d(ContentValues.TAG, "Code is running on a background thread")

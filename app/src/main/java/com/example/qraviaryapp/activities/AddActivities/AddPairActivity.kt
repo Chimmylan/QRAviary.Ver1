@@ -52,7 +52,10 @@ class AddPairActivity : AppCompatActivity() {
     private var btnMaleFlightValueKey: String? = null
     private var btnFemaleValueKey: String? = null
     private var btnFemaleFlightValueKey: String? = null
-
+    private var cageKeyFlightMaleValue: String? = null
+    private var cageKeyFlightFemaleValue: String? = null
+    private var CageBirdKeyMother: String? = null
+    private var CageBirdKeyFather: String? = null
     private var cageKeyValue: String? = null
 
     private var parentAndChild = false
@@ -135,6 +138,7 @@ class AddPairActivity : AppCompatActivity() {
         btnFemale.setOnClickListener {
             val requestCode = 2
             val i = Intent(this, PairFemaleBirdListActivity::class.java)
+
             if (!hybridizationCheck) {
                 if (maleMutation?.isNotEmpty() == true) {
                     i.putExtra("MaleMutation", maleMutation)
@@ -291,7 +295,11 @@ class AddPairActivity : AppCompatActivity() {
                 "Male Bird Key" to btnMaleValueKey,
                 "Female Bird Key" to btnFemaleValueKey,
                 "Male Flight Key" to btnMaleFlightValueKey,
-                "Female Flight Key" to btnFemaleFlightValueKey
+                "Female Flight Key" to btnFemaleFlightValueKey,
+                "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue,
+                "CageKeyFlightMaleValue" to cageKeyFlightMaleValue,
+                "CageKeyFemale" to CageBirdKeyMother,
+                "CageKeyMale" to CageBirdKeyFather
             )
 
             val maleBirdPair: Map<String, Any?> = hashMapOf(
@@ -401,6 +409,8 @@ class AddPairActivity : AppCompatActivity() {
                 btnMaleIdValue = data?.getStringExtra("MaleBirdId").toString()
                 btnMaleFlightValueKey = data?.getStringExtra("MaleFlightKey").toString()
                 maleMutation = data?.getStringExtra("MaleMutation").toString()
+                cageKeyFlightMaleValue = data?.getStringExtra("CageKeyMale").toString()
+                CageBirdKeyFather = data?.getStringExtra("CageBirdKeyMale").toString()
                 btnMale.text = btnMaleIdValue
             }
         }
@@ -410,6 +420,8 @@ class AddPairActivity : AppCompatActivity() {
                 btnFemaleIdValue = data?.getStringExtra("FemaleBirdId").toString()
                 btnFemaleFlightValueKey = data?.getStringExtra("FemaleFlightKey").toString()
                 femaleMutation = data?.getStringExtra("FemaleBirdMutation").toString()
+                cageKeyFlightFemaleValue = data?.getStringExtra("CageKeyFemale").toString()
+                CageBirdKeyMother = data?.getStringExtra("CageBirdKeyFemale").toString()
                 btnFemale.text = btnFemaleIdValue
             }
         }

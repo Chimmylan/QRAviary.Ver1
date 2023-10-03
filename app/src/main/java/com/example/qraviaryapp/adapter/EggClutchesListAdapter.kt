@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
+import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.MoveEggActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -151,6 +152,15 @@ class EggClutchesListAdapter(
 
 
             }
+            "Moved" -> {
+                holder.tvTime.text = "ID"
+                holder.tvTime.visibility = View.GONE
+                holder.layoutmove.visibility = View.GONE // Show layoutmove
+                holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
+
+
+
+            }
             else -> {
                 // Hide the date TextView and layoutmove for other statuses
                 holder.tvTime.visibility = View.GONE
@@ -173,6 +183,10 @@ class EggClutchesListAdapter(
             intent.putExtra("PairMaleID", eggs.pairMaleId)
             intent.putExtra("PairFemaleID", eggs.pairFemaleId)
             intent.putExtra("DateOfBirth", eggs.eggDate)
+            intent.putExtra("CageKeyFemale",eggs.eggcagekeyFemale)
+            intent.putExtra("CageKeyMale",eggs.eggcagekeyMale)
+            intent.putExtra("CageBirdFemale",eggs.eggcagebirdFemale)
+            intent.putExtra("CageBirdMale",eggs.eggcagebirdMale)
             context.startActivity(intent)
         }
 
@@ -206,22 +220,28 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     var eggImg: ImageView = itemView.findViewById(R.id.eggImageView)
     init {
 
+        if (dataList[adapterPosition].eggStatus == "Moved") {
+            itemView.setOnClickListener {
+                val i = Intent(itemvView.context, BirdsDetailedActivity::class.java)
+                itemvView.context.startActivity(i)
+            }
+        } else {
+            itemView.setOnClickListener {
+                val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
+                val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
+                val eggKey = dataList[adapterPosition].eggKey
+                val individualEggKey = dataList[adapterPosition].individualEggKey
+                val pairKey = dataList[adapterPosition].pairKey
 
-        itemView.setOnClickListener {
-            val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
-            val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
-            val eggKey = dataList[adapterPosition].eggKey
-            val individualEggKey = dataList[adapterPosition].individualEggKey
-            val pairKey = dataList[adapterPosition].pairKey
+                val i = Intent(itemvView.context, EditEggActivity::class.java)
+                i.putExtra("IncubatingStartDate", incubatingStartDate)
+                i.putExtra("MaturingStartDate", maturingStartDate)
+                i.putExtra("EggKey", eggKey)
+                i.putExtra("IndividualEggKey", individualEggKey)
+                i.putExtra("PairKey", pairKey)
+                itemvView.context.startActivity(i)
 
-            val i = Intent(itemvView.context, EditEggActivity::class.java)
-            i.putExtra("IncubatingStartDate", incubatingStartDate)
-            i.putExtra("MaturingStartDate", maturingStartDate)
-            i.putExtra("EggKey", eggKey)
-            i.putExtra("IndividualEggKey", individualEggKey)
-            i.putExtra("PairKey", pairKey)
-            itemvView.context.startActivity(i)
-
+            }
         }
     }
 }

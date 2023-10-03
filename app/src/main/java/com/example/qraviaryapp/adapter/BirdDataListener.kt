@@ -61,7 +61,11 @@ data class BirdData(
     var otOtherContact: String? = null,
     var birdCount: String? = null,
     var cageKey: String? = null,
-    var ageindays: String? = null
+    var ageindays: String? = null,
+    var cagekeyvalue: String? = null,
+    var cagebirdkey: String? = null,
+    var cagekeymalevalue: String? = null,
+    var cagebirdmalekey: String? = null
 )
 
 data class CageData(
@@ -105,12 +109,17 @@ data class PairData(
     var pairMaleGender: String? = null,
     var pairFemaleGender: String? = null,
     var pairMaleMutation: String? = null,
-    var pairFemaleMutation: String? = null
+    var pairFemaleMutation: String? = null,
+    var paircagekeyFemale: String? = null,
+    var paircagekeyMale: String? = null,
+    var paircagebirdMale: String? = null,
+    var paircagebirdFemale: String? = null,
 )
 
 data class EggData(
     var eggStatus: String? = null,
     var eggDate: String? = null,
+    var movedate: String? = null,
     var pairKey: String? = null,
     var pairFlightMaleKey: String? = null,
     var pairFlightFemaleKey: String? = null,
@@ -133,4 +142,26 @@ data class EggData(
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
     var eggMaturingStartDate: String? = null,
+    var eggcagekeyFemale: String? = null,
+    var eggcagekeyMale: String? = null,
+    var eggcagebirdMale: String? = null,
+    var eggcagebirdFemale: String? = null,
+    var birdkey: String? = null,
+    var cage: String? = null,
+    var datebirth: String? = null,
+    var gender: String? = null,
+    var identifier: String? = null,
+    var legband: String? = null,
+    var nurserykey: String? = null,
+    var mutation1: String? = null,
+    var mutation2: String? = null,
+    var mutation3: String? = null,
+    var mutation4: String? = null,
+    var mutation5: String? = null,
+    var mutation6: String? = null,
+    var father: String? = null,
+    var mother: String? = null,
+    var fatherkey: String? = null,
+    var motherkey: String? = null,
+
 )

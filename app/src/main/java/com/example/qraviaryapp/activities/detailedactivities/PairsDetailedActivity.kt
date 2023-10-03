@@ -61,7 +61,10 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var pairFlightFemaleKey: String
     private lateinit var pairMale: String
     private lateinit var pairFemale: String
-
+    private lateinit var pairCageKeyMale: String
+    private lateinit var pairCageKeyFemale: String
+    private lateinit var pairCageBirdMale: String
+    private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
@@ -131,6 +134,10 @@ class PairsDetailedActivity : AppCompatActivity() {
             pairFemaleKey = bundle.getString("PairFemaleKey").toString()
             pairMaleKey = bundle.getString("PairMaleKey").toString()
             pairKey = bundle.getString("PairKey").toString()
+            pairCageBirdFemale = bundle.getString("CageBirdFemale").toString()
+            pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
+            pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
+            pairCageKeyMale = bundle.getString("CageKeyMale").toString()
 
             currentUserId = mAuth.currentUser?.uid.toString()
             val db = FirebaseDatabase.getInstance().reference.child("Users")
@@ -304,7 +311,10 @@ class PairsDetailedActivity : AppCompatActivity() {
                     data.pairBirdMaleKey = pairMaleKey
                     data.pairFemaleId = pairFemale
                     data.pairMaleId = pairMale
-
+                    data.eggcagebirdMale = pairCageBirdMale
+                    data.eggcagebirdFemale = pairCageBirdFemale
+                    data.eggcagekeyMale = pairCageKeyMale
+                    data.eggcagekeyFemale = pairCageKeyFemale
                 }
             }
 
