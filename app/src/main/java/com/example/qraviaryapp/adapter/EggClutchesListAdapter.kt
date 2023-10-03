@@ -3,10 +3,12 @@ package com.example.qraviaryapp.adapter
 import EggData
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -244,6 +246,8 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
                     bundle.putString("BirdFatherKey", dataList[adapterPosition].fatherkey)
                     bundle.putString("BirdMother", dataList[adapterPosition].mother)
                     bundle.putString("BirdMotherKey", dataList[adapterPosition].motherkey)
+                    Log.d(ContentValues.TAG, dataList[adapterPosition].fatherkey.toString())
+                    Log.d(ContentValues.TAG, dataList[adapterPosition].motherkey.toString())
                     val i = Intent(itemView.context, BirdsDetailedActivity::class.java)
                     i.putExtras(bundle)
                     itemView.context.startActivity(i)

@@ -175,6 +175,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 val MotherValue = eggSnapshot.child("Parents").child("Mother").value.toString()
                 val fatherKeyValue = eggSnapshot.child("Parents").child("FatherKey").value.toString()
                 val motherKeyValue = eggSnapshot.child("Parents").child("MotherKey").value.toString()
+                val fatherBirdKeyValue = eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
+                val motherBirdKeyValue = eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
 
 
                 if (statusValue == "Incubating") {
@@ -219,8 +221,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.mutation5 = mutation5Value
                 data.father = FatherValue
                 data.fatherkey = fatherKeyValue
-                data.mother= motherKeyValue
-                data.motherkey = MotherValue
+                data.mother= MotherValue
+                data.fatherbirdkey = fatherBirdKeyValue
+                data.motherbirdkey = motherBirdKeyValue
+                data.motherkey = motherKeyValue
                 data.status1 = statusAvailable
                 dataList.add(data)
             }

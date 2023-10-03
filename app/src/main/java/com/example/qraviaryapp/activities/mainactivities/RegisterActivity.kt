@@ -230,9 +230,11 @@ class RegisterActivity : AppCompatActivity() {
                         if (dataSnapshot.hasChild("ID: $uid")) {
                             Log.d(TAG, "Main Page")
                             startActivity(Intent(this@RegisterActivity, NavHomeActivity::class.java))
+                            finish()
                         } else {
                             Log.d(TAG, "Get Started Page")
                             startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
+                            finish()
 
                             // Since the user does not exist, create a new entry in the database
                             val userData = hashMapOf("Name" to uid)
@@ -422,6 +424,7 @@ class RegisterActivity : AppCompatActivity() {
                                             ).show()
                                             //TODO Make the user go to the Get Started Page
                                             startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
+                                            finish()
                                         }.addOnFailureListener {
                                             Toast.makeText(
                                                 this@RegisterActivity,
@@ -462,6 +465,7 @@ class RegisterActivity : AppCompatActivity() {
 
     fun login(view: View) {
         startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+        finish()
     }
 
 

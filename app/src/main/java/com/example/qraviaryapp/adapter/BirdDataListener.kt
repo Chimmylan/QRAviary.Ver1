@@ -162,6 +162,8 @@ data class EggData(
     var father: String? = null,
     var mother: String? = null,
     var fatherkey: String? = null,
+    var fatherbirdkey: String? = null,
     var motherkey: String? = null,
+    var motherbirdkey: String? = null,
     var status1: String? = null,
 )
