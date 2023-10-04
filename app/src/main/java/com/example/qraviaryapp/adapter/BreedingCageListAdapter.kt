@@ -22,7 +22,7 @@ class CageListAdapter(
     private val clickListener: ClickListener
 ) : RecyclerView.Adapter<CageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CageViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist_category, parent, false)
 
 
         return CageViewHolder(view, dataList, context as BreedingCagesListActivity)
@@ -46,20 +46,20 @@ class CageListAdapter(
 
 
 
-        holder.cageDel.setOnClickListener{
-            val alertDialog = AlertDialog.Builder(holder.itemView.context)
-                .setTitle("Delete Cage")
-                .setMessage("Are you sure you want to delete this Cage?")
-                .setPositiveButton("Delete"){_,_->
-                    itemRef.removeValue()
-                    dataList.removeAt(position)
-                    notifyDataSetChanged()
-                }
-                .setNegativeButton("Cancel", null)
-                .create()
-            alertDialog.show()
-            true
-        }
+//        holder.cageDel.setOnClickListener{
+//            val alertDialog = AlertDialog.Builder(holder.itemView.context)
+//                .setTitle("Delete Cage")
+//                .setMessage("Are you sure you want to delete this Cage?")
+//                .setPositiveButton("Delete"){_,_->
+//                    itemRef.removeValue()
+//                    dataList.removeAt(position)
+//                    notifyDataSetChanged()
+//                }
+//                .setNegativeButton("Cancel", null)
+//                .create()
+//            alertDialog.show()
+//            true
+//        }
 
     }
 
@@ -70,7 +70,7 @@ class CageViewHolder(itemView: View, private val dataList: MutableList<CageData>
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
-    val cageDel: TextView = itemView.findViewById(R.id.cageDelete)
+
 
 
     init {

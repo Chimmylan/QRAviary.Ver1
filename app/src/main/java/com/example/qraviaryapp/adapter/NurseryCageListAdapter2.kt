@@ -47,20 +47,20 @@ class NurseryCageListAdapter2(
 
 
 
-        holder.cageDel.setOnClickListener{
-            val alertDialog = AlertDialog.Builder(holder.itemView.context)
-                .setTitle("Delete Cage")
-                .setMessage("Are you sure you want to delete this Cage?")
-                .setPositiveButton("Delete"){_,_->
-                    itemRef.removeValue()
-                    dataList.removeAt(position)
-                    notifyDataSetChanged()
-                }
-                .setNegativeButton("Cancel", null)
-                .create()
-            alertDialog.show()
-            true
-        }
+//        holder.cageDel.setOnClickListener{
+//            val alertDialog = AlertDialog.Builder(holder.itemView.context)
+//                .setTitle("Delete Cage")
+//                .setMessage("Are you sure you want to delete this Cage?")
+//                .setPositiveButton("Delete"){_,_->
+//                    itemRef.removeValue()
+//                    dataList.removeAt(position)
+//                    notifyDataSetChanged()
+//                }
+//                .setNegativeButton("Cancel", null)
+//                .create()
+//            alertDialog.show()
+//            true
+//        }
 
     }
 
@@ -71,7 +71,7 @@ class NurseryCageViewHolder2(itemView: View, private val dataList: MutableList<C
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
-    val cageDel: TextView = itemView.findViewById(R.id.cageDelete)
+
 
 
     init {
