@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Network
@@ -37,9 +39,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class BirdsFragment : Fragment() {
 
@@ -240,7 +246,10 @@ class BirdsFragment : Fragment() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
 
+                val image = getUrlImage(imageUrl)
+
                 birdCount++
+                data.bitmap = image
                 data.img = imageUrl
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
@@ -300,6 +309,25 @@ class BirdsFragment : Fragment() {
 
         dataList
     }
+    fun getUrlImage(urlString: String): Bitmap? {
+        var inputStream: InputStream? = null
+        var bitmap: Bitmap? = null
+
+        try {
+            val url = URL(urlString)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            inputStream = connection.inputStream
+            bitmap = BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            inputStream?.close()
+        }
+
+        return bitmap
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -349,6 +377,7 @@ class BirdsFragment : Fragment() {
     private fun reloadDataFromDatabase() {
         lifecycleScope.launch {
             try {
+                delay(4000)
 
                 val data = getDataFromDatabase()
                 dataList.clear()

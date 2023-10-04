@@ -1,3 +1,5 @@
+import android.graphics.Bitmap
+
 interface BirdDataListener {
 
     fun onBirdDataSaved(id: String?)
@@ -16,6 +18,7 @@ interface ClickListener {
 
 data class BirdData(
     /*addBird*/
+    var bitmap: Bitmap? = null,
     var imgUrl: String = "",
     var img: String? = null,
     var birdKey: String? = null,

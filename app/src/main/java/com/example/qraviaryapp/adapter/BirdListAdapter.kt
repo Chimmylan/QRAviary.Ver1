@@ -52,13 +52,18 @@ class BirdListAdapter(
                 .into(holder.imageView)
 
         } else {
-
             Glide.with(context)
-                .load(bird.img)
+                .load(bird.bitmap)
                 .placeholder(R.drawable.noimage)
                 .error(R.drawable.noimage)
                 .into(holder.imageView)
         }
+
+//        if (bird.bitmap != null) {
+//            holder.imageView.setImageBitmap(bird.bitmap)
+//        } else {
+//            // Handle the case where bird.bitmap is null or not available.
+//        }
 
         val maxIdentifierLength = 5 // Define your desired maximum length here
         val identifierText = if (bird.identifier?.length!! > maxIdentifierLength) {

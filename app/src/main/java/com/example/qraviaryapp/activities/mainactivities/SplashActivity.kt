@@ -19,28 +19,34 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         sharedPreferencess = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        onSaveDarkModeReference()
+        val appStoppedTime = sharedPreferencess.getLong("appStoppedTime", 0)
+        val currentTimeMillis = System.currentTimeMillis()
+        val elapsedTime = currentTimeMillis - appStoppedTime
+        val thresholdTime = 5000
 
-        if (sharedPreferencess.getBoolean("APP_OPENED_BEFORE", false)) {
-            // Skip SplashActivity and go to NavHomeActivity
-            goToNavHome()
-        } else {
-            onSaveDarkModeReference()
+
+
+        if (elapsedTime >= thresholdTime){
             Handler().postDelayed({
-                // Mark that the app has been opened at least once
-                sharedPreferencess.edit().putBoolean("APP_OPENED_BEFORE", true).apply()
-
+                val currentTimeMillis = System.currentTimeMillis()
+                sharedPreferencess.edit().putLong("appStoppedTime", currentTimeMillis).apply()
                 val intent =
                     Intent(this@SplashActivity, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }, 3000)
+        }else{
+            val intent =
+                Intent(this@SplashActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
+
     }
-    private fun goToNavHome() {
-        val intent = Intent(this@SplashActivity, NavHomeActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+
+
+
     fun onSaveDarkModeReference(){
         val darkModePref = sharedPreferencess.getInt("DARK_MODE", 0);
 

@@ -1,14 +1,16 @@
 package com.example.qraviaryapp.activities.mainactivities
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,28 +18,15 @@ import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
-import com.example.qraviaryapp.fragments.NavFragments.AdultingFragment
-import com.example.qraviaryapp.fragments.NavFragments.BalanceFragment
-import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
-import com.example.qraviaryapp.fragments.NavFragments.CagesFragment
-import com.example.qraviaryapp.fragments.NavFragments.CategoriesFragment
-import com.example.qraviaryapp.fragments.NavFragments.ExpensesFragment
-import com.example.qraviaryapp.fragments.NavFragments.GalleryFragment
-import com.example.qraviaryapp.fragments.NavFragments.IncubatingFragment
-import com.example.qraviaryapp.monitoring.MonitoringFragment
-import com.example.qraviaryapp.fragments.NavFragments.MutationsFragment
-import com.example.qraviaryapp.fragments.NavFragments.PairsFragment
-import com.example.qraviaryapp.fragments.NavFragments.PurchasesFragment
-import com.example.qraviaryapp.fragments.NavFragments.SalesFragment
-import com.example.qraviaryapp.fragments.NavFragments.StatisticsFragment
+import com.example.qraviaryapp.fragments.NavFragments.*
 import com.example.qraviaryapp.fragments.SettingsFragment
+import com.example.qraviaryapp.monitoring.MonitoringFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 
 class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
 
@@ -48,6 +37,9 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
     private lateinit var menu: Menu
+
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,9 +68,43 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, MonitoringFragment()).commit()
             navigationView.menu.getItem(0).isChecked = true
+
         }
 
+        sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+
+        checkElapsedTime()
     }
+    private fun checkElapsedTime() {
+        val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
+        val currentTimeMillis = System.currentTimeMillis()
+        val elapsedTime = currentTimeMillis - appStoppedTime
+        val thresholdTime = 5000 // 5 seconds in milliseconds
+
+        if (elapsedTime >= thresholdTime) {
+            // Show the splash activity
+            val intent = Intent(this, SplashActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun onPause() {
+        Log.d(ContentValues.TAG, "onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val currentTimeMillis = System.currentTimeMillis()
+        sharedPreferences.edit().putLong("appStoppedTime", currentTimeMillis).apply()
+    }
+
+    override fun onDestroy() {
+        Log.d(ContentValues.TAG, "onDestroy")
+        super.onDestroy()
+    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val fragment: Fragment

@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -109,19 +110,27 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
 
-                try {
-                    basicFragment.birdDataGetters{birdId, NurseryId, newBundle ->
-                        originFragment.addOirigin(birdId, NurseryId, newBundle)
-                        galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
-
-                        onBackPressed()
-                        finish()
-
+                lifecycleScope.launch {
+                    try {
+                        withContext(Dispatchers.IO) {
+                            basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
+                                galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
+                                originFragment.addOirigin(birdId, NurseryId, newBundle)
+                            }
+                        }
+                        // Now that the background work is done, switch to the main thread
+                        withContext(Dispatchers.Main) {
+                            onBackPressed()
+                            finish()
+                        }
+                    } catch (e: NullPointerException) {
+                        // Handle the exception if needed
+                        Toast.makeText(
+                            applicationContext,
+                            "Gender and Provenance in Origin tab must not be empty...",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-
-
-                }catch (e: NullPointerException){
-                    Toast.makeText(this,"Gender and Provenance in Origin tab must not be empty...", Toast.LENGTH_LONG).show()
                 }
 
 
@@ -136,6 +145,9 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+
 
     fun openDatePicker(view: View) {}
     fun openDatebandPicker(view: View) {}

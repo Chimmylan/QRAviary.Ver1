@@ -94,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (isRemembered) {
             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+            finish()
         }
 //        rememberme.isChecked = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false)
 
