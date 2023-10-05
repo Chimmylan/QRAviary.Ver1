@@ -258,14 +258,22 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
             if (data != null) {
+
+
+                val birds = itemSnapshot.child("Pair Birds")
+                for (birdSnapshot in birds.children){
+
+                    val pairCount = birds.childrenCount
+                    val birdsCount = pairCount * 2
+                    data.cagePairBirdCount = pairCount.toString()
+                    data.cageBirdCount = birdsCount.toString()
+
+                }
                 val key = itemSnapshot.key.toString()
-                val pairCount = snapshot.childrenCount
-                val birdsCount = pairCount * 2
+
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
 
-                data.cagePairBirdCount = pairCount.toString()
-                data.cageBirdCount = birdsCount.toString()
 
 
                 data.cage = cageNameValue
