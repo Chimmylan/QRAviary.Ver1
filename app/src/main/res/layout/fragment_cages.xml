@@ -4,15 +4,24 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="@color/new_appbar_color"
+        android:background="@color/new_appbar_color"
         android:orientation="vertical"
         tools:context=".fragments.NavFragments.CagesFragment">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:weightSum="7">
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBreeding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/bottom_nav_background"
+            app:cornerRadius="8dp"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/white_black"
             android:text="Breeding Cages"
             android:textAlignment="textStart"
             android:textColor="@color/black"
@@ -23,13 +32,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNursery"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
 
-            android:backgroundTint="@color/bottom_nav_background"
+            android:backgroundTint="@color/white_black"
             android:text="Nursery Cages"
             android:textAlignment="textStart"
             android:textColor="@color/black"
-
+            app:cornerRadius="8dp"
             app:icon="@drawable/cage"
             app:iconSize="60dp"
             app:iconTint="@color/black" />
@@ -37,14 +47,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFlight"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/bottom_nav_background"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/white_black"
             android:text="Flight Cages"
+            app:cornerRadius="8dp"
             android:textAlignment="textStart"
             android:textColor="@color/black"
             app:icon="@drawable/cage"
             app:iconSize="60dp"
             app:iconTint="@color/black" />
-
+   </LinearLayout>
     </LinearLayout>
 
