@@ -13,6 +13,8 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -28,8 +30,11 @@ import com.example.qraviaryapp.adapter.FlightCageListAdapter
 import com.example.qraviaryapp.adapter.NurseryCageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -43,6 +48,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var dataList: ArrayList<CageData>
     private lateinit var adapter: FlightCageListAdapter
     private lateinit var fabBtn: FloatingActionButton
+    private lateinit var editText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -114,46 +120,63 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
 //    }
 
     private fun showCageAddDialog() {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
-        val editText = dialogLayout.findViewById<EditText>(R.id.etAddCage)
+
+
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Flight Cages")
-        val newCageRef = db.push()
 
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
+        editText = dialogLayout.findViewById<EditText>(R.id.etAddCage)
+        val btncustom = dialogLayout.findViewById<Button>(R.id.custom)
+        val btnclose = dialogLayout.findViewById<Button>(R.id.close)
+
+        // Initially, show the EditText and btncustom
+
+        btncustom.visibility = View.VISIBLE
+
+        btncustom.setOnClickListener {
+            // When custom button is clicked, hide EditText and btncustom, and show btnclose
+            editText.visibility = View.VISIBLE
+            btncustom.visibility = View.GONE
+            btnclose.visibility = View.VISIBLE
+        }
+
+        btnclose.setOnClickListener {
+            // When close button is clicked, hide btnclose and show EditText and btncustom
+            btnclose.visibility = View.GONE
+            editText.visibility = View.GONE
+            btncustom.visibility = View.VISIBLE
+        }
 
         builder.setTitle("Add Cage")
         builder.setPositiveButton("Add", null)
 
         builder.setNegativeButton("Cancel") { dialog, which ->
-            Toast.makeText(this@FlightCagesListActivity, "Cancel", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show()
         }
         builder.setView(dialogLayout)
 
         val alertDialog = builder.create()
-
-        alertDialog.setOnShowListener{
-
+        alertDialog.setOnShowListener {
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             addButton.setOnClickListener {
-                val cageName = editText.text.toString()
-                if (TextUtils.isEmpty(cageName)) {
-                    editText.error = "Enter cage name"
-                    Toast.makeText(
-                        this@FlightCagesListActivity,
-                        "Please enter cage name before adding",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
+                val newCageNumber = editText.text.toString().trim()
+
+                if (newCageNumber.isNotEmpty()) {
+                    // User entered a custom cage name, use it
                     val data: Map<String, Any?> = hashMapOf(
-                        "Cage" to cageName
+                        "Cage" to newCageNumber.toInt()
                     )
-                    newCageRef.updateChildren(data)
+                    db.push().updateChildren(data)
+
+                    alertDialog.dismiss()
+
                     val newCage = CageData()
-                    newCage.cage = cageName
+                    newCage.cage = newCageNumber
                     dataList.add(newCage)
                     adapter.notifyItemInserted(dataList.size - 1)
                     dataList.sortBy { it.cage }
@@ -167,14 +190,61 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
                     }
+                }else{
+                    // Find the highest numbered cage and increment it
+                    db.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
 
 
-                    alertDialog.dismiss()
+                            var maxCageNumber = 0
+
+                            for (cageSnapshot in snapshot.children) {
+                                val cageNumber =
+                                    cageSnapshot.child("Cage").getValue(Int::class.java)
+                                if (cageNumber != null && cageNumber > maxCageNumber) {
+                                    maxCageNumber = cageNumber
+                                }
+                            }
+
+                            // Increment the cage number
+                            val newCageNumber = maxCageNumber + 1
+
+                            // Create a new cage with the incremented number
+                            val data: Map<String, Any?> = hashMapOf(
+                                "Cage" to newCageNumber
+                            )
+
+                            db.push().updateChildren(data)
+
+                            val newCage = CageData()
+                            newCage.cage = newCageNumber.toString()
+                            dataList.add(newCage)
+                            adapter.notifyItemInserted(dataList.size - 1)
+                            dataList.sortBy { it.cage }
+                            lifecycleScope.launch {
+                                try {
+                                    val data = getDataFromDataBase()
+                                    dataList.clear()
+                                    dataList.addAll(data)
+                                    adapter.notifyDataSetChanged()
+                                } catch (e: Exception) {
+                                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                                }
+                            }
+                            alertDialog.dismiss()
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Handle error
+                        }
+                    })
                 }
             }
-
+            val closeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            closeButton.setOnClickListener {
+                alertDialog.dismiss()
+            }
         }
-
         alertDialog.show()
 
     }

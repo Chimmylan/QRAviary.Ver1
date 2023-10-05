@@ -94,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (isRemembered) {
             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+            finish()
         }
 //        rememberme.isChecked = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false)
 
@@ -202,10 +203,11 @@ class LoginActivity : AppCompatActivity() {
                         if (dataSnapshot.hasChild("ID: $uid")) {
                             Log.d(TAG, "Main Page")
                             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                            finish()
                         } else {
                             Log.d(TAG, "Get Started Page")
                             startActivity(Intent(this@LoginActivity, GetStartActivity::class.java))
-
+                            finish()
                             // Since the user does not exist, create a new entry in the database
                             val userData = hashMapOf("Name" to uid)
                             userReference.child("ID: $uid").setValue(userData)
@@ -366,6 +368,7 @@ class LoginActivity : AppCompatActivity() {
 //                                editor.apply()
 
                                 startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                                finish()
 //                                {
 //                                    putExtra(KEY_REMEMBER_ME, rememberUser)
 //                                }
@@ -422,5 +425,6 @@ class LoginActivity : AppCompatActivity() {
     fun forgot(view: View) {}
     fun reg(view: View) {
         startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+        finish()
     }
 }

@@ -3,65 +3,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardUseCompatPadding="true"
+    android:layout_marginTop="5dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?selectableItemBackground"
-    android:backgroundTint="@color/new_appbar_color">
+    android:foreground="?selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="3"
         android:textAlignment="center"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:padding="15dp">
-            <TextView
-                android:id="@+id/tvCageList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cage"
-                android:textColor="@color/black_white"
-                android:layout_gravity="center"
-                android:textSize="26sp"/>
-            <ImageView
-                android:id="@+id/cageImgView"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:src="@drawable/cage"
-                android:contentDescription="Bird Image"
-                android:scaleType="fitCenter"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+            android:padding="5dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            >
+            android:orientation="horizontal">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/cageDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Delete"
-                />
+                <ImageView
+                    android:id="@+id/cageImgView"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:padding="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/cagess"
+                    android:contentDescription="Bird Image"
+                    android:scaleType="fitCenter"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="N"
+                    android:textColor="@color/black_white"
+                    android:layout_gravity="center"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/tvCageList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="10"
+                    android:textColor="@color/black_white"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"/>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvBirdCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Birds: 10"
 
+            android:textColor="@color/black_white"
 
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/tvMaturing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maturing: 10"
+            android:textColor="@color/black_white"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/tvMove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ready To Move: 10"
 
+            android:textColor="@color/black_white"
+            android:textSize="15sp"/>
+    </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

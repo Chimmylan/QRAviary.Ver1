@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -45,9 +46,19 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.elevation = 0f
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.new_appbar_color)))
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.new_appbar_color
+                )
+            )
+        )
         val abcolortitle = resources.getColor(R.color.appbar)
-        supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Nursery Bird</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+        supportActionBar?.title = HtmlCompat.fromHtml(
+            "<font color='$abcolortitle'>Add Nursery Bird</font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the white back button for night mode
@@ -61,20 +72,20 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
         viewPager.offscreenPageLimit = 3
 
 
-            val basicFragmentDeferred = BasicFragment()
-            val originFragmentDeferred =  OriginFragment()
-            val galleryFragmentDeferred = AddGalleryFragment()
+        val basicFragmentDeferred = BasicFragment()
+        val originFragmentDeferred = OriginFragment()
+        val galleryFragmentDeferred = AddGalleryFragment()
 
-            val basicFragment = basicFragmentDeferred
-            val originFragment = originFragmentDeferred
-            val galleryFragment = galleryFragmentDeferred
+        val basicFragment = basicFragmentDeferred
+        val originFragment = originFragmentDeferred
+        val galleryFragment = galleryFragmentDeferred
 
-            fragmentAdapter.addFragment(basicFragment, "Basic")
-            fragmentAdapter.addFragment(originFragment, "Origin")
-            fragmentAdapter.addFragment(galleryFragment, "Gallery")
+        fragmentAdapter.addFragment(basicFragment, "Basic")
+        fragmentAdapter.addFragment(originFragment, "Origin")
+        fragmentAdapter.addFragment(galleryFragment, "Gallery")
 
-            viewPager.adapter = fragmentAdapter
-            tablayout.setupWithViewPager(viewPager)
+        viewPager.adapter = fragmentAdapter
+        tablayout.setupWithViewPager(viewPager)
 
     }
 
@@ -87,17 +98,22 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#FFFFFF'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#FFFFFF'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         } else {
             // Set the text color to black for non-night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#000000'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#000000'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
 
 
 
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,19 +125,28 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
 
-                try {
-                    basicFragment.birdDataGetters{birdId, NurseryId, newBundle ->
-                        originFragment.addOirigin(birdId, NurseryId, newBundle)
-                        galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
+                lifecycleScope.launch {
+                    try {
 
-                        onBackPressed()
-                        finish()
+                        basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
+                            galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
+                            originFragment.addOirigin(birdId, NurseryId, newBundle)
+                            onBackPressed()
+                            finish()
+                        }
 
+                        // Now that the background work is done, switch to the main thread
+
+
+
+                    } catch (e: NullPointerException) {
+                        // Handle the exception if needed
+                        Toast.makeText(
+                            applicationContext,
+                            "Gender and Provenance in Origin tab must not be empty...",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-
-
-                }catch (e: NullPointerException){
-                    Toast.makeText(this,"Gender and Provenance in Origin tab must not be empty...", Toast.LENGTH_LONG).show()
                 }
 
 
@@ -136,6 +161,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 
     fun openDatePicker(view: View) {}
     fun openDatebandPicker(view: View) {}

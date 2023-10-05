@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -186,25 +190,30 @@ class AddGalleryFragment : Fragment() {
             .child("Birds").child(birdId).child("Gallery")
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Nursery Birds").child(NurseryId).child("Gallery")
-        for (imageUri in imageList){
-            val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-            val uploadTask = imageRef.putFile(imageUri)
-            val imgIdKey = birdRef.push()
-            val imgId = imgIdKey.key
-            uploadTask.addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    val imageUrl = uri.toString()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                for (imageUri in imageList) {
+                    val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+                    val uploadTask = imageRef.putFile(imageUri)
+                    val imgIdKey = birdRef.push()
+                    val imgId = imgIdKey.key
+                    uploadTask.addOnSuccessListener {uploadTask ->
+                        if (uploadTask.bytesTransferred == uploadTask.totalByteCount){
+                            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                                val imageUrl = uri.toString()
 
-                    val data: Map<String, Any?> = hashMapOf(
-                        imgId.toString() to imageUrl
-                    )
-                    birdRef.updateChildren(data)
-                    nurseryRef.updateChildren(data)
+                                val data: Map<String, Any?> = hashMapOf(
+                                    imgId.toString() to imageUrl
+                                )
+                                birdRef.setValue(data)
+                                nurseryRef.updateChildren(data)
+                            }
+                        }
 
+                    }.addOnFailureListener {
+                        // Handle upload failure here
+                    }
                 }
-
-            }.addOnFailureListener {
-
             }
         }
 

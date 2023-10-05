@@ -18,6 +18,7 @@ import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import org.w3c.dom.Text
 
 class FlightCageListAdapter2(
     private val context: android.content.Context,
@@ -49,20 +50,20 @@ class FlightCageListAdapter2(
 
 
 
-        holder.cageDel.setOnClickListener{
-            val alertDialog = AlertDialog.Builder(holder.itemView.context)
-                .setTitle("Delete Cage")
-                .setMessage("Are you sure you want to delete this Cage?")
-                .setPositiveButton("Delete"){_,_->
-                    itemRef.removeValue()
-                    dataList.removeAt(position)
-                    notifyDataSetChanged()
-                }
-                .setNegativeButton("Cancel", null)
-                .create()
-            alertDialog.show()
-            true
-        }
+//        holder.cageDel.setOnClickListener{
+//            val alertDialog = AlertDialog.Builder(holder.itemView.context)
+//                .setTitle("Delete Cage")
+//                .setMessage("Are you sure you want to delete this Cage?")
+//                .setPositiveButton("Delete"){_,_->
+//                    itemRef.removeValue()
+//                    dataList.removeAt(position)
+//                    notifyDataSetChanged()
+//                }
+//                .setNegativeButton("Cancel", null)
+//                .create()
+//            alertDialog.show()
+//            true
+//        }
 
     }
 
@@ -73,7 +74,10 @@ class FlightCageViewHolder2(itemView: View, private val dataList: MutableList<Ca
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
-    val cageDel: TextView = itemView.findViewById(R.id.cageDelete)
+    val tvCount: TextView = itemView.findViewById(R.id.tvBirdCount)
+    val tvMaturing: TextView = itemView.findViewById(R.id.tvMaturing)
+    val tvReadToMove: TextView = itemView.findViewById(R.id.tvMove)
+
 
 
     init {

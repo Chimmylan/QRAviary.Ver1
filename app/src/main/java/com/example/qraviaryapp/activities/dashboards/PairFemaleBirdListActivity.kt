@@ -59,7 +59,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Cages</font>",
+            "<font color='$abcolortitle'>Female Flight Birds</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
@@ -107,6 +107,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Flight Birds")
+
+
         val dataList = ArrayList<BirdData>()
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
@@ -129,6 +131,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         val femaleKey = itemSnapshot.key;
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                        val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
+                        val cagebirdkeyvalue = itemSnapshot.child("Cage Bird Key").value.toString()
                         val identifierValue = itemSnapshot.child("Identifier").value
                         val genderValue = itemSnapshot.child("Gender").value
                         val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
@@ -240,7 +244,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         data.donatedDate = donatedDate
                         data.donatedContact = donatedContact
                         data.otherComments = otherComments
-
+                        data.cagekeyvalue = cagekeyvalue
+                        data.cagebirdkey = cagebirdkeyvalue
 
                         if (Looper.myLooper() != Looper.getMainLooper()) {
                             Log.d(ContentValues.TAG, "Code is running on a background thread")
@@ -256,6 +261,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         val femaleKey = itemSnapshot.key;
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                        val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
+                        val cagebirdkeyvalue = itemSnapshot.child("Cage Bird Key").value.toString()
                         val identifierValue = itemSnapshot.child("Identifier").value
                         val genderValue = itemSnapshot.child("Gender").value
                         val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
@@ -360,7 +367,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         data.donatedDate = donatedDate
                         data.donatedContact = donatedContact
                         data.otherComments = otherComments
-
+                        data.cagekeyvalue = cagekeyvalue
+                        data.cagebirdkey = cagebirdkeyvalue
 
                         if (Looper.myLooper() != Looper.getMainLooper()) {
                             Log.d(ContentValues.TAG, "Code is running on a background thread")

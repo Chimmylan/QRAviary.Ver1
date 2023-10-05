@@ -47,8 +47,28 @@ class PairFemaleBirdListAdapter(
 
         holder.tvIdentifier.text = "ID: $identifierText"
 
+        if (bird.legband.isNullOrEmpty()) {
+            holder.tvLegband.visibility = View.GONE
+        } else {
+            holder.tvLegband.text = bird.legband
+        }
+        if (bird.status == "Available" || bird.status == "For Sale") {
+            val cageInfo = when {
+                bird.status == "Available" -> bird.availCage
+                bird.status == "For Sale" -> bird.forSaleCage
+                else -> ""
+            }
 
-        val mutationList = mutableListOf(
+            if (cageInfo.isNullOrBlank()) {
+                holder.tvCage.visibility = View.GONE
+            } else {
+                holder.tvCage.visibility = View.VISIBLE
+                holder.tvCage.text = "Cage: $cageInfo"
+            }
+        } else {
+            holder.tvCage.visibility = View.GONE
+        }
+        val mutationList = listOf(
             bird.mutation1,
             bird.mutation2,
             bird.mutation3,
@@ -57,21 +77,15 @@ class PairFemaleBirdListAdapter(
             bird.mutation6
         )
 
-
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
-
-        val combinedMutations = nonNullMutations.joinToString("\nMutation: ")
-
-
-        if (combinedMutations.length > BirdListAdapter.MAX_MUTATION_LENGTH) {
-            val trimmedMutations = combinedMutations.substring(0,
-                BirdListAdapter.MAX_MUTATION_LENGTH
-            ) + "..." // Add ellipsis
-            holder.tvMutation.text = "Mutations: $trimmedMutations"
+        val combinedMutations = if (nonNullMutations.isNotEmpty()) {
+            "Mutation: " + nonNullMutations.joinToString(" x ")
         } else {
-            holder.tvMutation.text = "Mutations: $combinedMutations"
+            "Mutation: None"
         }
+
+        holder.tvMutation.text = combinedMutations
 
         holder.tvStatus.text = bird.status
         val genderIcon = if(bird.gender == "Male"){
@@ -100,6 +114,8 @@ class PairFemaleViewHolder(
 
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
+    var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
+    var tvCage: TextView = itemView.findViewById(R.id.tvCage)
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
@@ -113,12 +129,15 @@ class PairFemaleViewHolder(
             val femaleMutation = dataList[adapterPosition].mutation1
             val femaleBirdId =
                 dataList[adapterPosition].identifier // Retrieve the cage name from the data list
-
+            val cagekey = dataList[adapterPosition].cagekeyvalue
+            val cagebirdkey = dataList[adapterPosition].cagebirdkey
             val intent = Intent()
             intent.putExtra("FemaleBirdId", femaleBirdId)
             intent.putExtra("FemaleBirdKey", femaleBirdKey)
             intent.putExtra("FemaleFlightKey", femaleFlightKey)
             intent.putExtra("FemaleBirdMutation", femaleMutation)
+            intent.putExtra("CageKeyFemale",cagekey)
+            intent.putExtra("CageBirdKeyFemale",cagebirdkey)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()

@@ -3,9 +3,12 @@ package com.example.qraviaryapp.adapter
 import EggData
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
+import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.MoveEggActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -151,6 +155,15 @@ class EggClutchesListAdapter(
 
 
             }
+            "Moved" -> {
+                holder.tvTime.text = "ID"
+                holder.tvTime.visibility = View.GONE
+                holder.layoutmove.visibility = View.GONE // Show layoutmove
+                holder.layoutprogressbar.visibility = View.GONE // Show layoutmove
+
+
+
+            }
             else -> {
                 // Hide the date TextView and layoutmove for other statuses
                 holder.tvTime.visibility = View.GONE
@@ -173,6 +186,10 @@ class EggClutchesListAdapter(
             intent.putExtra("PairMaleID", eggs.pairMaleId)
             intent.putExtra("PairFemaleID", eggs.pairFemaleId)
             intent.putExtra("DateOfBirth", eggs.eggDate)
+            intent.putExtra("CageKeyFemale",eggs.eggcagekeyFemale)
+            intent.putExtra("CageKeyMale",eggs.eggcagekeyMale)
+            intent.putExtra("CageBirdFemale",eggs.eggcagebirdFemale)
+            intent.putExtra("CageBirdMale",eggs.eggcagebirdMale)
             context.startActivity(intent)
         }
 
@@ -207,21 +224,51 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     init {
 
 
-        itemView.setOnClickListener {
-            val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
-            val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
-            val eggKey = dataList[adapterPosition].eggKey
-            val individualEggKey = dataList[adapterPosition].individualEggKey
-            val pairKey = dataList[adapterPosition].pairKey
 
-            val i = Intent(itemvView.context, EditEggActivity::class.java)
-            i.putExtra("IncubatingStartDate", incubatingStartDate)
-            i.putExtra("MaturingStartDate", maturingStartDate)
-            i.putExtra("EggKey", eggKey)
-            i.putExtra("IndividualEggKey", individualEggKey)
-            i.putExtra("PairKey", pairKey)
-            itemvView.context.startActivity(i)
+            itemView.setOnClickListener {
+                if (dataList[adapterPosition].eggStatus == "Moved") {
+                    val bundle = Bundle()
+                    bundle.putString("BirdKey", dataList[adapterPosition].birdkey)
+                    bundle.putString("NurseryKey", dataList[adapterPosition].nurserykey)
+                    bundle.putString("BirdLegband", dataList[adapterPosition].legband)
+                    bundle.putString("BirdId", dataList[adapterPosition].identifier)
+                    bundle.putString("BirdGender", dataList[adapterPosition].gender)
+                    bundle.putString("BirdStatus", dataList[adapterPosition].status1)
+                    bundle.putString("BirdDateBirth", dataList[adapterPosition].datebirth)
+                    bundle.putString("BirdAvailCage", dataList[adapterPosition].cage)
+                    bundle.putString("BirdMutation1", dataList[adapterPosition].mutation1)
+                    bundle.putString("BirdMutation2", dataList[adapterPosition].mutation2)
+                    bundle.putString("BirdMutation3", dataList[adapterPosition].mutation3)
+                    bundle.putString("BirdMutation4", dataList[adapterPosition].mutation4)
+                    bundle.putString("BirdMutation5", dataList[adapterPosition].mutation5)
+                    bundle.putString("BirdMutation6", dataList[adapterPosition].mutation6)
+                    bundle.putString("BirdFather", dataList[adapterPosition].father)
+                    bundle.putString("BirdFatherKey", dataList[adapterPosition].fatherkey)
+                    bundle.putString("BirdMother", dataList[adapterPosition].mother)
+                    bundle.putString("BirdMotherKey", dataList[adapterPosition].motherkey)
+                    Log.d(ContentValues.TAG, dataList[adapterPosition].fatherkey.toString())
+                    Log.d(ContentValues.TAG, dataList[adapterPosition].motherkey.toString())
+                    val i = Intent(itemView.context, BirdsDetailedActivity::class.java)
+                    i.putExtras(bundle)
+                    itemView.context.startActivity(i)
+                }else {
+                    val incubatingStartDate = dataList[adapterPosition].eggIncubationStartDate
+                    val maturingStartDate = dataList[adapterPosition].eggMaturingStartDate
+                    val eggKey = dataList[adapterPosition].eggKey
+                    val individualEggKey = dataList[adapterPosition].individualEggKey
+                    val pairKey = dataList[adapterPosition].pairKey
 
-        }
+                    val i = Intent(itemvView.context, EditEggActivity::class.java)
+                    i.putExtra("IncubatingStartDate", incubatingStartDate)
+                    i.putExtra("MaturingStartDate", maturingStartDate)
+                    i.putExtra("EggKey", eggKey)
+                    i.putExtra("IndividualEggKey", individualEggKey)
+                    i.putExtra("PairKey", pairKey)
+                    itemvView.context.startActivity(i)
+                }
+            }
+
+
+
     }
 }

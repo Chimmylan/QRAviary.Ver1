@@ -48,7 +48,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var pairBirdFemaleKey: String
     private lateinit var pairMaleID: String
     private lateinit var pairFemaleID: String
-
+    private lateinit var pairCageKeyMale: String
+    private lateinit var pairCageKeyFemale: String
+    private lateinit var pairCageBirdMale: String
+    private lateinit var pairCageBirdFemale: String
     private lateinit var totalegg: TextView
     private var eggCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +92,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairBirdFemaleKey = bundle.getString("PairFemaleKey").toString()
             pairFemaleID = bundle.getString("PairFemaleID").toString()
             pairMaleID = bundle.get("PairMaleID").toString()
+            pairCageBirdFemale = bundle.getString("CageBirdFemale").toString()
+            pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
+            pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
+            pairCageKeyMale = bundle.getString("CageKeyMale").toString()
 
         }
 
@@ -111,6 +118,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
+
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
 
@@ -119,10 +127,57 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             if (data != null) {
                 val individualEggKey = eggSnapshot.key.toString()
 
+
                 val statusValue = eggSnapshot.child("Status").value.toString()
                 val dateValue = eggSnapshot.child("Date").value.toString()
                 val incubatingDateValue = eggSnapshot.child("Incubating Days").value.toString()
                 val maturingDateValue = eggSnapshot.child("Maturing Days").value.toString()
+                val birdkey = eggSnapshot.child("Bird Key").value.toString()
+                val cage = eggSnapshot.child("Cage").value.toString()
+                val Datebirth = eggSnapshot.child("Date of Birth").value.toString()
+                val gender = eggSnapshot.child("Gender").value.toString()
+                val Identifier = eggSnapshot.child("Identifier").value.toString()
+                val statusAvailable = eggSnapshot.child("Status1").value.toString()
+                val Legband = eggSnapshot.child("Legband").value.toString()
+                val NurseryKey = eggSnapshot.child("Cage").value.toString()
+                val mutation1Value = if (eggSnapshot.hasChild("Mutation1")) {
+                    eggSnapshot.child("Mutation1").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation2Value = if (eggSnapshot.hasChild("Mutation2")) {
+                    eggSnapshot.child("Mutation2").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation3Value = if (eggSnapshot.hasChild("Mutation3")) {
+                    eggSnapshot.child("Mutation3").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation4Value = if (eggSnapshot.hasChild("Mutation4")) {
+                    eggSnapshot.child("Mutation4").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation5Value = if (eggSnapshot.hasChild("Mutation5")) {
+                    eggSnapshot.child("Mutation5").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation6Value = if (eggSnapshot.hasChild("Mutation6")) {
+                    eggSnapshot.child("Mutation6").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+
+                val FatherValue = eggSnapshot.child("Parents").child("Father").value.toString()
+                val MotherValue = eggSnapshot.child("Parents").child("Mother").value.toString()
+                val fatherKeyValue = eggSnapshot.child("Parents").child("FatherKey").value.toString()
+                val motherKeyValue = eggSnapshot.child("Parents").child("MotherKey").value.toString()
+                val fatherBirdKeyValue = eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
+                val motherBirdKeyValue = eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
+
 
                 if (statusValue == "Incubating") {
                     data.eggIncubating = statusValue
@@ -147,6 +202,30 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 data.pairFemaleId = pairFemaleID
                 data.pairBirdFemaleKey = pairBirdFemaleKey
                 data.pairBirdMaleKey = pairBirdMaleKey
+                data.eggcagebirdMale = pairCageBirdMale
+                data.eggcagebirdFemale = pairCageBirdFemale
+                data.eggcagekeyMale = pairCageKeyMale
+                data.eggcagekeyFemale = pairCageKeyFemale
+                data.birdkey = birdkey
+                data.datebirth = Datebirth
+                data.legband = Legband
+                data.identifier = Identifier
+                data.cage = cage
+                data.nurserykey = NurseryKey
+                data.gender = gender
+                data.mutation2 = mutation2Value
+                data.mutation1 = mutation1Value
+                data.mutation6 = mutation6Value
+                data.mutation3 = mutation3Value
+                data.mutation4 = mutation4Value
+                data.mutation5 = mutation5Value
+                data.father = FatherValue
+                data.fatherkey = fatherKeyValue
+                data.mother= MotherValue
+                data.fatherbirdkey = fatherBirdKeyValue
+                data.motherbirdkey = motherBirdKeyValue
+                data.motherkey = motherKeyValue
+                data.status1 = statusAvailable
                 dataList.add(data)
             }
         }

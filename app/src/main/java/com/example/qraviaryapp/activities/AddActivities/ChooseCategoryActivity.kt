@@ -133,7 +133,7 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
         }
 
     fun showAddCategoryDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_mutation, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_category, null)
 
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setView(dialogView)

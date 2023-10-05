@@ -19,15 +19,34 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         sharedPreferencess = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         onSaveDarkModeReference()
-        Handler().postDelayed({
+        val appStoppedTime = sharedPreferencess.getLong("appStoppedTime", 0)
+        val currentTimeMillis = System.currentTimeMillis()
+        val elapsedTime = currentTimeMillis - appStoppedTime
+        val thresholdTime = 5000
+
+
+
+        if (elapsedTime >= thresholdTime){
+            Handler().postDelayed({
+                val currentTimeMillis = System.currentTimeMillis()
+                sharedPreferencess.edit().putLong("appStoppedTime", currentTimeMillis).apply()
+                val intent =
+                    Intent(this@SplashActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, 3000)
+        }else{
             val intent =
                 Intent(this@SplashActivity, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
+        }
+
     }
+
+
+
     fun onSaveDarkModeReference(){
         val darkModePref = sharedPreferencess.getInt("DARK_MODE", 0);
 

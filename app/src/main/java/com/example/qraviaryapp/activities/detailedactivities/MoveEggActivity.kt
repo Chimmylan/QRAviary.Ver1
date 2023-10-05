@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import BirdData
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -25,6 +26,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.log
 
 class MoveEggActivity : AppCompatActivity() {
@@ -44,7 +48,7 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var pairMaleID: String
     private lateinit var pairFemaleID: String
     private lateinit var eggDate: String
-
+    private lateinit var movedate: String
     private lateinit var incubatingStartDate: String
     private lateinit var maturingStartDate: String
 
@@ -62,18 +66,18 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var btnMutation5: MaterialButton
     private lateinit var btnMutation6: MaterialButton
 
-    private var mutation1IncubatingDays = ""
-    private var mutation1MaturingDays = ""
-    private var mutation2IncubatingDays = ""
-    private var mutation2MaturingDays = ""
-    private var mutation3IncubatingDays = ""
-    private var mutation3MaturingDays = ""
-    private var mutation4IncubatingDays = ""
-    private var mutation4MaturingDays = ""
-    private var mutation5IncubatingDays = ""
-    private var mutation5MaturingDays = ""
-    private var mutation6IncubatingDays = ""
-    private var mutation6MaturingDays = ""
+    private var mutation1IncubatingDays: String? = null
+    private var mutation1MaturingDays: String? = null
+    private var mutation2IncubatingDays: String? = null
+    private var mutation2MaturingDays: String? = null
+    private var mutation3IncubatingDays: String? = null
+    private var mutation3MaturingDays: String? = null
+    private var mutation4IncubatingDays: String? = null
+    private var mutation4MaturingDays: String? = null
+    private var mutation5IncubatingDays: String? = null
+    private var mutation5MaturingDays: String? = null
+    private var mutation6IncubatingDays: String? = null
+    private var mutation6MaturingDays: String? = null
 
     /*RadioGroup*/
     private lateinit var rgGender: RadioGroup
@@ -83,7 +87,10 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var rbMale: RadioButton
     private lateinit var rbUnknown: RadioButton
 
-
+    private lateinit var pairCageKeyMale: String
+    private lateinit var pairCageKeyFemale: String
+    private lateinit var pairCageBirdMale: String
+    private lateinit var pairCageBirdFemale: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +155,10 @@ class MoveEggActivity : AppCompatActivity() {
         pairMaleID = intent.getStringExtra("PairMaleID").toString()
         pairFemaleID = intent.getStringExtra("PairFemaleID").toString()
         eggDate = intent.getStringExtra("DateOfBirth").toString()
-
+        pairCageBirdFemale = intent.getStringExtra("CageBirdFemale").toString()
+        pairCageBirdMale= intent.getStringExtra("CageBirdMale").toString()
+        pairCageKeyMale= intent.getStringExtra("CageKeyMale").toString()
+        pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
@@ -397,6 +407,29 @@ class MoveEggActivity : AppCompatActivity() {
         val dataSelectedGen = findViewById<RadioButton>(selectedOption)!!
 
 
+        val selectedMutations = mutableListOf<String?>()
+        val spinners = arrayOf(
+            btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
+        )
+
+        for (i in spinners.indices) {
+            if (spinners[i].visibility == View.VISIBLE) {
+                selectedMutations.add(spinners[i].text.toString())
+            } else {
+                selectedMutations.add(null)
+            }
+        }
+
+        val birds = BirdData(
+            mutation1 = selectedMutations[0],
+            mutation2 = selectedMutations[1],
+            mutation3 = selectedMutations[2],
+            mutation4 = selectedMutations[3],
+            mutation5 = selectedMutations[4],
+            mutation6 = selectedMutations[5],
+        )
+
+
 
         //toDeleteRef
         val eggRef = db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey)
@@ -416,36 +449,44 @@ class MoveEggActivity : AppCompatActivity() {
         val nurseryRef = db.child("Users").child("ID: $currentUserId").child("Nursery Birds")
             .push()
 
+        val descendantscagefather = db.child("Users").child("ID: $currentUserId").child("Cages")
+            .child("Flight Cages").child(pairCageBirdMale.toString()).child("Birds").child(pairCageKeyMale).child("Descendants").push()
+        val descendantscagemother = db.child("Users").child("ID: $currentUserId").child("Cages")
+        .child("Flight Cages").child(pairCageBirdFemale.toString()).child("Birds").child(pairCageKeyFemale).child("Descendants").push()
         val nurseryKey = nurseryRef.key
 
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+        val formattedDate = dateFormat.format(currentDate)
+        movedate = formattedDate
 //        cute
         val mutation1 = mapOf(
-            "Mutation Name" to btnMutation1.text,
+            "Mutation Name" to birds.mutation1,
             "Maturing Days" to mutation1MaturingDays,
             "Incubating Days" to mutation1IncubatingDays
         )
         val mutation2 = mapOf(
-            "Mutation Name" to btnMutation2.text,
+            "Mutation Name" to birds.mutation2,
             "Maturing Days" to mutation2MaturingDays,
             "Incubating Days" to mutation2IncubatingDays
         )
         val mutation3 = mapOf(
-            "Mutation Name" to btnMutation3.text,
+            "Mutation Name" to birds.mutation3,
             "Maturing Days" to mutation3MaturingDays,
             "Incubating Days" to mutation3IncubatingDays
         )
         val mutation4 = mapOf(
-            "Mutation Name" to btnMutation4.text,
+            "Mutation Name" to birds.mutation4,
             "Maturing Days" to mutation4MaturingDays,
             "Incubating Days" to mutation4IncubatingDays
         )
         val mutation5 = mapOf(
-            "Mutation Name" to btnMutation5.text,
+            "Mutation Name" to birds.mutation5,
             "Maturing Days" to mutation5MaturingDays,
             "Incubating Days" to mutation5IncubatingDays
         )
         val mutation6 = mapOf(
-            "Mutation Name" to btnMutation6.text,
+            "Mutation Name" to birds.mutation6,
             "Maturing Days" to mutation6MaturingDays,
             "Incubating Days" to mutation6IncubatingDays
         )
@@ -473,8 +514,28 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation4" to mutation4,
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
-            "Gender" to dataSelectedGen.text.toString()
+            "Gender" to dataSelectedGen.text.toString(),
+            "Cage" to cageNameValue,
+            "Legband" to "",
         )
+        val data1: Map<String, Any?> = hashMapOf(
+            "Bird Key" to birdKey,
+            "Parents" to parent,
+            "Date of Birth" to eggDate,
+            "Nursery Key" to nurseryKey,
+            "Status1" to "Available",
+            "Identifier" to etIdentifier.text.toString(),
+            "Mutation1" to mutation1,
+            "Mutation2" to mutation2,
+            "Mutation3" to mutation3,
+            "Mutation4" to mutation4,
+            "Mutation5" to mutation5,
+            "Mutation6" to mutation6,
+            "Gender" to dataSelectedGen.text.toString(),
+            "Cage" to cageNameValue,
+            "Legband" to "",
+        )
+
 
         newPrefBird.updateChildren(data)
         nurseryCageRef.updateChildren(data)
@@ -483,7 +544,16 @@ class MoveEggActivity : AppCompatActivity() {
         descendantsfatherRef.updateChildren(data)
         descendantsbirdmotherRef.updateChildren(data)
         descendantsbirdfatherRef.updateChildren(data)
-        eggRef.removeValue()
+        descendantscagefather.updateChildren(data)
+        descendantscagemother.updateChildren(data)
+
+//        eggRef.removeValue()
+
+
+
+        eggRef.child("Status").setValue("Moved")
+        eggRef.child("Date").setValue(movedate)
+        eggRef.updateChildren(data1)
         Log.d(ContentValues.TAG, data.toString())
 
 
