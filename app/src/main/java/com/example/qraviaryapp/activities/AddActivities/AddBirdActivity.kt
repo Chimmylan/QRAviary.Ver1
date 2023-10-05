@@ -112,13 +112,13 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
                 lifecycleScope.launch {
                     try {
-                        withContext(Dispatchers.IO) {
+
                             basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
                                 galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
                                 originFragment.addOirigin(birdId, NurseryId, newBundle)
                                 onBackPressed()
                                 finish()
-                            }
+
                         }
                         // Now that the background work is done, switch to the main thread
 
