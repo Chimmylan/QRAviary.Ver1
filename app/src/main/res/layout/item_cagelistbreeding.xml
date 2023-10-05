@@ -71,7 +71,7 @@
             android:id="@+id/tvBirdCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Birds: 10"
+            android:text="Birds: 0"
 
             android:textColor="@color/black_white"
 

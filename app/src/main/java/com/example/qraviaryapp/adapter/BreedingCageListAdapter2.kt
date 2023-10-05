@@ -44,8 +44,19 @@ class CageListAdapter2(
         val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
-        holder.tvBirdCount.text = "Birds Count: ${cage.cageBirdCount}"
-        holder.tvPair.text = "Pairs Count: ${cage.cagePairBirdCount}"
+        if(!cage.cageBirdCount.isNullOrEmpty()){
+
+            holder.tvBirdCount.text = "Birds Count: ${cage.cageBirdCount}"
+        }else{
+            holder.tvBirdCount.text = "Birds Count: 0"
+        }
+
+        if (!cage.cagePairBirdCount.isNullOrEmpty()){
+            holder.tvPair.text = "Pairs Count: ${cage.cagePairBirdCount}"
+        }else{
+            holder.tvPair.text = "Pairs Count: 0"
+        }
+
 
         val cageName = cage.cage
 
