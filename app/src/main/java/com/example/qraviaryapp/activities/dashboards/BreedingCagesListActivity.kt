@@ -260,6 +260,8 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
             val data = itemSnapshot.getValue(CageData::class.java)
             if (data != null) {
                 val key = itemSnapshot.key.toString()
+                val pairCount = snapshot.childrenCount
+                data.cagePairBirdCount = pairCount.toString()
                 data.cageId = key
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()

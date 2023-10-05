@@ -43,6 +43,8 @@ class FlightCageListAdapter(
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
 
+        holder.tvCount.text = "${cage.cageBirdsCount} Birds"
+
         val cageName = cage.cage
 
 
@@ -71,6 +73,7 @@ class FlightCageViewHolder(itemView: View, private val dataList: MutableList<Cag
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
+    val tvCount: TextView = itemView.findViewById(R.id.totalbirds)
 
 
 

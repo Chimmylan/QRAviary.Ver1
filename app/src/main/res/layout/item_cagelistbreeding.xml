@@ -60,32 +60,24 @@
         android:layout_weight="2"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/tvPairs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PairCount: 10"
+            android:textColor="@color/black_white"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"/>
+        <TextView
             android:id="@+id/tvBirdCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="Birds: 10"
 
             android:textColor="@color/black_white"
 
             android:textSize="15sp"/>
-        <TextView
-            android:id="@+id/tvMaturing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Maturing: 10"
-            android:visibility="gone"
-            android:textColor="@color/black_white"
-            android:textSize="15sp"/>
-        <TextView
-            android:id="@+id/tvMove"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ready To Move: 10"
 
-            android:textColor="@color/black_white"
-            android:textSize="15sp"/>
+
     </LinearLayout>
     </LinearLayout>
 

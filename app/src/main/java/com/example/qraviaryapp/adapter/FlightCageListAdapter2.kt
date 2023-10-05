@@ -45,7 +45,11 @@ class FlightCageListAdapter2(
         val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
-
+        if (cage.cageBirdsCount != null) {
+            holder.tvCount.text = "Birds: ${cage.cageBirdsCount}"
+        }else{
+            holder.tvCount.text = "0 Birds"
+        }
         val cageName = cage.cage
 
 

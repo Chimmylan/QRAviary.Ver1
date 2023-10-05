@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.dashboards
 
 import CageData
 import ClickListener
+import EggData
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
@@ -41,7 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class NurseryCagesList2Activity : AppCompatActivity(){
+class NurseryCagesList2Activity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
@@ -194,7 +195,7 @@ class NurseryCagesList2Activity : AppCompatActivity(){
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
                     }
-                }else{
+                } else {
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -254,7 +255,6 @@ class NurseryCagesList2Activity : AppCompatActivity(){
     }
 
 
-
     private suspend fun getDataFromDataBase(): List<CageData> = withContext(Dispatchers.IO) {
 
         val currentUserId = mAuth.currentUser?.uid
@@ -262,13 +262,36 @@ class NurseryCagesList2Activity : AppCompatActivity(){
             .child("ID: ${currentUserId.toString()}").child("Cages").child("Nursery Cages")
         val dataList = ArrayList<CageData>()
         val snapshot = db.get().await()
+        var birdMaturedCount = 0
+        var birdAvailCount = 0
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
             if (data != null) {
+                val birds = itemSnapshot.child("Birds")
                 val key = itemSnapshot.key.toString()
-                data.cageId = key
+
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
+
+                for (birdSnapshot in birds.children) {
+                    val birdData = itemSnapshot.getValue(CageData::class.java)
+                    if (birdData != null) {
+                        val birdsCount = birds.childrenCount
+                        val birdStatus = birdSnapshot.child("Status").value.toString()
+                        if (birdStatus == "Matured") {
+
+                            birdMaturedCount++
+                            data.cageBirdsMaturedCount = birdMaturedCount.toString()
+                        } else {
+                            birdAvailCount++
+                            data.cageBirdsAvailCount = birdAvailCount.toString()
+                        }
+                        data.cageBirdsCount = birdsCount.toString()
+
+                    }
+                }
+
+                data.cageId = key
                 data.cage = cageNameValue
                 cageCount++
                 data.cageCount = cageCount.toString()

@@ -1,20 +1,14 @@
 package com.example.qraviaryapp.adapter
 
 import CageData
-import ClickListener
-import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
 import com.example.qraviaryapp.activities.CagesActivity.NurseryListActivity
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
-import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -39,12 +33,33 @@ class NurseryCageListAdapter2(
         val cageId = cage.cageId
 
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
+        val itemRef = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
+        if (cage.cageBirdsCount != null) {
+            holder.tvBirdCount.text = "Birds: ${cage.cageBirdsCount}"
+        }else{
+            holder.tvBirdCount.text = "0 Birds"
+        }
+
+        if (cage.cageBirdsMaturedCount != null){
+            holder.tvReadToMove.visibility = View.VISIBLE
+            holder.tvReadToMove.text = "Ready to Move: ${cage.cageBirdsMaturedCount}"
+        }else{
+            holder.tvReadToMove.text = "Ready to Move: 0"
+
+        }
+
+        if (cage.cageBirdsAvailCount != null){
+            holder.tvMaturing.visibility = View.VISIBLE
+            holder.tvMaturing.text = "Maturing: ${cage.cageBirdsAvailCount}"
+        }else{
+            holder.tvMaturing.text = "Maturing: 0"
+        }
+
 
         val cageName = cage.cage
-
 
 
 //        holder.cageDel.setOnClickListener{
@@ -71,7 +86,9 @@ class NurseryCageViewHolder2(itemView: View, private val dataList: MutableList<C
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
-
+    val tvBirdCount: TextView = itemView.findViewById(R.id.tvBirdCount)
+    val tvMaturing: TextView = itemView.findViewById(R.id.tvMaturing)
+    val tvReadToMove: TextView = itemView.findViewById(R.id.tvMove)
 
 
     init {
