@@ -26,6 +26,9 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -37,6 +40,8 @@ class NurseryListAdapter(
     private val maturingDays: Int // Add this parameter
 ) :
     RecyclerView.Adapter<MyViewHolder2>() {
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var db: DatabaseReference
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -54,6 +59,11 @@ class NurseryListAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder2, position: Int) {
         val bird = dataList[position]
+
+        mAuth  = FirebaseAuth.getInstance()
+        db = FirebaseDatabase.getInstance().reference
+
+        val currentUserId = mAuth.currentUser?.uid
 
         if (bird.img.isNullOrEmpty()) {
             Glide.with(context)
@@ -107,6 +117,12 @@ class NurseryListAdapter(
             if (progressPercentage >= 100) {
                 progressPercentage = 100
 
+                val statusRef = db.child("Users").child("ID: ${currentUserId.toString()}").child("Cages").child("Nursery Cages")
+                    .child(bird.cageKey.toString())
+                    .child("Birds")
+                    .child(bird.birdKey.toString())
+
+                statusRef.child("Status").setValue("Matured")
                 holder.chickImg.setImageResource(R.drawable.hatchcolor)
                 holder.teenImg.setImageResource(R.drawable.chickcolor)
                 holder.adultImg.setImageResource(R.drawable.adultcolor)

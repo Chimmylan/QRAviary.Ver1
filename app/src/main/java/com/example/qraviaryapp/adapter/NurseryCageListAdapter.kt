@@ -41,6 +41,7 @@ class NurseryCageListAdapter(
         val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
+        holder.tvCount.text = cage.cageBirdsCount
 
         val cageName = cage.cage
 
@@ -70,6 +71,7 @@ class NurseryCageViewHolder(itemView: View, private val dataList: MutableList<Ca
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
+    val tvCount: TextView = itemView.findViewById(R.id.totalbirds)
 
 
 

@@ -260,10 +260,20 @@ class FlightCagesList2Activity : AppCompatActivity() {
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
             if (data != null) {
+                val birds = itemSnapshot.child("Birds")
                 val key = itemSnapshot.key.toString()
-                data.cageId = key
+
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
+                for (birdSnapshot in birds.children) {
+                    val birdData = itemSnapshot.getValue(CageData::class.java)
+                    if (birdData != null) {
+                        val birdsCount = birds.childrenCount
+                        data.cageBirdsCount = birdsCount.toString()
+
+                    }
+                }
+                data.cageId = key
                 data.cage = cageNameValue
                 cageCount++
 

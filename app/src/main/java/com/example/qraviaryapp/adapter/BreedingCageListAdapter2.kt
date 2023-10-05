@@ -25,7 +25,7 @@ class CageListAdapter2(
     private var dataList: MutableList<CageData>,
 ) : RecyclerView.Adapter<CageViewHolder2>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CageViewHolder2 {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelistbreeding, parent, false)
 
 
         return CageViewHolder2(view, dataList)
@@ -44,6 +44,8 @@ class CageListAdapter2(
         val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
+        holder.tvBirdCount.text = "Birds Count: ${cage.cageBirdCount}"
+        holder.tvPair.text = "Pairs Count: ${cage.cagePairBirdCount}"
 
         val cageName = cage.cage
 
@@ -73,6 +75,8 @@ class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
+    val tvBirdCount: TextView = itemView.findViewById(R.id.tvBirdCount)
+    val tvPair: TextView = itemView.findViewById(R.id.tvPairs)
 
 
     init {
