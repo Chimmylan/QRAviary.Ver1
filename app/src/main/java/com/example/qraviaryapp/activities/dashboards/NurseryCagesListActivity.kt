@@ -264,7 +264,8 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
             val data = itemSnapshot.getValue(CageData::class.java)
             if (data != null) {
                 val key = itemSnapshot.key.toString()
-                val birdCount = snapshot.childrenCount
+                val cage = itemSnapshot.child("Birds")
+                val birdCount = cage.childrenCount
                 data.cageBirdsCount = birdCount.toString()
                 data.cageId = key
                 val cageName = itemSnapshot.child("Cage").value

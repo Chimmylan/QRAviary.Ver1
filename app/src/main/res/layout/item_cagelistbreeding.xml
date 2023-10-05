@@ -63,7 +63,7 @@
             android:id="@+id/tvPairs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PairCount: 10"
+            android:text="PairCount: 0"
             android:textColor="@color/black_white"
             android:layout_marginTop="10dp"
             android:textSize="15sp"/>
@@ -71,7 +71,7 @@
             android:id="@+id/tvBirdCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Birds: 10"
+            android:text="Birds: 0"
 
             android:textColor="@color/black_white"
 
