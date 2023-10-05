@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -107,81 +108,101 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
         val fragment: Fragment
         val title: String
+        var isMonitoringFragment: Boolean
 
         when (item.itemId) {
             R.id.nav_birds -> {
                 fragment = BirdsFragment()
                 title = "Birds"
+                isMonitoringFragment = false
 
             }
             R.id.nav_pairs -> {
                 fragment = PairsFragment()
                 title = "Pairs"
+                isMonitoringFragment = false
             }
             R.id.nav_cages -> {
                 fragment = CagesFragment()
                 title = "Cages"
+                isMonitoringFragment = false
             }
             R.id.nav_statistics -> {
                 fragment = StatisticsFragment()
                 title = "Statistics"
+                isMonitoringFragment = false
             }
             R.id.nav_mutations -> {
                 fragment = MutationsFragment()
                 title = "Mutations"
+                isMonitoringFragment = false
             }
             R.id.nav_aldulting -> {
                 fragment = AdultingFragment()
                 title = "Adulting"
+                isMonitoringFragment = false
             }
             R.id.nav_expenses -> {
                 fragment = ExpensesFragment()
                 title = "Expenses"
+                isMonitoringFragment = false
             }
             R.id.nav_sales -> {
                 fragment = SalesFragment()
                 title = "Sales"
+                isMonitoringFragment = false
             }
             R.id.nav_purchases -> {
                 fragment = PurchasesFragment()
                 title = "Purchases"
+                isMonitoringFragment = false
             }
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
                 title = "Balance"
-
+                isMonitoringFragment = false
             }
             R.id.nav_gallery -> {
                 fragment = GalleryFragment()
                 title = "Gallery"
-
+                isMonitoringFragment = false
             }
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
                 title = "Incubating"
+                isMonitoringFragment = false
             }
             R.id.nav_settings -> {
                 fragment = SettingsFragment()
                 title = "Settings"
+                isMonitoringFragment = false
+            }
+            R.id.nav_categories -> {
+                fragment = CategoriesFragment()
+                title = "Categories"
+                isMonitoringFragment = false
             }
             R.id.nav_logout -> {
                 showLogoutConfirmationDialog()
                 return true // Early return, no need to continue
             }
-            R.id.nav_categories -> {
-                fragment = CategoriesFragment() // Default fragment
-                title = "Categories" // Default title
-            }
             else -> {
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
                 hideMenuItems()
-
+                isMonitoringFragment = true
             }
         }
-
+        if (!isMonitoringFragment) {
+            toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.bottom_nav_background)))
+        } else {
+            toolbar.elevation = 0f // Turn off elevation for MonitoringFragment
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white)))
+        }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
                 title == "Categories") {
@@ -196,6 +217,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.title = title
+
+
         return true
     }
     private fun hideMenuItems() {
