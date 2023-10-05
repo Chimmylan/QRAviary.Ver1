@@ -26,7 +26,7 @@ class FlightCageListAdapter2(
 
 ) : RecyclerView.Adapter<FlightCageViewHolder2>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightCageViewHolder2 {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_cagelist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_cageflight, parent, false)
 
 
         return FlightCageViewHolder2(view, dataList)
