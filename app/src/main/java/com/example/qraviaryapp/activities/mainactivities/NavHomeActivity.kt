@@ -45,7 +45,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         binding = ActivityNavHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,11 +60,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
-        ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
+        val toggle = ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
             .apply {
                 drawerLayout.addDrawerListener(this)
                 syncState()
             }
+        toggle.drawerArrowDrawable.color = ContextCompat.getColor(this, android.R.color.white)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, MonitoringFragment()).commit()
@@ -198,10 +199,10 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         if (!isMonitoringFragment) {
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.bottom_nav_background)))
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
         } else {
             toolbar.elevation = 0f // Turn off elevation for MonitoringFragment
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white)))
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
@@ -228,6 +229,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun showMenuItems() {
         menu.findItem(R.id.ic_filter).isVisible = true
+
         // Add more menu items to show if needed
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

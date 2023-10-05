@@ -23,7 +23,8 @@
                 android:id="@+id/tvBirdCount"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:background="#E9E8E8"
+                android:background="@color/totals"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:text=" "
                 android:textSize="16sp" />
@@ -49,8 +50,9 @@
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="50dp"
-            app:backgroundTint="@color/new_appbar_color"
+            app:backgroundTint="@color/fab"
             app:srcCompat="@drawable/ic_add"
+            app:tint="@color/white"
             android:onClick="fab"
             tools:ignore="SpeakableTextPresentCheck" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

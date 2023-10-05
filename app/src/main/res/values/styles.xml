@@ -15,7 +15,9 @@
 
     </style>
 
-
+    <style name="MenuItemTextStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
     <style name="roundImageView" parent="">
 
         <item name="cornerFamily">rounded</item>

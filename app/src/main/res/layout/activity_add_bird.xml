@@ -10,11 +10,11 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
-        android:background="@color/new_appbar_color"
+        android:background="@color/toolbarcolor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/black_white"
-        app:tabSelectedTextColor="@color/black_white"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
         app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabTextColor="@color/black"/>
 

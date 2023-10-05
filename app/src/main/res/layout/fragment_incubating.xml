@@ -8,34 +8,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/totalbirds"
-            android:text="Total Incubating:"
-            android:textSize="16sp" /> <!-- Set background color to grey -->
+            android:orientation ="horizontal"
+            android:background="#E9E8E8">
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvBirdCount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- Add your content here -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/RecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                android:layout_height="35dp"
+                android:background="@color/totals"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text=" "
+                android:textSize="16sp" />
 
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled ="false"/>
+
     </LinearLayout>
 
 </FrameLayout>
