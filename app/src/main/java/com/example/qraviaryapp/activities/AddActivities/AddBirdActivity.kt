@@ -116,13 +116,14 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
                                 galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
                                 originFragment.addOirigin(birdId, NurseryId, newBundle)
+                                onBackPressed()
+                                finish()
                             }
                         }
                         // Now that the background work is done, switch to the main thread
-                        withContext(Dispatchers.Main) {
-                            onBackPressed()
-                            finish()
-                        }
+
+
+
                     } catch (e: NullPointerException) {
                         // Handle the exception if needed
                         Toast.makeText(
