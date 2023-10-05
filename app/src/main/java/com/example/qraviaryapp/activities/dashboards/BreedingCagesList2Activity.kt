@@ -63,7 +63,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='B'+'$abcolortitle'>Breeding Cages</font>",
+            "<font color='$abcolortitle'>Breeding Cages</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled

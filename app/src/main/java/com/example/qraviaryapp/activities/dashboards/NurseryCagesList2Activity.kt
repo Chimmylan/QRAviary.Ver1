@@ -71,7 +71,7 @@ class NurseryCagesList2Activity : AppCompatActivity() {
         totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='N'+'$abcolortitle'>Nursery Cages</font>",
+            "<font color='$abcolortitle'>Nursery Cages</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
