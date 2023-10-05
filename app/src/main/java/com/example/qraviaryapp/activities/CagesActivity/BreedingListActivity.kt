@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListAdapter
+import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListPreviousAdapter
 import com.example.qraviaryapp.adapter.PairListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -33,9 +36,14 @@ class BreedingListActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var dataList: ArrayList<PairData>
+    private lateinit var dataList1: ArrayList<PairData>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView1: RecyclerView
     private lateinit var adapter: BreedingListAdapter
+    private lateinit var adapter1: BreedingListPreviousAdapter
     private lateinit var fab: FloatingActionButton
+    private lateinit var current: TextView
+    private lateinit var previous: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -67,21 +75,51 @@ class BreedingListActivity : AppCompatActivity() {
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
         }
         mAuth = FirebaseAuth.getInstance()
-        recyclerView = findViewById(R.id.recyclerView1)
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView1 = findViewById(R.id.recyclerView1)
         val gridLayoutManager = GridLayoutManager(this, 1)
+        val gridLayoutManager1 = GridLayoutManager(this, 1)
+
         recyclerView.layoutManager = gridLayoutManager
+        recyclerView1.layoutManager = gridLayoutManager1
+
         dataList = ArrayList()
+        dataList1 = ArrayList()
         adapter = BreedingListAdapter(this, dataList)
+        adapter1 = BreedingListPreviousAdapter(this, dataList1)
         recyclerView.adapter = adapter
 
+        current = findViewById(R.id.tvCurrent)
+        previous = findViewById(R.id.tvPrevious)
 
 
 
         lifecycleScope.launch{
             try {
                 val data = getDataFromDatabase()
+                dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
+                if (dataList.isEmpty()) {
+                    current.visibility = View.GONE
+                } else {
+                    current.visibility = View.VISIBLE
+                }
+            }catch (e:Exception){
+                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+        lifecycleScope.launch{
+            try {
+                val data = getDataFromPreviousDatabase()
+                dataList1.clear()
+                dataList1.addAll(data)
+                adapter.notifyDataSetChanged()
+                if (dataList1.isEmpty()) {
+                    previous.visibility = View.GONE
+                } else {
+                    previous.visibility = View.VISIBLE
+                }
             }catch (e:Exception){
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
@@ -130,6 +168,64 @@ class BreedingListActivity : AppCompatActivity() {
                 dataList.add(data)
             }
         }
+        dataList.sortBy { it.pairDateBeg }
+        dataList
+    }
+
+    private suspend fun getDataFromPreviousDatabase(): List<PairData> = withContext(Dispatchers.IO) {
+        val currentUserId = mAuth.currentUser?.uid
+        val db = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: ${currentUserId.toString()}").child("Pairs")
+        val dataList = ArrayList<PairData>()
+        val snapshot = db.get().await()
+        for (itemSnapshot in snapshot.children) {
+            val data = itemSnapshot.getValue(PairData::class.java)
+            if (data != null) {
+                if (itemSnapshot.child("Separate Date").exists()) {
+                    val key = itemSnapshot.key.toString()
+                    val cageName = itemSnapshot.child("Cage").value.toString()
+                    val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
+                    val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
+                    val cageBirdFemale = itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
+                    val cageBirdMale = itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
+                    val male = itemSnapshot.child("Male").value.toString()
+                    val female = itemSnapshot.child("Female").value.toString()
+                    val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
+                    val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
+                    val beginningDate = itemSnapshot.child("Beginning").value.toString()
+                    val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
+                    val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
+                    val separateDate = itemSnapshot.child("Separate Date").value.toString()
+
+                    data.pairMaleKey = pairMaleKey
+                    data.pairFemaleKey = pairFemaleKey
+                    data.pairKey = key
+                    data.pairFemale = female
+                    data.pairMale = male
+                    data.pairCage = cageName
+                    data.pairMaleMutation = maleMutation
+                    data.pairFemaleMutation = femaleMutation
+                    data.pairDateBeg = beginningDate
+                    data.pairDateSep = separateDate
+                    data.paircagebirdFemale =cageBirdFemale
+                    data.paircagebirdMale = cageBirdMale
+                    data.paircagekeyFemale = cageKeyFemale
+                    data.paircagekeyMale = cageKeyMale
+
+                    if (Looper.myLooper() != Looper.getMainLooper()) {
+                        Log.d(ContentValues.TAG, "Code is running on a background thread")
+                    } else {
+                        Log.d(ContentValues.TAG, "Code is running on the main thread")
+                    }
+
+                    dataList.add(data)
+                } else {
+
+                }
+            }
+
+        }
+
         dataList.sortBy { it.pairDateBeg }
         dataList
     }
