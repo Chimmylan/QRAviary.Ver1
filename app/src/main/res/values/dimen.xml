@@ -6,4 +6,5 @@
 
     <dimen name="keyboard_padding_bottom">16dp</dimen>
     <dimen name="margin_val">10dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 </resources>
