@@ -127,7 +127,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
-            .child("Nursery Cages")
+            .child("Breeding Cages")
 
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
