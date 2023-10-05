@@ -8,8 +8,8 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/CircularDeterminateProgressBar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/progress_bar2"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,8 +40,8 @@
     <ProgressBar
         android:id="@+id/progress_bar2"
         style="@style/CircularDeterminateProgressBar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintStart_toEndOf="@+id/progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -17,6 +17,7 @@
     <color name="bottom_background">#D9DADA</color>
     <color name="new_appbar_color">#D9DADA</color>
     <color name="appbar_color">#D9DADA</color>
+    <color name="toolbarcolor">#FF6200EE</color>
     <color name="totalbirds">#D8D9DA</color>
     <color name="filter">#DCD9D9</color>
     <color name="colorDarkSemiTransparent">#C6000000</color>

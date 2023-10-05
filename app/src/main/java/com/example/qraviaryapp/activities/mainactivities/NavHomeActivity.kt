@@ -201,7 +201,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.bottom_nav_background)))
         } else {
             toolbar.elevation = 0f // Turn off elevation for MonitoringFragment
-
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white)))
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
