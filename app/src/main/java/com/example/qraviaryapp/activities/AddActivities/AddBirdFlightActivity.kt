@@ -32,6 +32,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -48,9 +49,19 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.elevation = 0f
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.new_appbar_color)))
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.new_appbar_color
+                )
+            )
+        )
         val abcolortitle = resources.getColor(R.color.appbar)
-        supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Flight Bird</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+        supportActionBar?.title = HtmlCompat.fromHtml(
+            "<font color='$abcolortitle'>Add Flight Bird</font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the white back button for night mode
@@ -64,21 +75,20 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         viewPager.offscreenPageLimit = 3
 
 
+        val basicFragmentDeferred = BasicFlightFragment()
+        val originFragmentDeferred = OriginFragment()
+        val galleryFragmentDeferred = AddGalleryFragment()
 
-            val basicFragmentDeferred = BasicFlightFragment()
-            val originFragmentDeferred =  OriginFragment()
-            val galleryFragmentDeferred = AddGalleryFragment()
+        val basicFragment = basicFragmentDeferred
+        val originFragment = originFragmentDeferred
+        val galleryFragment = galleryFragmentDeferred
 
-            val basicFragment = basicFragmentDeferred
-            val originFragment = originFragmentDeferred
-            val galleryFragment = galleryFragmentDeferred
+        fragmentAdapter.addFragment(basicFragment, "Basic")
+        fragmentAdapter.addFragment(originFragment, "Origin")
+        fragmentAdapter.addFragment(galleryFragment, "Gallery")
 
-            fragmentAdapter.addFragment(basicFragment, "Basic")
-            fragmentAdapter.addFragment(originFragment, "Origin")
-            fragmentAdapter.addFragment(galleryFragment, "Gallery")
-
-            viewPager.adapter = fragmentAdapter
-            tablayout.setupWithViewPager(viewPager)
+        viewPager.adapter = fragmentAdapter
+        tablayout.setupWithViewPager(viewPager)
 
     }
 
@@ -91,17 +101,22 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#FFFFFF'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#FFFFFF'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         } else {
             // Set the text color to black for non-night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#000000'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#000000'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
 
 
 
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -112,21 +127,24 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                 val originFragment = fragmentAdapter.getItem(1) as OriginFragment
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
+                lifecycleScope.launch {
+                    try {
 
-                try {
-                    basicFragment.birdDataGetters{birdId, FlightId, newBundle ->
-                        originFragment.addFlightOrigin(birdId, FlightId, newBundle)
-                        galleryFragment.FlightuploadImageToStorage(birdId, FlightId, newBundle)
-                        
+                        basicFragment.birdDataGetters { birdId, FlightId, newBundle ->
+                            originFragment.addFlightOrigin(birdId, FlightId, newBundle)
+                            galleryFragment.FlightuploadImageToStorage(birdId, FlightId, newBundle)
+                            onBackPressed()
+                            finish()
+                        }
 
 
-                        onBackPressed()
-                        finish()
+                    } catch (e: NullPointerException) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Gender and Provenance in Origin tab must not be empty...",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-
-
-                }catch (e: NullPointerException){
-                    Toast.makeText(this,"Gender and Provenance in Origin tab must not be empty...", Toast.LENGTH_LONG).show()
                 }
 
 
@@ -142,12 +160,12 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
-   /* override fun onBackPressed() {
-        // Create an intent to navigate back to BirdListActivity
-        val intent = Intent(this, BirdListActivity::class.java)
-        startActivity(intent)
-        finish() // Finish the current activity (AddBirdActivity)
-    }*/
+    /* override fun onBackPressed() {
+         // Create an intent to navigate back to BirdListActivity
+         val intent = Intent(this, BirdListActivity::class.java)
+         startActivity(intent)
+         finish() // Finish the current activity (AddBirdActivity)
+     }*/
 
     fun openDatePicker(view: View) {}
     fun openDatebandPicker(view: View) {}

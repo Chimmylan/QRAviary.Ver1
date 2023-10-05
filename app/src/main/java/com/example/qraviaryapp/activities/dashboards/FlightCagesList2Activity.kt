@@ -266,6 +266,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
                 cageCount++
+
                 data.cageCount = cageCount.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")

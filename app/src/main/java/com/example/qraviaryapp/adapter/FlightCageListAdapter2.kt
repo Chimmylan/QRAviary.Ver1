@@ -18,6 +18,7 @@ import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import org.w3c.dom.Text
 
 class FlightCageListAdapter2(
     private val context: android.content.Context,
@@ -73,6 +74,9 @@ class FlightCageViewHolder2(itemView: View, private val dataList: MutableList<Ca
     RecyclerView.ViewHolder(itemView) {
 
     val tvCage: TextView = itemView.findViewById(R.id.tvCageList)
+    val tvCount: TextView = itemView.findViewById(R.id.tvBirdCount)
+    val tvMaturing: TextView = itemView.findViewById(R.id.tvMaturing)
+    val tvReadToMove: TextView = itemView.findViewById(R.id.tvMove)
 
 
 
