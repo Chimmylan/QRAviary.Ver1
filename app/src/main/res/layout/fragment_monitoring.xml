@@ -8,75 +8,65 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/CircularDeterminateProgressBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="83dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/temperature_text_view"
-        app:layout_constraintEnd_toStartOf="@+id/text_view_progress2"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/progress_bar2"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/temperature_text_view"
         tools:progress="25" />
 
     <TextView
         android:id="@+id/text_view_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="81dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_progress2"
-        app:layout_constraintEnd_toStartOf="@+id/progress_bar2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_view_progress2"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
         tools:text="25°C" />
 
     <TextView
         android:id="@+id/temperature_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
         android:text="Temperature: 25°C"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
         app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <ProgressBar
         android:id="@+id/progress_bar2"
         style="@style/CircularDeterminateProgressBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintStart_toEndOf="@+id/progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_view_progress"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/humidity_text_view"
         tools:progress="60" />
 
     <TextView
         android:id="@+id/text_view_progress2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="83dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
         app:layout_constraintTop_toTopOf="@+id/progress_bar2"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar2"
         tools:text="60%" />
 
     <TextView
         android:id="@+id/humidity_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="59dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="59dp"
         android:text="Humidity: 60%"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/progress_bar"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar2" />
+        app:layout_constraintStart_toStartOf="@+id/progress_bar2"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar2"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar2"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
