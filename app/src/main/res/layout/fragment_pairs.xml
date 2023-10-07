@@ -42,10 +42,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <!-- Add your content here -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
         </LinearLayout>
         <TextView
@@ -64,6 +60,11 @@
             <!-- Add your content here -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

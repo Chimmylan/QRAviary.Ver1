@@ -125,32 +125,32 @@ class BirdPairingFragment : Fragment() {
                             val mainPic = gallery.children.firstOrNull()?.value.toString()
 
                             val mutation1Value = if (snapshot.hasChild("Mutation1")) {
-                                snapshot.child("Mutation1").value.toString()
+                                snapshot.child("Mutation1").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
                             val mutation2Value = if (snapshot.hasChild("Mutation2")) {
-                                snapshot.child("Mutation2").value.toString()
+                                snapshot.child("Mutation2").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
                             val mutation3Value = if (snapshot.hasChild("Mutation3")) {
-                                snapshot.child("Mutation3").value.toString()
+                                snapshot.child("Mutation3").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
                             val mutation4Value = if (snapshot.hasChild("Mutation4")) {
-                                snapshot.child("Mutation4").value.toString()
+                                snapshot.child("Mutation4").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
                             val mutation5Value = if (snapshot.hasChild("Mutation5")) {
-                                snapshot.child("Mutation5").value.toString()
+                                snapshot.child("Mutation5").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
                             val mutation6Value = if (snapshot.hasChild("Mutation6")) {
-                                snapshot.child("Mutation6").value.toString()
+                                snapshot.child("Mutation6").child("Mutation Name").value.toString()
                             } else {
                                 ""
                             }
