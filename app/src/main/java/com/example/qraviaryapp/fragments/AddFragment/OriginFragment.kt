@@ -4,6 +4,7 @@ import BirdData
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -122,8 +123,8 @@ class OriginFragment : Fragment() {
         return view
     }
 
-    private var birdFatherKey: String? = null
-    private var birdMotherKey: String? = null
+    public var birdFatherKey: String? = null
+    public var birdMotherKey: String? = null
     private var birdBirdsFatherKey: String? = null
     private var birdBirdsMotherKey: String? = null
 
@@ -197,12 +198,12 @@ class OriginFragment : Fragment() {
         val birdLostDate = newBundle.getString("BirdLostDate")
         val birdExchangeDate = newBundle.getString("BirdExchangeDate")
         val birdDonatedDate = newBundle.getString("BirdDonatedDate")
-        val birdMutation1 = newBundle.getString("BirdMutation1")
-        val birdMutation2 = newBundle.getString("BirdMutation2")
-        val birdMutation3 = newBundle.getString("BirdMutation3")
-        val birdMutation4 = newBundle.getString("BirdMutation4")
-        val birdMutation5 = newBundle.getString("BirdMutation5")
-        val birdMutation6 = newBundle.getString("BirdMutation6")
+        val birdMutation1 = newBundle.getSerializable("BirdMutation1")
+        val birdMutation2 = newBundle.getSerializable("BirdMutation2")
+        val birdMutation3 = newBundle.getSerializable("BirdMutation3")
+        val birdMutation4 = newBundle.getSerializable("BirdMutation4")
+        val birdMutation5 = newBundle.getSerializable("BirdMutation5")
+        val birdMutation6 = newBundle.getSerializable("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
         val cageKeyValue = newBundle.getString("CageKeyValue")
@@ -813,7 +814,7 @@ class OriginFragment : Fragment() {
     }
 
 
-    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle) {
+    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -824,6 +825,7 @@ class OriginFragment : Fragment() {
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
+        Log.d(ContentValues.TAG, "BiRDIDDDD " + birdId)
 
 
         dataSelectedProvenence = view?.findViewById(dataProvenence)
@@ -866,12 +868,12 @@ class OriginFragment : Fragment() {
         val birdLostDate = newBundle.getString("BirdLostDate")
         val birdExchangeDate = newBundle.getString("BirdExchangeDate")
         val birdDonatedDate = newBundle.getString("BirdDonatedDate")
-        val birdMutation1 = newBundle.getString("BirdMutation1")
-        val birdMutation2 = newBundle.getString("BirdMutation2")
-        val birdMutation3 = newBundle.getString("BirdMutation3")
-        val birdMutation4 = newBundle.getString("BirdMutation4")
-        val birdMutation5 = newBundle.getString("BirdMutation5")
-        val birdMutation6 = newBundle.getString("BirdMutation6")
+        val birdMutation1 = newBundle.getSerializable("BirdMutation1")
+        val birdMutation2 = newBundle.getSerializable("BirdMutation2")
+        val birdMutation3 = newBundle.getSerializable("BirdMutation3")
+        val birdMutation4 = newBundle.getSerializable("BirdMutation4")
+        val birdMutation5 = newBundle.getSerializable("BirdMutation5")
+        val birdMutation6 = newBundle.getSerializable("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
         val cageKeyValue = newBundle.getString("CageKeyValue")
@@ -1488,6 +1490,12 @@ class OriginFragment : Fragment() {
                 Log.d(TAG, "MotherRef!! and FatherRef!!")
             }
         }
+
+        callback(birdMotherKey.toString(), birdFatherKey.toString())
+    }
+
+    interface OriginFragmentCallback{
+        fun onOriginDatSaved(birdId: String, nurseryId: String, newBundle: Bundle, birdMotherKey: String?, birdFatherKey: String?)
     }
 
     fun radioSelection() {

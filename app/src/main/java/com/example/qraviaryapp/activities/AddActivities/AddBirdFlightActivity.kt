@@ -124,13 +124,25 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
                 lifecycleScope.launch {
                     try {
+                        var birdId = ""
+                        var newBundle: Bundle = Bundle()
+                        var flightId = ""
 
-                        basicFragment.birdDataGetters { birdId, FlightId, newBundle ->
-                            originFragment.addFlightOrigin(birdId, FlightId, newBundle)
-                            galleryFragment.FlightuploadImageToStorage(birdId, FlightId, newBundle)
-                            onBackPressed()
-                            finish()
+                        basicFragment.birdDataGetters { receivedBirdId, receivedFlightId, receivedNewBundle ->
+                            birdId = receivedBirdId
+                            flightId = receivedFlightId
+                            newBundle = receivedNewBundle
                         }
+
+                        originFragment.addFlightOrigin(birdId, flightId, newBundle)
+                        { callBackMotherKey, callBackFatherKey ->
+                            galleryFragment.FlightuploadImageToStorage(birdId, flightId, newBundle,
+                                callBackMotherKey, callBackFatherKey)
+                        }
+
+
+                        onBackPressed()
+                        finish()
 
 
                     } catch (e: NullPointerException) {
