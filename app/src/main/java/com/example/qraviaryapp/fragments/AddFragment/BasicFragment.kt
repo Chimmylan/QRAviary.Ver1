@@ -685,6 +685,37 @@ class BasicFragment : Fragment() {
 
         val newBundle = Bundle()
 
+        val mutation1 = hashMapOf(
+            "Mutation Name" to birdData.mutation1,
+            "Maturing Days" to mutation1MaturingDays,
+            "Incubating Days" to mutation1IncubatingDays
+        )
+        val mutation2 = hashMapOf(
+            "Mutation Name" to birdData.mutation2,
+            "Maturing Days" to mutation2MaturingDays,
+            "Incubating Days" to mutation2IncubatingDays
+        )
+        val mutation3 = hashMapOf(
+            "Mutation Name" to birdData.mutation3,
+            "Maturing Days" to mutation3MaturingDays,
+            "Incubating Days" to mutation3IncubatingDays
+        )
+        val mutation4 = hashMapOf(
+            "Mutation Name" to birdData.mutation4,
+            "Maturing Days" to mutation4MaturingDays,
+            "Incubating Days" to mutation4IncubatingDays
+        )
+        val mutation5 = hashMapOf(
+            "Mutation Name" to birdData.mutation5,
+            "Maturing Days" to mutation5MaturingDays,
+            "Incubating Days" to mutation5IncubatingDays
+        )
+        val mutation6 = hashMapOf(
+            "Mutation Name" to birdData.mutation6,
+            "Maturing Days" to mutation6MaturingDays,
+            "Incubating Days" to mutation6IncubatingDays
+        )
+
         newBundle.putString("BirdIdentifier", birdData.identifier)
         newBundle.putString("BirdLegband", birdData.legband)
         newBundle.putString("BirdImage", birdData.img)
@@ -711,12 +742,12 @@ class BasicFragment : Fragment() {
         newBundle.putString("BirdExchangeDate", birdData.exDate)
         newBundle.putString("BirdDonatedDate", birdData.donatedDate)
         newBundle.putString("BirdDonatedContact", birdData.donatedContact)
-        newBundle.putString("BirdMutation1", birdData.mutation1)
-        newBundle.putString("BirdMutation2", birdData.mutation2)
-        newBundle.putString("BirdMutation3", birdData.mutation3)
-        newBundle.putString("BirdMutation4", birdData.mutation4)
-        newBundle.putString("BirdMutation5", birdData.mutation5)
-        newBundle.putString("BirdMutation6", birdData.mutation6)
+        newBundle.putSerializable("BirdMutation1", birdData.mutation1)
+        newBundle.putSerializable("BirdMutation2", birdData.mutation2)
+        newBundle.putSerializable("BirdMutation3", birdData.mutation3)
+        newBundle.putSerializable("BirdMutation4", birdData.mutation4)
+        newBundle.putSerializable("BirdMutation5", birdData.mutation5)
+        newBundle.putSerializable("BirdMutation6", birdData.mutation6)
         newBundle.putString("BirdFather", birdData.father)
         newBundle.putString("BirdFatherKey", birdData.fatherKey)
         newBundle.putString("BirdMother",birdData.mother)
@@ -724,36 +755,7 @@ class BasicFragment : Fragment() {
         newBundle.putString("CageKeyValue", cageKeyValue)
         newBundle.putString("CageBirdKeyValue", cageBirdKey)
 
-        val mutation1 = mapOf(
-            "Mutation Name" to birdData.mutation1,
-            "Maturing Days" to mutation1MaturingDays,
-            "Incubating Days" to mutation1IncubatingDays
-        )
-        val mutation2 = mapOf(
-            "Mutation Name" to birdData.mutation2,
-            "Maturing Days" to mutation2MaturingDays,
-            "Incubating Days" to mutation2IncubatingDays
-        )
-        val mutation3 = mapOf(
-            "Mutation Name" to birdData.mutation3,
-            "Maturing Days" to mutation3MaturingDays,
-            "Incubating Days" to mutation3IncubatingDays
-        )
-        val mutation4 = mapOf(
-            "Mutation Name" to birdData.mutation4,
-            "Maturing Days" to mutation4MaturingDays,
-            "Incubating Days" to mutation4IncubatingDays
-        )
-        val mutation5 = mapOf(
-            "Mutation Name" to birdData.mutation5,
-            "Maturing Days" to mutation5MaturingDays,
-            "Incubating Days" to mutation5IncubatingDays
-        )
-        val mutation6 = mapOf(
-            "Mutation Name" to birdData.mutation6,
-            "Maturing Days" to mutation6MaturingDays,
-            "Incubating Days" to mutation6IncubatingDays
-        )
+
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
