@@ -107,7 +107,9 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(BirdData::class.java)
+            val gallery = itemSnapshot.child("Gallery")
             if (data != null) {
+
                 val female = itemSnapshot.child("Gender").value.toString()
 
                 val mutations = arrayOf(
@@ -123,6 +125,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     if (female == "Female" && mutations.contains(maleMutation)) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
+                        val mainPic = gallery.children.firstOrNull()?.value.toString()
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
                         val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
@@ -208,7 +211,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         Log.d(ContentValues.TAG, "Mutation 4 $mutation4Value")
                         Log.d(ContentValues.TAG, "Mutation 5 $mutation5Value")
                         Log.d(ContentValues.TAG, "Mutation 6 $mutation6Value")
-
+                        data.img = mainPic
                         data.birdKey = birdKey
                         data.flightKey = flightKey
                         data.identifier = identifier
@@ -253,6 +256,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     if (female == "Female") {
                         Log.d(ContentValues.TAG, "Dont have Same Mutation")
                         val femaleKey = itemSnapshot.key;
+                        val mainPic = gallery.children.firstOrNull()?.value.toString()
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
                         val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
@@ -331,7 +335,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         val donatedDate = donatedDateValue.toString() ?: ""
                         val donatedContact = donatedContactValue.toString() ?: ""
                         val otherComments = otherCommentsValue.toString() ?: ""
-
+                        data.img = mainPic
                         data.birdKey = birdKey
                         data.flightKey = flightKey
                         data.identifier = identifier

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.PairMaleBirdListActivity
@@ -39,6 +40,21 @@ class PairMaleBirdListAdapter
     override fun onBindViewHolder(holder: PairMaleBirdViewHolder, position: Int) {
         val bird = dataList[position]
 
+        if (bird.img.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+
+        } else {
+
+            Glide.with(context)
+                .load(bird.img)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+        }
         val maxIdentifierLength = 5 // Define your desired maximum length here
         val identifierText = if (bird.identifier?.length!! > maxIdentifierLength) {
             bird.identifier?.substring(0, maxIdentifierLength) + "..." // Add ellipsis
@@ -111,7 +127,7 @@ class PairMaleBirdViewHolder(
     private val dataList: MutableList<BirdData>,
     private val activity: PairMaleBirdListActivity
 ) : RecyclerView.ViewHolder(itemView) {
-
+    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)

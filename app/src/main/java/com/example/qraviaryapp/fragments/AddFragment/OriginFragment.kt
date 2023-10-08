@@ -161,7 +161,7 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String) -> Unit) {
+    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -248,7 +248,7 @@ class OriginFragment : Fragment() {
 
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-
+        val purchaseId = purchasesRef.key
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
@@ -812,11 +812,14 @@ class OriginFragment : Fragment() {
 
 
         }
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString())
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
     }
 
 
-    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String) -> Unit) {
+    fun addFlightOrigin(birdId: String,
+    FlightId: String,
+    newBundle: Bundle,
+    callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String,  purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -909,7 +912,7 @@ class OriginFragment : Fragment() {
             .child(birdMotherKey.toString()).child("Descendants").push()
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-
+        val purchaseId = purchasesRef.key
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
@@ -1495,7 +1498,7 @@ class OriginFragment : Fragment() {
             }
         }
 
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString())
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
     }
 
     interface OriginFragmentCallback{

@@ -522,7 +522,7 @@ class BasicFragment : Fragment() {
         }
     }
 
-    fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle ) -> Unit) {
+    fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String,cagekeyvalue: String) -> Unit) {
 
         /*val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
@@ -959,7 +959,7 @@ class BasicFragment : Fragment() {
             }
             if (birdId != null) {
                 if (flightKey != null) {
-                    callback(birdId, flightKey, newBundle)
+                    callback(birdId, flightKey, newBundle, soldId.toString(), cageBirdKey, cageKeyValue.toString())
                 }
             }
             Log.d(TAG, birdData.toString())

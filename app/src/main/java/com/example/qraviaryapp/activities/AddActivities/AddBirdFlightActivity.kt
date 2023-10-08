@@ -127,16 +127,22 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                         var birdId = ""
                         var newBundle: Bundle = Bundle()
                         var flightId = ""
-
-                        basicFragment.birdDataGetters { receivedBirdId, receivedFlightId, receivedNewBundle ->
+                        var soldId = ""
+                        var cagebirdkey = ""
+                        var cagekeyvalue = ""
+                        basicFragment.birdDataGetters { receivedBirdId, receivedFlightId, receivedNewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue ->
                             birdId = receivedBirdId
                             flightId = receivedFlightId
                             newBundle = receivedNewBundle
+                            soldId = receivesoldId
 
+                            cagebirdkey = receivecagebirdkey
+                            cagekeyvalue = receivecagekeyvalue
                             originFragment.addFlightOrigin(birdId, flightId, newBundle)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
+                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
                                 galleryFragment.FlightuploadImageToStorage(birdId, flightId, newBundle,
-                                    callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
+                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
+                                    descendantmotherkey,cagebirdkey,cagekeyvalue,soldId, purchaseId)
                             }
 
 

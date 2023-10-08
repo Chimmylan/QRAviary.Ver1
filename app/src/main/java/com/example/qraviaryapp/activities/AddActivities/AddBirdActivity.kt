@@ -2,13 +2,10 @@ package com.example.qraviaryapp.activities.AddActivities
 
 import BirdData
 import BirdDataListener
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,16 +17,12 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.BirdListActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -124,17 +117,22 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                         var birdId = ""
                         var newBundle: Bundle = Bundle()
                         var nurseryId = ""
-
-                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle ->
+                        var soldId = ""
+                        var cagebirdkey = ""
+                        var cagekeyvalue = ""
+                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue->
                             birdId = receivedbirdId
                             nurseryId = NurseryId
                             newBundle = receivednewBundle
-
+                            soldId = receivesoldId
+                            cagebirdkey = receivecagebirdkey
+                            cagekeyvalue = receivecagekeyvalue
                             originFragment.addOirigin(birdId, nurseryId, newBundle)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
+                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
                                 galleryFragment.uploadImageToStorage(
                                     birdId, nurseryId, newBundle,
-                                    callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
+                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
+                                    descendantmotherkey, cagebirdkey,cagekeyvalue,  soldId, purchaseId)
                             }
                             onBackPressed()
                             finish()
