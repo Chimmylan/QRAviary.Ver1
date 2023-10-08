@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
         val appStoppedTime = sharedPreferencess.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()
         val elapsedTime = currentTimeMillis - appStoppedTime
-        val thresholdTime = 5000
+        val thresholdTime = 60000
 
 
 

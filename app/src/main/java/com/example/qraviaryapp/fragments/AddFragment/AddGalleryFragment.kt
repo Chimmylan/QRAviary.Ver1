@@ -188,13 +188,19 @@ class AddGalleryFragment : Fragment() {
         return tempUri!!
     }
 
-    fun uploadImageToStorage(birdId: String, NurseryId: String, newBundle: Bundle) {
+    fun uploadImageToStorage(birdId: String, NurseryId: String, newBundle: Bundle,motherKey: String, fatherKey: String, descendantfatherkey:String, descendantmotherkey:String) {
         storageRef = FirebaseStorage.getInstance().reference
         val currentUser = mAuth.currentUser?.uid
         val birdRef = db.child("Users").child("ID: $currentUser")
             .child("Birds").child(birdId).child("Gallery")
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Nursery Birds").child(NurseryId).child("Gallery")
+        val descendantsfather = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey).child("Gallery")
+        val descendantsmother =  db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey).child("Gallery")
+        val soldRef = db.child("Users").child("ID: $currentUser")
+            .child("Sold Birds").child(NurseryId).child("Gallery")
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 for (imageUri in imageList) {
@@ -212,6 +218,12 @@ class AddGalleryFragment : Fragment() {
                                 )
                                 birdRef.setValue(data)
                                 nurseryRef.updateChildren(data)
+                                if (fatherKey != "null" && !fatherKey.isNullOrEmpty()) {
+                                    descendantsfather.updateChildren(data)
+                                }
+                                if (motherKey != "null" && !motherKey.isNullOrEmpty()) {
+                                    descendantsmother.updateChildren(data)
+                                }
                             }
                         }
 
@@ -255,13 +267,18 @@ class AddGalleryFragment : Fragment() {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
 
+
                     val data: Map<String, Any?> = hashMapOf(
                         imgId.toString() to imageUrl
                     )
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
-                    descendantsfather.updateChildren(data)
-                    descendantsmother.updateChildren(data)
+                    if (fatherKey != "null" && !fatherKey.isNullOrEmpty()) {
+                        descendantsfather.updateChildren(data)
+                    }
+                    if (motherKey != "null" && !motherKey.isNullOrEmpty()) {
+                        descendantsmother.updateChildren(data)
+                    }
                 }
 
             }.addOnFailureListener {

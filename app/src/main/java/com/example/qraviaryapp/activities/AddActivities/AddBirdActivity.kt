@@ -132,7 +132,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
                             originFragment.addOirigin(birdId, nurseryId, newBundle)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
-                                galleryFragment.FlightuploadImageToStorage(
+                                galleryFragment.uploadImageToStorage(
                                     birdId, nurseryId, newBundle,
                                     callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
                             }

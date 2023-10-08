@@ -81,7 +81,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()
         val elapsedTime = currentTimeMillis - appStoppedTime
-        val thresholdTime = 5000 // 5 seconds in milliseconds
+        val thresholdTime = 60000 // 5 seconds in milliseconds
 
         if (elapsedTime >= thresholdTime) {
             // Show the splash activity
