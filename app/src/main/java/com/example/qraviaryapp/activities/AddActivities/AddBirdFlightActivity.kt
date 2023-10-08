@@ -132,17 +132,20 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             birdId = receivedBirdId
                             flightId = receivedFlightId
                             newBundle = receivedNewBundle
+
+                            originFragment.addFlightOrigin(birdId, flightId, newBundle)
+                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
+                                galleryFragment.FlightuploadImageToStorage(birdId, flightId, newBundle,
+                                    callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
+                            }
+
+
+                            onBackPressed()
+                            finish()
+
                         }
 
-                        originFragment.addFlightOrigin(birdId, flightId, newBundle)
-                        { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
-                            galleryFragment.FlightuploadImageToStorage(birdId, flightId, newBundle,
-                                callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
-                        }
 
-
-                        onBackPressed()
-                        finish()
 
 
                     } catch (e: NullPointerException) {

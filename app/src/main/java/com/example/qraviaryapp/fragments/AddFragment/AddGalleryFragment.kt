@@ -242,9 +242,9 @@ class AddGalleryFragment : Fragment() {
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Flight Birds").child(FlightId).child("Gallery")
         val descendantsfather = db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(FlightId).child("Descendants").child(descendantmotherkey).child("Gallery")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey).child("Gallery")
         val descendantsmother =  db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(FlightId).child("Descendants").child(descendantmotherkey).child("Gallery")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey).child("Gallery")
             for (imageUri in imageList) {
             val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
             val uploadTask = imageRef.putFile(imageUri)
