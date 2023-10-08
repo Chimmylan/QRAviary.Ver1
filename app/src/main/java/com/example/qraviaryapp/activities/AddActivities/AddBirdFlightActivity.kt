@@ -139,10 +139,20 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
                             originFragment.addFlightOrigin(birdId, flightId, newBundle)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
-                                galleryFragment.FlightuploadImageToStorage(birdId, flightId, newBundle,
-                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
-                                    descendantmotherkey,cagebirdkey,cagekeyvalue,soldId, purchaseId)
+                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId ->
+                                galleryFragment.FlightuploadImageToStorage(
+                                    birdId,
+                                    flightId,
+                                    newBundle,
+                                    callBackMotherKey,
+                                    callBackFatherKey,
+                                    descendantfatherkey,
+                                    descendantmotherkey,
+                                    cagebirdkey,
+                                    cagekeyvalue,
+                                    soldId,
+                                    purchaseId
+                                )
                             }
 
 
@@ -150,8 +160,6 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             finish()
 
                         }
-
-
 
 
                     } catch (e: NullPointerException) {

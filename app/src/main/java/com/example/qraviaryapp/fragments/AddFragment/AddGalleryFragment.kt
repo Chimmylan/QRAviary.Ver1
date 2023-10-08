@@ -188,7 +188,19 @@ class AddGalleryFragment : Fragment() {
         return tempUri!!
     }
 
-    fun uploadImageToStorage(birdId: String, NurseryId: String, newBundle: Bundle,motherKey: String, fatherKey: String, descendantfatherkey:String, descendantmotherkey:String,cagebirdkey: String, cagekeyvalue: String, soldId: String, purchaseId: String) {
+    fun uploadImageToStorage(
+        birdId: String,
+        NurseryId: String,
+        newBundle: Bundle,
+        motherKey: String,
+        fatherKey: String,
+        descendantfatherkey: String,
+        descendantmotherkey: String,
+        cagebirdkey: String,
+        cagekeyvalue: String,
+        soldId: String,
+        purchaseId: String
+    ) {
         storageRef = FirebaseStorage.getInstance().reference
         val currentUser = mAuth.currentUser?.uid
         val birdRef = db.child("Users").child("ID: $currentUser")
@@ -196,15 +208,18 @@ class AddGalleryFragment : Fragment() {
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Nursery Birds").child(NurseryId).child("Gallery")
         val descendantsfather = db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey).child("Gallery")
-        val descendantsmother =  db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey).child("Gallery")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey)
+            .child("Gallery")
+        val descendantsmother = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey)
+            .child("Gallery")
         val soldRef = db.child("Users").child("ID: $currentUser")
             .child("Sold Items").child(soldId).child("Gallery")
         val purchaseRef = db.child("Users").child("ID: $currentUser")
             .child("Purchase Items").child(purchaseId).child("Gallery")
         val cageRef = db.child("Users").child("ID: $currentUser").child("Cages")
-            .child("Nursery Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey).child("Gallery")
+            .child("Nursery Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey)
+            .child("Gallery")
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 for (imageUri in imageList) {
@@ -256,11 +271,15 @@ class AddGalleryFragment : Fragment() {
         newBundle: Bundle,
         motherKey: String,
         fatherKey: String,
-        descendantfatherkey:String,
-        descendantmotherkey:String, cagebirdkey: String, cagekeyvalue: String, soldId: String, purchaseId: String
+        descendantfatherkey: String,
+        descendantmotherkey: String,
+        cagebirdkey: String,
+        cagekeyvalue: String,
+        soldId: String,
+        purchaseId: String
     ) {
 
-        Log.d(ContentValues.TAG,"FATHERMOTEHRKEY $motherKey $fatherKey")
+        Log.d(ContentValues.TAG, "wwweeewww $soldId $purchaseId")
         storageRef = FirebaseStorage.getInstance().reference
         val currentUser = mAuth.currentUser?.uid
         val birdRef = db.child("Users").child("ID: $currentUser")
@@ -270,14 +289,17 @@ class AddGalleryFragment : Fragment() {
         val soldRef = db.child("Users").child("ID: $currentUser")
             .child("Sold Items").child(soldId).child("Gallery")
         val descendantsfather = db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey).child("Gallery")
-        val descendantsmother =  db.child("Users").child("ID: $currentUser")
-            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey).child("Gallery")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey)
+            .child("Gallery")
+        val descendantsmother = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey)
+            .child("Gallery")
         val purchaseRef = db.child("Users").child("ID: $currentUser")
             .child("Purchase Items").child(purchaseId).child("Gallery")
         val cageRef = db.child("Users").child("ID: $currentUser").child("Cages")
-            .child("Flight Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey).child("Gallery")
-            for (imageUri in imageList) {
+            .child("Flight Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey)
+            .child("Gallery")
+        for (imageUri in imageList) {
             val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
             val uploadTask = imageRef.putFile(imageUri)
             val imgIdKey = birdRef.push()

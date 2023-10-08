@@ -5,6 +5,7 @@ import BirdDataListener
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -961,13 +962,15 @@ class BasicFragment : Fragment() {
                     callback(birdId, flightKey, newBundle, soldId.toString(), cageBirdKey, cageKeyValue.toString())
                 }
             }
+            args.putString("birdId", birdId)
+            args.putString("SoldId", soldId)
+            args.putString("nurseryId", flightKey)
             Log.d(TAG, birdData.toString())
         } else {
             Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
         }
-        args.putString("birdId", birdId)
-        args.putString("SoldId", soldId)
-        args.putString("nurseryId", flightKey)
+
+        Log.d(ContentValues.TAG, "sold id $soldId")
     }
 
 

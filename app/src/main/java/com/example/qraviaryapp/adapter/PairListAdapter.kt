@@ -32,6 +32,9 @@ class PairListAdapter(
         val pairs = dataList[position]
         val femaleimg = pairs.pairfemaleimg
         val maleimg = pairs.pairmaleimg
+
+        holder.pairId.text = "Pair ID: ${pairs.pairId}"
+
         if (femaleimg.isNullOrEmpty()) {
             Glide.with(context)
                 .load(R.drawable.noimage)
@@ -77,6 +80,7 @@ class PairListAdapter(
 
 class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairData>) :
     RecyclerView.ViewHolder(itemView) {
+    var pairId: TextView = itemView.findViewById(R.id.tvidpairs)
     var maleimageview: ImageView = itemView.findViewById(R.id.maleImageView)
     var femaleimageview: ImageView = itemView.findViewById(R.id.femaleImageView)
     var maleBird: TextView = itemView.findViewById(R.id.tvmaleid)

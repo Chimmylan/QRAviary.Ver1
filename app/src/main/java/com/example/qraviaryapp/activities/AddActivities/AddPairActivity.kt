@@ -160,7 +160,7 @@ class AddPairActivity : AppCompatActivity() {
 
     }
 
-    fun Checking(){
+    fun Checking() {
 
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -222,6 +222,7 @@ class AddPairActivity : AppCompatActivity() {
         val nestValue = etNest.text.toString()
         val commentValue = etComment.text.toString()
 
+
         val bird = PairData(
             pairCage = cageValue,
             nest = nestValue,
@@ -235,126 +236,178 @@ class AddPairActivity : AppCompatActivity() {
 
         val userId = mAuth.currentUser?.uid.toString()
 
-        val cageReference =
-            db.child("Users").child("ID: $userId").child("Cages").child("Breeding Cages")
-                .child(cageKeyValue.toString()).child("Pair Birds").push()
+        var counter = 0
+        val pairCountRef = db.child("Users").child("ID: $userId").child("Pairs")
 
-        val userBird = db.child("Users").child("ID: $userId")
-            .child("Pairs")
+        pairCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-        val newMaleBirdPref =
-            db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
-                .child("Pairs").push()
-        val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds")
-            .child(btnFemaleValueKey.toString())
-            .child("Pairs").push()
+                counter = snapshot.childrenCount.toInt()
 
+                val cageReference =
+                    db.child("Users").child("ID: $userId").child("Cages").child("Breeding Cages")
+                        .child(cageKeyValue.toString()).child("Pair Birds").push()
 
-        //Status Ref
-        val newMaleBirdsPref =
-            db.child("Users").child("ID: $userId").child("Birds").child(btnMaleValueKey.toString())
-        val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
-            .child(btnFemaleValueKey.toString())
+                val userBird = db.child("Users").child("ID: $userId")
+                    .child("Pairs")
 
-        //Checking parent ref
-        val femaleParentRef = newFemaleBirdsPref.child("Parents")
-        val maleParentRef = newMaleBirdsPref.child("Parents")
+                val newMaleBirdPref =
+                    db.child("Users").child("ID: $userId").child("Birds")
+                        .child(btnMaleValueKey.toString())
+                        .child("Pairs").push()
+                val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds")
+                    .child(btnFemaleValueKey.toString())
+                    .child("Pairs").push()
 
 
-        val newPairPref = userBird.push()
+                //Status Ref
+                val newMaleBirdsPref =
+                    db.child("Users").child("ID: $userId").child("Birds")
+                        .child(btnMaleValueKey.toString())
+                val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
+                    .child(btnFemaleValueKey.toString())
 
-        var validMale = false
-        var validFemale = false
-
-        if (btnMale.text.isEmpty()) {
-            btnMale.error = "Please select a bird..."
-        } else {
-            validMale = true
-        }
-        if (btnFemale.text.isEmpty()) {
-            btnFemale.error = "Please select a bird..."
-        } else {
-            validFemale = true
-        }
-
-        if (validMale && validFemale) {
+                //Checking parent ref
+                val femaleParentRef = newFemaleBirdsPref.child("Parents")
+                val maleParentRef = newMaleBirdsPref.child("Parents")
 
 
+                val newPairPref = userBird.push()
 
-            val data: Map<String, Any?> = hashMapOf(
-                "Male" to bird.pairMale,
-                "Male Mutation" to bird.pairMaleGender,
-                "Female" to bird.pairFemale,
-                "Female Mutation" to bird.pairFemaleGender,
-                "Beginning" to bird.pairDateBeg,
-                "Cage" to bird.pairCage,
-                "Nest" to bird.nest,
-                "Comment" to bird.pairComment,
-                "MaleIdentifier" to btnMaleIdValue,
-                "FemaleIdentifier" to btnFemaleIdValue,
-                "Male Bird Key" to btnMaleValueKey,
-                "Female Bird Key" to btnFemaleValueKey,
-                "Male Flight Key" to btnMaleFlightValueKey,
-                "Female Flight Key" to btnFemaleFlightValueKey,
-                "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue,
-                "CageKeyFlightMaleValue" to cageKeyFlightMaleValue,
-                "CageKeyFemale" to CageBirdKeyMother,
-                "CageKeyMale" to CageBirdKeyFather,
-                "Female Gallery" to femalegallery,
-                "Male Gallery" to malegallery
-            )
+                var validMale = false
+                var validFemale = false
 
-            val maleBirdPair: Map<String, Any?> = hashMapOf(
-                "Identifier" to btnFemaleIdValue,
-                "Bird Key" to btnFemaleValueKey
-            )
-            val femaleBirdPair: Map<String, Any?> = hashMapOf(
-                "Identifier" to btnMaleIdValue,
-                "Bird Key" to btnMaleValueKey
-            )
-
-
-            Log.d(ContentValues.TAG, parentAndChild.toString())
-            if (parentAndChild) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Confirmation")
-
-                builder.setMessage("They are Parent and Child.\nAre you sure you want to save?")
-                builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
-                    // Execute addPair() when the user clicks "Yes"
-
-                    newMaleBirdsPref.child("Status").setValue("Paired")
-                    newFemaleBirdsPref.child("Status").setValue("Paired")
-                    cageReference.updateChildren(data)
-                    newFemaleBirdPref.updateChildren(femaleBirdPair)
-                    newMaleBirdPref.updateChildren(maleBirdPair)
-                    newPairPref.updateChildren(data)
-
-                    dialogInterface.dismiss()
-                    onBackPressed()
-                    finish()
+                if (btnMale.text.isEmpty()) {
+                    btnMale.error = "Please select a bird..."
+                } else {
+                    validMale = true
                 }
-                builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
-                    // Handle the case when the user clicks "No" (optional)
-                    dialogInterface.dismiss()
+                if (btnFemale.text.isEmpty()) {
+                    btnFemale.error = "Please select a bird..."
+                } else {
+                    validFemale = true
                 }
-                val dialog = builder.create()
-                dialog.show()
-            } else {
 
-                newMaleBirdsPref.child("Status").setValue("Paired")
-                newFemaleBirdsPref.child("Status").setValue("Paired")
-                cageReference.updateChildren(data)
-                newFemaleBirdPref.updateChildren(femaleBirdPair)
-                newMaleBirdPref.updateChildren(maleBirdPair)
-                newPairPref.updateChildren(data)
-                onBackPressed()
-                finish()
+
+                userBird.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var highestPairKey = 0
+
+                        for (childSnapshot in snapshot.children) {
+                            val pairNumber =
+                                childSnapshot.child("Pair ID").getValue(Int::class.java)
+                            if (pairNumber != null && pairNumber > highestPairKey) {
+                                highestPairKey = pairNumber
+                                Log.d(
+                                    ContentValues.TAG,
+                                    "HigestPairKey " + highestPairKey.toString()
+                                )
+                            }else
+                            {
+                                Log.d(
+                                    ContentValues.TAG,
+                                    "HigestPairKey is null" + highestPairKey.toString()
+                                )
+                            }
+                        }
+
+                        val newPairNumber = highestPairKey + 1
+
+                        if (validMale && validFemale) {
+
+                            val data: Map<String, Any?> = hashMapOf(
+                                "Pair ID" to newPairNumber,
+                                "Male" to bird.pairMale,
+                                "Male Mutation" to bird.pairMaleGender,
+                                "Female" to bird.pairFemale,
+                                "Female Mutation" to bird.pairFemaleGender,
+                                "Beginning" to bird.pairDateBeg,
+                                "Cage" to bird.pairCage,
+                                "Nest" to bird.nest,
+                                "Comment" to bird.pairComment,
+                                "MaleIdentifier" to btnMaleIdValue,
+                                "FemaleIdentifier" to btnFemaleIdValue,
+                                "Male Bird Key" to btnMaleValueKey,
+                                "Female Bird Key" to btnFemaleValueKey,
+                                "Male Flight Key" to btnMaleFlightValueKey,
+                                "Female Flight Key" to btnFemaleFlightValueKey,
+                                "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue,
+                                "CageKeyFlightMaleValue" to cageKeyFlightMaleValue,
+                                "CageKeyFemale" to CageBirdKeyMother,
+                                "CageKeyMale" to CageBirdKeyFather,
+                                "Female Gallery" to femalegallery,
+                                "Male Gallery" to malegallery
+                            )
+
+                            val maleBirdPair: Map<String, Any?> = hashMapOf(
+                                "Identifier" to btnFemaleIdValue,
+                                "Bird Key" to btnFemaleValueKey
+                            )
+                            val femaleBirdPair: Map<String, Any?> = hashMapOf(
+                                "Identifier" to btnMaleIdValue,
+                                "Bird Key" to btnMaleValueKey
+                            )
+
+
+                            Log.d(ContentValues.TAG, parentAndChild.toString())
+                            if (parentAndChild) {
+                                val builder = AlertDialog.Builder(this@AddPairActivity)
+                                builder.setTitle("Confirmation")
+
+                                builder.setMessage("They are Parent and Child.\nAre you sure you want to save?")
+                                builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+                                    // Execute addPair() when the user clicks "Yes"
+
+                                    newMaleBirdsPref.child("Status").setValue("Paired")
+                                    newFemaleBirdsPref.child("Status").setValue("Paired")
+                                    cageReference.updateChildren(data)
+                                    newFemaleBirdPref.updateChildren(femaleBirdPair)
+                                    newMaleBirdPref.updateChildren(maleBirdPair)
+                                    newPairPref.updateChildren(data)
+
+                                    dialogInterface.dismiss()
+                                    onBackPressed()
+                                    finish()
+                                }
+                                builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
+                                    // Handle the case when the user clicks "No" (optional)
+                                    dialogInterface.dismiss()
+                                }
+                                val dialog = builder.create()
+                                dialog.show()
+                            } else {
+
+                                newMaleBirdsPref.child("Status").setValue("Paired")
+                                newFemaleBirdsPref.child("Status").setValue("Paired")
+                                cageReference.updateChildren(data)
+                                newFemaleBirdPref.updateChildren(femaleBirdPair)
+                                newMaleBirdPref.updateChildren(maleBirdPair)
+                                newPairPref.updateChildren(data)
+                                onBackPressed()
+                                finish()
+
+                            }
+
+
+                        }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
 
             }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
 
-        }
+        })
+
 
     }
 
@@ -380,7 +433,6 @@ class AddPairActivity : AppCompatActivity() {
 
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -415,7 +467,7 @@ class AddPairActivity : AppCompatActivity() {
                 CageBirdKeyFather = data?.getStringExtra("CageBirdKeyMale").toString()
                 btnMale.text = btnMaleIdValue
                 malegallery = data?.getStringExtra("MaleGallery").toString()
-                Log.d(TAG,"$malegallery malegallery")
+                Log.d(TAG, "$malegallery malegallery")
             }
         }
         if (requestCode == 2) {
@@ -428,7 +480,7 @@ class AddPairActivity : AppCompatActivity() {
                 CageBirdKeyMother = data?.getStringExtra("CageBirdKeyFemale").toString()
                 btnFemale.text = btnFemaleIdValue
                 femalegallery = data?.getStringExtra("FemaleGallery").toString()
-                Log.d(TAG,"$femalegallery femalegallery")
+                Log.d(TAG, "$femalegallery femalegallery")
             }
         }
         if (requestCode == 3) {

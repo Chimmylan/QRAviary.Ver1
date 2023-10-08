@@ -156,6 +156,7 @@ class PairsFragment : Fragment() {
                     femalegallery = itemSnapshot.child("Female Gallery").value.toString()
                     malegallery = itemSnapshot.child("Male Gallery").value.toString()
                     val key = itemSnapshot.key.toString()
+                    val pairsId = itemSnapshot.child("Pair ID").value.toString()
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
                     val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
@@ -172,6 +173,7 @@ class PairsFragment : Fragment() {
                     val pairMaleFlightKey = itemSnapshot.child("Male Flight Key").value.toString()
                     val pairFemaleFlightKey = itemSnapshot.child("Female Flight Key").value.toString()
 
+                    data.pairId = pairsId
                     data.pairfemaleimg = femalegallery
                     data.pairmaleimg = malegallery
                     data.pairFlightMaleKey = pairMaleFlightKey
@@ -219,6 +221,7 @@ class PairsFragment : Fragment() {
                 if (data != null) {
                     if (itemSnapshot.child("Separate Date").exists()) {
                         val key = itemSnapshot.key.toString()
+                        val pairsId = itemSnapshot.child("Pair ID").value.toString()
                         val cageName = itemSnapshot.child("Cage").value.toString()
                         val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
                         val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
@@ -233,6 +236,7 @@ class PairsFragment : Fragment() {
                         val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
                         val separateDate = itemSnapshot.child("Separate Date").value.toString()
 
+                        data.pairId = pairsId
                         data.pairMaleKey = pairMaleKey
                         data.pairFemaleKey = pairFemaleKey
                         data.pairKey = key
