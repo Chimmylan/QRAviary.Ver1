@@ -248,11 +248,11 @@ class OriginFragment : Fragment() {
 
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-        val purchaseId = purchasesRef.key
+        var purchaseId: String? = null
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
-
+            purchaseId = purchasesRef.key
             if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(
@@ -912,11 +912,11 @@ class OriginFragment : Fragment() {
             .child(birdMotherKey.toString()).child("Descendants").push()
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-        val purchaseId = purchasesRef.key
+       var purchaseId: String? = null
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
-
+            purchaseId = purchasesRef.key
             if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(

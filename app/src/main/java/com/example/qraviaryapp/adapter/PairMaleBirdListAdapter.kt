@@ -147,7 +147,9 @@ class PairMaleBirdViewHolder(
                 dataList[adapterPosition].identifier // Retrieve the cage name from the data list
             val cagekey = dataList[adapterPosition].cagekeymalevalue
             val cagebirdkey = dataList[adapterPosition].cagebirdmalekey
+            val image = dataList[adapterPosition].img
             val intent = Intent()
+            intent.putExtra("MaleGallery", image)
             intent.putExtra("MaleBirdId", maleBird)
             intent.putExtra("MaleBirdKey", maleBirdKey)
             intent.putExtra("MaleFlightKey", maleFlightKey)

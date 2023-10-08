@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
-    app:cardUseCompatPadding="true">
+    android:layout_marginTop="5dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,101 +39,112 @@
         android:layout_height="match_parent"
         android:weightSum="2"
         android:orientation="horizontal">
+
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:gravity="center"
+
     android:orientation="vertical"
-    android:padding="10dp">
+    android:paddingLeft="10dp"
+    android:paddingRight="5dp">
 
     <ImageView
         android:id="@+id/maleImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
         android:src="@drawable/bird"
         android:contentDescription="Bird Image"
-        android:scaleType="fitCenter"/>
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
+        android:weightSum="3"
         android:orientation="horizontal"
         android:padding="5dp">
 
         <ImageView
             android:id="@+id/gendermaleImageView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:contentDescription="Bird Image"
             android:scaleType="fitCenter"
-            android:src="@drawable/male_icon" />
-
+            android:src="@drawable/baseline_male_24" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
         <TextView
-        android:id="@+id/tvmaleid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ID"
-        android:padding="10dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:id="@+id/tvmaleid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ID" />
         <TextView
             android:id="@+id/tvMaleMutation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mutation" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     </LinearLayout>
 </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingRight="10dp"
+            android:paddingLeft="5dp">
 
             <ImageView
                 android:id="@+id/femaleImageView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:src="@drawable/bird"
                 android:contentDescription="Bird Image"
-                android:scaleType="fitCenter"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:weightSum="2"
-                android:orientation="horizontal"
-                android:padding="5dp">
-                <ImageView
-                    android:id="@+id/genderfemaleImageView"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/female_icon"
-                    android:contentDescription="Bird Image"
-                    android:scaleType="fitCenter"/>
-                <TextView
-                    android:id="@+id/tvfemaleid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ID"
-                    android:padding="10dp"/>
-
-            </LinearLayout>
+                android:scaleType="centerCrop"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/genderfemaleImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:contentDescription="Bird Image"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/female_logo" />
+
+                <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tvFemaleMutation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mutation" />
+                    android:id="@+id/tvfemaleid"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="ID" />
+                   <TextView
+                       android:id="@+id/tvFemaleMutation"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Mutation" />
+               </LinearLayout>
             </LinearLayout>
+
 
         </LinearLayout>
 

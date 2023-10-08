@@ -41,7 +41,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
     private lateinit var editor: SharedPreferences.Editor
 
     private var maleMutation: String? = null
-
+    private var mainPic: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +125,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     if (female == "Female" && mutations.contains(maleMutation)) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
-                        val mainPic = gallery.children.firstOrNull()?.value.toString()
+                        mainPic = gallery.children.firstOrNull()?.value.toString()
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
                         val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
@@ -256,7 +256,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     if (female == "Female") {
                         Log.d(ContentValues.TAG, "Dont have Same Mutation")
                         val femaleKey = itemSnapshot.key;
-                        val mainPic = gallery.children.firstOrNull()?.value.toString()
+                        mainPic = gallery.children.firstOrNull()?.value.toString()
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
                         val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
@@ -394,6 +394,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
 
     override fun onClick(nameValue: String, id: String, mutation: String) {
         val intent = Intent()
+        intent.putExtra("FemaleGallery",mainPic )
         intent.putExtra("FemaleBird", nameValue)
         intent.putExtra("FemaleBirdId", id)
         intent.putExtra("FemaleMutation", mutation)

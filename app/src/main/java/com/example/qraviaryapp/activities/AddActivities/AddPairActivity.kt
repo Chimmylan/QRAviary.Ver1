@@ -4,6 +4,7 @@ import PairData
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.*
+import android.content.ContentValues.TAG
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -57,7 +58,8 @@ class AddPairActivity : AppCompatActivity() {
     private var CageBirdKeyMother: String? = null
     private var CageBirdKeyFather: String? = null
     private var cageKeyValue: String? = null
-
+    private var femalegallery: String? = null
+    private var malegallery: String? = null
     private var parentAndChild = false
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -260,7 +262,6 @@ class AddPairActivity : AppCompatActivity() {
 
 
         val newPairPref = userBird.push()
-        val pairId = newPairPref.key
 
         var validMale = false
         var validFemale = false
@@ -277,6 +278,9 @@ class AddPairActivity : AppCompatActivity() {
         }
 
         if (validMale && validFemale) {
+
+
+
             val data: Map<String, Any?> = hashMapOf(
                 "Male" to bird.pairMale,
                 "Male Mutation" to bird.pairMaleGender,
@@ -295,7 +299,9 @@ class AddPairActivity : AppCompatActivity() {
                 "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue,
                 "CageKeyFlightMaleValue" to cageKeyFlightMaleValue,
                 "CageKeyFemale" to CageBirdKeyMother,
-                "CageKeyMale" to CageBirdKeyFather
+                "CageKeyMale" to CageBirdKeyFather,
+                "Female Gallery" to femalegallery,
+                "Male Gallery" to malegallery
             )
 
             val maleBirdPair: Map<String, Any?> = hashMapOf(
@@ -408,6 +414,8 @@ class AddPairActivity : AppCompatActivity() {
                 cageKeyFlightMaleValue = data?.getStringExtra("CageKeyMale").toString()
                 CageBirdKeyFather = data?.getStringExtra("CageBirdKeyMale").toString()
                 btnMale.text = btnMaleIdValue
+                malegallery = data?.getStringExtra("MaleGallery").toString()
+                Log.d(TAG,"$malegallery malegallery")
             }
         }
         if (requestCode == 2) {
@@ -419,6 +427,8 @@ class AddPairActivity : AppCompatActivity() {
                 cageKeyFlightFemaleValue = data?.getStringExtra("CageKeyFemale").toString()
                 CageBirdKeyMother = data?.getStringExtra("CageBirdKeyFemale").toString()
                 btnFemale.text = btnFemaleIdValue
+                femalegallery = data?.getStringExtra("FemaleGallery").toString()
+                Log.d(TAG,"$femalegallery femalegallery")
             }
         }
         if (requestCode == 3) {

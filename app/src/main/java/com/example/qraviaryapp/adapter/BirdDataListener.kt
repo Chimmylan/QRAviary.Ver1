@@ -101,6 +101,8 @@ data class ExpensesData(
 )
 
 data class PairData(
+    var pairfemaleimg: String? = null,
+    var pairmaleimg: String? = null,
     var pairKey: String? = null,
     var pairId: String? = null,
     var nest: String? = null,

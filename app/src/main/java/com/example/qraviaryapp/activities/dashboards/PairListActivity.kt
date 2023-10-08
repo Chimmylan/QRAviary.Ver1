@@ -45,6 +45,8 @@ class PairListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PairListAdapter
     private lateinit var fab: FloatingActionButton
+    private var femalegallery: String? = null
+    private var malegallery: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -102,8 +104,11 @@ class PairListActivity : AppCompatActivity() {
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
+
             val data = itemSnapshot.getValue(PairData::class.java)
             if (data != null){
+                femalegallery = itemSnapshot.child("Female Gallery").value.toString()
+                malegallery = itemSnapshot.child("Male Gallery").value.toString()
                 val key = itemSnapshot.key.toString()
 //                val FemaleIdentifier = itemSnapshot.child("FemaleIdentifier").value.toString()
 //                val MaleIdentifier = itemSnapshot.child("MaleIdentifier").value.toString()
@@ -114,7 +119,8 @@ class PairListActivity : AppCompatActivity() {
                 val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
                 val beginningDate = itemSnapshot.child("Beginning").value.toString()
 
-
+                data.pairfemaleimg = femalegallery
+                data.pairmaleimg = malegallery
                 data.pairKey = key
                 data.pairFemale = female
                 data.pairMale = male
@@ -123,7 +129,9 @@ class PairListActivity : AppCompatActivity() {
                 data.pairFemaleMutation = femaleMutation
                 data.pairDateBeg = beginningDate
 
-
+                Log.d(ContentValues.TAG, "femaleimg $femalegallery")
+                Log.d(ContentValues.TAG, "maleimg $malegallery")
+                Log.d(ContentValues.TAG, "key $key")
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {

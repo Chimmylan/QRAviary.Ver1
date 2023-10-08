@@ -43,7 +43,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
     private lateinit var editor: Editor
 
     private var femaleMutation: String? = null
-
+    private var mainPic: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -121,7 +121,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                 //Run if mutation exist
                 if (femaleMutation?.isNotEmpty() == true) {
                     if (male == "Male" && mutations.contains(femaleMutation)) {
-                        val mainPic = gallery.children.firstOrNull()?.value.toString()
+                        mainPic = gallery.children.firstOrNull()?.value.toString()
                         val maleKey = itemSnapshot.key
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
@@ -246,7 +246,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                 } else {
                     if (male == "Male") {
                         val maleKey = itemSnapshot.key
-                        val mainPic = gallery.children.firstOrNull()?.value.toString()
+                        mainPic = gallery.children.firstOrNull()?.value.toString()
                         val birdKey = itemSnapshot.child("Bird Key").value.toString()
                         val flightKey = itemSnapshot.child("Flight Key").value.toString()
                         val cagekeyvalue = itemSnapshot.child("CageKey").value.toString()
@@ -386,6 +386,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
 
     override fun onClick(nameValue: String, id: String, mutation: String) {
         val intent = Intent()
+        intent.putExtra("MaleGallery", mainPic)
         intent.putExtra("MaleBird", nameValue)
         intent.putExtra("MaleBirdId", id)
         intent.putExtra("MaleMutation", mutation)

@@ -670,15 +670,14 @@ class BasicFragment : Fragment() {
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
         val SoldRef =  dbase.child("Users").child("ID: $userId").child("Sold Items")
         val SoldBirdRef = SoldRef.push()
-        val soldId = SoldBirdRef.key
+        var soldId: String? = null
+
         val newBirdPref = userBird.push()
         val newNurseryPref = NurseryBird.push()
         val birdId = newBirdPref.key
         val flightKey = newNurseryPref.key
         val args = Bundle()
-        args.putString("birdId", birdId)
-        args.putString("SoldId", soldId)
-        args.putString("nurseryId", flightKey)
+
 
         val originFragment = OriginFragment()
         originFragment.arguments = args
@@ -810,7 +809,7 @@ class BasicFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (soldLayout.visibility == View.VISIBLE) {
-
+                soldId = SoldBirdRef.key
 
                 val data: Map<String, Any?> = hashMapOf(
 
@@ -966,6 +965,9 @@ class BasicFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
         }
+        args.putString("birdId", birdId)
+        args.putString("SoldId", soldId)
+        args.putString("nurseryId", flightKey)
     }
 
 

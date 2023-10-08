@@ -47,7 +47,8 @@ class PairsFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var current: TextView
     private lateinit var previous: TextView
-
+    private var femalegallery: String? = null
+    private var malegallery: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -152,6 +153,8 @@ class PairsFragment : Fragment() {
                 if (itemSnapshot.child("Separate Date").exists()) {
 
                 } else {
+                    femalegallery = itemSnapshot.child("Female Gallery").value.toString()
+                    malegallery = itemSnapshot.child("Male Gallery").value.toString()
                     val key = itemSnapshot.key.toString()
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
@@ -169,7 +172,8 @@ class PairsFragment : Fragment() {
                     val pairMaleFlightKey = itemSnapshot.child("Male Flight Key").value.toString()
                     val pairFemaleFlightKey = itemSnapshot.child("Female Flight Key").value.toString()
 
-
+                    data.pairfemaleimg = femalegallery
+                    data.pairmaleimg = malegallery
                     data.pairFlightMaleKey = pairMaleFlightKey
                     data.pairFlightFemaleKey = pairFemaleFlightKey
                     data.pairMaleKey = pairMaleKey
