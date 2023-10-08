@@ -121,13 +121,24 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
                 lifecycleScope.launch {
                     try {
+                        var birdId = ""
+                        var newBundle: Bundle = Bundle()
+                        var nurseryId = ""
 
-                        basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
-                            galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
-                            originFragment.addOirigin(birdId, NurseryId, newBundle)
-                            onBackPressed()
-                            finish()
+                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle ->
+                            birdId = receivedbirdId
+                            nurseryId = NurseryId
+                            newBundle = receivednewBundle
                         }
+                        originFragment.addOirigin(birdId, nurseryId, newBundle)
+                        { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey ->
+                            galleryFragment.FlightuploadImageToStorage(
+                                birdId, nurseryId, newBundle,
+                                callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey)
+                        }
+                        onBackPressed()
+                        finish()
+
 
                         // Now that the background work is done, switch to the main thread
 

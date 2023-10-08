@@ -161,7 +161,7 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle) {
+    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -249,7 +249,8 @@ class OriginFragment : Fragment() {
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
 
-
+        val descendantsfatherkey = descendantsFatherRef.key
+        val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
 
             if (btnFather.text == "None" && btnMother.text == "None") {
@@ -811,10 +812,11 @@ class OriginFragment : Fragment() {
 
 
         }
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString())
     }
 
 
-    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String) -> Unit) {
+    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -908,6 +910,8 @@ class OriginFragment : Fragment() {
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
 
+        val descendantsfatherkey = descendantsFatherRef.key
+        val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
 
             if (btnFather.text == "None" && btnMother.text == "None") {
@@ -1491,7 +1495,7 @@ class OriginFragment : Fragment() {
             }
         }
 
-        callback(birdMotherKey.toString(), birdFatherKey.toString())
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString())
     }
 
     interface OriginFragmentCallback{

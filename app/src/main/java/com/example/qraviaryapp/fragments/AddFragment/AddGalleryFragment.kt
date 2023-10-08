@@ -229,7 +229,9 @@ class AddGalleryFragment : Fragment() {
         FlightId: String,
         newBundle: Bundle,
         motherKey: String,
-        fatherKey: String
+        fatherKey: String,
+        descendantfatherkey:String,
+        descendantmotherkey:String
     ) {
 
         Log.d(ContentValues.TAG,"FATHERMOTEHRKEY $motherKey $fatherKey")
@@ -239,12 +241,17 @@ class AddGalleryFragment : Fragment() {
             .child("Birds").child(birdId).child("Gallery")
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Flight Birds").child(FlightId).child("Gallery")
-        for (imageUri in imageList) {
+        val descendantsfather = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(FlightId).child("Descendants").child(descendantmotherkey).child("Gallery")
+        val descendantsmother =  db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(FlightId).child("Descendants").child(descendantmotherkey).child("Gallery")
+            for (imageUri in imageList) {
             val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
             val uploadTask = imageRef.putFile(imageUri)
             val imgIdKey = birdRef.push()
             val imgId = imgIdKey.key
             uploadTask.addOnSuccessListener {
+
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
 
@@ -253,7 +260,8 @@ class AddGalleryFragment : Fragment() {
                     )
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
-
+                    descendantsfather.updateChildren(data)
+                    descendantsmother.updateChildren(data)
                 }
 
             }.addOnFailureListener {
