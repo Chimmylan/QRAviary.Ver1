@@ -632,6 +632,7 @@ class BirdOriginFragment : Fragment() {
 
             val i = Intent(motherLinearLayout.context, BirdsDetailedActivity::class.java)
             i.putExtras(bundle)
+
             motherLinearLayout.context.startActivity(i)
         }
 
@@ -683,6 +684,8 @@ class BirdOriginFragment : Fragment() {
                     val data = itemSnapshot.getValue(BirdData::class.java)
                     val gallery = itemSnapshot.child("Gallery")
                     if (data != null) {
+
+                        val mainPic = gallery.children.firstOrNull()?.value.toString()
 
                         val siblingBirdKey = itemSnapshot.child("Bird Key").value.toString()
                         val siblingFlightKey = itemSnapshot.child("Flight Key").value.toString()
@@ -754,6 +757,8 @@ class BirdOriginFragment : Fragment() {
                         val siblingsFatherKeyValue = siblingsFatherKey.value.toString()
                         val siblingsMotherKey = parentRef.child("MotherKey")
                         val siblingsMotherKeyValue = siblingsMotherKey.value.toString()
+
+                        data.img = mainPic
                         data.identifier = siblingIdentifier
                         data.flightKey = siblingFlightKey
                         data.birdKey = siblingBirdKey
