@@ -127,7 +127,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             soldId = receivesoldId
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
-                            originFragment.addOirigin(birdId, nurseryId, newBundle)
+                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
                                 galleryFragment.uploadImageToStorage(
                                     birdId, nurseryId, newBundle,

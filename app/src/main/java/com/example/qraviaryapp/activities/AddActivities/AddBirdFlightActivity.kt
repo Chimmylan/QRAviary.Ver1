@@ -138,7 +138,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
-                            originFragment.addFlightOrigin(birdId, flightId, newBundle)
+                            originFragment.addFlightOrigin(birdId, flightId, newBundle,soldId)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId ->
                                 galleryFragment.FlightuploadImageToStorage(
                                     birdId,

@@ -161,7 +161,7 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
+    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -245,9 +245,11 @@ class OriginFragment : Fragment() {
             .child(birdFatherKey.toString()).child("Descendants").push()
         val descendantMotherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
             .child(birdMotherKey.toString()).child("Descendants").push()
-
+        val soldidref = dbase.child("Users").child("ID: $userId").child("Sold Items")
+            .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
+
         var purchaseId: String? = null
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
@@ -468,7 +470,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
             val data: Map<String, Any?> = hashMapOf(
@@ -638,7 +642,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -809,7 +815,9 @@ class OriginFragment : Fragment() {
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(data)
+            }
 
         }
         callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
@@ -818,7 +826,7 @@ class OriginFragment : Fragment() {
 
     fun addFlightOrigin(birdId: String,
     FlightId: String,
-    newBundle: Bundle,
+    newBundle: Bundle,soldId: String,
     callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String,  purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
@@ -910,6 +918,8 @@ class OriginFragment : Fragment() {
             .child(birdFatherKey.toString()).child("Descendants").push()
         val descendantMotherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
             .child(birdMotherKey.toString()).child("Descendants").push()
+        val soldidref = dbase.child("Users").child("ID: $userId").child("Sold Items")
+            .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
        var purchaseId: String? = null
@@ -1136,6 +1146,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1316,6 +1329,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1492,6 +1508,9 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
+                if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(motherRefdata)
+                }
                 fatherRef.updateChildren(motherRefdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!! and FatherRef!!")

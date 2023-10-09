@@ -158,7 +158,7 @@ class PurchasesFragment : Fragment() {
                     ""
                 }
                 val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
-                val dateOfBirthValue = itemSnapshot.child("Date Birth").value
+                val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Avail Cage").value
                 val forSaleCageValue = itemSnapshot.child("For Sale Cage").value
