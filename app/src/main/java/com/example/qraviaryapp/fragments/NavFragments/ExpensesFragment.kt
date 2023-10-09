@@ -19,11 +19,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddExpensesActivity
 import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
+import com.example.qraviaryapp.adapter.FragmentAdapter
+import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
+import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
+import com.example.qraviaryapp.fragments.Expenses.ExpensesChartFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -33,7 +39,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ExpensesFragment : Fragment() {
-
+    private lateinit var viewPager: ViewPager
+    private lateinit var tablayout: TabLayout
+    private lateinit var fragmentAdapter: FragmentAdapter
 //    private lateinit var dataList: ArrayList<ExpensesData>
 //    private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
@@ -109,9 +117,16 @@ class ExpensesFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
+        fragmentAdapter = FragmentAdapter(requireFragmentManager())
+        val expensesFragment = ExpenseFragment()
+        val chartFragment = ExpensesChartFragment()
+        viewPager = view.findViewById(R.id.viewPager)
+        tablayout = view.findViewById(R.id.tablayout)
 
-
-
+        fragmentAdapter.addFragment(expensesFragment, "EXPENSES")
+        fragmentAdapter.addFragment(chartFragment, "CHART")
+        viewPager.adapter = fragmentAdapter
+        tablayout.setupWithViewPager(viewPager)
         return view
     }
     private fun showSnackbar(message: String) {
