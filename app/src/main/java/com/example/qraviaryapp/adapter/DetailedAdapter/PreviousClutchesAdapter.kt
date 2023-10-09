@@ -10,8 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.PreviousClutchesActivity
 
-class ClutchesListAdapter(
+class PreviousClutchesListAdapter(
     private val context: android.content.Context,
     private var dataList: MutableList<EggData>
 ) : RecyclerView.Adapter<PreviousClutchesViewHolder>() {
@@ -108,7 +109,7 @@ class ClutchesListAdapter(
 
 }
 
-class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggData>) :
+class PreviousClutchesViewHolder(itemView: View, private val dataList: MutableList<EggData>) :
     RecyclerView.ViewHolder(itemView) {
 
     val tvTotal: TextView = itemView.findViewById(R.id.tvTotal)
@@ -138,7 +139,7 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
             bundle.putString("CageKeyMale", dataList[adapterPosition].eggcagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].eggcagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].eggcagebirdMale)
-            val i = Intent(itemView.context, ClutchesDetailedActivity::class.java)
+            val i = Intent(itemView.context, PreviousClutchesActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)
         }

@@ -7,8 +7,7 @@
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background = "@color/bottom_nav_background"
-    tools:context=".activities.detailedactivities.PairsDetailedActivity">
+    android:background = "@color/bottom_nav_background">
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -72,52 +71,52 @@
                 app:iconSize="24dp"/>
 
         </androidx.cardview.widget.CardView>
-            `<androidx.cardview.widget.CardView
+        `<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="4dp"
+        android:layout_marginTop="1dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnfemaleid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="4dp"
-            android:layout_marginTop="1dp">
+            android:backgroundTint="@color/white_black"
+            android:gravity="left|center"
+            android:text="Female ID"
+            android:textColor="@color/black_white"
+            android:textSize="12sp"
+            app:icon="@drawable/female_icon"
+            app:iconGravity="start"
+            app:iconSize="24dp"
+            app:iconTint="@color/black_white" />
+    </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnfemaleid"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white_black"
-                android:gravity="left|center"
-                android:text="Female ID"
-                android:textColor="@color/black_white"
-                android:textSize="12sp"
-                app:icon="@drawable/female_icon"
-                app:iconGravity="start"
-                app:iconSize="24dp"
-                app:iconTint="@color/black_white" />
-        </androidx.cardview.widget.CardView>
+                android:background="#E9E8E8"
+                android:elevation="4dp"
+                app:tabIndicatorColor="@color/black_white"
+                app:tabSelectedTextColor="@color/black_white"
+                app:tabTextAppearance="@style/TabLayoutTextStyle"
+                app:tabTextColor="@color/black_white"/>
 
-
-            <LinearLayout
+            <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:id="@+id/viewPager"
+                android:background="@color/white"
+                android:layout_weight="1"/>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tablayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#E9E8E8"
-                    android:elevation="4dp"
-                    app:tabIndicatorColor="@color/black_white"
-                    app:tabSelectedTextColor="@color/black_white"
-                    app:tabTextAppearance="@style/TabLayoutTextStyle"
-                    app:tabTextColor="@color/black_white"/>
-
-                <androidx.viewpager.widget.ViewPager
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/viewPager"
-                    android:background="@color/white"
-                    android:layout_weight="1"/>
-
-            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

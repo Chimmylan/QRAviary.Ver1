@@ -92,6 +92,8 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
+            bundle.putString("PairFemaleImg", dataList[adapterPosition].pairfemaleimg)
+            bundle.putString("PairMaleImg", dataList[adapterPosition].pairmaleimg)
             bundle.putString("PairId", dataList[adapterPosition].pairId)
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)

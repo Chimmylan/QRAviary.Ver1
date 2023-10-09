@@ -29,6 +29,7 @@ import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
 import com.example.qraviaryapp.fragments.Pairs.DescendantsFragment
+import com.example.qraviaryapp.fragments.Pairs.PreviousClutchesFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -47,7 +48,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PairsDetailedActivity : AppCompatActivity() {
+class PreviousPairActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     private lateinit var tablayout: TabLayout
     val fragmentAdapter = FragmentAdapter(supportFragmentManager)
@@ -74,7 +75,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
-//    private lateinit var pairfemaleimg: String
+    //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
     private var clutchCount = 0
@@ -83,7 +84,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
-        setContentView(R.layout.detailed_activity_pairs)
+        setContentView(R.layout.activity_previous_pair)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.elevation = 0f
@@ -159,7 +160,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             newBundle.putString("CageBirdMale", pairCageBirdMale)
             newBundle.putString("CageKeyFemale", pairCageKeyFemale)
             newBundle.putString("CageKeyMale", pairCageKeyMale)
-            val clutchesFragment = ClutchesFragment() // Create an instance of ClutchesFragment
+            val clutchesFragment = PreviousClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
             fragmentAdapter.addFragment(clutchesFragment, "CLUTCHES")
@@ -175,7 +176,7 @@ class PairsDetailedActivity : AppCompatActivity() {
 
             val abcolortitle = resources.getColor(R.color.appbar)
             supportActionBar?.title = HtmlCompat.fromHtml(
-                "<font color='$abcolortitle'>$pairId</font>",
+                "<font color='$abcolortitle'>Pair</font>",
                 HtmlCompat.FROM_HTML_MODE_LEGACY
             )
             currentUserId = mAuth.currentUser?.uid.toString()
@@ -270,7 +271,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         val currentUserId = mAuth.currentUser?.uid
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).removeValue()
-        }
+    }
     private fun showSeparateConfirmation() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Separate")

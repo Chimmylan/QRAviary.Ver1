@@ -8,10 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.PreviousPairActivity
 import org.w3c.dom.Text
 
 class PreviousPairAdapter(
@@ -26,7 +29,38 @@ class PreviousPairAdapter(
 
     override fun onBindViewHolder(holder: PreviousViewHolder, position: Int) {
         val pairs = dataList[position]
+        val femaleimg = pairs.pairfemaleimg
+        val maleimg = pairs.pairmaleimg
 
+
+        if (femaleimg.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.femaleimageview)
+
+        } else {
+            Glide.with(context)
+                .load(femaleimg)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.femaleimageview)
+        }
+        if (maleimg.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.maleimageview)
+
+        } else {
+            Glide.with(context)
+                .load(maleimg)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.maleimageview)
+        }
         holder.dateId.text = pairs.pairDateBeg
         holder.femaleBird.text = pairs.pairFemale
         holder.femaleMutation.text = pairs.pairFemaleMutation
@@ -42,6 +76,8 @@ class PreviousPairAdapter(
 
 class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairData>) :
     RecyclerView.ViewHolder(itemView) {
+    var maleimageview: ImageView = itemView.findViewById(R.id.maleImageView)
+    var femaleimageview: ImageView = itemView.findViewById(R.id.femaleImageView)
     var maleBird: TextView = itemView.findViewById(R.id.tvmaleid)
     var femaleBird: TextView = itemView.findViewById(R.id.tvfemaleid)
     var maleMutation: TextView = itemView.findViewById(R.id.tvMaleMutation)
@@ -65,7 +101,7 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
             bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)
-            val i = Intent(itemView.context, PairsDetailedActivity::class.java)
+            val i = Intent(itemView.context, PreviousPairActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)
         }

@@ -14,6 +14,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,11 +34,10 @@
         <TextView
             android:id="@+id/tvCurrent"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-           android:padding="5dp"
+            android:layout_height="wrap_content"
             android:gravity="center|left"
             android:text="Current"
-
+            android:visibility="gone"
             android:layout_margin="10dp"
             android:textSize="16sp" />
         <LinearLayout
@@ -54,27 +56,30 @@
             <!-- Add your content here -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/tvPrevious"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:padding="5dp"
+                android:layout_height="wrap_content"
                 android:gravity="center|left"
                 android:text="Previous"
+                android:visibility="gone"
                 android:layout_margin="10dp"
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView1"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
 
     </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

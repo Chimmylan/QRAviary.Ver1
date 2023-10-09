@@ -219,7 +219,10 @@ class PairsFragment : Fragment() {
             for (itemSnapshot in snapshot.children) {
                 val data = itemSnapshot.getValue(PairData::class.java)
                 if (data != null) {
+
                     if (itemSnapshot.child("Separate Date").exists()) {
+                        femalegallery = itemSnapshot.child("Female Gallery").value.toString()
+                        malegallery = itemSnapshot.child("Male Gallery").value.toString()
                         val key = itemSnapshot.key.toString()
                         val pairsId = itemSnapshot.child("Pair ID").value.toString()
                         val cageName = itemSnapshot.child("Cage").value.toString()
@@ -236,6 +239,8 @@ class PairsFragment : Fragment() {
                         val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
                         val separateDate = itemSnapshot.child("Separate Date").value.toString()
 
+                        data.pairfemaleimg = femalegallery
+                        data.pairmaleimg = malegallery
                         data.pairId = pairsId
                         data.pairMaleKey = pairMaleKey
                         data.pairFemaleKey = pairFemaleKey
