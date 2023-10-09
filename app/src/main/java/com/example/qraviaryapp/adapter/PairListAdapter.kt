@@ -33,7 +33,7 @@ class PairListAdapter(
         val femaleimg = pairs.pairfemaleimg
         val maleimg = pairs.pairmaleimg
 
-        holder.pairId.text = "Pair ID: ${pairs.pairId}"
+        holder.pairId.text = "${pairs.pairId}"
 
         if (femaleimg.isNullOrEmpty()) {
             Glide.with(context)
@@ -92,7 +92,7 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-
+            bundle.putString("PairId", dataList[adapterPosition].pairId)
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
             bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)

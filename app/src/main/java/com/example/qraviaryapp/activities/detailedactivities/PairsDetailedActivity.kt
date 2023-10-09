@@ -22,10 +22,16 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
+
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
+import com.example.qraviaryapp.adapter.FragmentAdapter
+import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
+import com.example.qraviaryapp.fragments.Pairs.DescendantsFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,7 +48,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class PairsDetailedActivity : AppCompatActivity() {
-
+    private lateinit var viewPager: ViewPager
+    private lateinit var tablayout: TabLayout
+    val fragmentAdapter = FragmentAdapter(supportFragmentManager)
     private lateinit var tvDate: TextView
     private lateinit var tvMutations: TextView
     private lateinit var btnMale: MaterialButton
@@ -53,7 +61,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
-
+    private lateinit var pairId: String
     private lateinit var pairKey: String
     private lateinit var pairMaleKey: String
     private lateinit var pairFlightMaleKey: String
@@ -85,12 +93,8 @@ class PairsDetailedActivity : AppCompatActivity() {
                 )
             )
         )
-        totalclutch =findViewById(R.id.tvBirdCount)
-        val abcolortitle = resources.getColor(R.color.appbar)
-        supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Clutch</font>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
+//        totalclutch =findViewById(R.id.tvBirdCount)
+
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
@@ -99,25 +103,26 @@ class PairsDetailedActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(this, 1)
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = gridLayoutManager
+//        recyclerView = findViewById(R.id.recyclerView)
+//        recyclerView.layoutManager = gridLayoutManager
 
-        adapter = ClutchesListAdapter(this, dataList)
-        recyclerView.adapter = adapter
+//        adapter = ClutchesListAdapter(this, dataList)
+//        recyclerView.adapter = adapter
 
         tvDate = findViewById(R.id.tvfromdate)
         tvMutations = findViewById(R.id.tvmutations)
         btnMale = findViewById(R.id.btnmaleid)
         btnFemale = findViewById(R.id.btnfemaleid)
-        fab = findViewById(R.id.fab)
+
+        viewPager = findViewById(R.id.viewPager)
+        tablayout = findViewById(R.id.tablayout)
 
 
-        fab.setOnClickListener {
-            showEggDialog()
-        }
 
+        val newBundle = Bundle()
         //Bundle from PairListActivity
         if (bundle != null) {
+            pairId = bundle.getString("PairId").toString()
             pairMale = bundle.getString("MaleID").toString()
             pairFemale = bundle.getString("FemaleID").toString()
             val beginningDate = bundle.getString("BeginningDate")
@@ -134,13 +139,46 @@ class PairsDetailedActivity : AppCompatActivity() {
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
 
+            newBundle.putString("PairId", pairId)
+            newBundle.putString("MaleID", pairMale)
+            newBundle.putString("FemaleID", pairFemale)
+            newBundle.putString("BeginningDate", beginningDate)
+            newBundle.putString("SeparateDate", separateDate)
+            newBundle.putString("MaleGender", maleGender)
+            newBundle.putString("FemaleGender", femaleGender)
+            newBundle.putString("PairFlightFemaleKey", pairFlightFemaleKey)
+            newBundle.putString("PairFlightMaleKey", pairFlightMaleKey)
+            newBundle.putString("PairMaleKey", pairMaleKey)
+            newBundle.putString("PairFemaleKey", pairFemaleKey)
+            newBundle.putString("PairKey", pairKey)
+            newBundle.putString("CageBirdFemale", pairCageBirdFemale)
+            newBundle.putString("CageBirdMale", pairCageBirdMale)
+            newBundle.putString("CageKeyFemale", pairCageKeyFemale)
+            newBundle.putString("CageKeyMale", pairCageKeyMale)
+            val clutchesFragment = ClutchesFragment() // Create an instance of ClutchesFragment
+            val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
+            clutchesFragment.arguments = newBundle
+            fragmentAdapter.addFragment(clutchesFragment, "CLUTCHES")
+            fragmentAdapter.addFragment(descendantsFragment, "DESCENDANTS")
+
+            viewPager.adapter = fragmentAdapter
+            tablayout.setupWithViewPager(viewPager)
+
+            currentUserId = mAuth.currentUser?.uid.toString()
+//            val db = FirebaseDatabase.getInstance().reference.child("Users")
+//                .child("ID: ${currentUserId.toString()}").child("Pairs")
+//                .child(pairKey)
+
+            val abcolortitle = resources.getColor(R.color.appbar)
+            supportActionBar?.title = HtmlCompat.fromHtml(
+                "<font color='$abcolortitle'>$pairId</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
             currentUserId = mAuth.currentUser?.uid.toString()
             val db = FirebaseDatabase.getInstance().reference.child("Users")
                 .child("ID: ${currentUserId.toString()}").child("Pairs")
                 .child(pairKey)
-
-
-            db.addListenerForSingleValueEvent(object : ValueEventListener{
+            db.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.child("Separate Date").exists()){
                         tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
@@ -158,6 +196,7 @@ class PairsDetailedActivity : AppCompatActivity() {
 
 
 
+
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
             btnFemale.text = pairFemale.toString()
             btnMale.text = pairMale.toString()
@@ -165,294 +204,16 @@ class PairsDetailedActivity : AppCompatActivity() {
 
 
         //Coroutine
-        lifecycleScope.launch {
-            try {
-                val data = getDataFromDatabase()
-                dataList.clear()
-                dataList.addAll(data)
-                adapter.notifyDataSetChanged()
-            } catch (e: java.lang.Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
-            }
-        }
+
 
 
         invalidateOptionsMenu()
     }
 
     //Gets data from database and display it
-    private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
-
-        val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Pairs")
-            .child(pairKey).child("Clutches")
-        val dataList = ArrayList<EggData>()
-        val snapshot = db.get().await()
-        for (clutchSnapshot in snapshot.children) {
-            val data = clutchSnapshot.getValue(EggData::class.java)
-            val key = clutchSnapshot.key.toString()
-            var incubatingCount = 0
-            var laidCount = 0
-            var hatchedCount = 0
-            var notFertilizedCount = 0
-            var brokenCount = 0
-            var abandonCount = 0
-            var deadInShellCount = 0
-            var deadBeforeMovingToNurseryCount = 0
-            var eggsCount = 0
-
-            if (data != null) {
-                for (eggSnapshot in clutchSnapshot.children) {
-                    val eggData = eggSnapshot.getValue(EggData::class.java)
-
-                    val eggStatus = eggSnapshot.child("Status").value.toString()
-                    val eggDate = eggSnapshot.child("Date").value.toString()
-                    eggsCount++
-
-                    clutchCount = snapshot.childrenCount.toInt()
-                    data.clutchCount = clutchCount.toString()
-                    if (eggStatus == "Incubating") {
-
-                        incubatingCount++
-                        Log.d(TAG, incubatingCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggIncubating = incubatingCount.toString()
-                        data.eggIncubationStartDate = eggDate
-                    }
-                    if (eggStatus == "Laid") {
-
-                        laidCount++
-                        Log.d(TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggLaid = laidCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Hatched") {
-
-                        hatchedCount++
-                        Log.d(TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggHatched = hatchedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Not Fertilized") {
-
-                        notFertilizedCount++
-                        Log.d(TAG, notFertilizedCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggNotFertilized = notFertilizedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Broken") {
-
-                        brokenCount++
-                        Log.d(TAG, brokenCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggBroken = brokenCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Abandon") {
-
-                        abandonCount++
-                        Log.d(TAG, abandonCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggAbandon = abandonCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead in Shell") {
-
-                        deadInShellCount++
-                        Log.d(TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadInShell = deadInShellCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead Before Moving To Nursery") {
-
-                        deadBeforeMovingToNurseryCount++
-                        Log.d(TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-
-
-                    data.pairFlightMaleKey = pairFlightMaleKey
-                    data.pairFlightFemaleKey = pairFlightFemaleKey
-                    data.pairBirdFemaleKey = pairFemaleKey
-                    data.pairBirdMaleKey = pairMaleKey
-                    data.pairFemaleId = pairFemale
-                    data.pairMaleId = pairMale
-                    data.eggcagebirdMale = pairCageBirdMale
-                    data.eggcagebirdFemale = pairCageBirdFemale
-                    data.eggcagekeyMale = pairCageKeyMale
-                    data.eggcagekeyFemale = pairCageKeyFemale
-                }
-            }
-
-            if (data != null) {
-                dataList.add(data)
-            }
-
-        }
-        totalclutch.text = "Total Clutch: $clutchCount"
-        dataList
-    }
-
-    private fun showEggDialog() {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.showlayout_add_egg, null)
-        val numberPicker = dialogLayout.findViewById<NumberPicker>(R.id.numberPicker)
-        val checkBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox)
-        val currentUserId = mAuth.currentUser?.uid
-        val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Pairs")
-            .child(pairKey).child("Clutches")
-
-        checkBox.isChecked = true
-
-
-        val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
-        val maturingDays = maturingValue?.toIntOrNull() ?: 50
-
-        val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
-        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
 
 
-        val newClutchRef = db.push()
-
-        numberPicker.minValue = 0
-        numberPicker.maxValue = 10
-
-        builder.setTitle("Add Eggs")
-        builder.setPositiveButton("Save", null)
-
-        builder.setNegativeButton("Cancel") { dialog, which ->
-            Toast.makeText(this@PairsDetailedActivity, "Cancel", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setView(dialogLayout)
-
-        val alertDialog = builder.create()
-
-        alertDialog.setOnShowListener {
-            val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            var eggValue: Int
-            var defaultStatus = "Incubating"
-
-            var currentDate = LocalDate.now()
-            var eggCount = 0
-            var incubatingCount = 0
-            var laidCount = 0
-            val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
-            val formattedDate = currentDate.format(formatter)
-            addButton.setOnClickListener {
-                val newEggs = EggData()
-                eggValue = numberPicker.value
-                if (checkBox.isChecked) {
-
-
-                    Toast.makeText(
-                        this@PairsDetailedActivity,
-                        "Checked $eggValue",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    for (i in 0 until eggValue) {
-                        val clutches = newClutchRef.push()
-                        eggCount++
-                        incubatingCount++
-                        val data: Map<String, Any?> = hashMapOf(
-                            "Status" to defaultStatus,
-                            "Date" to formattedDate,
-                            "Incubating Days" to incubatingDays,
-                            "Maturing Days" to maturingDays
-                        )
-
-                        newEggs.eggCount = eggCount.toString()
-                        newEggs.eggIncubating = incubatingCount.toString()
-                        newEggs.eggIncubationStartDate = formattedDate
-
-                        clutches.updateChildren(data)
-
-                    }
-                    dataList.add(newEggs)
-
-
-                } else if (!checkBox.isChecked) {
-                    Toast.makeText(
-                        this@PairsDetailedActivity,
-                        "notChecked $eggValue",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    defaultStatus = "Laid"
-                    for (i in 0 until eggValue) {
-                        val clutches = newClutchRef.push()
-                        eggCount++
-                        laidCount++
-                        val data: Map<String, Any?> = hashMapOf(
-                            "Status" to defaultStatus,
-                            "Date" to formattedDate,
-                            "Incubating Days" to incubatingDays,
-                            "Maturing Days" to maturingDays
-                        )
-
-                        newEggs.eggCount = eggCount.toString()
-                        newEggs.eggLaid = laidCount.toString()
-                        newEggs.eggLaidStartDate = formattedDate
-
-                        clutches.updateChildren(data)
-
-                    }
-                    dataList.add(newEggs)
-
-                }
-                lifecycleScope.launch {
-                    try {
-                        val data = getDataFromDatabase()
-                        dataList.clear()
-                        dataList.addAll(data)
-                        adapter.notifyDataSetChanged()
-                    } catch (e: java.lang.Exception) {
-                        Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
-                    }
-                }
-
-                alertDialog.dismiss()
-            }
-
-        }
-
-        alertDialog.show()
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
@@ -538,19 +299,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        lifecycleScope.launch {
-            try {
-                val data = getDataFromDatabase()
-                dataList.clear()
-                dataList.addAll(data)
-                adapter.notifyDataSetChanged()
-            } catch (e: java.lang.Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
-            }
-        }
-    }
+
 
 
 }
