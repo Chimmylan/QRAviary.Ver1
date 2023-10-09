@@ -251,6 +251,8 @@ class OriginFragment : Fragment() {
         val fatherRef = descendantsFatherRef.child("Parents")
 
         var purchaseId: String? = null
+        val purchaseRef = purchasesRef.child("Parents")
+
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
@@ -473,6 +475,7 @@ class OriginFragment : Fragment() {
             if (soldId != "null" && !soldId.isNullOrEmpty()){
                 soldidref.updateChildren(parentdata)
             }
+            purchaseRef.updateChildren(parentdata)
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
             val data: Map<String, Any?> = hashMapOf(
