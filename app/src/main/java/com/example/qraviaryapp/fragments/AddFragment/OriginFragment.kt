@@ -1357,7 +1357,9 @@ class OriginFragment : Fragment() {
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(data)
+            }
             if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
             } else if (btnFather.text != "None" && btnMother.text == "None") {
@@ -1508,9 +1510,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                if (soldId != "null" && !soldId.isNullOrEmpty()){
-                soldidref.updateChildren(motherRefdata)
-                }
+
                 fatherRef.updateChildren(motherRefdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!! and FatherRef!!")

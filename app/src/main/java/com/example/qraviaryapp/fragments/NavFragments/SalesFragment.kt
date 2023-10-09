@@ -123,7 +123,7 @@ class SalesFragment : Fragment() {
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
 
 
-                val key = itemSnapshot.child("ChildKey").value.toString()
+                val key = itemSnapshot.child("Bird Key").value.toString()
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
@@ -253,7 +253,7 @@ class SalesFragment : Fragment() {
                 data.fatherKey = fatherKeyValue.toString()
                 data.motherKey = motherKeyValue.toString()
 
-
+                Log.d(ContentValues.TAG, "fatherrr $fatherKeyValue")
                 dataList.add(data)
 
 
