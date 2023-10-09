@@ -32,14 +32,14 @@ class EggAdapter(
 
         holder.tvTotal.text = eggCount
         if (incubatingCount != null) {
-            if (incubatingCount > 0.toString()){
+            if (incubatingCount.toInt() > 0){
                 holder.tvIncubating.visibility = View.VISIBLE
                 holder.tvIncubating.text = "$incubatingCount Incubating"
                 holder.tvDate.text = incubateDate
             }
         }
         if (laidCount != null) {
-            if (laidCount > 0.toString()){
+            if (laidCount.toInt() > 0){
                 holder.tvLaid.visibility = View.VISIBLE
                 holder.tvLaid.text = "$laidCount Laid"
                 holder.tvDate.text = laidDate

@@ -980,7 +980,7 @@ class OriginFragment : Fragment() {
                 )
                 purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
-//                fatherRef.updateChildren(fatherRefdata)
+                fatherRef.updateChildren(fatherRefdata)
             } else if (btnFather.text != "None" && btnMother.text == "None") {
                 // Update descendantsFatherRef
                 val descendantdata: Map<String, Any?> = hashMapOf(
@@ -1018,7 +1018,7 @@ class OriginFragment : Fragment() {
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
                 )
-                descendantsFatherRef.updateChildren(descendantdata)
+                //descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
