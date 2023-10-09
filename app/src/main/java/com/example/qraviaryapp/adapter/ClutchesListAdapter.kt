@@ -14,14 +14,14 @@ import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedAct
 class ClutchesListAdapter(
     private val context: android.content.Context,
     private var dataList: MutableList<EggData>
-) : RecyclerView.Adapter<PreviousClutchesViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreviousClutchesViewHolder {
+) : RecyclerView.Adapter<ClutchesViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClutchesViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_clutcheslist, parent, false)
 
-        return PreviousClutchesViewHolder(view, dataList)
+        return ClutchesViewHolder(view, dataList)
     }
 
-    override fun onBindViewHolder(holder: PreviousClutchesViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ClutchesViewHolder, position: Int) {
         val clutch = dataList[position]
 
         val eggCount = clutch.eggCount

@@ -14,7 +14,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 
 
-class PurchasesAdapter(
+class PairDescendantsAdapter(
     private val context: android.content.Context,
     private var dataList: MutableList<BirdData>
 ) :
@@ -84,24 +84,8 @@ class PurchasesAdapter(
 
 
         holder.tvStatus.text = bird.status
+        holder.tvCage.text = bird.availCage
 
-
-        if (bird.status == "Available" || bird.status == "For Sale") {
-            val cageInfo = when {
-                bird.status == "Available" -> bird.availCage
-                bird.status == "For Sale" -> bird.forSaleCage
-                else -> ""
-            }
-
-            if (cageInfo.isNullOrBlank() ) {
-                holder.tvCage.visibility = View.GONE
-            } else {
-                holder.tvCage.visibility = View.VISIBLE
-                holder.tvCage.text = "Cage: $cageInfo"
-            }
-        } else {
-            holder.tvCage.visibility = View.GONE
-        }
 
         val genderIcon = when (bird.gender) {
             "Male" -> {
@@ -128,7 +112,7 @@ class PurchasesAdapter(
     }
 }
 
-class PurchasesViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :
+class PairDescendantsViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
     var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
@@ -158,7 +142,6 @@ class PurchasesViewHolder(itemView: View, private val dataList: MutableList<Bird
             bundle.putString("BirdExchangeWith", dataList[adapterPosition].exContact)
             bundle.putString("BirdLostDetails", dataList[adapterPosition].lostDetails)
             bundle.putString("BirdAvailCage", dataList[adapterPosition].availCage)
-            bundle.putString("BirdForsaleCage", dataList[adapterPosition].forSaleCage)
             bundle.putString("BirdRequestedPrice", dataList[adapterPosition].reqPrice)
             bundle.putString("BirdBuyPrice", dataList[adapterPosition].buyPrice)
             bundle.putString("BirdBoughtOn", dataList[adapterPosition].boughtDate)

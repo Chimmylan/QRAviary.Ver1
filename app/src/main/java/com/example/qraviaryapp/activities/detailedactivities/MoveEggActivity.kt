@@ -450,7 +450,8 @@ class MoveEggActivity : AppCompatActivity() {
         val descendantscagemother = db.child("Users").child("ID: $currentUserId").child("Cages")
         .child("Flight Cages").child(pairCageBirdFemale.toString()).child("Birds").child(pairCageKeyFemale).child("Descendants").push()
         val nurseryKey = nurseryRef.key
-
+        val pairDescendantRef = db.child("Users").child("ID: $currentUserId").child("Pairs")
+            .child(pairKey).child("Descendants").push()
         val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
         val formattedDate = dateFormat.format(currentDate)
@@ -532,7 +533,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Legband" to "",
         )
 
-
+        pairDescendantRef.updateChildren(data)
         newPrefBird.updateChildren(data)
         nurseryCageRef.updateChildren(data)
         nurseryRef.updateChildren(data)

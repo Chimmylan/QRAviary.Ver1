@@ -162,6 +162,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             val clutchesFragment = ClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
+            descendantsFragment.arguments = newBundle
             fragmentAdapter.addFragment(clutchesFragment, "CLUTCHES")
             fragmentAdapter.addFragment(descendantsFragment, "DESCENDANTS")
 

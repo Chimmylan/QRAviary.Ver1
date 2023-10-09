@@ -14,6 +14,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -75,8 +76,8 @@ class BirdOriginFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var parentlinear: LinearLayout
-    private lateinit var fatherLinearLayout: LinearLayout
-    private lateinit var motherLinearLayout: LinearLayout
+    private lateinit var fatherLinearLayout: CardView
+    private lateinit var motherLinearLayout: CardView
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
@@ -584,11 +585,11 @@ class BirdOriginFragment : Fragment() {
             bundle.putString("BirdMutation5", fatherMutation5Value)
             bundle.putString("BirdMutation6", fatherMutation6Value)
 
-            val i = Intent(fatherLinearLayout.context, BirdsDetailedActivity::class.java)
+            val i = Intent(requireContext(), BirdsDetailedActivity::class.java)
 
             i.putExtras(bundle)
 
-            fatherLinearLayout.context.startActivity(i)
+            requireContext().startActivity(i)
         }
         motherLinearLayout.setOnClickListener {
             val bundle = Bundle()
@@ -630,10 +631,11 @@ class BirdOriginFragment : Fragment() {
             bundle.putString("BirdMutation6", motherMutation6Value)
 
 
-            val i = Intent(motherLinearLayout.context, BirdsDetailedActivity::class.java)
+            val i = Intent(requireContext(), BirdsDetailedActivity::class.java)
             i.putExtras(bundle)
+            Log.d(TAG, "Click")
+            requireContext().startActivity(i)
 
-            motherLinearLayout.context.startActivity(i)
         }
 
         lifecycleScope.launch {

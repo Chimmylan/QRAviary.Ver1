@@ -100,7 +100,7 @@ class ClutchesFragment : Fragment() {
 
 
         fab = view.findViewById(R.id.fab)
-        pairKey = arguments?.getString("BirdKey").toString()
+//        pairKey = arguments?.getString("BirdKey").toString()
         pairId = arguments?.getString("PairId").toString()
         pairMale = arguments?.getString("MaleID").toString()
         pairFemale = arguments?.getString("FemaleID").toString()

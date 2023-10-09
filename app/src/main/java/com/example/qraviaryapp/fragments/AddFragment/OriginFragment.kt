@@ -257,7 +257,7 @@ class OriginFragment : Fragment() {
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
             purchaseId = purchasesRef.key
-            if (btnFather.text == "None" && btnMother.text == "None" && btnFather.text.isNullOrEmpty() && btnMother.text.isNullOrEmpty()) {
+            if (btnFather.text == "None" && btnMother.text == "None" ) {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(
                     "ChildKey" to birdId,
@@ -293,7 +293,7 @@ class OriginFragment : Fragment() {
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
                 )
-                descendantsFatherRef.updateChildren(descendantdata)
+//                descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
@@ -968,7 +968,7 @@ class OriginFragment : Fragment() {
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
                 )
-                descendantsFatherRef.updateChildren(descendantdata)
+//                descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,

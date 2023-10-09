@@ -56,13 +56,14 @@
             android:orientation = "vertical">
 
             <LinearLayout
-                android:id="@+id/fatherLayout"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation = "vertical">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/fatherLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="1dp"
@@ -163,12 +164,13 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/motherLayout"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation = "vertical">
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/motherLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="1dp"
