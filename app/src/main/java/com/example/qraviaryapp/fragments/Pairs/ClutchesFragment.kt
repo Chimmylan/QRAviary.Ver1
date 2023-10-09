@@ -117,7 +117,7 @@ class ClutchesFragment : Fragment() {
         pairCageBirdMale = arguments?.getString("CageBirdFemale").toString()
         pairCageKeyFemale = arguments?.getString("CageKeyFemale").toString()
         pairCageKeyMale = arguments?.getString("CageKeyMale").toString()
-
+        currentUserId = mAuth.currentUser?.uid.toString()
 
         fab.setOnClickListener {
             showEggDialog()
@@ -137,7 +137,7 @@ class ClutchesFragment : Fragment() {
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
         val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Pairs")
+            .child("ID: ${currentUserId}").child("Pairs")
             .child(pairKey).child("Clutches")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
@@ -280,7 +280,7 @@ class ClutchesFragment : Fragment() {
         val dialogLayout = inflater.inflate(R.layout.showlayout_add_egg, null)
         val numberPicker = dialogLayout.findViewById<NumberPicker>(R.id.numberPicker)
         val checkBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox)
-        val currentUserId = mAuth.currentUser?.uid
+
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches")

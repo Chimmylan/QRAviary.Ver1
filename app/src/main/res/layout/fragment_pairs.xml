@@ -35,7 +35,8 @@
            android:padding="5dp"
             android:gravity="center|left"
             android:text="Current"
-            android:visibility="gone"
+
+            android:layout_margin="10dp"
             android:textSize="16sp" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,27 +45,30 @@
             <!-- Add your content here -->
 
         </LinearLayout>
-        <TextView
-            android:id="@+id/tvPrevious"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:gravity="center|left"
-            android:text="Previous"
-            android:visibility="gone"
-            android:textSize="16sp" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <!-- Add your content here -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView1"
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <TextView
+                android:id="@+id/tvPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:gravity="center|left"
+                android:text="Previous"
+                android:layout_margin="10dp"
+                android:textSize="16sp" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/recyclerView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
