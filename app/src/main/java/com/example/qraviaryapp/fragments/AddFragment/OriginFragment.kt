@@ -257,7 +257,7 @@ class OriginFragment : Fragment() {
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
             purchaseId = purchasesRef.key
-            if (btnFather.text == "None" && btnMother.text == "None") {
+            if (btnFather.text == "None" && btnMother.text == "None" && btnFather.text.isNullOrEmpty() && btnMother.text.isNullOrEmpty()) {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(
                     "ChildKey" to birdId,
@@ -304,9 +304,9 @@ class OriginFragment : Fragment() {
                     "Bird Key" to birdId
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
+//                fatherRef.updateChildren(fatherRefdata)
 
 
             } else if (btnFather.text != "None" && btnMother.text == "None") {
@@ -355,7 +355,7 @@ class OriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
                 Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
@@ -404,7 +404,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!!")
@@ -453,7 +453,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 fatherRef.updateChildren(motherRefdata)
@@ -926,6 +926,7 @@ class OriginFragment : Fragment() {
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
        var purchaseId: String? = null
+        val purchaseRef = purchasesRef.child("Parents")
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
@@ -977,9 +978,9 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
+//                fatherRef.updateChildren(fatherRefdata)
             } else if (btnFather.text != "None" && btnMother.text == "None") {
                 // Update descendantsFatherRef
                 val descendantdata: Map<String, Any?> = hashMapOf(
@@ -1028,7 +1029,7 @@ class OriginFragment : Fragment() {
                     "Bird Key" to birdId
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
                 Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
@@ -1079,7 +1080,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!!")
@@ -1130,7 +1131,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(motherRefdata)
                 motherRef.updateChildren(motherRefdata)
@@ -1152,6 +1153,7 @@ class OriginFragment : Fragment() {
             if (soldId != "null" && !soldId.isNullOrEmpty()){
                 soldidref.updateChildren(parentdata)
             }
+            purchaseRef.updateChildren(parentdata)
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 

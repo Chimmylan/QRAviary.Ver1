@@ -122,7 +122,7 @@ class PurchasesFragment : Fragment() {
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
 
 
-                val key = itemSnapshot.child("Bird Key").value.toString()
+                val key = itemSnapshot.child("ChildKey").value.toString()
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
