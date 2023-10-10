@@ -128,9 +128,11 @@ class ExpenseFragment : Fragment() {
                     val PriceName = itemSnapshot.child("Amount").value
                     val date = itemSnapshot.child("Beginning").value
                     val comment = itemSnapshot.child("Comment").value
+                    val datenumber = itemSnapshot.child("Date").value
                     val mutationNameValue = mutationName.toString()
                     val priceNameValue = PriceName.toString()
                     val dateValue = date.toString()
+                    val dateNumber = datenumber.toString()
                     val commentValue = comment.toString()
                     expensesCount = snapshot.childrenCount.toInt()
                     data.expensesCount = expensesCount.toString()
@@ -138,6 +140,7 @@ class ExpenseFragment : Fragment() {
                     data.price = priceNameValue.toDouble()
                     data.expensesComment = commentValue
                     data.expensesDate = dateValue
+                    data.date = dateNumber
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
                     } else {

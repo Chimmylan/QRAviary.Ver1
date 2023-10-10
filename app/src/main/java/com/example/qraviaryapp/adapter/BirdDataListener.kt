@@ -97,7 +97,8 @@ data class ExpensesData(
     var expensesId: String? = null,
     var expensesCount: String? = null,
     var expensesComment: String? = null,
-    var expensesDate: String? = null
+    var expensesDate: String? = null,
+    var date: String? = null
 )
 
 data class PairData(

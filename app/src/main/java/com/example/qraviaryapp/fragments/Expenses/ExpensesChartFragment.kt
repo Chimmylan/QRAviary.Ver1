@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.fragments.Expenses
 
 import ExpensesData
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,10 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -58,35 +65,47 @@ class ExpensesChartFragment : Fragment() {
 
 
         databaseReference.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
 
                 val uniqueCategories = HashSet<String>()
                 val expensesList = ArrayList<ExpensesData>()
-
+                val expensesList1 = ArrayList<ExpensesData>()
+                val entries = ArrayList<Entry>()
 
                 for (itemSnapshot in dataSnapshot.children) {
                     val data = itemSnapshot.getValue(ExpensesData::class.java)
                     if (data != null) {
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
+                        val date = itemSnapshot.child("Date").value
+
                         val category = categoryitem.toString()
                         val priceNameValue = PriceName.toString().toDouble()
-
+                        val dateValue = date.toString().toFloat()
                         // Check if the category is already in the list
                         val existingCategory = expensesList.find { it.expenses == category }
                         if (existingCategory != null) {
                             // If it exists, add the value to the existing category
                             existingCategory.price = existingCategory.price?.plus(priceNameValue)
+                            existingCategory.date = dateValue.toString()
                         } else {
                             // If it doesn't exist, create a new category and add it to the list
-                            expensesList.add(ExpensesData(category, priceNameValue))
+                            expensesList.add(ExpensesData(category, priceNameValue, dateValue.toString()))
+
                         }
+
+
                     }
+
+
                 }
 
                 val pieCharts = view.findViewById<PieChart>(R.id.pieChart)
                 setupPieChart(pieCharts, expensesList)
+                val lineCharts = view.findViewById<LineChart>(R.id.lineChart)
+                setupLineChart(lineCharts, expensesList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -95,7 +114,45 @@ class ExpensesChartFragment : Fragment() {
 
         return view
     }
+    private fun setupLineChart(lineChart: LineChart,expensesList: List<ExpensesData> ) {
+        if (!isAdded) {
+            // Fragment is not attached to a context, return or handle accordingly
+            return
+        }
+        val entries = ArrayList<Entry>()
 
+        for ((index, expenseData) in expensesList.withIndex()) {
+            val amount = expenseData.price.toString().toFloat()
+//            val date = expenseData.date.toString().toFloat()
+            entries.add(Entry(0f, amount))
+        }
+
+
+        val dataSet = LineDataSet(entries, "Sample Data")
+
+
+        dataSet.color = resources.getColor(R.color.black)
+        dataSet.lineWidth = 2f
+
+
+        val lineDataSets: ArrayList<ILineDataSet> = ArrayList()
+        lineDataSets.add(dataSet)
+        val lineData = LineData(lineDataSets)
+
+
+        lineChart.data = lineData
+        val xAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        lineChart.xAxis.labelCount = 1
+//        lineChart.xAxis.axisMinimum = 1f
+//        lineChart.xAxis.axisMaximum = 2f
+        lineChart.axisRight.isEnabled = false
+        lineChart.setTouchEnabled(true)
+        lineChart.setPinchZoom(true)
+        lineChart.description.text = "Monthly Expenses"
+        lineChart.legend.isEnabled = true
+    }
     private fun setupPieChart(pieChart: PieChart, expensesList: List<ExpensesData>) {
         val entries = ArrayList<PieEntry>()
 

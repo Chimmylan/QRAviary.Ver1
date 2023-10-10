@@ -22,7 +22,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddExpensesActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
@@ -91,6 +93,13 @@ class AddExpensesActivity : AppCompatActivity() {
 
         val newExpenses = userBird.push()
 
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
+// Assuming beginningFormattedDate is in the format "dd/MM/yyyy"
+        val date = inputDateFormat.parse(beginningFormattedDate)
+        val formattedDate = outputDateFormat.format(date)
+        val month = formattedDate.split(" - ")[1]
         var validExpenses = false
         if (btnCategory.text.isEmpty()) {
             btnCategory.error = "Please select a Category..."
@@ -102,7 +111,8 @@ class AddExpensesActivity : AppCompatActivity() {
                 "Amount" to expenses.price,
                 "Beginning" to expenses.expensesDate,
                 "Comment" to expenses.expensesComment,
-                "Category" to btnCategoryValue
+                "Category" to btnCategoryValue,
+                "Date" to month.toFloat()
             )
             newExpenses.updateChildren(data)
         }
