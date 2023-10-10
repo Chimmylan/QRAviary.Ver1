@@ -6,6 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,8 +38,33 @@ class ExpensesChartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_expenses_chart, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_expenses_chart, container, false)
+
+        val pieChart = view.findViewById<PieChart>(R.id.pieChart)
+
+        val entries = listOf(
+            PieEntry(40f, "Category A"),
+            PieEntry(30f, "Category B"),
+            PieEntry(20f, "Category C"),
+            PieEntry(10f, "Category D")
+        )
+
+        val dataSet = PieDataSet(entries, "Sample Pie Chart")
+
+        // Configure the PieDataSet (colors, labels, etc.)
+        // dataSet.setColors(...)
+        // dataSet.setSliceSpace(...)
+        // dataSet.setValueTextSize(...)
+
+        val pieData = PieData(dataSet)
+
+        // Attach the PieData to the PieChart
+        pieChart.data = pieData
+
+        // Refresh the chart
+        pieChart.invalidate()
+        return view
     }
 
     companion object {

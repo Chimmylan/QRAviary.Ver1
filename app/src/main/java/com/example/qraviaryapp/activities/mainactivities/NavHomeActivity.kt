@@ -149,6 +149,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_expenses -> {
                 fragment = ExpensesFragment()
                 title = "Expenses"
+
                 isMonitoringFragment = false
             }
             R.id.nav_sales -> {
@@ -174,6 +175,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
                 title = "Incubating"
+
                 isMonitoringFragment = false
             }
             R.id.nav_settings -> {
@@ -198,10 +200,16 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
         }
         if (!isMonitoringFragment) {
+            if(title == "Expenses"){
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+            }else{
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+                }
         } else {
-            toolbar.elevation = 0f // Turn off elevation for MonitoringFragment
+
+            toolbar.elevation = 0f
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||

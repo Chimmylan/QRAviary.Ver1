@@ -59,10 +59,10 @@ class ExpensesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expenses, container, false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            requireActivity().window.statusBarColor =
-                ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            requireActivity().window.statusBarColor =
+//                ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
+//        }
 
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
