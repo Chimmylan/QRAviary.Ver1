@@ -1,5 +1,7 @@
 package com.example.qraviaryapp.fragments.Expenses
 
+import ExpensesData
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +12,12 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +33,7 @@ class ExpensesChartFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,31 +50,85 @@ class ExpensesChartFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_expenses_chart, container, false)
 
+        mAuth = FirebaseAuth.getInstance()
+        val currentUserId = mAuth.currentUser?.uid
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
         val pieChart = view.findViewById<PieChart>(R.id.pieChart)
 
-        val entries = listOf(
-            PieEntry(40f, "Category A"),
-            PieEntry(30f, "Category B"),
-            PieEntry(20f, "Category C"),
-            PieEntry(10f, "Category D")
-        )
 
-        val dataSet = PieDataSet(entries, "Sample Pie Chart")
 
-        // Configure the PieDataSet (colors, labels, etc.)
-        // dataSet.setColors(...)
-        // dataSet.setSliceSpace(...)
-        // dataSet.setValueTextSize(...)
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-        val pieData = PieData(dataSet)
+                val expensesList = ArrayList<ExpensesData>()
 
-        // Attach the PieData to the PieChart
-        pieChart.data = pieData
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(ExpensesData::class.java)
 
-        // Refresh the chart
-        pieChart.invalidate()
+                    if (data != null) {
+                        val key = itemSnapshot.key.toString()
+                        data.expensesId = key
+                        val categoryitem = itemSnapshot.child("Category").value
+                        val PriceName = itemSnapshot.child("Amount").value
+                        val date = itemSnapshot.child("Beginning").value
+                        val comment = itemSnapshot.child("Comment").value
+                        val category = categoryitem.toString()
+                        val priceNameValue = PriceName.toString()
+                        val dateValue = date.toString()
+                        val commentValue = comment.toString()
+
+                        data.expenses = category
+                        data.price = priceNameValue
+                        data.expensesComment = commentValue
+                        data.expensesDate = dateValue
+
+                            expensesList.add(data).toString()
+                    }
+
+                }
+                val pieChart = view.findViewById<PieChart>(R.id.pieChart)
+                setupPieChart(pieChart, expensesList)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
         return view
     }
+    private fun setupPieChart(pieChart: PieChart, expensesList: List<ExpensesData>) {
+        val entries = ArrayList<PieEntry>()
+
+        // Define a list of custom colors
+        val colors = ArrayList<Int>()
+        colors.add(Color.RED)
+        colors.add(Color.GREEN)
+        colors.add(Color.BLUE)
+        // Add more colors as needed
+        val dataSetColors = ArrayList<Int>()
+        for ((index, expenseData) in expensesList.withIndex()) {
+            val amount = expenseData.price.toString()
+            entries.add(PieEntry(amount.toFloat(), expenseData.expenses))
+
+            // Set a unique color for each entry from the list of custom colors
+            val colorIndex = index % colors.size
+            dataSetColors.add(colors[colorIndex])
+        }
+
+        val dataSet = PieDataSet(entries, "Expenses")
+
+        // Set the custom colors to the dataSet
+        dataSet.colors = dataSetColors
+
+        val data = PieData(dataSet)
+        pieChart.data = data
+        pieChart.description.isEnabled = false
+        pieChart.isDrawHoleEnabled = true
+        pieChart.setHoleColor(android.R.color.transparent)
+        pieChart.setTransparentCircleRadius(0f)
+        pieChart.animateY(1000)
+    }
+
 
     companion object {
         /**

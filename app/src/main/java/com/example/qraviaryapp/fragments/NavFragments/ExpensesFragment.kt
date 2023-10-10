@@ -117,7 +117,7 @@ class ExpensesFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-        fragmentAdapter = FragmentAdapter(requireFragmentManager())
+        fragmentAdapter = FragmentAdapter(childFragmentManager)
         val expensesFragment = ExpenseFragment()
         val chartFragment = ExpensesChartFragment()
         viewPager = view.findViewById(R.id.viewPager)
