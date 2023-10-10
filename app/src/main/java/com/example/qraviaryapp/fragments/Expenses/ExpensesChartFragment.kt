@@ -52,7 +52,8 @@ class ExpensesChartFragment : Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
         val currentUserId = mAuth.currentUser?.uid
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
         val pieChart = view.findViewById<PieChart>(R.id.pieChart)
 
 
@@ -60,14 +61,17 @@ class ExpensesChartFragment : Fragment() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
+                val uniqueCategories = HashSet<String>()
                 val expensesList = ArrayList<ExpensesData>()
+
 
                 for (itemSnapshot in dataSnapshot.children) {
                     val data = itemSnapshot.getValue(ExpensesData::class.java)
-
                     if (data != null) {
+
                         val key = itemSnapshot.key.toString()
                         data.expensesId = key
+
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
                         val date = itemSnapshot.child("Beginning").value
@@ -77,17 +81,26 @@ class ExpensesChartFragment : Fragment() {
                         val dateValue = date.toString()
                         val commentValue = comment.toString()
 
-                        data.expenses = category
                         data.price = priceNameValue
                         data.expensesComment = commentValue
                         data.expensesDate = dateValue
 
+                        if(!uniqueCategories.contains(category)){
+                            uniqueCategories.add(category)
+                            data.expenses = category
                             expensesList.add(data).toString()
+                        }
+
+
+
+
+
+
                     }
 
                 }
-                val pieChart = view.findViewById<PieChart>(R.id.pieChart)
-                setupPieChart(pieChart, expensesList)
+                val pieCharts = view.findViewById<PieChart>(R.id.pieChart)
+                setupPieChart(pieCharts, expensesList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -96,6 +109,7 @@ class ExpensesChartFragment : Fragment() {
 
         return view
     }
+
     private fun setupPieChart(pieChart: PieChart, expensesList: List<ExpensesData>) {
         val entries = ArrayList<PieEntry>()
 

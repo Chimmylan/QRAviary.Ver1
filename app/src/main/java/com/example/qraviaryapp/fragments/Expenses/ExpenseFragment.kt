@@ -132,7 +132,7 @@ class ExpenseFragment : Fragment() {
                     val priceNameValue = PriceName.toString()
                     val dateValue = date.toString()
                     val commentValue = comment.toString()
-                    expensesCount++
+                    expensesCount = snapshot.childrenCount.toInt()
                     data.expensesCount = expensesCount.toString()
                     data.expenses = mutationNameValue
                     data.price = priceNameValue

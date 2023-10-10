@@ -59,37 +59,9 @@ class ExpensesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expenses, container, false)
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            requireActivity().window.statusBarColor =
-//                ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
-//        }
-
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
-//        fab = view.findViewById(R.id.fab)
-//        recyclerView = view.findViewById(R.id.recyclerView)
-//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-//        recyclerView.layoutManager = gridLayoutManager
-//        dataList = ArrayList()
-//        adapter = ExpensesAdapter(requireContext(), dataList)
-//        recyclerView.adapter = adapter
 
-//        lifecycleScope.launch {
-//            try {
-//                val data = getDataFromDataBase()
-//                dataList.addAll(data)
-//
-//                adapter.notifyDataSetChanged()
-//            } catch (e: Exception) {
-//                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
-//            }
-//        }
-//
-//        fab.setOnClickListener {
-//            val i = Intent(requireContext(), AddExpensesActivity::class.java)
-//            startActivity(i)
-//        }
-//        totalBirds = view.findViewById(R.id.tvBirdCount)
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -133,65 +105,5 @@ class ExpensesFragment : Fragment() {
         snackbar.setText(message)
         snackbar.show()
     }
-//    private suspend fun getDataFromDataBase(): List<ExpensesData> =
-//        withContext(Dispatchers.IO){
-//
-//            val currentUserId = mAuth.currentUser?.uid
-//            val db = FirebaseDatabase.getInstance().reference.child("Users")
-//                .child("ID: ${currentUserId.toString()}").child("Expenses")
-//            val dataList = ArrayList<ExpensesData>()
-//            val snapshot = db.get().await()
-//            for (itemSnapshot in snapshot.children){
-//                val data = itemSnapshot.getValue(ExpensesData::class.java)
-//                if (data != null){
-//                    val key = itemSnapshot.key.toString()
-//                    data.expensesId = key
-//                    val mutationName = itemSnapshot.child("Category").value
-//                    val PriceName = itemSnapshot.child("Amount").value
-//                    val date = itemSnapshot.child("Beginning").value
-//                    val comment = itemSnapshot.child("Comment").value
-//                    val mutationNameValue = mutationName.toString()
-//                    val priceNameValue = PriceName.toString()
-//                    val dateValue = date.toString()
-//                    val commentValue = comment.toString()
-//                    expensesCount++
-//                    data.expensesCount = expensesCount.toString()
-//                    data.expenses = mutationNameValue
-//                    data.price = priceNameValue
-//                    data.expensesComment = commentValue
-//                    data.expensesDate = dateValue
-//                    if (Looper.myLooper() != Looper.getMainLooper()) {
-//                        Log.d(ContentValues.TAG, "Code is running on a background thread")
-//                    } else {
-//                        Log.d(ContentValues.TAG, "Code is running on the main thread")
-//                        //
-//                    }
-//                    dataList.add(data)
-//                }
-//            }
-//            totalBirds.text = "Total Expenses: $expensesCount"
-//            dataList.sortBy { it.expenses }
-//            dataList
-//        }
-//
-//    override fun onResume() {
-//        super.onResume()
-//
-//        // Call a function to reload data from the database and update the RecyclerView
-//        reloadDataFromDatabase()
-//    }
-//    private fun reloadDataFromDatabase() {
-//        lifecycleScope.launch {
-//            try {
-//                val data = getDataFromDataBase()
-//                dataList.clear()
-//                dataList.addAll(data)
-//                adapter.notifyDataSetChanged()
-//            } catch (e: Exception) {
-//                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-//            }
-//        }
-//    }
-    // Move the rest of your code here, including the functions and onOptionsItemSelected
-    // Note: Replace "this" with "requireActivity()" where needed
+
 }
