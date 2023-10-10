@@ -104,20 +104,41 @@ class ExpensesChartFragment : Fragment() {
         colors.add(Color.RED)
         colors.add(Color.GREEN)
         colors.add(Color.BLUE)
-        // Add more colors as needed
+        colors.add(Color.YELLOW)
+        colors.add(Color.CYAN)
+        colors.add(Color.MAGENTA)
+        colors.add(Color.GRAY)
+        colors.add(Color.LTGRAY)
+        colors.add(Color.DKGRAY)
+        colors.add(Color.BLACK)
+        colors.add(Color.WHITE)
+        colors.add(Color.parseColor("#FF5733")) // Custom color 1
+        colors.add(Color.parseColor("#33FF57")) // Custom color 2
+        colors.add(Color.parseColor("#5733FF")) // Custom color 3
+        colors.add(Color.parseColor("#FF33A1")) // Custom color 4
+        colors.add(Color.parseColor("#33A1FF")) // Custom color 5
+        colors.add(Color.parseColor("#A1FF33")) // Custom color 6
+        colors.add(Color.parseColor("#33FFA1")) // Custom color 7
+        colors.add(Color.parseColor("#A133FF")) // Custom color 8
+        colors.add(Color.parseColor("#FF33FF")) // Custom color 9
+        colors.add(Color.parseColor("#33FFFF")) // Custom color 10
+
         val dataSetColors = ArrayList<Int>()
+
         for ((index, expenseData) in expensesList.withIndex()) {
+
+
             val amount = expenseData.price.toString()
             entries.add(PieEntry(amount.toFloat(), expenseData.expenses))
 
-            // Set a unique color for each entry from the list of custom colors
+
             val colorIndex = index % colors.size
             dataSetColors.add(colors[colorIndex])
         }
 
         val dataSet = PieDataSet(entries, "Expenses")
 
-        // Set the custom colors to the dataSet
+
         dataSet.colors = dataSetColors
 
         val data = PieData(dataSet)
