@@ -2,8 +2,11 @@ package com.example.qraviaryapp.fragments.Expenses
 
 import ExpensesData
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Debug
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +22,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -48,7 +52,7 @@ class ExpensesChartFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
+    lateinit var expensesList: ArrayList<ExpensesData>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +74,7 @@ class ExpensesChartFragment : Fragment() {
 
 
                 val uniqueCategories = HashSet<String>()
-                val expensesList = ArrayList<ExpensesData>()
+                expensesList = ArrayList()
                 val expensesList1 = ArrayList<ExpensesData>()
                 val entries = ArrayList<Entry>()
 
@@ -83,16 +87,16 @@ class ExpensesChartFragment : Fragment() {
 
                         val category = categoryitem.toString()
                         val priceNameValue = PriceName.toString().toDouble()
-                        val dateValue = date.toString().toFloat()
+                        val dateValue = date.toString().toDouble()
                         // Check if the category is already in the list
                         val existingCategory = expensesList.find { it.expenses == category }
                         if (existingCategory != null) {
                             // If it exists, add the value to the existing category
                             existingCategory.price = existingCategory.price?.plus(priceNameValue)
-                            existingCategory.date = dateValue.toString()
+                            existingCategory.date = dateValue
                         } else {
                             // If it doesn't exist, create a new category and add it to the list
-                            expensesList.add(ExpensesData(category, priceNameValue, dateValue.toString()))
+                            expensesList.add(ExpensesData(category, priceNameValue, dateValue))
 
                         }
 
@@ -114,22 +118,44 @@ class ExpensesChartFragment : Fragment() {
 
         return view
     }
-    private fun setupLineChart(lineChart: LineChart,expensesList: List<ExpensesData> ) {
+
+    lateinit var entries: ArrayList<Entry>
+    lateinit var lineDataSet: LineDataSet
+    lateinit var lineData: LineData
+
+    private fun setupLineChart(lineChart: LineChart, expensesList: List<ExpensesData>) {
         if (!isAdded) {
             // Fragment is not attached to a context, return or handle accordingly
             return
         }
-        val entries = ArrayList<Entry>()
+        entries = ArrayList()
 
         for ((index, expenseData) in expensesList.withIndex()) {
             val amount = expenseData.price.toString().toFloat()
-//            val date = expenseData.date.toString().toFloat()
-            entries.add(Entry(0f, amount))
+            val date = expenseData.date.toString().toFloat()
+            entries.add(Entry(date, amount))
+            Log.d(ContentValues.TAG, "1")
         }
 
 
-        val dataSet = LineDataSet(entries, "Sample Data")
+        entries.sortBy { it.x }
 
+        Log.d(ContentValues.TAG, entries.toString())
+
+        lineDataSet = LineDataSet(entries, "Count")
+        lineData = LineData(lineDataSet)
+        lineDataSet.setColors(Color.RED)
+        lineDataSet!!.valueTextColor = Color.BLUE
+        lineDataSet!!.valueTextSize=20f
+        lineChart.data = lineData
+
+/*
+
+        Log.d(ContentValues.TAG, expensesList.toString())
+        Log.d(ContentValues.TAG, entries.toString())
+
+
+        val dataSet = LineDataSet(entries, "Sample Data")
 
         dataSet.color = resources.getColor(R.color.black)
         dataSet.lineWidth = 2f
@@ -139,6 +165,8 @@ class ExpensesChartFragment : Fragment() {
         lineDataSets.add(dataSet)
         val lineData = LineData(lineDataSets)
 
+        Log.d(ContentValues.TAG, dataSet.toString())
+        Log.d(ContentValues.TAG, lineData.toString())
 
         lineChart.data = lineData
         val xAxis = lineChart.xAxis
@@ -151,8 +179,9 @@ class ExpensesChartFragment : Fragment() {
         lineChart.setTouchEnabled(true)
         lineChart.setPinchZoom(true)
         lineChart.description.text = "Monthly Expenses"
-        lineChart.legend.isEnabled = true
+        lineChart.legend.isEnabled = true*/
     }
+
     private fun setupPieChart(pieChart: PieChart, expensesList: List<ExpensesData>) {
         val entries = ArrayList<PieEntry>()
 

@@ -140,7 +140,7 @@ class ExpenseFragment : Fragment() {
                     data.price = priceNameValue.toDouble()
                     data.expensesComment = commentValue
                     data.expensesDate = dateValue
-                    data.date = dateNumber
+                    data.date = dateNumber.toDouble()
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
                     } else {
