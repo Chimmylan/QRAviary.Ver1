@@ -93,7 +93,7 @@ data class MutationData(
 
 data class ExpensesData(
     var expenses: String? = null,
-    var price: String? = null,
+    var price: Double? =null,
     var expensesId: String? = null,
     var expensesCount: String? = null,
     var expensesComment: String? = null,

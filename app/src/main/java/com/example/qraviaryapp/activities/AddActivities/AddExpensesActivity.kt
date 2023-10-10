@@ -13,15 +13,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.ExpensesActivity
-import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
-import com.example.qraviaryapp.activities.dashboards.PairListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -79,7 +75,7 @@ class AddExpensesActivity : AppCompatActivity() {
     }
 
     fun addCategory() {
-        val amountValue = etAmount.text.toString()
+        val amountValue = etAmount.text.toString().toDouble()
         val commentValue = etComment.text.toString()
 
         val expenses = ExpensesData(

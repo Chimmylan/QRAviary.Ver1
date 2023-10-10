@@ -135,7 +135,7 @@ class ExpenseFragment : Fragment() {
                     expensesCount = snapshot.childrenCount.toInt()
                     data.expensesCount = expensesCount.toString()
                     data.expenses = mutationNameValue
-                    data.price = priceNameValue
+                    data.price = priceNameValue.toDouble()
                     data.expensesComment = commentValue
                     data.expensesDate = dateValue
                     if (Looper.myLooper() != Looper.getMainLooper()) {

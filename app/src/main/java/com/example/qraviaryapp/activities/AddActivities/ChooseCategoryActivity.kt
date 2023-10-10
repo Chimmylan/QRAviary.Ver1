@@ -2,7 +2,6 @@ package com.example.qraviaryapp.activities.AddActivities
 
 import ExpensesData
 import ClickListener
-import MutationData
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
@@ -19,7 +18,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +25,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CategoryAdapter
-import com.example.qraviaryapp.adapter.HomeGenesAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

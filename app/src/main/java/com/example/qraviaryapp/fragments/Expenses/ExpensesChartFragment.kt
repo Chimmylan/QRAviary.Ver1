@@ -12,7 +12,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -61,6 +60,7 @@ class ExpensesChartFragment : Fragment() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
+
                 val uniqueCategories = HashSet<String>()
                 val expensesList = ArrayList<ExpensesData>()
 
@@ -68,37 +68,23 @@ class ExpensesChartFragment : Fragment() {
                 for (itemSnapshot in dataSnapshot.children) {
                     val data = itemSnapshot.getValue(ExpensesData::class.java)
                     if (data != null) {
-
-                        val key = itemSnapshot.key.toString()
-                        data.expensesId = key
-
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
-                        val date = itemSnapshot.child("Beginning").value
-                        val comment = itemSnapshot.child("Comment").value
                         val category = categoryitem.toString()
-                        val priceNameValue = PriceName.toString()
-                        val dateValue = date.toString()
-                        val commentValue = comment.toString()
+                        val priceNameValue = PriceName.toString().toDouble()
 
-                        data.price = priceNameValue
-                        data.expensesComment = commentValue
-                        data.expensesDate = dateValue
-
-                        if(!uniqueCategories.contains(category)){
-                            uniqueCategories.add(category)
-                            data.expenses = category
-                            expensesList.add(data).toString()
+                        // Check if the category is already in the list
+                        val existingCategory = expensesList.find { it.expenses == category }
+                        if (existingCategory != null) {
+                            // If it exists, add the value to the existing category
+                            existingCategory.price = existingCategory.price?.plus(priceNameValue)
+                        } else {
+                            // If it doesn't exist, create a new category and add it to the list
+                            expensesList.add(ExpensesData(category, priceNameValue))
                         }
-
-
-
-
-
-
                     }
-
                 }
+
                 val pieCharts = view.findViewById<PieChart>(R.id.pieChart)
                 setupPieChart(pieCharts, expensesList)
             }
