@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.fragments.Expenses
 
+import DateTotalExpense
 import ExpensesData
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import com.example.qraviaryapp.R
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -21,6 +23,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
@@ -44,7 +47,7 @@ class ExpensesChartFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var mAuth: FirebaseAuth
-
+    private lateinit var lineDataSet: LineDataSet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -53,6 +56,7 @@ class ExpensesChartFragment : Fragment() {
         }
     }
     lateinit var expensesList: ArrayList<ExpensesData>
+    lateinit var expensesList1: ArrayList<DateTotalExpense>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,8 +79,8 @@ class ExpensesChartFragment : Fragment() {
 
                 val uniqueCategories = HashSet<String>()
                 expensesList = ArrayList()
-                val expensesList1 = ArrayList<ExpensesData>()
-                val entries = ArrayList<Entry>()
+                expensesList1 = ArrayList()
+
 
                 for (itemSnapshot in dataSnapshot.children) {
                     val data = itemSnapshot.getValue(ExpensesData::class.java)
@@ -84,22 +88,34 @@ class ExpensesChartFragment : Fragment() {
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
                         val date = itemSnapshot.child("Date").value
-
+                        val year= itemSnapshot.child("Year").value
                         val category = categoryitem.toString()
                         val priceNameValue = PriceName.toString().toDouble()
                         val dateValue = date.toString().toDouble()
-                        // Check if the category is already in the list
+                        val dateyear = year.toString().toDouble()
+
+                        val existingDate = expensesList1.find { it.date.toDouble() == dateValue && it.year.toDouble() == dateyear }
+
+                        if (existingDate != null) {
+
+                            existingDate.price = existingDate.price?.plus(priceNameValue)!!
+                            existingDate.date = dateValue
+                        } else {
+
+                            expensesList1.add(DateTotalExpense(dateValue, priceNameValue, dateyear))
+
+                        }
+
                         val existingCategory = expensesList.find { it.expenses == category }
                         if (existingCategory != null) {
                             // If it exists, add the value to the existing category
                             existingCategory.price = existingCategory.price?.plus(priceNameValue)
-                            existingCategory.date = dateValue
+//                            existingCategory.date = dateValue
                         } else {
                             // If it doesn't exist, create a new category and add it to the list
                             expensesList.add(ExpensesData(category, priceNameValue, dateValue))
 
                         }
-
 
                     }
 
@@ -109,7 +125,7 @@ class ExpensesChartFragment : Fragment() {
                 val pieCharts = view.findViewById<PieChart>(R.id.pieChart)
                 setupPieChart(pieCharts, expensesList)
                 val lineCharts = view.findViewById<LineChart>(R.id.lineChart)
-                setupLineChart(lineCharts, expensesList)
+                setupLineChart(lineCharts, expensesList1)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -120,19 +136,19 @@ class ExpensesChartFragment : Fragment() {
     }
 
     lateinit var entries: ArrayList<Entry>
-    lateinit var lineDataSet: LineDataSet
+
     lateinit var lineData: LineData
 
-    private fun setupLineChart(lineChart: LineChart, expensesList: List<ExpensesData>) {
+    private fun setupLineChart(lineChart: LineChart, expensesList1: List<DateTotalExpense>) {
         if (!isAdded) {
             // Fragment is not attached to a context, return or handle accordingly
             return
         }
         entries = ArrayList()
 
-        for ((index, expenseData) in expensesList.withIndex()) {
+        for ((index, expenseData) in expensesList1.withIndex()) {
             val amount = expenseData.price.toString().toFloat()
-            val date = expenseData.date.toString().toFloat()
+            val date = expenseData.date.toString().toFloat() - 1
             entries.add(Entry(date, amount))
             Log.d(ContentValues.TAG, "1")
         }
@@ -141,46 +157,52 @@ class ExpensesChartFragment : Fragment() {
         entries.sortBy { it.x }
 
         Log.d(ContentValues.TAG, entries.toString())
-
-        lineDataSet = LineDataSet(entries, "Count")
+        lineChart.description.text = "Monthly Expenses"
+        lineDataSet = LineDataSet(entries, "Expenses")
+//        lineDataSet.setDrawValues(false)
         lineData = LineData(lineDataSet)
-        lineDataSet.setColors(Color.RED)
+        lineDataSet.color = resources.getColor(R.color.purple_200)
         lineDataSet!!.valueTextColor = Color.BLUE
-        lineDataSet!!.valueTextSize=20f
+        lineDataSet!!.valueTextSize= 10f
         lineChart.data = lineData
-
-/*
-
-        Log.d(ContentValues.TAG, expensesList.toString())
-        Log.d(ContentValues.TAG, entries.toString())
-
-
-        val dataSet = LineDataSet(entries, "Sample Data")
-
-        dataSet.color = resources.getColor(R.color.black)
-        dataSet.lineWidth = 2f
-
-
-        val lineDataSets: ArrayList<ILineDataSet> = ArrayList()
-        lineDataSets.add(dataSet)
-        val lineData = LineData(lineDataSets)
-
-        Log.d(ContentValues.TAG, dataSet.toString())
-        Log.d(ContentValues.TAG, lineData.toString())
-
-        lineChart.data = lineData
+        lineChart.xAxis.setLabelCount(entries.size, true)
+        lineChart.axisRight.isEnabled = false
         val xAxis = lineChart.xAxis
+//        xAxis.valueFormatter = YearMonthValueFormatter()
+
+        xAxis.valueFormatter = object : ValueFormatter() {
+            private val months = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < months.size) {
+                    months[index]
+                } else {
+                    ""
+                }
+            }
+        }
+
+        xAxis.setAvoidFirstLastClipping(true)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-        lineChart.xAxis.labelCount = 1
-//        lineChart.xAxis.axisMinimum = 1f
-//        lineChart.xAxis.axisMaximum = 2f
-        lineChart.axisRight.isEnabled = false
-        lineChart.setTouchEnabled(true)
-        lineChart.setPinchZoom(true)
-        lineChart.description.text = "Monthly Expenses"
-        lineChart.legend.isEnabled = true*/
+
+
     }
+    class YearMonthValueFormatter : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            val year = value.toInt() / 100
+            val month = value.toInt() % 100
+            return if (month == 1) {
+                "$year"
+            } else {
+                // Display the month number for other months
+                String.format("%02d", month)
+            }
+        }
+    }
+
+
 
     private fun setupPieChart(pieChart: PieChart, expensesList: List<ExpensesData>) {
         val entries = ArrayList<PieEntry>()

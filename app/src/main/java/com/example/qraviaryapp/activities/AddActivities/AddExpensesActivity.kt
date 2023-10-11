@@ -96,23 +96,29 @@ class AddExpensesActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
 
-// Assuming beginningFormattedDate is in the format "dd/MM/yyyy"
         val date = inputDateFormat.parse(beginningFormattedDate)
         val formattedDate = outputDateFormat.format(date)
-        val month = formattedDate.split(" - ")[1]
+
+        val monthYearParts = formattedDate.split(" - ")
+        val day = monthYearParts[0]
+        val month = monthYearParts[1]
+        val year = monthYearParts[2]
         var validExpenses = false
+
         if (btnCategory.text.isEmpty()) {
             btnCategory.error = "Please select a Category..."
         } else {
             validExpenses = true
         }
+
         if (validExpenses) {
             val data: Map<String, Any?> = hashMapOf (
                 "Amount" to expenses.price,
                 "Beginning" to expenses.expensesDate,
                 "Comment" to expenses.expensesComment,
                 "Category" to btnCategoryValue,
-                "Date" to month.toFloat()
+                "Date" to month.toFloat(),
+                "Year" to year.toInt() // Add the year to the data map
             )
             newExpenses.updateChildren(data)
         }
