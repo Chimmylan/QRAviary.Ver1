@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.adapter.MyMarker
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
@@ -23,14 +24,21 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,22 +95,19 @@ class ExpensesChartFragment : Fragment() {
                     if (data != null) {
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
-                        val date = itemSnapshot.child("Date").value
-                        val year= itemSnapshot.child("Year").value
+                        val date = itemSnapshot.child("Beginning").value.toString()
                         val category = categoryitem.toString()
                         val priceNameValue = PriceName.toString().toDouble()
-                        val dateValue = date.toString().toDouble()
-                        val dateyear = year.toString().toDouble()
 
-                        val existingDate = expensesList1.find { it.date.toDouble() == dateValue && it.year.toDouble() == dateyear }
+                        val existingDate = expensesList1.find { it.date == date}
 
                         if (existingDate != null) {
 
                             existingDate.price = existingDate.price?.plus(priceNameValue)!!
-                            existingDate.date = dateValue
+                            existingDate.date = date
                         } else {
 
-                            expensesList1.add(DateTotalExpense(dateValue, priceNameValue, dateyear))
+                            expensesList1.add(DateTotalExpense(date, priceNameValue))
 
                         }
 
@@ -113,7 +118,7 @@ class ExpensesChartFragment : Fragment() {
 //                            existingCategory.date = dateValue
                         } else {
                             // If it doesn't exist, create a new category and add it to the list
-                            expensesList.add(ExpensesData(category, priceNameValue, dateValue))
+                            expensesList.add(ExpensesData(category, priceNameValue))
 
                         }
 
@@ -141,54 +146,77 @@ class ExpensesChartFragment : Fragment() {
 
     private fun setupLineChart(lineChart: LineChart, expensesList1: List<DateTotalExpense>) {
         if (!isAdded) {
-            // Fragment is not attached to a context, return or handle accordingly
             return
         }
+
+        val maxLabelCount = 4
         entries = ArrayList()
 
         for ((index, expenseData) in expensesList1.withIndex()) {
             val amount = expenseData.price.toString().toFloat()
-            val date = expenseData.date.toString().toFloat() - 1
-            entries.add(Entry(date, amount))
+            val date = expenseData.date
+            val dateFormatted = SimpleDateFormat("MMM dd yyyy").parse(date)?.time?.toFloat() ?: 0f
+            entries.add(Entry(dateFormatted, amount))
             Log.d(ContentValues.TAG, "1")
         }
 
 
         entries.sortBy { it.x }
 
-        Log.d(ContentValues.TAG, entries.toString())
+        lineChart.xAxis.apply {
+            lineChart.xAxis.valueFormatter = LineChartXAxisValueFormatter()
+            isGranularityEnabled = true
+            if (entries.size >= maxLabelCount){
+                val granularityValue = entries.size / maxLabelCount
+                granularity = granularityValue.toFloat()
+                labelCount = maxLabelCount
+            }else
+            {
+                lineChart.xAxis.setLabelCount(entries.size, true)
+            }
+
+            lineChart.axisRight.isEnabled = false
+        }
+
         lineChart.description.text = "Monthly Expenses"
         lineDataSet = LineDataSet(entries, "Expenses")
-//        lineDataSet.setDrawValues(false)
         lineData = LineData(lineDataSet)
         lineDataSet.color = resources.getColor(R.color.purple_200)
         lineDataSet!!.valueTextColor = Color.BLUE
         lineDataSet!!.valueTextSize= 10f
         lineChart.data = lineData
-        lineChart.xAxis.setLabelCount(entries.size, true)
-        lineChart.axisRight.isEnabled = false
+
         val xAxis = lineChart.xAxis
-//        xAxis.valueFormatter = YearMonthValueFormatter()
 
-        xAxis.valueFormatter = object : ValueFormatter() {
-            private val months = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < months.size) {
-                    months[index]
-                } else {
-                    ""
-                }
-            }
-        }
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        Log.d(ContentValues.TAG, entries.toString())
 
         xAxis.setAvoidFirstLastClipping(true)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
+// Create a CustomMarker instance and set it for the LineChart
+        val customMarker = MyMarker(requireContext(), R.layout.custom_marker)
+        lineChart.marker = customMarker
+
 
 
 
     }
+
+    class LineChartXAxisValueFormatter : IndexAxisValueFormatter() {
+
+        override fun getFormattedValue(value: Float): String {
+
+            val dateInMillis = value.toLong()
+            val date = Calendar.getInstance().apply {
+                timeInMillis = dateInMillis
+            }.time
+
+            return SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(date)
+        }
+
+    }
+
     class YearMonthValueFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             val year = value.toInt() / 100
