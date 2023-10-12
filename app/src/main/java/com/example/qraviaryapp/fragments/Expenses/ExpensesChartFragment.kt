@@ -96,18 +96,21 @@ class ExpensesChartFragment : Fragment() {
                         val categoryitem = itemSnapshot.child("Category").value
                         val PriceName = itemSnapshot.child("Amount").value
                         val date = itemSnapshot.child("Beginning").value.toString()
+                        val month = itemSnapshot.child("Date").value.toString().toDouble()
+                        val year = itemSnapshot.child("Year").value.toString().toDouble()
+
                         val category = categoryitem.toString()
                         val priceNameValue = PriceName.toString().toDouble()
-
-                        val existingDate = expensesList1.find { it.date == date}
+                        val dateValue = date.toString()
+                        val existingDate = expensesList1.find { it.month == month &&  it.year == year}
 
                         if (existingDate != null) {
 
                             existingDate.price = existingDate.price?.plus(priceNameValue)!!
-                            existingDate.date = date
+//                            existingDate.date = date
                         } else {
 
-                            expensesList1.add(DateTotalExpense(date, priceNameValue))
+                            expensesList1.add(DateTotalExpense(dateValue, priceNameValue,month,year))
 
                         }
 
@@ -149,7 +152,7 @@ class ExpensesChartFragment : Fragment() {
             return
         }
 
-        val maxLabelCount = 15
+        val maxLabelCount = 100
         entries = ArrayList()
 
         for ((index, expenseData) in expensesList1.withIndex()) {
@@ -167,8 +170,15 @@ class ExpensesChartFragment : Fragment() {
             lineChart.xAxis.valueFormatter = LineChartXAxisValueFormatter()
             labelRotationAngle = 45f
             lineChart.axisRight.isEnabled = false
-
-            lineChart.xAxis.setLabelCount(5,true)
+            mAxisMaximum = 100f
+            mAxisMinimum = 0f
+            val monthsPassed = calculateMonthsPassed(entries)
+            val labelCount = if (monthsPassed <= maxLabelCount) {
+                monthsPassed
+            } else {
+                maxLabelCount
+            }
+            setLabelCount(labelCount, true)
             val xOffset = 20f // Adjust this value as needed.
             setXOffset(xOffset)
         }
@@ -194,6 +204,33 @@ class ExpensesChartFragment : Fragment() {
         lineChart.marker = customMarker
 
 
+    }
+    private fun calculateMonthsPassed(entries: List<Entry>): Int {
+        if (entries.isEmpty()) {
+            return 0
+        }
+        val firstDateMillis = entries.first().x.toLong()
+        val lastDateMillis = entries.last().x.toLong()
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = firstDateMillis
+        val startDate = calendar.time
+        calendar.timeInMillis = lastDateMillis
+        val endDate = calendar.time
+
+        val startCalendar = Calendar.getInstance()
+        startCalendar.time = startDate
+        val endCalendar = Calendar.getInstance()
+        endCalendar.time = endDate
+
+        // Calculate the number of months passed
+        var monthsPassed = 0
+        while (startCalendar.before(endCalendar) || startCalendar == endCalendar) {
+            monthsPassed++
+            startCalendar.add(Calendar.MONTH, 1)
+        }
+
+        return monthsPassed
     }
 //    private fun sortEntriesByMonth(entriesList1: List<Entry>): List<Entry> {
 //        return entriesList1.sortedBy { entry ->

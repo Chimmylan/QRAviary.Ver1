@@ -8,6 +8,7 @@ import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,7 +21,10 @@ class MyMarker(context: Context, layoutResource: Int) : MarkerView(context, layo
             val dateInMillis = e.x.toLong()
             val formattedDate = SimpleDateFormat("MMM yyyy", Locale.getDefault())
                 .format(Date(dateInMillis))
-            textView.text = "Date: $formattedDate\nValue: ${e.y}" // Customize this as needed
+            val decimalFormat = DecimalFormat("#,###.##") // Define your format here
+            val formattedValue = decimalFormat.format(e.y)
+
+            textView.text = "Date: $formattedDate\nValue: $formattedValue"
         }
     }
 
