@@ -149,7 +149,7 @@ class ExpensesChartFragment : Fragment() {
             return
         }
 
-        val maxLabelCount = 4
+        val maxLabelCount = 15
         entries = ArrayList()
 
         for ((index, expenseData) in expensesList1.withIndex()) {
@@ -161,21 +161,16 @@ class ExpensesChartFragment : Fragment() {
         }
 
 
+//        entries = ArrayList(sortEntriesByMonth(entries))
         entries.sortBy { it.x }
-
         lineChart.xAxis.apply {
             lineChart.xAxis.valueFormatter = LineChartXAxisValueFormatter()
-            isGranularityEnabled = true
-            if (entries.size >= maxLabelCount){
-                val granularityValue = entries.size / maxLabelCount
-                granularity = granularityValue.toFloat()
-                labelCount = maxLabelCount
-            }else
-            {
-                lineChart.xAxis.setLabelCount(entries.size, true)
-            }
-
+            labelRotationAngle = 45f
             lineChart.axisRight.isEnabled = false
+
+            lineChart.xAxis.setLabelCount(5,true)
+            val xOffset = 20f // Adjust this value as needed.
+            setXOffset(xOffset)
         }
 
         lineChart.description.text = "Monthly Expenses"
@@ -184,38 +179,55 @@ class ExpensesChartFragment : Fragment() {
         lineDataSet.color = resources.getColor(R.color.purple_200)
         lineDataSet!!.valueTextColor = Color.BLUE
         lineDataSet!!.valueTextSize= 10f
+        lineDataSet.setDrawValues(false)
         lineChart.data = lineData
 
         val xAxis = lineChart.xAxis
-
 
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         Log.d(ContentValues.TAG, entries.toString())
 
         xAxis.setAvoidFirstLastClipping(true)
-// Create a CustomMarker instance and set it for the LineChart
+
         val customMarker = MyMarker(requireContext(), R.layout.custom_marker)
         lineChart.marker = customMarker
 
 
-
-
     }
+//    private fun sortEntriesByMonth(entriesList1: List<Entry>): List<Entry> {
+//        return entriesList1.sortedBy { entry ->
+//            val date = Date(entry.x.toLong())
+//            val calendar = Calendar.getInstance()
+//            calendar.time = date
+//
+//            // Extract and use month and year for sorting
+//            val year = calendar.get(Calendar.YEAR)
+//            val month = calendar.get(Calendar.MONTH)
+//
+//            // Create a composite key for sorting
+//            year * 100 + month
+//        }
+//    }
+        class LineChartXAxisValueFormatter : IndexAxisValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val dateInMillis = value.toLong()
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = dateInMillis
+                val month = SimpleDateFormat("MM", Locale.getDefault()).format(dateInMillis)
+                val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(dateInMillis)
 
-    class LineChartXAxisValueFormatter : IndexAxisValueFormatter() {
-
-        override fun getFormattedValue(value: Float): String {
-
-            val dateInMillis = value.toLong()
-            val date = Calendar.getInstance().apply {
-                timeInMillis = dateInMillis
-            }.time
-
-            return SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(date)
+                return if (month == "01") {
+                    "$month $year"
+                } else {
+                    month
+                }
+            }
         }
 
-    }
+
+
+
 
     class YearMonthValueFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {

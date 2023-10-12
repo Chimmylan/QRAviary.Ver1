@@ -91,7 +91,7 @@ data class MutationData(
 
 )
 data class DateTotalExpense(var date: String, var price: Double)
-
+data class MonthYearEntry(val monthYearValue: Float, val amount: Float)
 data class ExpensesData(
     var expenses: String? = null,
     var price: Double? =null,

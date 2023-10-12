@@ -18,7 +18,7 @@ class MyMarker(context: Context, layoutResource: Int) : MarkerView(context, layo
         if (e != null) {
             // Format the timestamp as "MMM dd yyyy" before displaying it
             val dateInMillis = e.x.toLong()
-            val formattedDate = SimpleDateFormat("MMM dd yyyy", Locale.getDefault())
+            val formattedDate = SimpleDateFormat("MMM yyyy", Locale.getDefault())
                 .format(Date(dateInMillis))
             textView.text = "Date: $formattedDate\nValue: ${e.y}" // Customize this as needed
         }
