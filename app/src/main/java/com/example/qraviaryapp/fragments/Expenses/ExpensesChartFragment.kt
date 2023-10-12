@@ -172,6 +172,9 @@ class ExpensesChartFragment : Fragment() {
             lineChart.axisRight.isEnabled = false
             mAxisMaximum = 100f
             mAxisMinimum = 0f
+
+            isGranularityEnabled = true
+            granularity = 1f
             val monthsPassed = calculateMonthsPassed(entries)
             val labelCount = if (monthsPassed <= maxLabelCount) {
                 monthsPassed
@@ -182,13 +185,16 @@ class ExpensesChartFragment : Fragment() {
             val xOffset = 20f // Adjust this value as needed.
             setXOffset(xOffset)
         }
-
+        lineChart.setScaleEnabled(false)
         lineChart.description.text = "Monthly Expenses"
         lineDataSet = LineDataSet(entries, "Expenses")
         lineData = LineData(lineDataSet)
         lineDataSet.color = resources.getColor(R.color.purple_200)
         lineDataSet!!.valueTextColor = Color.BLUE
         lineDataSet!!.valueTextSize= 10f
+
+
+//        lineChart.setTouchEnabled(false)
         lineDataSet.setDrawValues(false)
         lineChart.data = lineData
 
@@ -309,7 +315,7 @@ class ExpensesChartFragment : Fragment() {
         colors.add(Color.parseColor("#33FFFF")) // Custom color 10
 
         val dataSetColors = ArrayList<Int>()
-
+        val dataSet = PieDataSet(entries, "Expenses")
         for ((index, expenseData) in expensesList.withIndex()) {
 
 
@@ -321,7 +327,7 @@ class ExpensesChartFragment : Fragment() {
             dataSetColors.add(colors[colorIndex])
         }
 
-        val dataSet = PieDataSet(entries, "Expenses")
+
 
 
         dataSet.colors = dataSetColors
