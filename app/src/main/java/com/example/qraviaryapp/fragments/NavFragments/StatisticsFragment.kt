@@ -4,47 +4,28 @@ import BirdBarChart
 import BirdData
 import BirdGenderBarChart
 import BirdStatusBarChart
-import ExpensesData
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.AddActivities.AddExpensesActivity
-import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
-import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
-import com.example.qraviaryapp.fragments.Expenses.ExpensesChartFragment
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -53,10 +34,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class StatisticsFragment : Fragment() {
     private lateinit var viewPager: ViewPager
@@ -122,12 +99,12 @@ class StatisticsFragment : Fragment() {
                     if (data != null) {
                         val gender = itemSnapshot.child("Gender").value
                         val status = itemSnapshot.child("Status").value
-                        val mutation1 = itemSnapshot.child("Mutation1").value
-                        val mutation2 = itemSnapshot.child("Mutation2").value
-                        val mutation3 = itemSnapshot.child("Mutation3").value
-                        val mutation4 = itemSnapshot.child("Mutation4").value
-                        val mutation5 = itemSnapshot.child("Mutation5").value
-                        val mutation6 = itemSnapshot.child("Mutation6").value
+                        val mutation1 = itemSnapshot.child("Mutation1").child("Mutation Name").value
+                        val mutation2 = itemSnapshot.child("Mutation2").child("Mutation Name").value
+                        val mutation3 = itemSnapshot.child("Mutation3").child("Mutation Name").value
+                        val mutation4 = itemSnapshot.child("Mutation4").child("Mutation Name").value
+                        val mutation5 = itemSnapshot.child("Mutation5").child("Mutation Name").value
+                        val mutation6 = itemSnapshot.child("Mutation6").child("Mutation Name").value
 
                         val nonNullMutations = listOf(
                             mutation1,
@@ -155,7 +132,7 @@ class StatisticsFragment : Fragment() {
                         val birdstatus = status.toString()
                         val birdGenderBarChart = BirdGenderBarChart(sex)
                         val birdStatusBarChart = BirdStatusBarChart(birdstatus)
-                        val birdBarChart= BirdBarChart(CombinedMutations,sex)
+                        val birdBarChart= BirdBarChart(CombinedMutations,sex,birdstatus)
                         genderList.add(birdGenderBarChart)
                         statusList.add(birdStatusBarChart)
                         birdList.add(birdBarChart)
@@ -165,7 +142,7 @@ class StatisticsFragment : Fragment() {
                 val birdGenderChart = view.findViewById<BarChart>(R.id.birdsgenderChart)
                 setupGenderBarChart(birdGenderChart, genderList)
                 val birdStatusChart = view.findViewById<BarChart>(R.id.birdstatusChart)
-                setupStatusBarChart(birdStatusChart, statusList)
+                setupStatusBarChart(birdStatusChart, birdList)
                 val birdChart = view.findViewById<BarChart>(R.id.birdsChart)
                 setupBarChart(birdChart, birdList)
             }
@@ -237,13 +214,24 @@ class StatisticsFragment : Fragment() {
         val legend = barChart.legend
         legend.form = Legend.LegendForm.CIRCLE
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        val xAxis = barChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.labelCount = barEntries.size
 
+        // Set the custom XAxis value formatter to display the combinedMutations as labels
+        xAxis.valueFormatter = CombinedMutationXAxisValueFormatter(combinedMutationCounts)
         // Set data value formatter to show counts
         data.setValueFormatter(BarValueFormatter(combinedMutationCounts))
 
         barChart.invalidate()
     }
-
+    class CombinedMutationXAxisValueFormatter(private val combinedMutationCounts: Map<String, MutableMap<String, Int>>) : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            val index = value.toInt()
+            val mutationCombination = combinedMutationCounts.keys.elementAtOrNull(index)
+            return mutationCombination ?: ""
+        }
+    }
     class BarValueFormatter(private val combinedMutationCounts: Map<String, MutableMap<String, Int>>) : ValueFormatter() {
         override fun getBarLabel(barEntry: BarEntry?): String {
             val index = barEntry?.x?.toInt() ?: 0
@@ -258,54 +246,113 @@ class StatisticsFragment : Fragment() {
     }
 
 
-    private fun setupStatusBarChart(barChart: BarChart, statusList: List<BirdStatusBarChart>) {
-        val barEntries = ArrayList<BarEntry>()
-        var available = 0
-        var forsale = 0
-        var sold= 0
-        var deceased = 0
-        var exchanged = 0
-        var lost= 0
-        var donated= 0
-        var other = 0
-        var paired = 0
+    private fun setupStatusBarChart(barChart: BarChart, birdList: List<BirdBarChart>) {
+        val combinedMutationCounts = mutableMapOf<String, MutableMap<String, Int>>()
 
-        for (birdData in statusList) {
-            when (birdData.status) {
-                "Available" -> available++
-                "For Sale" -> forsale++
-                "Sold" -> sold++
-                "Deceased" -> deceased++
-                "Exchanged" -> exchanged++
-                "Lost" -> lost++
-                "Donated" -> donated++
-                "Other" -> other++
-                "Paired" -> paired++
+        for (birdBarChart in birdList) {
+            val combinedMutations = birdBarChart.mutations ?: "Mutation: None"
+            val status = birdBarChart.status ?: "Paired"
+
+            if (combinedMutations != "Mutation: None") {
+                if (!combinedMutationCounts.containsKey(combinedMutations)) {
+                    combinedMutationCounts[combinedMutations] = mutableMapOf("Available" to 0, "For Sale" to 0,
+                        "Sold" to 0,"Deceased" to 0,"Exchanged" to 0,"Lost" to 0,"Donated" to 0,"Other" to 0,"Paired" to 0, )
+                }
+
+                val mutationCounts = combinedMutationCounts[combinedMutations]!!
+
+                when (status) {
+                    "Available" -> mutationCounts["Available"] = mutationCounts["Available"]!! + 1
+                    "For Sale" -> mutationCounts["For Sale"] = mutationCounts["For Sale"]!! + 1
+                    "Sold" -> mutationCounts["Sold"] = mutationCounts["Sold"]!! + 1
+                    "Deceased" -> mutationCounts["Deceased"] = mutationCounts["Deceased"]!! + 1
+                    "Exchanged" -> mutationCounts["Exchanged"] = mutationCounts["Exchanged"]!! + 1
+                    "Lost" -> mutationCounts["Lost"] = mutationCounts["Lost"]!! + 1
+                    "Donated" -> mutationCounts["Donated"] = mutationCounts["Donated"]!! + 1
+                    "Other" -> mutationCounts["Other"] = mutationCounts["Other"]!! + 1
+                    else -> mutationCounts["Paired"] = mutationCounts["Paired"]!! + 1
+                }
             }
         }
 
-        barEntries.add(BarEntry(1f, available.toFloat()))
-        barEntries.add(BarEntry(2f, forsale.toFloat()))
-        barEntries.add(BarEntry(3f, sold.toFloat()))
-        barEntries.add(BarEntry(4f, deceased.toFloat()))
-        barEntries.add(BarEntry(5f, exchanged.toFloat()))
-        barEntries.add(BarEntry(6f, lost.toFloat()))
-        barEntries.add(BarEntry(7f, donated.toFloat()))
-        barEntries.add(BarEntry(8f, other.toFloat()))
-        barEntries.add(BarEntry(9f, paired.toFloat()))
+        val barEntries = mutableListOf<BarEntry>()
+        val labels = mutableListOf<String>()
 
-        val dataSet = BarDataSet(barEntries, "Status Counts")
-        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        combinedMutationCounts.entries.forEachIndexed { index, entry ->
+            val mutationCombination = entry.key
+            val counts = entry.value
+            val barEntry = BarEntry(index.toFloat(), floatArrayOf(
+                counts["Available"]!!.toFloat(),
+                counts["For Sale"]!!.toFloat(),
+                counts["Sold"]!!.toFloat(),
+                counts["Deceased"]!!.toFloat(),
+                counts["Exchanged"]!!.toFloat(),
+                counts["Lost"]!!.toFloat(),
+                counts["Donated"]!!.toFloat(),
+                counts["Other"]!!.toFloat(),
+                counts["Paired"]!!.toFloat(),
+            ))
+            barEntries.add(barEntry)
+            labels.add(mutationCombination)
+        }
 
-        val barData = BarData(dataSet)
+        val dataSet = BarDataSet(barEntries,"")
 
-        barChart.data = barData
-        barChart.setFitBars(true)
+        val labels1 = listOf("Available", "For Sale", "Sold", "Deceased", "Exchanged", "Lost", "Donated", "Other", "Paired")
+
+        dataSet.stackLabels = labels1.toTypedArray()
+        dataSet.colors = listOf(Color.GREEN,Color.BLUE,Color.RED,Color.BLACK,Color.CYAN,Color.MAGENTA,Color.YELLOW,Color.LTGRAY, Color.rgb(255, 182, 193))
+
+
+        val data = BarData(dataSet)
+        barChart.data = data
         barChart.description.isEnabled = false
-        barChart.animateY(1000)
-        barChart.invalidate()
+        barChart.setDrawBarShadow(false)
+        barChart.setDrawValueAboveBar(true)
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
 
+        val yAxisLeft = barChart.axisLeft
+        yAxisLeft.isEnabled = true
+
+        val yAxisRight = barChart.axisRight
+        yAxisRight.isEnabled = true
+
+        val legend = barChart.legend
+        legend.form = Legend.LegendForm.CIRCLE
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        val xAxis = barChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.labelCount = barEntries.size
+
+        // Set the custom XAxis value formatter to display the combinedMutations as labels
+        xAxis.valueFormatter = CombinedMutationXAxisValueFormatter(combinedMutationCounts)
+        // Set data value formatter to show counts
+        data.setValueFormatter(BarValueFormatter1(combinedMutationCounts))
+
+        barChart.invalidate()
     }
+
+
+    class BarValueFormatter1(private val combinedMutationCounts: Map<String, MutableMap<String, Int>>) : ValueFormatter() {
+        override fun getBarLabel(barEntry: BarEntry?): String {
+            val index = barEntry?.x?.toInt() ?: 0
+            val mutationCombination = barEntry?.x?.toInt()?.let { combinedMutationCounts.keys.elementAt(it) }
+            val counts = mutationCombination?.let { combinedMutationCounts[it] }
+            val available = counts?.get("Available") ?: 0
+            val forsale = counts?.get("For Sale") ?: 0
+            val sold = counts?.get("Sold") ?: 0
+            val deceased = counts?.get("Available") ?: 0
+            val lost = counts?.get("For Sale") ?: 0
+            val exchanged = counts?.get("Sold") ?: 0
+            val other = counts?.get("Available") ?: 0
+            val donated = counts?.get("For Sale") ?: 0
+            val paired = counts?.get("Sold") ?: 0
+            return "Available: $available, For Sale: $forsale, Sold: $sold, Deceased: $deceased, " +
+                    "Lost: $lost, Exchanged: $exchanged, Donated: $donated, Other: $other, Paired: $paired"
+        }
+    }
+
     private fun setupGenderBarChart(barChart: BarChart, genderList: List<BirdGenderBarChart>) {
         val barEntries = ArrayList<BarEntry>()
 
