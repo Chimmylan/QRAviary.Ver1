@@ -605,6 +605,9 @@ class BasicFragment : Fragment() {
             donatedContact = dataDonatedContact,
             otherComments = dataOtherComments
         )
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
 
         var validInputs = false
         var validIdentifier = false
@@ -811,7 +814,13 @@ class BasicFragment : Fragment() {
                 newNurseryPref.updateChildren(data)
             } else if (soldLayout.visibility == View.VISIBLE) {
                 soldId = SoldBirdRef.key
+                val date = inputDateFormat.parse(dataSoldSaleDate)
+                val formattedDate = outputDateFormat.format(date)
 
+                val monthYearParts = formattedDate.split(" - ")
+                val day = monthYearParts[0]
+                val month = monthYearParts[1]
+                val year = monthYearParts[2]
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Legband" to birdData.legband,
@@ -832,7 +841,9 @@ class BasicFragment : Fragment() {
                     "Nursery Key" to flightKey,
                     "Sold Id" to soldId,
                     "Bird Key" to birdId,
-                    "Age" to ageInDays
+                    "Age" to ageInDays,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
 
                 )
                 val solddata: Map<String, Any?> = hashMapOf(

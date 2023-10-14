@@ -598,6 +598,9 @@ class BasicFlightFragment : Fragment() {
             donatedContact = dataDonatedContact,
             otherComments = dataOtherComments
         )
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
 
         var validInputs = false
         var validIdentifier = false
@@ -820,6 +823,13 @@ class BasicFlightFragment : Fragment() {
 
             } else if (soldLayout.visibility == View.VISIBLE) {
                 soldId = SoldBirdRef.key
+                val date = inputDateFormat.parse(dataSoldSaleDate)
+                val formattedDate = outputDateFormat.format(date)
+
+                val monthYearParts = formattedDate.split(" - ")
+                val day = monthYearParts[0]
+                val month = monthYearParts[1]
+                val year = monthYearParts[2]
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -838,7 +848,9 @@ class BasicFlightFragment : Fragment() {
                     "Sale Contact" to birdData.saleContact,
                     "Flight Key" to FlightId,
                     "Bird Key" to birdId,
-                    "Sold Id" to soldId
+                    "Sold Id" to soldId,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 val solddata: Map<String, Any?> = hashMapOf(
                     "Bird Id" to birdId

@@ -27,11 +27,7 @@ import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
 import com.example.qraviaryapp.fragments.Expenses.ExpensesChartFragment
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.utils.ColorTemplate
+import com.example.qraviaryapp.fragments.Expenses.PurchaseChartFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -43,7 +39,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class StatisticsFragment : Fragment() {
+class NavPurchasesFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tablayout: TabLayout
     private lateinit var fragmentAdapter: FragmentAdapter
@@ -62,7 +58,7 @@ class StatisticsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_statistics, container, false)
+        val view = inflater.inflate(R.layout.fragment_nav_purchases, container, false)
 
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -94,38 +90,16 @@ class StatisticsFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-//        fragmentAdapter = FragmentAdapter(childFragmentManager)
-//        val expensesFragment = ExpenseFragment()
-//        val chartFragment = ExpensesChartFragment()
-//        viewPager = view.findViewById(R.id.viewPager)
-//        tablayout = view.findViewById(R.id.tablayout)
-//
-//        fragmentAdapter.addFragment(expensesFragment, "EXPENSES")
-//        fragmentAdapter.addFragment(chartFragment, "Sales and Purchases")
-//        viewPager.adapter = fragmentAdapter
-//        tablayout.setupWithViewPager(viewPager)
+        fragmentAdapter = FragmentAdapter(childFragmentManager)
+        val expensesFragment = PurchasesFragment()
+        val chartFragment = PurchaseChartFragment()
+        viewPager = view.findViewById(R.id.viewPager)
+        tablayout = view.findViewById(R.id.tablayout)
 
-
-
-
-        val barChart: BarChart = view.findViewById(R.id.birdsbarChart)
-
-        // Create some sample data for the bar chart
-        val entries = arrayListOf(
-            BarEntry(1f, 10f),
-            BarEntry(2f, 15f),
-            BarEntry(3f, 8f),
-            BarEntry(4f, 20f)
-        )
-
-        val dataSet = BarDataSet(entries, "Sample Data")
-        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-        val barData = BarData(dataSet)
-
-        barChart.data = barData
-        barChart.setFitBars(true)
-        barChart.description.isEnabled = false
-        barChart.animateY(1000)
+        fragmentAdapter.addFragment(expensesFragment, "EXPENSES")
+        fragmentAdapter.addFragment(chartFragment, "CHART")
+        viewPager.adapter = fragmentAdapter
+        tablayout.setupWithViewPager(viewPager)
         return view
     }
     private fun showSnackbar(message: String) {

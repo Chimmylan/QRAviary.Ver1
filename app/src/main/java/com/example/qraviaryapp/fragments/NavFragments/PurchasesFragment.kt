@@ -177,7 +177,7 @@ class PurchasesFragment : Fragment() {
                 val donatedContactValue = itemSnapshot.child("Donated Contact").value
                 val otherCommentsValue = itemSnapshot.child("Comments").value
                 val buyPriceValue = itemSnapshot.child("Buy Price").value
-                val boughtDateValue = itemSnapshot.child("Bought Date").value
+                val boughtDateValue = itemSnapshot.child("Bought On").value
                 val breederContactValue = itemSnapshot.child("Breeder Contact").value
                 val FatherValue = itemSnapshot.child("Parents").child("Father").value
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value

@@ -153,12 +153,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 isMonitoringFragment = false
             }
             R.id.nav_sales -> {
-                fragment = SalesFragment()
+                fragment = NavSalesFragment()
                 title = "Sales"
                 isMonitoringFragment = false
             }
             R.id.nav_purchases -> {
-                fragment = PurchasesFragment()
+                fragment = NavPurchasesFragment()
                 title = "Purchases"
                 isMonitoringFragment = false
             }
@@ -200,7 +200,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
         }
         if (!isMonitoringFragment) {
-            if(title == "Expenses"){
+            if(title == "Expenses" || title == "Purchases" || title == "Sales"){
                 toolbar.elevation = 0f
                 supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
             }else{
