@@ -44,7 +44,17 @@ class AddPairActivity : AppCompatActivity() {
     private lateinit var switchMaterial: SwitchMaterial
 
     private var maleMutation: String? = null
+    private var maleMutation2: String? = null
+    private var maleMutation3: String? = null
+    private var maleMutation4: String? = null
+    private var maleMutation5: String? = null
+    private var maleMutation6: String? = null
     private var femaleMutation: String? = null
+    private var femaleMutation2: String? = null
+    private var femaleMutation3: String? = null
+    private var femaleMutation4: String? = null
+    private var femaleMutation5: String? = null
+    private var femaleMutation6: String? = null
 
     private var beginningFormattedDate: String? = null
     private var btnMaleIdValue: String? = null
@@ -124,6 +134,11 @@ class AddPairActivity : AppCompatActivity() {
             if (!hybridizationCheck) {
                 if (femaleMutation?.isNotEmpty() == true) {
                     i.putExtra("FemaleMutation", femaleMutation)
+                    i.putExtra("FemaleMutation2", femaleMutation2)
+                    i.putExtra("FemaleMutation3", femaleMutation3)
+                    i.putExtra("FemaleMutation4", femaleMutation4)
+                    i.putExtra("FemaleMutation5", femaleMutation5)
+                    i.putExtra("FemaleMutation6", femaleMutation6)
                 } else {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
@@ -140,6 +155,12 @@ class AddPairActivity : AppCompatActivity() {
             if (!hybridizationCheck) {
                 if (maleMutation?.isNotEmpty() == true) {
                     i.putExtra("MaleMutation", maleMutation)
+                    i.putExtra("MaleMutation2", maleMutation2)
+                    i.putExtra("MaleMutation3", maleMutation3)
+                    i.putExtra("MaleMutation4", maleMutation4)
+                    i.putExtra("MaleMutation5", maleMutation5)
+                    i.putExtra("MaleMutation6", maleMutation6)
+
                 } else {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
@@ -222,7 +243,46 @@ class AddPairActivity : AppCompatActivity() {
         val nestValue = etNest.text.toString()
         val commentValue = etComment.text.toString()
 
+        val nonNullMutations = listOf(
+            femaleMutation,
+            femaleMutation2,
+            femaleMutation3,
+            femaleMutation4,
+            femaleMutation5,
+            femaleMutation6
+        ).filter { !it.isNullOrBlank() }
+        val NonNullMutations = mutableListOf<String>()
+        for (mutation in nonNullMutations) {
+            if (mutation != "null") {
+                NonNullMutations.add(mutation.toString())
+            }
+        }
+        val femaleCombinedMutations = if (NonNullMutations.isNotEmpty()) {
+            NonNullMutations.joinToString(" x ")
 
+        } else {
+            "Mutation: None"
+        }
+        val nonNullMutations1 = listOf(
+            maleMutation,
+            maleMutation2,
+            maleMutation3,
+            maleMutation4,
+            maleMutation5,
+            maleMutation6
+        ).filter { !it.isNullOrBlank() }
+        val NonNullMutations1 = mutableListOf<String>()
+        for (mutation in nonNullMutations1) {
+            if (mutation != "null") {
+                NonNullMutations1.add(mutation.toString())
+            }
+        }
+        val maleCombinedMutations = if (NonNullMutations1.isNotEmpty()) {
+            NonNullMutations1.joinToString(" x ")
+
+        } else {
+            "Mutation: None"
+        }
         val bird = PairData(
             pairCage = cageValue,
             nest = nestValue,
@@ -230,8 +290,8 @@ class AddPairActivity : AppCompatActivity() {
             pairDateBeg = beginningFormattedDate,
             pairFemale = btnFemale.text.toString(),
             pairMale = btnMale.text.toString(),
-            pairFemaleGender = femaleMutation,
-            pairMaleGender = maleMutation
+            pairFemaleGender = femaleCombinedMutations,
+            pairMaleGender = maleCombinedMutations
         )
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -463,6 +523,11 @@ class AddPairActivity : AppCompatActivity() {
                 btnMaleIdValue = data?.getStringExtra("MaleBirdId").toString()
                 btnMaleFlightValueKey = data?.getStringExtra("MaleFlightKey").toString()
                 maleMutation = data?.getStringExtra("MaleMutation").toString()
+                maleMutation2 = data?.getStringExtra("MaleMutation2").toString()
+                maleMutation3 = data?.getStringExtra("MaleMutation3").toString()
+                maleMutation4 = data?.getStringExtra("MaleMutation4").toString()
+                maleMutation5 = data?.getStringExtra("MaleMutation5").toString()
+                maleMutation6 = data?.getStringExtra("MaleMutation6").toString()
                 cageKeyFlightMaleValue = data?.getStringExtra("CageKeyMale").toString()
                 CageBirdKeyFather = data?.getStringExtra("CageBirdKeyMale").toString()
                 btnMale.text = btnMaleIdValue
@@ -476,6 +541,11 @@ class AddPairActivity : AppCompatActivity() {
                 btnFemaleIdValue = data?.getStringExtra("FemaleBirdId").toString()
                 btnFemaleFlightValueKey = data?.getStringExtra("FemaleFlightKey").toString()
                 femaleMutation = data?.getStringExtra("FemaleBirdMutation").toString()
+                femaleMutation2 = data?.getStringExtra("FemaleBirdMutation2").toString()
+                femaleMutation3 = data?.getStringExtra("FemaleBirdMutation3").toString()
+                femaleMutation4 = data?.getStringExtra("FemaleBirdMutation4").toString()
+                femaleMutation5 = data?.getStringExtra("FemaleBirdMutation5").toString()
+                femaleMutation6 = data?.getStringExtra("FemaleBirdMutation6").toString()
                 cageKeyFlightFemaleValue = data?.getStringExtra("CageKeyFemale").toString()
                 CageBirdKeyMother = data?.getStringExtra("CageBirdKeyFemale").toString()
                 btnFemale.text = btnFemaleIdValue

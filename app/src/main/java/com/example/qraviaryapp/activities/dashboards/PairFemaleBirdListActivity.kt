@@ -39,7 +39,11 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-
+    private var maleMutation2: String? = null
+    private var maleMutation3: String? = null
+    private var maleMutation4: String? = null
+    private var maleMutation5: String? = null
+    private var maleMutation6: String? = null
     private var maleMutation: String? = null
     private var mainPic: String? = null
 
@@ -71,6 +75,13 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
         val isHybridization = sharedPreferences.getBoolean("isHybridization", false)
 
         maleMutation = intent.getStringExtra("MaleMutation")
+        maleMutation2 = intent.getStringExtra("MaleMutation2")
+        maleMutation3 = intent.getStringExtra("MaleMutation3")
+        maleMutation4 = intent.getStringExtra("MaleMutation4")
+        maleMutation5 = intent.getStringExtra("MaleMutation5")
+        maleMutation6 = intent.getStringExtra("MaleMutation6")
+
+
         Log.d(ContentValues.TAG, "Male Mutation Pair" + maleMutation.toString())
 
 
@@ -97,7 +108,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
     }
 
     suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
-
+        val mutationArray = arrayOf(maleMutation,maleMutation2,maleMutation3,maleMutation4,maleMutation5,maleMutation6)
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Flight Birds")
@@ -122,7 +133,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                 )
 
                 if (maleMutation?.isNotEmpty() == true) {
-                    if (female == "Female" && mutations.contains(maleMutation)) {
+                    if (female == "Female" && mutationArray.all { mutations.contains(it) }) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
                         mainPic = gallery.children.firstOrNull()?.value.toString()

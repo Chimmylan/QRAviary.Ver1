@@ -142,7 +142,12 @@ class PairMaleBirdViewHolder(
 
             val maleBirdKey = dataList[adapterPosition].birdKey
             val maleFlightKey = dataList[adapterPosition].flightKey
-            val maleBirdMutation = dataList[adapterPosition].mutation1
+            val mutation1 = dataList[adapterPosition].mutation1
+            val mutation2 = dataList[adapterPosition].mutation2
+            val mutation3 = dataList[adapterPosition].mutation3
+            val mutation4 = dataList[adapterPosition].mutation4
+            val mutation5 = dataList[adapterPosition].mutation5
+            val mutation6 = dataList[adapterPosition].mutation6
             val maleBird =
                 dataList[adapterPosition].identifier // Retrieve the cage name from the data list
             val cagekey = dataList[adapterPosition].cagekeymalevalue
@@ -153,7 +158,12 @@ class PairMaleBirdViewHolder(
             intent.putExtra("MaleBirdId", maleBird)
             intent.putExtra("MaleBirdKey", maleBirdKey)
             intent.putExtra("MaleFlightKey", maleFlightKey)
-            intent.putExtra("MaleMutation", maleBirdMutation)
+            intent.putExtra("MaleMutation", mutation1)
+            intent.putExtra("MaleMutation2", mutation2)
+            intent.putExtra("MaleMutation3", mutation3)
+            intent.putExtra("MaleMutation4", mutation4)
+            intent.putExtra("MaleMutation5", mutation5)
+            intent.putExtra("MaleMutation6", mutation6)
             intent.putExtra("CageKeyMale",cagekey)
             intent.putExtra("CageBirdKeyMale",cagebirdkey)
             activity.setResult(Activity.RESULT_OK, intent)
