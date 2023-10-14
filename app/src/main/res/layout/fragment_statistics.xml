@@ -96,7 +96,7 @@
                     android:textSize="15sp"
                     android:padding="10dp"
                     android:textColor="@color/black_white"
-                    android:text="Total birds per mutations"/>
+                    android:text="Total birds per mutations and sex"/>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/birdsChart"
@@ -107,6 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:background="@color/white_black"
             android:orientation="vertical">
         <TextView
