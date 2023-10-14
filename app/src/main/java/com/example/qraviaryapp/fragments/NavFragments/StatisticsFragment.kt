@@ -187,7 +187,10 @@ class StatisticsFragment : Fragment() {
             barEntries.add(barEntry)
             labels.add(mutationCombination)
         }
-
+        val legend = barChart.legend
+        legend.form = Legend.LegendForm.CIRCLE
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.isWordWrapEnabled = true
         val dataSet = BarDataSet(barEntries,"")
 
         val labels1 = listOf("Male", "Female", "Unknown")
@@ -204,16 +207,14 @@ class StatisticsFragment : Fragment() {
         barChart.setDrawValueAboveBar(true)
         barChart.setPinchZoom(false)
         barChart.isDoubleTapToZoomEnabled = false
-
+        barChart.animateXY(2000, 2000);
         val yAxisLeft = barChart.axisLeft
         yAxisLeft.isEnabled = true
 
         val yAxisRight = barChart.axisRight
         yAxisRight.isEnabled = true
 
-        val legend = barChart.legend
-        legend.form = Legend.LegendForm.CIRCLE
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+
         val xAxis = barChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelCount = barEntries.size
@@ -295,7 +296,10 @@ class StatisticsFragment : Fragment() {
             barEntries.add(barEntry)
             labels.add(mutationCombination)
         }
-
+        val legend = barChart.legend
+        legend.form = Legend.LegendForm.CIRCLE
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.isWordWrapEnabled = true
         val dataSet = BarDataSet(barEntries,"")
 
         val labels1 = listOf("Available", "For Sale", "Sold", "Deceased", "Exchanged", "Lost", "Donated", "Other", "Paired")
@@ -311,16 +315,14 @@ class StatisticsFragment : Fragment() {
         barChart.setDrawValueAboveBar(true)
         barChart.setPinchZoom(false)
         barChart.isDoubleTapToZoomEnabled = false
-
+        barChart.animateXY(2000, 2000);
         val yAxisLeft = barChart.axisLeft
         yAxisLeft.isEnabled = true
 
         val yAxisRight = barChart.axisRight
         yAxisRight.isEnabled = true
 
-        val legend = barChart.legend
-        legend.form = Legend.LegendForm.CIRCLE
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+
         val xAxis = barChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelCount = barEntries.size
