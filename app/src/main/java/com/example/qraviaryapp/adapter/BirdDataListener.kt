@@ -82,6 +82,11 @@ data class BirdBarChart(
     var gender: String?,
     var status: String?,
 )
+data class PairBarChart(
+    var malemutations: String?,
+    var femalemutations: String?,
+    var status: String?,
+)
 data class CageData(
     var cage: String? = null,
     var cageId: String? = null,
