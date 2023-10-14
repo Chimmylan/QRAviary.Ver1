@@ -28,6 +28,7 @@ data class BirdData(
     var legband: String? = null,
     var identifier: String? = null,
     var gender: String? = null,
+    var mutation: String? = null,
     var mutation1: String? = null,
     var mutation2: String? = null,
     var mutation3: String? = null,
@@ -70,7 +71,16 @@ data class BirdData(
     var cagekeymalevalue: String? = null,
     var cagebirdmalekey: String? = null
 )
-
+data class BirdGenderBarChart(
+    var gender: String?
+)
+data class BirdStatusBarChart(
+    var status: String?
+)
+data class BirdBarChart(
+    var mutations: String?,
+    var gender: String?
+)
 data class CageData(
     var cage: String? = null,
     var cageId: String? = null,

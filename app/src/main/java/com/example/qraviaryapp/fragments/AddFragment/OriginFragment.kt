@@ -357,6 +357,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
@@ -407,6 +409,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 val motherRefdata: Map<String, Any?> = hashMapOf(
@@ -455,6 +459,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 descendantsFatherRef.updateChildren(descendantdata)
@@ -1043,6 +1049,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
@@ -1095,6 +1103,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 val motherRefdata: Map<String, Any?> = hashMapOf(
@@ -1145,6 +1155,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 descendantsFatherRef.updateChildren(descendantdata)

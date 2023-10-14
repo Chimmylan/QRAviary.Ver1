@@ -76,7 +76,7 @@ class ExpensesChartFragment : Fragment() {
         val currentUserId = mAuth.currentUser?.uid
         val databaseReference =
             FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
-        val pieChart = view.findViewById<PieChart>(R.id.pieChart)
+
 
 
 

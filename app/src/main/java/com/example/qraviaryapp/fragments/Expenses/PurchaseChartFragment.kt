@@ -176,7 +176,7 @@ class PurchaseChartFragment : Fragment() {
         }
         lineChart.setScaleEnabled(false)
         lineChart.description.text = "Monthly Expenses"
-        lineDataSet = LineDataSet(entries, "Expenses")
+        lineDataSet = LineDataSet(entries, "Bird Purchases")
         lineData = LineData(lineDataSet)
         lineDataSet.color = resources.getColor(R.color.purple_200)
         lineDataSet!!.valueTextColor = Color.BLUE
