@@ -109,7 +109,14 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
     }
 
     suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
-        val mutationArray = arrayOf(maleMutation,maleMutation2,maleMutation3,maleMutation4,maleMutation5,maleMutation6)
+        val mutationArray = arrayOf(
+            maleMutation,
+            maleMutation2,
+            maleMutation3,
+            maleMutation4,
+            maleMutation5,
+            maleMutation6
+        )
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Flight Birds")
@@ -130,7 +137,8 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                 val mutation5 = itemSnapshot.child("Mutation5")
                 val mutation6 = itemSnapshot.child("Mutation6")
 
-                val hasOnly1Mutation = !mutation2.exists() && !mutation3.exists() && !mutation4.exists() && !mutation5.exists() && !mutation6.exists()
+                val hasOnly1Mutation =
+                    !mutation2.exists() && !mutation3.exists() && !mutation4.exists() && !mutation5.exists() && !mutation6.exists()
 
                 val mutations = arrayOf(
                     itemSnapshot.child("Mutation1").child("Mutation Name").value.toString(),
@@ -141,8 +149,12 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     itemSnapshot.child("Mutation6").child("Mutation Name").value.toString(),
                 )
 
-                if (maleMutation?.isNotEmpty() == true)        
-                    if ( isHybridization == false && female == "Female" && mutations.any { mutationArray.contains(it) && hasOnly1Mutation  } ) {
+                if (maleMutation?.isNotEmpty() == true) {
+                    if (isHybridization == false && female == "Female" && mutations.any {
+                            mutationArray.contains(
+                                it
+                            ) && hasOnly1Mutation
+                        }) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
                         mainPic = gallery.children.firstOrNull()?.value.toString()
@@ -272,7 +284,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         }
                         dataList.add(data)
                     }
-                } else if(isHybridization == false){
+                } else if (isHybridization == false) {
                     if (female == "Female" && hasOnly1Mutation) {
                         Log.d(ContentValues.TAG, "Dont have Same Mutation")
                         val femaleKey = itemSnapshot.key;
@@ -396,7 +408,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                         }
                         dataList.add(data)
                     }
-                }else if (isHybridization == true){
+                } else if (isHybridization == true) {
                     if (female == "Female") {
                         Log.d(ContentValues.TAG, "Dont have Same Mutation")
                         val femaleKey = itemSnapshot.key;
@@ -538,7 +550,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
 
     override fun onClick(nameValue: String, id: String, mutation: String) {
         val intent = Intent()
-        intent.putExtra("FemaleGallery",mainPic )
+        intent.putExtra("FemaleGallery", mainPic)
         intent.putExtra("FemaleBird", nameValue)
         intent.putExtra("FemaleBirdId", id)
         intent.putExtra("FemaleMutation", mutation)
