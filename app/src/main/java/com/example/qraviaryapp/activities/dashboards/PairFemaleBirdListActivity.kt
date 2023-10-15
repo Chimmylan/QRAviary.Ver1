@@ -141,7 +141,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     itemSnapshot.child("Mutation6").child("Mutation Name").value.toString(),
                 )
 
-                if (maleMutation?.isNotEmpty() == true) {
+                if (maleMutation?.isNotEmpty() == true)        
                     if ( isHybridization == false && female == "Female" && mutations.any { mutationArray.contains(it) && hasOnly1Mutation  } ) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
