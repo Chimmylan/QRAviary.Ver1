@@ -133,7 +133,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                 )
 
                 if (maleMutation?.isNotEmpty() == true) {
-                    if (female == "Female" && mutationArray.all { mutations.contains(it) }) {
+                    if (female == "Female" && mutations.any { mutationArray.contains(it) }) {
                         Log.d(ContentValues.TAG, "Same Mutation")
                         val femaleKey = itemSnapshot.key;
                         mainPic = gallery.children.firstOrNull()?.value.toString()

@@ -15,6 +15,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
@@ -39,54 +41,74 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class StatisticsFragment : Fragment() {
-    private lateinit var viewPager: ViewPager
-    private lateinit var tablayout: TabLayout
-    private lateinit var fragmentAdapter: FragmentAdapter
 
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var db: DatabaseReference
-
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
-    lateinit var genderList: ArrayList<BirdGenderBarChart>
-    lateinit var statusList: ArrayList<BirdStatusBarChart>
     lateinit var birdList: ArrayList<BirdBarChart>
     lateinit var birdList1: ArrayList<PairBarChart>
-    private var sexcount: Int = 0
+    private lateinit var switch: SwitchCompat
+    private var isSwitchOn = false
+    private lateinit var rball: RadioButton
+    private lateinit var rbsplit: RadioButton
+    private lateinit var rbnotsplit: RadioButton
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_statistics, container, false)
-
+        switch = view.findViewById(R.id.switchbtn)
+        rball = view.findViewById(R.id.radio_all_birds)
+        rbnotsplit = view.findViewById(R.id.radio_not_split)
+        rbsplit = view.findViewById(R.id.radio_split)
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
-        connectivityManager =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        // Set up NetworkCallback to detect network changes
+
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 if (!isNetworkAvailable) {
-                    // Network was restored from offline, show Snackbar
                     showSnackbar("Your Internet connection was restored")
                 }
                 isNetworkAvailable = true
             }
 
-
             override fun onLost(network: Network) {
                 super.onLost(network)
-                // Network is offline, show Snackbar
                 showSnackbar("You are currently offline")
                 isNetworkAvailable = false
             }
         }
 
-        // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            isSwitchOn = isChecked
+            updateBarChart()
+            if (isSwitchOn) {
+                // Reload the charts with filtered data
+                setupBarChart(view.findViewById(R.id.birdsChart), birdList)
+                setupStatusBarChart(view.findViewById(R.id.birdstatusChart), birdList)
+            } else {
+                // Load the charts with the original data
+                setupBarChart(view.findViewById(R.id.birdsChart), birdList)
 
+                setupStatusBarChart(view.findViewById(R.id.birdstatusChart), birdList)
+            }
+        }
+        rball.isChecked = true
+        rball.setOnClickListener {
+            updateBarChart()
+        }
+
+        rbnotsplit.setOnClickListener {
+            updateBarChart()
+        }
+
+        rbsplit.setOnClickListener {
+            updateBarChart()
+        }
         mAuth = FirebaseAuth.getInstance()
         val currentUserId = mAuth.currentUser?.uid
         val databaseReference =
@@ -98,8 +120,7 @@ class StatisticsFragment : Fragment() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             @SuppressLint("CutPasteId")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                genderList = ArrayList()
-                statusList = ArrayList()
+
                 birdList = ArrayList()
                 for (itemSnapshot in dataSnapshot.children) {
                     val birdsSnapshot = itemSnapshot.child("Birds").value
@@ -135,20 +156,13 @@ class StatisticsFragment : Fragment() {
                             "Mutation: None"
                         }
 
-
                         val sex = gender.toString()
                         val birdstatus = status.toString()
-                        val birdGenderBarChart = BirdGenderBarChart(sex)
-                        val birdStatusBarChart = BirdStatusBarChart(birdstatus)
                         val birdBarChart= BirdBarChart(CombinedMutations,sex,birdstatus)
-                        genderList.add(birdGenderBarChart)
-                        statusList.add(birdStatusBarChart)
                         birdList.add(birdBarChart)
                     }
                 }
 
-                val birdGenderChart = view.findViewById<BarChart>(R.id.birdsgenderChart)
-                setupGenderBarChart(birdGenderChart, genderList)
                 val birdStatusChart = view.findViewById<BarChart>(R.id.birdstatusChart)
                 setupStatusBarChart(birdStatusChart, birdList)
                 val birdChart = view.findViewById<BarChart>(R.id.birdsChart)
@@ -193,7 +207,39 @@ class StatisticsFragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
+
         return view
+    }
+    private fun showSnackbar(message: String) {
+        snackbar.setText(message)
+        snackbar.show()
+    }
+    fun updateBarChart() {
+
+        if (rball.isChecked) {
+            // Show all birds with mutations
+            setupBarChart(requireView().findViewById(R.id.birdsChart), birdList)
+            setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), birdList1)
+        } else if (rbsplit.isChecked) {
+            // Show birds with only one mutation (split)
+            val splitBirdList = birdList.filter { it.mutations?.contains("x") != true }
+            val splitBirdList1 = birdList1.filter { it.malemutations?.contains("x") != true}
+            val splitBirdList2 = birdList1.filter {  it.femalemutations?.contains("x") != true }
+            setupBarChart(requireView().findViewById(R.id.birdsChart), splitBirdList)
+            setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), splitBirdList)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), splitBirdList1)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), splitBirdList2)
+        } else if (rbnotsplit.isChecked) {
+            // Show birds with combined mutations (not split)
+            val notSplitBirdList = birdList.filter { it.mutations?.contains("x") == true }
+            val notSplitBirdList1 = birdList1.filter { it.malemutations?.contains("x") == true}
+            val notSplitBirdList2 = birdList1.filter { it.femalemutations?.contains("x") == true}
+            setupBarChart(requireView().findViewById(R.id.birdsChart), notSplitBirdList)
+            setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), notSplitBirdList)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart),notSplitBirdList1)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart),notSplitBirdList2)
+        }
     }
     private fun setupPairBarChart(barChart: BarChart, birdList1: List<PairBarChart>) {
         val MutationCounts = mutableMapOf<String, MutableMap<String, Int>>()
@@ -328,7 +374,7 @@ class StatisticsFragment : Fragment() {
                 barChart.setDrawValueAboveBar(true)
                 barChart.setPinchZoom(false)
                 barChart.isDoubleTapToZoomEnabled = false
-                barChart.animateXY(2000, 2000);
+                barChart.animateXY(1000, 1000);
                 val yAxisLeft = barChart.axisLeft
                 yAxisLeft.isEnabled = true
 
@@ -367,11 +413,15 @@ class StatisticsFragment : Fragment() {
         }
     }
     private fun setupBarChart(barChart: BarChart, birdList: List<BirdBarChart>) {
-
+        val filteredBirdList = if (isSwitchOn) {
+            birdList.filter { it.status in listOf("Available", "For Sale", "Paired") }
+        } else {
+            birdList
+        }
 
         val combinedMutationCounts = mutableMapOf<String, MutableMap<String, Int>>()
 
-        for (birdBarChart in birdList) {
+        for (birdBarChart in filteredBirdList) {
             val combinedMutations = birdBarChart.mutations ?: "Mutation: None"
             val sex = birdBarChart.gender ?: "Unknown"
 
@@ -420,7 +470,7 @@ class StatisticsFragment : Fragment() {
         barChart.setDrawValueAboveBar(true)
         barChart.setPinchZoom(false)
         barChart.isDoubleTapToZoomEnabled = false
-        barChart.animateXY(2000, 2000);
+        barChart.animateXY(1000, 1000);
         val yAxisLeft = barChart.axisLeft
         yAxisLeft.isEnabled = true
 
@@ -458,12 +508,16 @@ class StatisticsFragment : Fragment() {
             return "M: $maleCount, F: $femaleCount, U: $unknownCount"
         }
     }
-
-
     private fun setupStatusBarChart(barChart: BarChart, birdList: List<BirdBarChart>) {
+        val filteredBirdList = if (isSwitchOn) {
+            birdList.filter { it.status in listOf("Available", "For Sale", "Paired") }
+        } else {
+            birdList
+        }
+
         val combinedMutationCounts = mutableMapOf<String, MutableMap<String, Int>>()
 
-        for (birdBarChart in birdList) {
+        for (birdBarChart in filteredBirdList) {
             val combinedMutations = birdBarChart.mutations ?: "Mutation: None"
             val status = birdBarChart.status ?: "Paired"
 
@@ -528,7 +582,7 @@ class StatisticsFragment : Fragment() {
         barChart.setDrawValueAboveBar(true)
         barChart.setPinchZoom(false)
         barChart.isDoubleTapToZoomEnabled = false
-        barChart.animateXY(2000, 2000);
+        barChart.animateXY(1000, 1000);
         val yAxisLeft = barChart.axisLeft
         yAxisLeft.isEnabled = true
 
@@ -547,8 +601,6 @@ class StatisticsFragment : Fragment() {
 
         barChart.invalidate()
     }
-
-
     class BarValueFormatter1(private val combinedMutationCounts: Map<String, MutableMap<String, Int>>) : ValueFormatter() {
         override fun getBarLabel(barEntry: BarEntry?): String {
             val index = barEntry?.x?.toInt() ?: 0
@@ -568,62 +620,6 @@ class StatisticsFragment : Fragment() {
         }
     }
 
-    private fun setupGenderBarChart(barChart: BarChart, genderList: List<BirdGenderBarChart>) {
-        val barEntries = ArrayList<BarEntry>()
 
-        // Initialize counters for each gender
-        var maleCount = 0
-        var femaleCount = 0
-        var unknownCount = 0
-
-        // Count the occurrences of each gender in the data
-        for (birdData in genderList) {
-            when (birdData.gender) {
-                "Male" -> maleCount++
-                "Female" -> femaleCount++
-                "Unknown" -> unknownCount++
-            }
-        }
-
-        barEntries.add(BarEntry(1f, maleCount.toFloat()))
-        barEntries.add(BarEntry(2f, femaleCount.toFloat()))
-        barEntries.add(BarEntry(3f, unknownCount.toFloat()))
-
-        val dataSet = BarDataSet(barEntries, "Gender Counts")
-        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-
-        val barData = BarData(dataSet)
-
-        barChart.data = barData
-        barChart.setFitBars(true)
-        barChart.description.isEnabled = false
-        barChart.animateY(1000)
-        barChart.invalidate()
-    }
-
-//        val barChart: BarChart = view.findViewById(R.id.birdsbarChart)
-//
-//        // Create some sample data for the bar chart
-//        val entries = arrayListOf(
-//            BarEntry(1f, 10f),
-//            BarEntry(2f, 15f),
-//            BarEntry(3f, 8f),
-//        )
-//
-//        val dataSet = BarDataSet(entries, "Sample Data")
-//        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-//        val barData = BarData(dataSet)
-//
-//        barChart.data = barData
-//        barChart.setFitBars(true)
-//        barChart.description.isEnabled = false
-//        barChart.animateY(1000)
-
-
-
-    private fun showSnackbar(message: String) {
-        snackbar.setText(message)
-        snackbar.show()
-    }
 
 }

@@ -1,166 +1,182 @@
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/bottom_nav_background">
+    android:background="@color/bottom_nav_background"
+    android:fillViewport="true">
 
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:orientation="vertical">
-
-
-
+        android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:paddingRight="20dp"
-            android:background="@color/white_black"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:text="Apply only to birds currently in aviary"
-                android:textSize="15sp"
-                android:textColor="@color/black_white"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"/>
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_weight="5"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:paddingRight="20dp"
-            android:background="@color/white_black"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="All Birds"
-                    android:id="@+id/radio_all_birds"
-                    />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Split"
-                    android:id="@+id/radio_not_split"
-                    />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Not Split"
-                    android:id="@+id/radio_split"
-                    />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="15dp"
-        android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
+                android:layout_marginTop="10dp"
                 android:background="@color/white_black"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="15sp"
-                    android:padding="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Apply only to birds currently in aviary"
                     android:textColor="@color/black_white"
-                    android:text="Total birds per mutations and sex"/>
+                    android:textSize="15sp" />
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/birdsChart"
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchbtn"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center" />
             </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:background="@color/white_black"
-            android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:padding="10dp"
-            android:textColor="@color/black_white"
-            android:text="Total birds per sex"/>
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/birdsgenderChart"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white_black"
-            android:orientation="vertical">
-            <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white_black"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_all_birds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="All Birds" />
+
+                    <RadioButton
+                        android:id="@+id/radio_not_split"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Split" />
+
+                    <RadioButton
+                        android:id="@+id/radio_split"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Not Split" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:padding="10dp"
-                android:textColor="@color/black_white"
-                android:text="Birds per status "/>
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/birdstatusChart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:background="@color/white_black"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="Total birds per mutations and sex"
+                        android:textColor="@color/black_white"
+                        android:textSize="15sp" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/birdsChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white_black"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="Total birds per sex"
+                        android:textColor="@color/black_white"
+                        android:textSize="15sp" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/birdsgenderChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white_black"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="Birds per status "
+                        android:textColor="@color/black_white"
+                        android:textSize="15sp" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/birdstatusChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white_black"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="Egg per status"
+                        android:textColor="@color/black_white"
+                        android:textSize="15sp" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/eggbarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white_black"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:padding="10dp"
-                android:textColor="@color/black_white"
-                android:text="Egg per status"/>
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/eggbarChart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp" />
-        </LinearLayout>
-    </LinearLayout>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
