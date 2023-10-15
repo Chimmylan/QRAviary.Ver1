@@ -103,10 +103,10 @@
                         android:textColor="@color/black_white"
                         android:textSize="15sp" />
 
-                    <com.github.mikephil.charting.charts.BarChart
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
                         android:id="@+id/birdsChart"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp" />
+                        android:layout_height="400dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -128,7 +128,7 @@
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/birdsgenderChart"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp" />
+                        android:layout_height="400dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -147,10 +147,10 @@
                         android:textColor="@color/black_white"
                         android:textSize="15sp" />
 
-                    <com.github.mikephil.charting.charts.BarChart
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
                         android:id="@+id/birdstatusChart"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp" />
+                        android:layout_height="400dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -169,7 +169,7 @@
                         android:textColor="@color/black_white"
                         android:textSize="15sp" />
 
-                    <com.github.mikephil.charting.charts.BarChart
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
                         android:id="@+id/eggbarChart"
                         android:layout_width="match_parent"
                         android:layout_height="400dp" />
