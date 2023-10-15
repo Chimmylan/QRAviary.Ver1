@@ -58,6 +58,7 @@ class StatisticsFragment : Fragment() {
 
     private var allBirds = false
     private var isSplit = false
+    private var notSplit = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,6 +105,7 @@ class StatisticsFragment : Fragment() {
             }
         }
         rball.isChecked = true
+        allBirds = true
         rball.setOnClickListener {
             updateBarChart()
         }
@@ -226,6 +228,7 @@ class StatisticsFragment : Fragment() {
             // Show all birds with mutations
             allBirds = true
             isSplit = false
+            notSplit = false
             Log.d(ContentValues.TAG, allBirds.toString())
             setupBarChart(requireView().findViewById(R.id.birdsChart), birdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
@@ -233,24 +236,25 @@ class StatisticsFragment : Fragment() {
         } else if (rbsplit.isChecked) {
             allBirds = false
             isSplit = true
+            notSplit = false
             Log.d(ContentValues.TAG, isSplit.toString())
             // Show birds with only one mutation (split)
             val splitBirdList = birdList.filter { it.mutations?.contains("x") != true }
-            val splitBirdList1 = birdList1.filter { it.malemutations?.contains("x") != true}
-            val splitBirdList2 = birdList1.filter {  it.femalemutations?.contains("x") != true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), splitBirdList)
-            setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), splitBirdList)
-            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), splitBirdList1)
-            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), splitBirdList2)
+            setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart), birdList1)
+
         } else if (rbnotsplit.isChecked) {
+            allBirds = false
+            isSplit = false
+            notSplit = true
+
             // Show birds with combined mutations (not split)
             val notSplitBirdList = birdList.filter { it.mutations?.contains("x") == true }
-            val notSplitBirdList1 = birdList1.filter { it.malemutations?.contains("x") == true}
-            val notSplitBirdList2 = birdList1.filter { it.femalemutations?.contains("x") == true}
             setupBarChart(requireView().findViewById(R.id.birdsChart), notSplitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), notSplitBirdList)
-            setupPairBarChart(requireView().findViewById(R.id.eggbarChart),notSplitBirdList1)
-            setupPairBarChart(requireView().findViewById(R.id.eggbarChart),notSplitBirdList2)
+            setupPairBarChart(requireView().findViewById(R.id.eggbarChart),birdList1)
+
         }
     }
     private fun setupPairBarChart(barChart: BarChart, birdList1: List<PairBarChart>) {
@@ -319,25 +323,33 @@ class StatisticsFragment : Fragment() {
                             "Laid" to 0
                         )
                     }
-                    val mutationCounts2 = MutationCounts[mutationKey2]!!
+                    var mutationCounts2: MutableMap<String, Int>? = MutationCounts[mutationKey2]
 
                     when (status) {
-                        "Incubating" -> mutationCounts2["Incubating"] =
+                        "Incubating" -> mutationCounts2?.set("Incubating",
                             mutationCounts2["Incubating"]!! + 1
+                        )
 
-                        "Hatched" -> mutationCounts2["Hatched"] = mutationCounts2["Hatched"]!! + 1
-                        "Not Fertilized" -> mutationCounts2["Not Fertilized"] =
+                        "Hatched" -> mutationCounts2?.set("Hatched",
+                            mutationCounts2["Hatched"]!! + 1
+                        )
+                        "Not Fertilized" -> mutationCounts2?.set("Not Fertilized",
                             mutationCounts2["Not Fertilized"]!! + 1
+                        )
 
-                        "Broken" -> mutationCounts2["Broken"] = mutationCounts2["Broken"]!! + 1
-                        "Abandon" -> mutationCounts2["Abandon"] = mutationCounts2["Abandon"]!! + 1
-                        "Dead in Shell" -> mutationCounts2["Dead in Shell"] =
+                        "Broken" -> mutationCounts2?.set("Broken", mutationCounts2["Broken"]!! + 1)
+                        "Abandon" -> mutationCounts2?.set("Abandon",
+                            mutationCounts2["Abandon"]!! + 1
+                        )
+                        "Dead in Shell" -> mutationCounts2?.set("Dead in Shell",
                             mutationCounts2["Dead in Shell"]!! + 1
+                        )
 
-                        "Moved" -> mutationCounts2["Moved"] = mutationCounts2["Moved"]!! + 1
-                        "Laid" -> mutationCounts2["Laid"] = mutationCounts2["Laid"]!! + 1
-                        else -> mutationCounts2["Dead Before Moving To Nursery"] =
+                        "Moved" -> mutationCounts2?.set("Moved", mutationCounts2["Moved"]!! + 1)
+                        "Laid" -> mutationCounts2?.set("Laid", mutationCounts2["Laid"]!! + 1)
+                        else -> mutationCounts2?.set("Dead Before Moving To Nursery",
                             mutationCounts2["Dead Before Moving To Nursery"]!! + 1
+                        )
                     }
                 }
             }else if (isSplit){
@@ -393,25 +405,115 @@ class StatisticsFragment : Fragment() {
                             "Laid" to 0
                         )
                     }
-                    val mutationCounts2 = MutationCounts[mutationKey2]!!
+                    var mutationCounts2: MutableMap<String, Int>? = MutationCounts[mutationKey2]
 
                     when (status) {
-                        "Incubating" -> mutationCounts2["Incubating"] =
+                        "Incubating" -> mutationCounts2?.set("Incubating",
                             mutationCounts2["Incubating"]!! + 1
+                        )
 
-                        "Hatched" -> mutationCounts2["Hatched"] = mutationCounts2["Hatched"]!! + 1
-                        "Not Fertilized" -> mutationCounts2["Not Fertilized"] =
+                        "Hatched" -> mutationCounts2?.set("Hatched",
+                            mutationCounts2["Hatched"]!! + 1
+                        )
+                        "Not Fertilized" -> mutationCounts2?.set("Not Fertilized",
                             mutationCounts2["Not Fertilized"]!! + 1
+                        )
 
-                        "Broken" -> mutationCounts2["Broken"] = mutationCounts2["Broken"]!! + 1
-                        "Abandon" -> mutationCounts2["Abandon"] = mutationCounts2["Abandon"]!! + 1
-                        "Dead in Shell" -> mutationCounts2["Dead in Shell"] =
+                        "Broken" -> mutationCounts2?.set("Broken", mutationCounts2["Broken"]!! + 1)
+                        "Abandon" -> mutationCounts2?.set("Abandon",
+                            mutationCounts2["Abandon"]!! + 1
+                        )
+                        "Dead in Shell" -> mutationCounts2?.set("Dead in Shell",
                             mutationCounts2["Dead in Shell"]!! + 1
+                        )
 
-                        "Moved" -> mutationCounts2["Moved"] = mutationCounts2["Moved"]!! + 1
-                        "Laid" -> mutationCounts2["Laid"] = mutationCounts2["Laid"]!! + 1
-                        else -> mutationCounts2["Dead Before Moving To Nursery"] =
+                        "Moved" -> mutationCounts2?.set("Moved", mutationCounts2["Moved"]!! + 1)
+                        "Laid" -> mutationCounts2?.set("Laid", mutationCounts2["Laid"]!! + 1)
+                        else -> mutationCounts2?.set("Dead Before Moving To Nursery",
                             mutationCounts2["Dead Before Moving To Nursery"]!! + 1
+                        )
+                    }
+                }
+            }else if (notSplit){
+                if (!MutationCounts.containsKey(mutationKey1) && !mutation1.contains("x")) {
+                    MutationCounts[mutationKey1] = mutableMapOf(
+                        "Incubating" to 0,
+                        "Hatched" to 0,
+                        "Not Fertilized" to 0,
+                        "Broken" to 0,
+                        "Abandon" to 0,
+                        "Dead in Shell" to 0,
+                        "Dead Before Moving To Nursery" to 0,
+                        "Moved" to 0,
+                        "Laid" to 0
+                    )
+                }
+                // Use mutationKey1 to access the inner map
+                var mutationCounts: MutableMap<String, Int>? = MutationCounts[mutationKey1]
+
+                when (status) {
+                    "Incubating" -> mutationCounts?.set("Incubating",
+                        mutationCounts["Incubating"]!! + 1
+                    )
+                    "Hatched" -> mutationCounts?.set("Hatched", mutationCounts["Hatched"]!! + 1)
+                    "Not Fertilized" -> mutationCounts?.set("Not Fertilized",
+                        mutationCounts["Not Fertilized"]!! + 1
+                    )
+
+                    "Broken" -> mutationCounts?.set("Broken", mutationCounts["Broken"]!! + 1)
+                    "Abandon" -> mutationCounts?.set("Abandon", mutationCounts["Abandon"]!! + 1)
+                    "Dead in Shell" -> mutationCounts?.set("Dead in Shell",
+                        mutationCounts["Dead in Shell"]!! + 1
+                    )
+
+                    "Moved" -> mutationCounts?.set("Moved", mutationCounts["Moved"]!! + 1)
+                    "Laid" -> mutationCounts?.set("Laid", mutationCounts["Laid"]!! + 1)
+                    else -> mutationCounts?.set("Dead Before Moving To Nursery",
+                        mutationCounts["Dead Before Moving To Nursery"]!! + 1
+                    )
+                }
+                if (mutation1 != mutation2) {
+                    val mutationKey2 = mutation2
+                    if (!MutationCounts.containsKey(mutationKey2)&& !mutation2.contains("x")) {
+                        MutationCounts[mutationKey2] = mutableMapOf(
+                            "Incubating" to 0,
+                            "Hatched" to 0,
+                            "Not Fertilized" to 0,
+                            "Broken" to 0,
+                            "Abandon" to 0,
+                            "Dead in Shell" to 0,
+                            "Dead Before Moving To Nursery" to 0,
+                            "Moved" to 0,
+                            "Laid" to 0
+                        )
+                    }
+                    var mutationCounts2: MutableMap<String, Int>? = MutationCounts[mutationKey2]
+
+                    when (status) {
+                        "Incubating" -> mutationCounts2?.set("Incubating",
+                            mutationCounts2["Incubating"]!! + 1
+                        )
+
+                        "Hatched" -> mutationCounts2?.set("Hatched",
+                            mutationCounts2["Hatched"]!! + 1
+                        )
+                        "Not Fertilized" -> mutationCounts2?.set("Not Fertilized",
+                            mutationCounts2["Not Fertilized"]!! + 1
+                        )
+
+                        "Broken" -> mutationCounts2?.set("Broken", mutationCounts2["Broken"]!! + 1)
+                        "Abandon" -> mutationCounts2?.set("Abandon",
+                            mutationCounts2["Abandon"]!! + 1
+                        )
+                        "Dead in Shell" -> mutationCounts2?.set("Dead in Shell",
+                            mutationCounts2["Dead in Shell"]!! + 1
+                        )
+
+                        "Moved" -> mutationCounts2?.set("Moved", mutationCounts2["Moved"]!! + 1)
+                        "Laid" -> mutationCounts2?.set("Laid", mutationCounts2["Laid"]!! + 1)
+                        else -> mutationCounts2?.set("Dead Before Moving To Nursery",
+                            mutationCounts2["Dead Before Moving To Nursery"]!! + 1
+                        )
                     }
                 }
             }
