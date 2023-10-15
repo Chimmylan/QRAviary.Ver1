@@ -6,7 +6,6 @@ import BirdGenderBarChart
 import BirdStatusBarChart
 import EggData
 import PairBarChart
-import PairData
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -200,81 +199,153 @@ class StatisticsFragment : Fragment() {
         val MutationCounts = mutableMapOf<String, MutableMap<String, Int>>()
 
         for (pairBarChart in birdList1) {
-            val male = pairBarChart.malemutations ?: "Mutation: None"
-            val female = pairBarChart.femalemutations ?: "Mutation: None"
+            val mutation1 = pairBarChart.malemutations ?: "Mutation: None"
+            val mutation2 = pairBarChart.femalemutations ?: "Mutation: None"
             val status = pairBarChart.status ?: "Dead Before Moving To Nursery"
 
-            val mutationKey = if (male == female) male else "$male - $female"
+            val mutationKey1 = mutation1
 
-            if (!MutationCounts.containsKey(mutationKey)) {
-                MutationCounts[mutationKey] = mutableMapOf(
-                    "Incubating" to 0, "Hatched" to 0, "Not Fertilized" to 0,
-                    "Broken" to 0, "Abandon" to 0, "Dead in Shell" to 0, "Dead Before Moving To Nursery" to 0, "Moved" to 0, "Laid" to 0
+            // If the mutation key is not in the outer map, add it
+            if (!MutationCounts.containsKey(mutationKey1)) {
+                MutationCounts[mutationKey1] = mutableMapOf(
+                    "Incubating" to 0,
+                    "Hatched" to 0,
+                    "Not Fertilized" to 0,
+                    "Broken" to 0,
+                    "Abandon" to 0,
+                    "Dead in Shell" to 0,
+                    "Dead Before Moving To Nursery" to 0,
+                    "Moved" to 0,
+                    "Laid" to 0
                 )
             }
 
-            val mutationCounts = MutationCounts[mutationKey]!!
-
+            // Use mutationKey1 to access the inner map
+            val mutationCounts = MutationCounts[mutationKey1]!!
             when (status) {
                 "Incubating" -> mutationCounts["Incubating"] = mutationCounts["Incubating"]!! + 1
                 "Hatched" -> mutationCounts["Hatched"] = mutationCounts["Hatched"]!! + 1
-                "Not Fertilized" -> mutationCounts["Not Fertilized"] = mutationCounts["Not Fertilized"]!! + 1
+                "Not Fertilized" -> mutationCounts["Not Fertilized"] =
+                    mutationCounts["Not Fertilized"]!! + 1
+
                 "Broken" -> mutationCounts["Broken"] = mutationCounts["Broken"]!! + 1
                 "Abandon" -> mutationCounts["Abandon"] = mutationCounts["Abandon"]!! + 1
-                "Dead in Shell" -> mutationCounts["Dead in Shell"] = mutationCounts["Dead in Shell"]!! + 1
+                "Dead in Shell" -> mutationCounts["Dead in Shell"] =
+                    mutationCounts["Dead in Shell"]!! + 1
+
                 "Moved" -> mutationCounts["Moved"] = mutationCounts["Moved"]!! + 1
                 "Laid" -> mutationCounts["Laid"] = mutationCounts["Laid"]!! + 1
-                else -> mutationCounts["Dead Before Moving To Nursery"] = mutationCounts["Dead Before Moving To Nursery"]!! + 1
+                else -> mutationCounts["Dead Before Moving To Nursery"] =
+                    mutationCounts["Dead Before Moving To Nursery"]!! + 1
+            }
+            if (mutation1 != mutation2) {
+                val mutationKey2 = mutation2
+                if (!MutationCounts.containsKey(mutationKey2)) {
+                    MutationCounts[mutationKey2] = mutableMapOf(
+                        "Incubating" to 0,
+                        "Hatched" to 0,
+                        "Not Fertilized" to 0,
+                        "Broken" to 0,
+                        "Abandon" to 0,
+                        "Dead in Shell" to 0,
+                        "Dead Before Moving To Nursery" to 0,
+                        "Moved" to 0,
+                        "Laid" to 0
+                    )
+                }
+                val mutationCounts2 = MutationCounts[mutationKey2]!!
+
+                when (status) {
+                    "Incubating" -> mutationCounts2["Incubating"] =
+                        mutationCounts2["Incubating"]!! + 1
+
+                    "Hatched" -> mutationCounts2["Hatched"] = mutationCounts2["Hatched"]!! + 1
+                    "Not Fertilized" -> mutationCounts2["Not Fertilized"] =
+                        mutationCounts2["Not Fertilized"]!! + 1
+
+                    "Broken" -> mutationCounts2["Broken"] = mutationCounts2["Broken"]!! + 1
+                    "Abandon" -> mutationCounts2["Abandon"] = mutationCounts2["Abandon"]!! + 1
+                    "Dead in Shell" -> mutationCounts2["Dead in Shell"] =
+                        mutationCounts2["Dead in Shell"]!! + 1
+
+                    "Moved" -> mutationCounts2["Moved"] = mutationCounts2["Moved"]!! + 1
+                    "Laid" -> mutationCounts2["Laid"] = mutationCounts2["Laid"]!! + 1
+                    else -> mutationCounts2["Dead Before Moving To Nursery"] =
+                        mutationCounts2["Dead Before Moving To Nursery"]!! + 1
+                }
             }
 
-            val barEntries = mutableListOf<BarEntry>()
-            val labels = mutableListOf<String>()
 
-           MutationCounts.entries.forEachIndexed { index, entry ->
-                val mutationCombination = entry.key
-                val counts = entry.value
-                val barEntry = BarEntry(index.toFloat(), floatArrayOf(counts["Incubating"]!!.toFloat(),
-                    counts["Hatched"]!!.toFloat(), counts["Not Fertilized"]!!.toFloat(), counts["Broken"]!!.toFloat(),
-                    counts["Abandon"]!!.toFloat(), counts["Dead in Shell"]!!.toFloat(),
-                    counts["Moved"]!!.toFloat(), counts["Laid"]!!.toFloat(), counts["Dead Before Moving To Nursery"]!!.toFloat()))
-                barEntries.add(barEntry)
-                labels.add(mutationCombination)
+                val barEntries = mutableListOf<BarEntry>()
+                val labels = mutableListOf<String>()
+
+                MutationCounts.entries.forEachIndexed { index, entry ->
+                    val mutationCombination = entry.key
+                    val counts = entry.value
+                    val barEntry = BarEntry(
+                        index.toFloat(), floatArrayOf(
+                            counts["Incubating"]!!.toFloat(),
+                            counts["Hatched"]!!.toFloat(),
+                            counts["Not Fertilized"]!!.toFloat(),
+                            counts["Broken"]!!.toFloat(),
+                            counts["Abandon"]!!.toFloat(),
+                            counts["Dead in Shell"]!!.toFloat(),
+                            counts["Moved"]!!.toFloat(),
+                            counts["Laid"]!!.toFloat(),
+                            counts["Dead Before Moving To Nursery"]!!.toFloat()
+                        )
+                    )
+                    barEntries.add(barEntry)
+                    labels.add(mutationCombination)
+                }
+
+
+                val legend = barChart.legend
+                legend.form = Legend.LegendForm.CIRCLE
+                legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                legend.isWordWrapEnabled = true
+                val dataSet = BarDataSet(barEntries, "")
+                val labels1 = listOf(
+                    "Incubating", "Hatched", "Not Fertilized", "Broken", "Abandon",
+                    "Dead in Shell", "Moved", "Laid", "Dead Before Moving To Nursery"
+                )
+                dataSet.stackLabels = labels1.toTypedArray()
+                dataSet.colors = listOf(
+                    Color.GREEN,
+                    Color.BLUE,
+                    Color.RED,
+                    Color.BLACK,
+                    Color.CYAN,
+                    Color.MAGENTA,
+                    Color.rgb(255, 182, 193),
+                    Color.YELLOW,
+                    Color.GRAY
+                )
+                val data = BarData(dataSet)
+                barChart.data = data
+                barChart.description.isEnabled = false
+                barChart.setDrawBarShadow(false)
+                barChart.setDrawValueAboveBar(true)
+                barChart.setPinchZoom(false)
+                barChart.isDoubleTapToZoomEnabled = false
+                barChart.animateXY(2000, 2000);
+                val yAxisLeft = barChart.axisLeft
+                yAxisLeft.isEnabled = true
+
+                val yAxisRight = barChart.axisRight
+                yAxisRight.isEnabled = true
+
+
+                val xAxis = barChart.xAxis
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.labelCount = barEntries.size
+
+                xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+
+                data.setValueFormatter(BarValueFormatter2(MutationCounts))
+
+                barChart.invalidate()
             }
-
-            val legend = barChart.legend
-            legend.form = Legend.LegendForm.CIRCLE
-            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            legend.isWordWrapEnabled = true
-            val dataSet = BarDataSet(barEntries,"")
-            val labels1 = listOf("Incubating", "Hatched", "Not Fertilized", "Broken", "Abandon",
-                "Dead in Shell" ,"Moved","Laid", "Dead Before Moving To Nursery")
-            dataSet.stackLabels = labels1.toTypedArray()
-            dataSet.colors = listOf(Color.GREEN,Color.BLUE,Color.RED,Color.BLACK,Color.CYAN,Color.MAGENTA,Color.rgb(255, 182, 193),Color.YELLOW,Color.GRAY)
-            val data = BarData(dataSet)
-            barChart.data = data
-            barChart.description.isEnabled = false
-            barChart.setDrawBarShadow(false)
-            barChart.setDrawValueAboveBar(true)
-            barChart.setPinchZoom(false)
-            barChart.isDoubleTapToZoomEnabled = false
-            barChart.animateXY(2000, 2000);
-            val yAxisLeft = barChart.axisLeft
-            yAxisLeft.isEnabled = true
-
-            val yAxisRight = barChart.axisRight
-            yAxisRight.isEnabled = true
-
-
-            val xAxis = barChart.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.labelCount = barEntries.size
-
-            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
-            data.setValueFormatter(BarValueFormatter2(MutationCounts))
-
-            barChart.invalidate()
-        }
     }
     class BarValueFormatter2(private val combinedMutationCounts: Map<String, MutableMap<String, Int>>) : ValueFormatter() {
         override fun getBarLabel(barEntry: BarEntry?): String {
