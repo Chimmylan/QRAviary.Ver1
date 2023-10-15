@@ -121,8 +121,9 @@ class AddPairActivity : AppCompatActivity() {
         switchMaterial.setOnCheckedChangeListener { buttonView, isChecked ->
 
             hybridizationCheck = isChecked
-
+            Log.d(ContentValues.TAG, "CHECKKI")
             editor.putBoolean("Hybridization", isChecked)
+            editor.commit()
             editor.apply()
         }
         initDatePickers()
@@ -133,6 +134,7 @@ class AddPairActivity : AppCompatActivity() {
             val i = Intent(this, PairMaleBirdListActivity::class.java)
             if (!hybridizationCheck) {
                 if (femaleMutation?.isNotEmpty() == true) {
+                    i.putExtra("Hybridization", hybridizationCheck)
                     i.putExtra("FemaleMutation", femaleMutation)
                     i.putExtra("FemaleMutation2", femaleMutation2)
                     i.putExtra("FemaleMutation3", femaleMutation3)
@@ -143,6 +145,7 @@ class AddPairActivity : AppCompatActivity() {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
             } else {
+                i.putExtra("Hybridization", hybridizationCheck)
                 Log.d(ContentValues.TAG, "Hybridization is On")
             }
 
@@ -154,6 +157,7 @@ class AddPairActivity : AppCompatActivity() {
 
             if (!hybridizationCheck) {
                 if (maleMutation?.isNotEmpty() == true) {
+                    i.putExtra("Hybridization", hybridizationCheck)
                     i.putExtra("MaleMutation", maleMutation)
                     i.putExtra("MaleMutation2", maleMutation2)
                     i.putExtra("MaleMutation3", maleMutation3)
@@ -165,6 +169,8 @@ class AddPairActivity : AppCompatActivity() {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
             } else {
+                i.putExtra("Hybridization", hybridizationCheck)
+
                 Log.d(ContentValues.TAG, "Hybridization is On")
             }
             startActivityForResult(i, requestCode)
