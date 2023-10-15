@@ -67,14 +67,14 @@
                         android:text="All Birds" />
 
                     <RadioButton
-                        android:id="@+id/radio_not_split"
+                        android:id="@+id/radio_split"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Split" />
 
                     <RadioButton
-                        android:id="@+id/radio_split"
+                        android:id="@+id/radio_not_split"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
