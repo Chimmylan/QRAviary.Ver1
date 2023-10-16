@@ -123,7 +123,7 @@ class BalanceFragment : Fragment() {
                         totalExpensesValue += priceValue
                     }
                 }
-                totalExpenses.text = "₱"+decimalFormat.format(totalExpensesValue)
+                totalExpenses.text = "Expenses: ₱"+decimalFormat.format(totalExpensesValue)
                 calculateTotalBalance()
             }
 
@@ -150,7 +150,7 @@ class BalanceFragment : Fragment() {
 
                 }
 
-                totalPurchases.text = "₱"+decimalFormat.format(totalPurchasesValue)
+                totalPurchases.text = "Purchase: ₱"+decimalFormat.format(totalPurchasesValue)
                 calculateTotalBalance()
             }
 
