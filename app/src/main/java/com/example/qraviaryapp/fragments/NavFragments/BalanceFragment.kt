@@ -3,6 +3,9 @@ package com.example.qraviaryapp.fragments.NavFragments
 import BirdData
 import ExpensesData
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,6 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.DecimalFormat
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,6 +54,9 @@ class BalanceFragment : Fragment() {
     var totalPurchasesValue = 0.0
     var totalSpentValue = 0.0
     var totalBalanceValue = 0.0
+    private lateinit var datePickerDialogBeginning: DatePickerDialog
+    private var dateFromFormat: String? = null
+    private var dateToFormat: String? = null
     private val decimalFormat = DecimalFormat("#,###,##0")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +79,9 @@ class BalanceFragment : Fragment() {
         totalReceive = view.findViewById(R.id.receive)
         dateFrom = view.findViewById(R.id.btndatefrom)
         dateTo = view.findViewById(R.id.btndateto)
-
+        initDatePickers()
+        showDatePickerDialog(requireContext(), dateFrom, datePickerDialogBeginning)
+        showDatePickerDialog(requireContext(), dateTo, datePickerDialogBeginning)
         mAuth = FirebaseAuth.getInstance()
         val currentUserId = mAuth.currentUser?.uid
         val PurchasesRef =
@@ -161,12 +170,62 @@ class BalanceFragment : Fragment() {
 
         return view
     }
+
     private fun calculateTotalBalance() {
         totalSpentValue = totalPurchasesValue + totalExpensesValue
         totalSpent.text = "₱"+decimalFormat.format(totalSpentValue)
-
         totalBalanceValue = totalReceiveValue - totalSpentValue
         totalBalance.text = "₱"+decimalFormat.format(totalBalanceValue)
+    }
+    private fun initDatePickers() {
+        val dateSetListenerBeginning =
+            DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+               dateFromFormat = makeDateString(day, month + 1, year)
+                dateFrom.text = dateFromFormat
+                dateToFormat = makeDateString(day, month + 1, year)
+                dateTo.text = dateToFormat
+            }
+
+        val cal = Calendar.getInstance()
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+
+        val style = AlertDialog.THEME_HOLO_LIGHT
+
+        datePickerDialogBeginning =
+            DatePickerDialog(
+                requireContext(), style, dateSetListenerBeginning, year, month, day
+            )
+
+    }
+
+    fun showDatePickerDialog(context: Context, button: Button, datePickerDialog: DatePickerDialog) {
+        button.setOnClickListener {
+            datePickerDialog.show()
+        }
+    }
+
+    private fun makeDateString(day: Int, month: Int, year: Int): String {
+        return getMonthFormat(month) + " " + day + " " + year
+    }
+
+    private fun getMonthFormat(month: Int): String {
+        return when (month) {
+            1 -> "JAN"
+            2 -> "FEB"
+            3 -> "MAR"
+            4 -> "APR"
+            5 -> "MAY"
+            6 -> "JUN"
+            7 -> "JUL"
+            8 -> "AUG"
+            9 -> "SEP"
+            10 -> "OCT"
+            11 -> "NOV"
+            12 -> "DEC"
+            else -> "JAN" // Default should never happen
+        }
     }
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
