@@ -5,9 +5,11 @@ import ExpensesData
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +19,7 @@ import android.widget.TextView
 import com.example.qraviaryapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import java.text.DecimalFormat
 import java.util.Calendar
 
@@ -58,6 +57,9 @@ class BalanceFragment : Fragment() {
     private lateinit var datePickerDialogEnd: DatePickerDialog
     private var dateFromFormat: String? = null
     private var dateToFormat: String? = null
+    private var fromDateSelected: String? = null
+    private var toDateSelected: String? = null
+
     private val decimalFormat = DecimalFormat("#,###,##0")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +78,7 @@ class BalanceFragment : Fragment() {
         totalBalance = view.findViewById(R.id.balance)
         totalSpent = view.findViewById(R.id.spent)
         totalExpenses = view.findViewById(R.id.expense)
-        totalPurchases= view.findViewById(R.id.purchase)
+        totalPurchases = view.findViewById(R.id.purchase)
         totalReceive = view.findViewById(R.id.receive)
         dateFrom = view.findViewById(R.id.btndatefrom)
         dateTo = view.findViewById(R.id.btndateto)
@@ -84,6 +86,16 @@ class BalanceFragment : Fragment() {
         showDatePickerDialog(requireContext(), dateFrom, datePickerDialogBeginning)
         showDatePickerDialog(requireContext(), dateTo, datePickerDialogEnd)
         mAuth = FirebaseAuth.getInstance()
+
+
+        defaultBalance()
+
+
+
+        return view
+    }
+
+    private fun defaultBalance() {
         val currentUserId = mAuth.currentUser?.uid
         val PurchasesRef =
             FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Purchase Items")
@@ -110,7 +122,7 @@ class BalanceFragment : Fragment() {
                     }
 
                 }
-                    totalReceive.text = "₱"+decimalFormat.format(totalReceiveValue)
+                totalReceive.text = "₱" + decimalFormat.format(totalReceiveValue)
                 calculateTotalBalance()
             }
 
@@ -133,7 +145,7 @@ class BalanceFragment : Fragment() {
                         totalExpensesValue += priceValue
                     }
                 }
-                totalExpenses.text = "Expenses: ₱"+decimalFormat.format(totalExpensesValue)
+                totalExpenses.text = "Expenses: ₱" + decimalFormat.format(totalExpensesValue)
                 calculateTotalBalance()
             }
 
@@ -148,7 +160,7 @@ class BalanceFragment : Fragment() {
                 for (itemSnapshot in dataSnapshot.children) {
                     val data = itemSnapshot.getValue(BirdData::class.java)
                     if (data != null) {
-                        val price= itemSnapshot.child("Buy Price").value
+                        val price = itemSnapshot.child("Buy Price").value
                         val date = itemSnapshot.child("Bought On").value.toString()
 
 
@@ -160,7 +172,7 @@ class BalanceFragment : Fragment() {
 
                 }
 
-                totalPurchases.text = "Purchase: ₱"+decimalFormat.format(totalPurchasesValue)
+                totalPurchases.text = "Purchase: ₱" + decimalFormat.format(totalPurchasesValue)
                 calculateTotalBalance()
             }
 
@@ -168,28 +180,139 @@ class BalanceFragment : Fragment() {
             }
         })
 
-
-        return view
     }
+
+    private fun applyDataRangeFilter() {
+        totalBalanceValue = 0.0
+        totalSpentValue = 0.0
+        totalReceiveValue = 0.0
+        totalExpensesValue = 0.0
+        totalPurchasesValue = 0.0
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val currentUserId = mAuth.currentUser?.uid
+        val PurchasesRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Purchase Items")
+        val ExpensesRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
+        val ReceiveRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Sold Items")
+        if (toDateSelected == null) {
+            // If toDateSelected is not specified, set it to the current date or a future date
+            toDateSelected = makeDateString(currentDay, currentMonth + 1, currentYear) // This assumes you have a makeDateString function
+        }
+
+        val recieve = ReceiveRef.orderByChild("Sold Date").startAt(fromDateSelected).endAt(toDateSelected)
+        val purchase = PurchasesRef.orderByChild("Bought On").startAt(fromDateSelected).endAt(toDateSelected)
+        val expenses = ExpensesRef.orderByChild("Beginning").startAt(fromDateSelected).endAt(toDateSelected)
+
+
+        recieve.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(BirdData::class.java)
+                    if (data != null) {
+                        val price = itemSnapshot.child("Sale Price").value
+                        val date = itemSnapshot.child("Sold Date").value.toString()
+
+
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+                        Log.d(TAG, "Recieve: $priceValue")
+                        totalReceiveValue += priceValue
+
+                    }
+
+                }
+                totalReceive.text = "₱" + decimalFormat.format(totalReceiveValue)
+                calculateTotalBalance()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
+        expenses.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(ExpensesData::class.java)
+                    if (data != null) {
+                        val price = itemSnapshot.child("Amount").value
+                        val date = itemSnapshot.child("Beginning").value.toString()
+
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+                        Log.d(TAG, "Expenses: $priceValue")
+                        totalExpensesValue += priceValue
+                    }
+                }
+                totalExpenses.text = "Expenses: ₱" + decimalFormat.format(totalExpensesValue)
+                calculateTotalBalance()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
+        purchase.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(BirdData::class.java)
+                    if (data != null) {
+                        val price = itemSnapshot.child("Buy Price").value
+                        val date = itemSnapshot.child("Bought On").value.toString()
+
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+                        Log.d(TAG, "Purchase: $priceValue")
+                        totalPurchasesValue += priceValue
+                    }
+
+
+                }
+
+                totalPurchases.text = "Purchase: ₱" + decimalFormat.format(totalPurchasesValue)
+                calculateTotalBalance()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+    }
+
 
     private fun calculateTotalBalance() {
         totalSpentValue = totalPurchasesValue + totalExpensesValue
-        totalSpent.text = "₱"+decimalFormat.format(totalSpentValue)
+        totalSpent.text = "₱" + decimalFormat.format(totalSpentValue)
         totalBalanceValue = totalReceiveValue - totalSpentValue
-        totalBalance.text = "₱"+decimalFormat.format(totalBalanceValue)
+        totalBalance.text = "₱" + decimalFormat.format(totalBalanceValue)
     }
+
     private fun initDatePickers() {
         val dateSetListenerBeginning =
             DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-               dateFromFormat = makeDateString(day, month + 1, year)
+                dateFromFormat = makeDateString(day, month + 1, year)
                 dateFrom.text = dateFromFormat
-
+                fromDateSelected = dateFrom.text.toString()
+                applyDataRangeFilter()
             }
 
         val dateSetListenerEnd =
             DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                 dateToFormat = makeDateString(day, month + 1, year)
                 dateTo.text = dateToFormat
+                toDateSelected = dateTo.text.toString()
+                applyDataRangeFilter()
+
             }
 
         val cal = Calendar.getInstance()
@@ -237,6 +360,7 @@ class BalanceFragment : Fragment() {
             else -> "JAN" // Default should never happen
         }
     }
+
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
