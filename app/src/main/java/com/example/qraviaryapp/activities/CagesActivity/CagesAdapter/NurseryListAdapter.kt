@@ -103,10 +103,10 @@ class NurseryListAdapter(
         val datebirth = bird.dateOfBirth
         Log.d(TAG,"$maturingDays")
         val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
-        val birthDate = dateFormat.parse(datebirth)
+        val birthDate = datebirth?.let { dateFormat.parse(it) }
         val currentDate = Calendar.getInstance().time
 
-        val ageInMillis = currentDate.time - birthDate.time
+        val ageInMillis = currentDate.time - birthDate?.time!!
         val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
 
         if (ageInDays >= maturingDays) {
@@ -231,6 +231,7 @@ class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>)
 
         itemView.setOnClickListener {
             val bundle = Bundle()
+            bundle.putString("NurseryKey", dataList[adapterPosition].adultingKey)
             bundle.putString("BirdKey", dataList[adapterPosition].birdKey)
             bundle.putString("FlightKey", dataList[adapterPosition].flightKey)
             bundle.putString("BirdLegband", dataList[adapterPosition].legband)

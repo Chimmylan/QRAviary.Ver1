@@ -104,6 +104,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
+        val nureseryKey = bundle?.getString("NurseryKey")
         FlightKey = bundle?.getString("FlightKey").toString()
         BirdImage = bundle?.getString("BirdImage").toString()
         BirdGender = bundle?.getString("BirdGender").toString()
@@ -147,6 +148,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
         Log.d(TAG, "BIRDKEY NEW $BirdKey")
 
+        newBundle.putString("NurseryKey", nureseryKey)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
         newBundle.putString("FlightKey", FlightKey)
