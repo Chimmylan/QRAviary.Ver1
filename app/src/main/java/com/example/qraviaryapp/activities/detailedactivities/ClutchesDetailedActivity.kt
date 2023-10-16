@@ -93,9 +93,11 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairFemaleID = bundle.getString("PairFemaleID").toString()
             pairMaleID = bundle.get("PairMaleID").toString()
             pairCageBirdFemale = bundle.getString("CageBirdFemale").toString()
-            pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
+            pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+            Log.d(TAG," wew $bundle")
+
 
         }
 
@@ -113,6 +115,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     }
 
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
+
 
         val currenUserId = mAuth.currentUser?.uid
         db = FirebaseDatabase.getInstance().reference.child("Users")

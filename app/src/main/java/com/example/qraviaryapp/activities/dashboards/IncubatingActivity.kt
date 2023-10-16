@@ -64,7 +64,7 @@ class IncubatingActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.RecyclerView)
         recyclerView.layoutManager = gridLayoutManager
 
-        adapter = EggAdapter(this, dataList)
+//        adapter = EggAdapter(this, dataList)
         recyclerView.adapter = adapter
 
         lifecycleScope.launch {

@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
 import EggData
+import PairData
 import android.content.ContentValues
 import android.content.Context
 import android.net.ConnectivityManager
@@ -38,6 +39,8 @@ class IncubatingFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private var femalegallery: String? = null
+    private var malegallery: String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -113,9 +116,44 @@ class IncubatingFragment : Fragment() {
         val snapshot = db.get().await()
 
         for (itemsnapshot in snapshot.children) {
+            val data = itemsnapshot.getValue(EggData::class.java)
+            val newData = itemsnapshot.getValue(PairData::class.java)
+            femalegallery = itemsnapshot.child("Female Gallery").value.toString()
+            malegallery = itemsnapshot.child("Male Gallery").value.toString()
+            val key = itemsnapshot.key.toString()
+            val pairsId = itemsnapshot.child("Pair ID").value.toString()
+            val cageName = itemsnapshot.child("Cage").value.toString()
+            val cageKeyFemale = itemsnapshot.child("CageKeyFemale").value.toString()
+            val cageKeyMale = itemsnapshot.child("CageKeyMale").value.toString()
+            val cageBirdFemale = itemsnapshot.child("CageKeyFlightFemaleValue").value.toString()
+            val cageBirdMale = itemsnapshot.child("CageKeyFlightMaleValue").value.toString()
+            val male = itemsnapshot.child("Male").value.toString()
+            val female = itemsnapshot.child("Female").value.toString()
+            val maleMutation = itemsnapshot.child("Male Mutation").value.toString()
+            val femaleMutation = itemsnapshot.child("Female Mutation").value.toString()
+            val beginningDate = itemsnapshot.child("Beginning").value.toString()
+            val pairMaleKey = itemsnapshot.child("Male Bird Key").value.toString()
+            val pairFemaleKey = itemsnapshot.child("Female Bird Key").value.toString()
+            val separateDate = itemsnapshot.child("Separate Date").value.toString()
+            val pairMaleFlightKey = itemsnapshot.child("Male Flight Key").value.toString()
+            val pairFemaleFlightKey = itemsnapshot.child("Female Flight Key").value.toString()
+
+
+            data?.pairKey = key
+            data?.pairFlightFemaleKey = pairFemaleFlightKey
+            data?.pairFlightMaleKey = pairMaleFlightKey
+            data?.pairBirdMaleKey = pairMaleKey
+            data?.pairBirdFemaleKey = pairFemaleKey
+            data?.pairMaleId = male
+            data?.pairFemaleId = female
+            data?.eggcagebirdFemale = cageBirdFemale
+            data?.eggcagebirdMale = cageBirdMale
+            data?.eggcagekeyMale = cageKeyMale
+            data?.eggcagekeyFemale = cageKeyFemale
+
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
-                val data = clutchSnapshot.getValue(EggData::class.java)
+
                 val key = clutchSnapshot.key.toString()
                 var eggsCount = 0
 
@@ -139,6 +177,7 @@ class IncubatingFragment : Fragment() {
                     }
                 }
             }
+
         }
 
         dataList.sortBy { it.eggIncubationStartDate }
