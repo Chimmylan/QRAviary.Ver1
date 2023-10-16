@@ -14,6 +14,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -75,17 +76,18 @@ class BirdOriginFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var parentlinear: LinearLayout
-    private lateinit var fatherLinearLayout: LinearLayout
-    private lateinit var motherLinearLayout: LinearLayout
+    private lateinit var fatherLinearLayout: CardView
+    private lateinit var motherLinearLayout: CardView
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
-
+    private lateinit var layoutnofound: LinearLayout
 
     private lateinit var ParentRef: DatabaseReference
     private lateinit var cageKey: String
     private var nurseryCageValue: String? = null
-
+    private var nofoundparent = false
+    private var nofoundsiblings = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -121,6 +123,7 @@ class BirdOriginFragment : Fragment() {
         parentlinear = view.findViewById(R.id.ParentLinearLayout)
         fatherLinearLayout = view.findViewById(R.id.fatherLayout)
         motherLinearLayout = view.findViewById(R.id.motherLayout)
+        layoutnofound = view.findViewById(R.id.layouttvnofound)
         mAuth = FirebaseAuth.getInstance()
         dbase = FirebaseDatabase.getInstance().reference
 
@@ -141,6 +144,7 @@ class BirdOriginFragment : Fragment() {
         Log.d(TAG, "From flight: ${fromFlightAdapter}")
         Log.d(TAG, "From Nursery: ${fromNurseryAdapter}")
         Log.d(TAG, "birdCageKey ORIGIN: ${cageKey}")
+
 
         val fatherRef =
             dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Flight Birds")
@@ -529,6 +533,7 @@ class BirdOriginFragment : Fragment() {
                     }
                     if (father == "None" && mother == "None") {
                         parentlinear.visibility = GONE
+                        nofoundparent = true
                         Log.d(TAG, "ELSE!")
                     }
                 }
@@ -580,11 +585,11 @@ class BirdOriginFragment : Fragment() {
             bundle.putString("BirdMutation5", fatherMutation5Value)
             bundle.putString("BirdMutation6", fatherMutation6Value)
 
-            val i = Intent(fatherLinearLayout.context, BirdsDetailedActivity::class.java)
+            val i = Intent(requireContext(), BirdsDetailedActivity::class.java)
 
             i.putExtras(bundle)
 
-            fatherLinearLayout.context.startActivity(i)
+            requireContext().startActivity(i)
         }
         motherLinearLayout.setOnClickListener {
             val bundle = Bundle()
@@ -626,9 +631,11 @@ class BirdOriginFragment : Fragment() {
             bundle.putString("BirdMutation6", motherMutation6Value)
 
 
-            val i = Intent(motherLinearLayout.context, BirdsDetailedActivity::class.java)
+            val i = Intent(requireContext(), BirdsDetailedActivity::class.java)
             i.putExtras(bundle)
-            motherLinearLayout.context.startActivity(i)
+            Log.d(TAG, "Click")
+            requireContext().startActivity(i)
+
         }
 
         lifecycleScope.launch {
@@ -637,6 +644,15 @@ class BirdOriginFragment : Fragment() {
                     dataList.clear()
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
+                    Log.d(TAG,"$nofoundparent+$nofoundsiblings")
+//                    layoutnofound.visibility = VISIBLE
+                    if (nofoundsiblings == true && nofoundparent == true){
+                        layoutnofound.visibility = VISIBLE
+                        Log.d(TAG,"$nofoundparent+$nofoundsiblings")
+                    }
+                    else{
+                        layoutnofound.visibility = GONE
+                    }
                 }
 
             } catch (e: Exception) {
@@ -670,6 +686,8 @@ class BirdOriginFragment : Fragment() {
                     val data = itemSnapshot.getValue(BirdData::class.java)
                     val gallery = itemSnapshot.child("Gallery")
                     if (data != null) {
+
+                        val mainPic = gallery.children.firstOrNull()?.value.toString()
 
                         val siblingBirdKey = itemSnapshot.child("Bird Key").value.toString()
                         val siblingFlightKey = itemSnapshot.child("Flight Key").value.toString()
@@ -741,6 +759,8 @@ class BirdOriginFragment : Fragment() {
                         val siblingsFatherKeyValue = siblingsFatherKey.value.toString()
                         val siblingsMotherKey = parentRef.child("MotherKey")
                         val siblingsMotherKeyValue = siblingsMotherKey.value.toString()
+
+                        data.img = mainPic
                         data.identifier = siblingIdentifier
                         data.flightKey = siblingFlightKey
                         data.birdKey = siblingBirdKey
@@ -831,7 +851,7 @@ class BirdOriginFragment : Fragment() {
                                 tvSiblings.visibility = VISIBLE
                             }
                         } else {
-                            //GONE SIBLING TV
+                               nofoundsiblings = true
                         }
 
 
@@ -848,6 +868,7 @@ class BirdOriginFragment : Fragment() {
             }
         })
     }
+
 
     companion object {
         /**

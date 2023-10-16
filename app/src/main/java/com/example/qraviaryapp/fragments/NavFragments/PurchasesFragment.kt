@@ -128,37 +128,37 @@ class PurchasesFragment : Fragment() {
                 val identifierValue = itemSnapshot.child("Identifier").value
                 val genderValue = itemSnapshot.child("Gender").value
                 val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
-                    itemSnapshot.child("Mutation1").value.toString()
+                    itemSnapshot.child("Mutation1").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val mutation2Value = if (itemSnapshot.hasChild("Mutation2")) {
-                    itemSnapshot.child("Mutation2").value.toString()
+                    itemSnapshot.child("Mutation2").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val mutation3Value = if (itemSnapshot.hasChild("Mutation3")) {
-                    itemSnapshot.child("Mutation3").value.toString()
+                    itemSnapshot.child("Mutation3").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val mutation4Value = if (itemSnapshot.hasChild("Mutation4")) {
-                    itemSnapshot.child("Mutation4").value.toString()
+                    itemSnapshot.child("Mutation4").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val mutation5Value = if (itemSnapshot.hasChild("Mutation5")) {
-                    itemSnapshot.child("Mutation5").value.toString()
+                    itemSnapshot.child("Mutation5").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val mutation6Value = if (itemSnapshot.hasChild("Mutation6")) {
-                    itemSnapshot.child("Mutation6").value.toString()
+                    itemSnapshot.child("Mutation6").child("Mutation Name").value.toString()
                 } else {
                     ""
                 }
                 val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
-                val dateOfBirthValue = itemSnapshot.child("Date Birth").value
+                val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Avail Cage").value
                 val forSaleCageValue = itemSnapshot.child("For Sale Cage").value
@@ -177,7 +177,7 @@ class PurchasesFragment : Fragment() {
                 val donatedContactValue = itemSnapshot.child("Donated Contact").value
                 val otherCommentsValue = itemSnapshot.child("Comments").value
                 val buyPriceValue = itemSnapshot.child("Buy Price").value
-                val boughtDateValue = itemSnapshot.child("Bought Date").value
+                val boughtDateValue = itemSnapshot.child("Bought On").value
                 val breederContactValue = itemSnapshot.child("Breeder Contact").value
                 val FatherValue = itemSnapshot.child("Parents").child("Father").value
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value

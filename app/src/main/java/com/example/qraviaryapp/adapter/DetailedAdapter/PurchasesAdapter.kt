@@ -1,11 +1,8 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,15 +18,15 @@ class PurchasesAdapter(
     private val context: android.content.Context,
     private var dataList: MutableList<BirdData>
 ) :
-    RecyclerView.Adapter<PurchasesViewHolder>() {
+    RecyclerView.Adapter<PairDescendantsViewHolder>() {
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchasesViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PairDescendantsViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
-        return PurchasesViewHolder(view, dataList)
+        return PairDescendantsViewHolder(view, dataList)
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +34,7 @@ class PurchasesAdapter(
     }
 
 
-    override fun onBindViewHolder(holder: PurchasesViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PairDescendantsViewHolder, position: Int) {
         val bird = dataList[position]
 
         if (bird.img.isNullOrEmpty()) {

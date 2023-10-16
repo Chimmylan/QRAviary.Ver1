@@ -4,6 +4,7 @@ import BirdData
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -122,8 +124,8 @@ class OriginFragment : Fragment() {
         return view
     }
 
-    private var birdFatherKey: String? = null
-    private var birdMotherKey: String? = null
+    public var birdFatherKey: String? = null
+    public var birdMotherKey: String? = null
     private var birdBirdsFatherKey: String? = null
     private var birdBirdsMotherKey: String? = null
 
@@ -160,7 +162,7 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle) {
+    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -197,12 +199,12 @@ class OriginFragment : Fragment() {
         val birdLostDate = newBundle.getString("BirdLostDate")
         val birdExchangeDate = newBundle.getString("BirdExchangeDate")
         val birdDonatedDate = newBundle.getString("BirdDonatedDate")
-        val birdMutation1 = newBundle.getString("BirdMutation1")
-        val birdMutation2 = newBundle.getString("BirdMutation2")
-        val birdMutation3 = newBundle.getString("BirdMutation3")
-        val birdMutation4 = newBundle.getString("BirdMutation4")
-        val birdMutation5 = newBundle.getString("BirdMutation5")
-        val birdMutation6 = newBundle.getString("BirdMutation6")
+        val birdMutation1 = newBundle.getSerializable("BirdMutation1")
+        val birdMutation2 = newBundle.getSerializable("BirdMutation2")
+        val birdMutation3 = newBundle.getSerializable("BirdMutation3")
+        val birdMutation4 = newBundle.getSerializable("BirdMutation4")
+        val birdMutation5 = newBundle.getSerializable("BirdMutation5")
+        val birdMutation6 = newBundle.getSerializable("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
         val cageKeyValue = newBundle.getString("CageKeyValue")
@@ -220,6 +222,9 @@ class OriginFragment : Fragment() {
             father = btnFather.text.toString(),
             mother = btnMother.text.toString()
         )
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
 
         val userId = mAuth.currentUser?.uid.toString()
 
@@ -244,14 +249,26 @@ class OriginFragment : Fragment() {
             .child(birdFatherKey.toString()).child("Descendants").push()
         val descendantMotherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
             .child(birdMotherKey.toString()).child("Descendants").push()
-
+        val soldidref = dbase.child("Users").child("ID: $userId").child("Sold Items")
+            .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
 
+        var purchaseId: String? = null
+        val purchaseRef = purchasesRef.child("Parents")
 
+        val descendantsfatherkey = descendantsFatherRef.key
+        val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
+            purchaseId = purchasesRef.key
+            val date = inputDateFormat.parse(dataBoughtDate)
+            val formattedDate = outputDateFormat.format(date)
 
-            if (btnFather.text == "None" && btnMother.text == "None") {
+            val monthYearParts = formattedDate.split(" - ")
+            val day = monthYearParts[0]
+            val month = monthYearParts[1]
+            val year = monthYearParts[2]
+            if (btnFather.text == "None" && btnMother.text == "None" ) {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(
                     "ChildKey" to birdId,
@@ -261,7 +278,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -272,9 +289,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -286,8 +303,10 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
-                descendantsFatherRef.updateChildren(descendantdata)
+//                descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
@@ -298,9 +317,9 @@ class OriginFragment : Fragment() {
                     "Bird Key" to birdId
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
+//                fatherRef.updateChildren(fatherRefdata)
 
 
             } else if (btnFather.text != "None" && btnMother.text == "None") {
@@ -313,7 +332,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -324,9 +343,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -338,6 +357,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
@@ -349,7 +370,7 @@ class OriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
                 Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
@@ -363,7 +384,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -374,9 +395,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -388,6 +409,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 val motherRefdata: Map<String, Any?> = hashMapOf(
@@ -398,7 +421,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!!")
@@ -411,7 +434,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -422,9 +445,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -436,6 +459,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 descendantsFatherRef.updateChildren(descendantdata)
@@ -447,7 +472,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 fatherRef.updateChildren(motherRefdata)
@@ -466,7 +491,10 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(parentdata)
+            }
+            purchaseRef.updateChildren(parentdata)
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
             val data: Map<String, Any?> = hashMapOf(
@@ -491,7 +519,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -505,7 +533,7 @@ class OriginFragment : Fragment() {
                     "Buy Price" to birdBuyPrice,
                     "Bought On" to birdBoughtOn,
                     "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
+                    "Breeder" to birdData.otOtherContact,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
                     "Lost Date" to birdLostDate,
@@ -538,7 +566,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -552,7 +580,7 @@ class OriginFragment : Fragment() {
                     "Buy Price" to birdBuyPrice,
                     "Bought On" to birdBoughtOn,
                     "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
+                    "Breeder" to birdData.otOtherContact,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
                     "Lost Date" to birdLostDate,
@@ -584,7 +612,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -598,7 +626,7 @@ class OriginFragment : Fragment() {
                     "Buy Price" to birdBuyPrice,
                     "Bought On" to birdBoughtOn,
                     "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
+                    "Breeder" to birdData.otOtherContact,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
                     "Lost Date" to birdLostDate,
@@ -636,7 +664,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -661,7 +691,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -708,7 +738,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -754,7 +784,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -807,13 +837,19 @@ class OriginFragment : Fragment() {
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(data)
+            }
 
         }
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
     }
 
 
-    fun addFlightOrigin(birdId: String, FlightId: String, newBundle: Bundle) {
+    fun addFlightOrigin(birdId: String,
+    FlightId: String,
+    newBundle: Bundle,soldId: String,
+    callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String,  purchaseId: String) -> Unit) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -824,6 +860,7 @@ class OriginFragment : Fragment() {
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
+        Log.d(ContentValues.TAG, "BiRDIDDDD " + birdId)
 
 
         dataSelectedProvenence = view?.findViewById(dataProvenence)
@@ -838,6 +875,9 @@ class OriginFragment : Fragment() {
             father = btnFather.text.toString(),
             mother = btnMother.text.toString()
         )
+
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
 
 
 
@@ -866,12 +906,12 @@ class OriginFragment : Fragment() {
         val birdLostDate = newBundle.getString("BirdLostDate")
         val birdExchangeDate = newBundle.getString("BirdExchangeDate")
         val birdDonatedDate = newBundle.getString("BirdDonatedDate")
-        val birdMutation1 = newBundle.getString("BirdMutation1")
-        val birdMutation2 = newBundle.getString("BirdMutation2")
-        val birdMutation3 = newBundle.getString("BirdMutation3")
-        val birdMutation4 = newBundle.getString("BirdMutation4")
-        val birdMutation5 = newBundle.getString("BirdMutation5")
-        val birdMutation6 = newBundle.getString("BirdMutation6")
+        val birdMutation1 = newBundle.getSerializable("BirdMutation1")
+        val birdMutation2 = newBundle.getSerializable("BirdMutation2")
+        val birdMutation3 = newBundle.getSerializable("BirdMutation3")
+        val birdMutation4 = newBundle.getSerializable("BirdMutation4")
+        val birdMutation5 = newBundle.getSerializable("BirdMutation5")
+        val birdMutation6 = newBundle.getSerializable("BirdMutation6")
         val fatherKey = newBundle.getString("BirdFatherKey")
         val motherKey = newBundle.getString("BirdMotherKey")
         val cageKeyValue = newBundle.getString("CageKeyValue")
@@ -903,13 +943,26 @@ class OriginFragment : Fragment() {
             .child(birdFatherKey.toString()).child("Descendants").push()
         val descendantMotherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
             .child(birdMotherKey.toString()).child("Descendants").push()
+        val soldidref = dbase.child("Users").child("ID: $userId").child("Sold Items")
+            .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-
+       var purchaseId: String? = null
+        val purchaseRef = purchasesRef.child("Parents")
+        val descendantsfatherkey = descendantsFatherRef.key
+        val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
+            purchaseId = purchasesRef.key
+            val date = inputDateFormat.parse(dataBoughtDate)
+            val formattedDate = outputDateFormat.format(date)
 
+            val monthYearParts = formattedDate.split(" - ")
+            val day = monthYearParts[0]
+            val month = monthYearParts[1]
+            val year = monthYearParts[2]
             if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
+
                 val descendantdata: Map<String, Any?> = hashMapOf(
                     "Flight Key" to FlightId,
                     "ChildKey" to birdId,
@@ -919,7 +972,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -930,9 +983,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -944,8 +997,10 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
-                descendantsFatherRef.updateChildren(descendantdata)
+//                descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
@@ -955,9 +1010,9 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
+//                fatherRef.updateChildren(fatherRefdata)
             } else if (btnFather.text != "None" && btnMother.text == "None") {
                 // Update descendantsFatherRef
                 val descendantdata: Map<String, Any?> = hashMapOf(
@@ -969,7 +1024,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -980,9 +1035,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -994,6 +1049,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantsFatherRef.updateChildren(descendantdata)
                 val fatherRefdata: Map<String, Any?> = hashMapOf(
@@ -1006,7 +1063,7 @@ class OriginFragment : Fragment() {
                     "Bird Key" to birdId
                 )
 
-                purchasesRef.updateChildren(fatherRefdata)
+                purchaseRef.updateChildren(fatherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(fatherRefdata)
                 Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
@@ -1021,7 +1078,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -1032,9 +1089,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -1046,6 +1103,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 val motherRefdata: Map<String, Any?> = hashMapOf(
@@ -1057,7 +1116,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!!")
@@ -1071,7 +1130,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -1082,9 +1141,9 @@ class OriginFragment : Fragment() {
                     "For Sale Cage" to birdForsaleCage,
                     "Requested Price" to birdRequestedPrice,
                     "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought On" to birdData.boughtDate,
+                    "Bought Breeder" to birdData.breederContact,
                     "Breeder" to birdBreeder,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
@@ -1096,6 +1155,8 @@ class OriginFragment : Fragment() {
                     "Mutation4" to birdMutation4,
                     "Mutation5" to birdMutation5,
                     "Mutation6" to birdMutation6,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 descendantMotherRef.updateChildren(descendantdata)
                 descendantsFatherRef.updateChildren(descendantdata)
@@ -1108,7 +1169,7 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
-                purchasesRef.updateChildren(motherRefdata)
+                purchaseRef.updateChildren(motherRefdata)
                 purchasesRef.updateChildren(descendantdata)
                 fatherRef.updateChildren(motherRefdata)
                 motherRef.updateChildren(motherRefdata)
@@ -1127,6 +1188,10 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(parentdata)
+            }
+            purchaseRef.updateChildren(parentdata)
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1154,7 +1219,7 @@ class OriginFragment : Fragment() {
                         "Donated Contact" to birdDonatedContact,
                         "Gender" to birdGender,
                         "Sale Price" to birdsalePrice,
-                        "Date Birth" to birdDateBirth,
+                        "Date of Birth" to birdDateBirth,
                         "Breeder Contact" to birdBuyer,
                         "Death Reason" to birdDeathReason,
                         "Exchange Reason" to birdExchangeReason,
@@ -1168,7 +1233,7 @@ class OriginFragment : Fragment() {
                         "Buy Price" to birdBuyPrice,
                         "Bought On" to birdBoughtOn,
                         "Bought Breeder" to birdBoughtBreeder,
-                        "Breeder" to birdBreeder,
+                        "Breeder" to birdData.otOtherContact,
                         "Death Date" to birdDeceaseDate,
                         "Sold Date" to birdSoldDate,
                         "Lost Date" to birdLostDate,
@@ -1205,7 +1270,7 @@ class OriginFragment : Fragment() {
                         "Donated Contact" to birdDonatedContact,
                         "Gender" to birdGender,
                         "Sale Price" to birdsalePrice,
-                        "Date Birth" to birdDateBirth,
+                        "Date of Birth" to birdDateBirth,
                         "Breeder Contact" to birdBuyer,
                         "Death Reason" to birdDeathReason,
                         "Exchange Reason" to birdExchangeReason,
@@ -1219,7 +1284,7 @@ class OriginFragment : Fragment() {
                         "Buy Price" to birdBuyPrice,
                         "Bought On" to birdBoughtOn,
                         "Bought Breeder" to birdBoughtBreeder,
-                        "Breeder" to birdBreeder,
+                        "Breeder" to birdData.otOtherContact,
                         "Death Date" to birdDeceaseDate,
                         "Sold Date" to birdSoldDate,
                         "Lost Date" to birdLostDate,
@@ -1254,7 +1319,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -1268,7 +1333,7 @@ class OriginFragment : Fragment() {
                     "Buy Price" to birdBuyPrice,
                     "Bought On" to birdBoughtOn,
                     "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
+                    "Breeder" to birdData.otOtherContact,
                     "Death Date" to birdDeceaseDate,
                     "Sold Date" to birdSoldDate,
                     "Lost Date" to birdLostDate,
@@ -1307,6 +1372,9 @@ class OriginFragment : Fragment() {
             if (!cageKeyValue.isNullOrEmpty()){
                 cageReference.updateChildren(parentdata)
             }
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                soldidref.updateChildren(parentdata)
+            }
             relationshipRef.updateChildren(parentdata)
             nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1332,7 +1400,9 @@ class OriginFragment : Fragment() {
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-
+            if (soldId != "null" && !soldId.isNullOrEmpty()){
+                soldidref.updateChildren(data)
+            }
             if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
             } else if (btnFather.text != "None" && btnMother.text == "None") {
@@ -1346,7 +1416,7 @@ class OriginFragment : Fragment() {
                         "Donated Contact" to birdDonatedContact,
                         "Gender" to birdGender,
                         "Sale Price" to birdsalePrice,
-                        "Date Birth" to birdDateBirth,
+                        "Date of Birth" to birdDateBirth,
                         "Breeder Contact" to birdBuyer,
                         "Death Reason" to birdDeathReason,
                         "Exchange Reason" to birdExchangeReason,
@@ -1397,7 +1467,7 @@ class OriginFragment : Fragment() {
                         "Donated Contact" to birdDonatedContact,
                         "Gender" to birdGender,
                         "Sale Price" to birdsalePrice,
-                        "Date Birth" to birdDateBirth,
+                        "Date of Birth" to birdDateBirth,
                         "Breeder Contact" to birdBuyer,
                         "Death Reason" to birdDeathReason,
                         "Exchange Reason" to birdExchangeReason,
@@ -1446,7 +1516,7 @@ class OriginFragment : Fragment() {
                     "Donated Contact" to birdDonatedContact,
                     "Gender" to birdGender,
                     "Sale Price" to birdsalePrice,
-                    "Date Birth" to birdDateBirth,
+                    "Date of Birth" to birdDateBirth,
                     "Breeder Contact" to birdBuyer,
                     "Death Reason" to birdDeathReason,
                     "Exchange Reason" to birdExchangeReason,
@@ -1483,11 +1553,18 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "Bird Key" to birdId
                 )
+
                 fatherRef.updateChildren(motherRefdata)
                 motherRef.updateChildren(motherRefdata)
                 Log.d(TAG, "MotherRef!! and FatherRef!!")
             }
         }
+
+        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
+    }
+
+    interface OriginFragmentCallback{
+        fun onOriginDatSaved(birdId: String, nurseryId: String, newBundle: Bundle, birdMotherKey: String?, birdFatherKey: String?)
     }
 
     fun radioSelection() {

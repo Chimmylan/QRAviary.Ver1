@@ -13,20 +13,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.ExpensesActivity
-import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
-import com.example.qraviaryapp.activities.dashboards.PairListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddExpensesActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
@@ -41,21 +39,24 @@ class AddExpensesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         setContentView(R.layout.activity_add_expenses)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.new_appbar_color)))
+        supportActionBar?.elevation = 0f
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.toolbarcolor
+                )
+            )
+        )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Expenses</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Check if night mode is enabled
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            // Set the white back button for night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-        } else {
-            // Set the black back button for non-night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
-        }
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
         btnCategory = findViewById(R.id.btnCategory)
         etComment = findViewById(R.id.etcomment)
         btnBeginningDate = findViewById(R.id.btndateband)
@@ -76,7 +77,7 @@ class AddExpensesActivity : AppCompatActivity() {
     }
 
     fun addCategory() {
-        val amountValue = etAmount.text.toString()
+        val amountValue = etAmount.text.toString().toDouble()
         val commentValue = etComment.text.toString()
 
         val expenses = ExpensesData(
@@ -92,18 +93,32 @@ class AddExpensesActivity : AppCompatActivity() {
 
         val newExpenses = userBird.push()
 
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
+        val date = inputDateFormat.parse(beginningFormattedDate)
+        val formattedDate = outputDateFormat.format(date)
+
+        val monthYearParts = formattedDate.split(" - ")
+        val day = monthYearParts[0]
+        val month = monthYearParts[1]
+        val year = monthYearParts[2]
         var validExpenses = false
+
         if (btnCategory.text.isEmpty()) {
             btnCategory.error = "Please select a Category..."
         } else {
             validExpenses = true
         }
+
         if (validExpenses) {
             val data: Map<String, Any?> = hashMapOf (
                 "Amount" to expenses.price,
                 "Beginning" to expenses.expensesDate,
                 "Comment" to expenses.expensesComment,
-                "Category" to btnCategoryValue
+                "Category" to btnCategoryValue,
+                "Date" to month.toFloat(),
+                "Year" to year.toInt() // Add the year to the data map
             )
             newExpenses.updateChildren(data)
         }

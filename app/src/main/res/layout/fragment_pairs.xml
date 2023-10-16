@@ -14,6 +14,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,19 +26,29 @@
             android:id="@+id/tvBirdCount"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:background="#E9E8E8"
+            android:background="@color/totals"
+            android:textColor="@color/black_white"
             android:gravity="center"
             android:text=" "
             android:textSize="16sp" />
         <TextView
             android:id="@+id/tvCurrent"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-           android:padding="5dp"
+            android:layout_height="wrap_content"
             android:gravity="center|left"
             android:text="Current"
             android:visibility="gone"
+            android:layout_margin="10dp"
             android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Add your content here -->
+
+        </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,32 +56,30 @@
             <!-- Add your content here -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </LinearLayout>
-        <TextView
-            android:id="@+id/tvPrevious"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:gravity="center|left"
-            android:text="Previous"
-            android:visibility="gone"
-            android:textSize="16sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- Add your content here -->
+            <TextView
+                android:id="@+id/tvPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:text="Previous"
+                android:visibility="gone"
+                android:layout_margin="10dp"
+                android:textSize="16sp" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView1"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
 
     </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -76,8 +87,9 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/new_appbar_color"
+        app:backgroundTint="@color/fab"
         app:srcCompat="@drawable/ic_add"
+        app:tint="@color/white"
         android:onClick="fab"
         tools:ignore="SpeakableTextPresentCheck" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

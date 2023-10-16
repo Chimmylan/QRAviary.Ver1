@@ -45,18 +45,21 @@ class PairListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PairListAdapter
     private lateinit var fab: FloatingActionButton
+    private var femalegallery: String? = null
+    private var malegallery: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         setContentView(R.layout.activity_pair_list)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.elevation = 0f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
                     this,
-                    R.color.new_appbar_color
+                    R.color.toolbarcolor
                 )
             )
         )
@@ -66,13 +69,7 @@ class PairListActivity : AppCompatActivity() {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            // Set the white back button for night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-        } else {
-            // Set the black back button for non-night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
-        }
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
         mAuth = FirebaseAuth.getInstance()
         recyclerView = findViewById(R.id.recyclerView)
@@ -107,8 +104,11 @@ class PairListActivity : AppCompatActivity() {
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
+
             val data = itemSnapshot.getValue(PairData::class.java)
             if (data != null){
+                femalegallery = itemSnapshot.child("Female Gallery").value.toString()
+                malegallery = itemSnapshot.child("Male Gallery").value.toString()
                 val key = itemSnapshot.key.toString()
 //                val FemaleIdentifier = itemSnapshot.child("FemaleIdentifier").value.toString()
 //                val MaleIdentifier = itemSnapshot.child("MaleIdentifier").value.toString()
@@ -119,7 +119,8 @@ class PairListActivity : AppCompatActivity() {
                 val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
                 val beginningDate = itemSnapshot.child("Beginning").value.toString()
 
-
+                data.pairfemaleimg = femalegallery
+                data.pairmaleimg = malegallery
                 data.pairKey = key
                 data.pairFemale = female
                 data.pairMale = male
@@ -128,7 +129,9 @@ class PairListActivity : AppCompatActivity() {
                 data.pairFemaleMutation = femaleMutation
                 data.pairDateBeg = beginningDate
 
-
+                Log.d(ContentValues.TAG, "femaleimg $femalegallery")
+                Log.d(ContentValues.TAG, "maleimg $malegallery")
+                Log.d(ContentValues.TAG, "key $key")
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {

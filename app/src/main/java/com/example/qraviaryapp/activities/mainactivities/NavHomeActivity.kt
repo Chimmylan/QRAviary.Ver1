@@ -45,7 +45,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         binding = ActivityNavHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,11 +60,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawerLayout = binding.drawerLayout
         val navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
-        ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
+        val toggle = ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
             .apply {
                 drawerLayout.addDrawerListener(this)
                 syncState()
             }
+        toggle.drawerArrowDrawable.color = ContextCompat.getColor(this, R.color.black_white)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, MonitoringFragment()).commit()
@@ -80,7 +81,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()
         val elapsedTime = currentTimeMillis - appStoppedTime
-        val thresholdTime = 5000 // 5 seconds in milliseconds
+        val thresholdTime = 60000 // 5 seconds in milliseconds
 
         if (elapsedTime >= thresholdTime) {
             // Show the splash activity
@@ -111,7 +112,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         val fragment: Fragment
         val title: String
-        var isMonitoringFragment: Boolean
+        val isMonitoringFragment: Boolean
 
         when (item.itemId) {
             R.id.nav_birds -> {
@@ -133,6 +134,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_statistics -> {
                 fragment = StatisticsFragment()
                 title = "Statistics"
+
                 isMonitoringFragment = false
             }
             R.id.nav_mutations -> {
@@ -148,21 +150,23 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_expenses -> {
                 fragment = ExpensesFragment()
                 title = "Expenses"
+
                 isMonitoringFragment = false
             }
             R.id.nav_sales -> {
-                fragment = SalesFragment()
+                fragment = NavSalesFragment()
                 title = "Sales"
                 isMonitoringFragment = false
             }
             R.id.nav_purchases -> {
-                fragment = PurchasesFragment()
+                fragment = NavPurchasesFragment()
                 title = "Purchases"
                 isMonitoringFragment = false
             }
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
                 title = "Balance"
+
                 isMonitoringFragment = false
             }
             R.id.nav_gallery -> {
@@ -173,6 +177,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
                 title = "Incubating"
+
                 isMonitoringFragment = false
             }
             R.id.nav_settings -> {
@@ -197,11 +202,29 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
         }
         if (!isMonitoringFragment) {
+            if(title == "Expenses" || title == "Purchases" || title == "Sales"){
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+            }else{
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.bottom_nav_background)))
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+                }
         } else {
-            toolbar.elevation = 0f // Turn off elevation for MonitoringFragment
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white)))
+            if (title.equals("Balance")){
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white_black)))
+            }
+            else {
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(
+                    ColorDrawable(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.toolbarcolor
+                        )
+                    )
+                )
+            }
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
@@ -228,6 +251,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun showMenuItems() {
         menu.findItem(R.id.ic_filter).isVisible = true
+
         // Add more menu items to show if needed
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

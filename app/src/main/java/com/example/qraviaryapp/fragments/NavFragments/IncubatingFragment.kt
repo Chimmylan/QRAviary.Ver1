@@ -104,7 +104,7 @@ class IncubatingFragment : Fragment() {
         }
     }
 
-    private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
+    suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
@@ -113,54 +113,36 @@ class IncubatingFragment : Fragment() {
         val snapshot = db.get().await()
 
         for (itemsnapshot in snapshot.children) {
-
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
                 val data = clutchSnapshot.getValue(EggData::class.java)
                 val key = clutchSnapshot.key.toString()
-                var incubatingCount = 0
-                var laidCount = 0
                 var eggsCount = 0
+
                 if (data != null) {
                     for (eggSnapshot in clutchSnapshot.children) {
                         val eggData = eggSnapshot.getValue(EggData::class.java)
-
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
                         eggsCount++
+
                         if (eggStatus == "Incubating") {
-
-                            incubatingCount++
-                            Log.d(ContentValues.TAG, incubatingCount.toString())
-
                             data.eggKey = key
                             data.eggCount = eggsCount.toString()
-                            data.eggIncubating = incubatingCount.toString()
+                            data.eggIncubating = eggsCount.toString()
                             data.eggIncubationStartDate = eggDate
                         }
-                        if (eggStatus == "Laid") {
-
-                            laidCount++
-                            Log.d(ContentValues.TAG, laidCount.toString())
-
-                            data.eggKey = key
-                            data.eggCount = eggsCount.toString()
-                            data.eggLaid = laidCount.toString()
-                            data.eggLaidStartDate = eggDate
-
-                        }
-
                     }
-                }
-                if (data != null) {
-                    dataList.add(data)
+                    // Only add data to the list if it has Incubating eggs
+                    if (data.eggIncubating != null) {
+                        dataList.add(data)
+                    }
                 }
             }
         }
 
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
-
     }
 
 

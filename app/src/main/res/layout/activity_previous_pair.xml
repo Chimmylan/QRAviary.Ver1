@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background = "@color/bottom_nav_background">
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#E9E8E8"
+            android:elevation="4dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvfromdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
+                android:text="From {date}"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvmutations"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Mutations"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+        </LinearLayout>
+
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="4dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnmaleid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white_black"
+                android:text="Male ID"
+                android:textColor="@color/black_white"
+                android:textSize="12sp"
+                android:gravity="left|center"
+                app:iconTint="@color/black_white"
+                app:icon="@drawable/male_icon"
+                app:iconGravity="start"
+                app:iconSize="24dp"/>
+
+        </androidx.cardview.widget.CardView>
+        `<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="4dp"
+        android:layout_marginTop="1dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnfemaleid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white_black"
+            android:gravity="left|center"
+            android:text="Female ID"
+            android:textColor="@color/black_white"
+            android:textSize="12sp"
+            app:icon="@drawable/female_icon"
+            app:iconGravity="start"
+            app:iconSize="24dp"
+            app:iconTint="@color/black_white" />
+    </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E9E8E8"
+                android:elevation="4dp"
+                app:tabIndicatorColor="@color/black_white"
+                app:tabSelectedTextColor="@color/black_white"
+                app:tabTextAppearance="@style/TabLayoutTextStyle"
+                app:tabTextColor="@color/black_white"/>
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/viewPager"
+                android:background="@color/white"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

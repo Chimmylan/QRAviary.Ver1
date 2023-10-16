@@ -71,7 +71,7 @@ class BirdsFragment : Fragment() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity?.window?.statusBarColor =
-                ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
+                ContextCompat.getColor(requireContext(), R.color.totalbirds)
         }
 
 

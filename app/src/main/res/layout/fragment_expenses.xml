@@ -13,42 +13,34 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvBirdCount"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="#E9E8E8"
-            android:gravity="center"
-            android:text=" "
-            android:textSize="16sp" />
-
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!-- Add your content here -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:background="@color/toolbarcolor"
+                app:tabIndicatorColor="@color/white"
+                app:tabSelectedTextColor="@color/white"
+                app:tabTextAppearance="@style/TabLayoutTextStyle"
+                app:tabTextColor="@color/appbar_color"/>
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/viewPager"
+                android:background="@color/white"
+                android:layout_weight="1"/>
 
         </LinearLayout>
-    </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/new_appbar_color"
-        app:srcCompat="@drawable/ic_add"
-        android:onClick="fab"
-        tools:ignore="SpeakableTextPresentCheck" />
+    </androidx.core.widget.NestedScrollView>
+
 </FrameLayout>

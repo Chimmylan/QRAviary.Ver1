@@ -38,14 +38,14 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         setContentView(R.layout.activity_male_bird_list)
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
                     this,
-                    R.color.new_appbar_color
+                    R.color.toolbarcolor
                 )
             )
         )
@@ -54,14 +54,7 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
             "<font color='$abcolortitle'>Cages</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        // Check if night mode is enabled
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            // Set the white back button for night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-        } else {
-            // Set the black back button for non-night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
-        }
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
         mAuth = FirebaseAuth.getInstance()
         recyclerView = findViewById(R.id.recyclerView)
@@ -93,42 +86,44 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children){
             val data = itemSnapshot.getValue(BirdData::class.java)
+            val gallery = itemSnapshot.child("Gallery")
             if (data != null){
                 val female = itemSnapshot.child("Gender").value.toString()
                 if (female == "Female"){
 
+                    val mainPic = gallery.children.firstOrNull()?.value.toString()
                     val femaleKey = itemSnapshot.key;
                     val birdKey = itemSnapshot.child("Bird Key").value.toString()
                     val flightKey = itemSnapshot.child("Flight Key").value.toString()
                     val identifierValue = itemSnapshot.child("Identifier").value
                     val genderValue = itemSnapshot.child("Gender").value
                     val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
-                        itemSnapshot.child("Mutation1").value.toString()
+                        itemSnapshot.child("Mutation1").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
                     val mutation2Value = if (itemSnapshot.hasChild("Mutation2")) {
-                        itemSnapshot.child("Mutation2").value.toString()
+                        itemSnapshot.child("Mutation2").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
                     val mutation3Value = if (itemSnapshot.hasChild("Mutation3")) {
-                        itemSnapshot.child("Mutation3").value.toString()
+                        itemSnapshot.child("Mutation3").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
                     val mutation4Value = if (itemSnapshot.hasChild("Mutation4")) {
-                        itemSnapshot.child("Mutation4").value.toString()
+                        itemSnapshot.child("Mutation4").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
                     val mutation5Value = if (itemSnapshot.hasChild("Mutation5")) {
-                        itemSnapshot.child("Mutation5").value.toString()
+                        itemSnapshot.child("Mutation5").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
                     val mutation6Value = if (itemSnapshot.hasChild("Mutation6")) {
-                        itemSnapshot.child("Mutation6").value.toString()
+                        itemSnapshot.child("Mutation6").child("Mutation Name").value.toString()
                     } else {
                         ""
                     }
@@ -174,7 +169,7 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
                     val donatedDate = donatedDateValue.toString() ?: ""
                     val donatedContact = donatedContactValue.toString() ?: ""
                     val otherComments = otherCommentsValue.toString() ?: ""
-
+                    data.img = mainPic
                     data.birdKey = birdKey
                     data.flightKey = flightKey
                     data.identifier = identifier

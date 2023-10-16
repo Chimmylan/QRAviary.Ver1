@@ -2,13 +2,10 @@ package com.example.qraviaryapp.activities.AddActivities
 
 import BirdData
 import BirdDataListener
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,16 +17,12 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.BirdListActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -40,7 +33,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.bottom_nav_background)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
         setContentView(R.layout.activity_add_bird)
 
@@ -50,7 +43,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             ColorDrawable(
                 ContextCompat.getColor(
                     this,
-                    R.color.new_appbar_color
+                    R.color.toolbarcolor
                 )
             )
         )
@@ -59,14 +52,8 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             "<font color='$abcolortitle'>Add Nursery Bird</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        // Check if night mode is enabled
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            // Set the white back button for night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-        } else {
-            // Set the black back button for non-night mode
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_black)
-        }
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
         viewPager = findViewById(R.id.viewPager)
         tablayout = findViewById(R.id.tablayout)
         viewPager.offscreenPageLimit = 3
@@ -127,13 +114,32 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
                 lifecycleScope.launch {
                     try {
-
-                        basicFragment.birdDataGetters { birdId, NurseryId, newBundle ->
-                            galleryFragment.uploadImageToStorage(birdId, NurseryId, newBundle)
-                            originFragment.addOirigin(birdId, NurseryId, newBundle)
+                        var birdId = ""
+                        var newBundle: Bundle = Bundle()
+                        var nurseryId = ""
+                        var soldId = ""
+                        var cagebirdkey = ""
+                        var cagekeyvalue = ""
+                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue->
+                            birdId = receivedbirdId
+                            nurseryId = NurseryId
+                            newBundle = receivednewBundle
+                            soldId = receivesoldId
+                            cagebirdkey = receivecagebirdkey
+                            cagekeyvalue = receivecagekeyvalue
+                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
+                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
+                                galleryFragment.uploadImageToStorage(
+                                    birdId, nurseryId, newBundle,
+                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
+                                    descendantmotherkey, cagebirdkey,cagekeyvalue,  soldId, purchaseId)
+                            }
                             onBackPressed()
                             finish()
+
                         }
+
+
 
                         // Now that the background work is done, switch to the main thread
 

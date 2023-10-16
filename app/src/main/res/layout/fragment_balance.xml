@@ -4,151 +4,211 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bottom_nav_background"
     tools:context=".fragments.NavFragments.BalanceFragment">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="360dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:elevation="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:background="@color/white_black"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/btndatefrom"
+                android:gravity="center"
+                android:weightSum="4">
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_marginStart="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black_white"
+                        android:text="Total Balance"
+
+                        android:textSize="20sp"
+                        android:layout_weight="2"/>
+                <TextView
+                    android:id="@+id/balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_white"
+                    android:text="1000"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:textSize="30sp"
+                    android:layout_weight="2"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+                <Button
+                    android:id="@+id/btndatefrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="From"
-                    android:layout_margin="10dp"
                     android:textSize="15sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_white"
                     style="?android:spinnerStyle"
                     android:onClick="openDatefromPicker"/>
                 <Button
                     android:id="@+id/btndateto"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="To"
-                    android:layout_margin="10dp"
+
                     android:textSize="15sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_white"
                     style="?android:spinnerStyle"
                     android:onClick="openDatetoPicker"/>
+                </LinearLayout>
             </LinearLayout>
+
+
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvexpenses"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/white_black"
+                android:weightSum="2">
+                <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Expenses"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
 
-                <TextView
-                    android:id="@+id/tvtotalexpenses"
+                    app:cardCornerRadius="30dp"
+                    android:backgroundTint="@color/bg1"
+                    android:layout_height="250dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="6"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="0dp"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/uparrow"
+                            app:tint="@color/white_black" />
+
+                        <TextView
+                            android:layout_width="81dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="SPENT"
+                            android:textColor="@color/white_black"
+                            android:textSize="15sp" />
+                        <TextView
+                            android:id="@+id/spent"
+                            android:layout_width="match_parent"
+                            android:layout_weight="2"
+                            android:text="10000"
+                            android:gravity="center"
+                            android:textColor="@color/white_black"
+                            android:fontFamily="sans-serif-black"
+                            android:textSize="25sp"
+                            android:layout_height="0dp"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/expense"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:padding="10dp"
+                                android:text="Expenses:"
+                                android:textColor="@color/white_black"
+                                android:textSize="12sp" />
+                            <TextView
+                                android:id="@+id/purchase"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+
+                                android:padding="10dp"
+                                android:text="Purchases:"
+                                android:textColor="@color/white_black"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Total of Expenses"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
+                    android:padding="5dp"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:weightSum="4"
+                        android:layout_gravity="left"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="0dp"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/down"
+                            app:tint="@color/black_white" />
+
+                        <TextView
+                            android:layout_width="81dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="RECEIVE"
+                            android:textColor="@color/black_white"
+                            android:textSize="15sp" />
+                        <TextView
+                            android:id="@+id/receive"
+                            android:layout_width="match_parent"
+                            android:layout_weight="2"
+                            android:text="10000"
+                            android:gravity="center"
+                            android:textColor="@color/black_white"
+                            android:fontFamily="sans-serif-black"
+                            android:textSize="25sp"
+                            android:layout_height="0dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvbirdpurchases"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Bird Purchases"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
 
-                <TextView
-                    android:id="@+id/tvtotalbirdpurchases"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Total of Bird Purchases"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvbirdsales"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Bird Sales"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
-
-                <TextView
-                    android:id="@+id/tvtotalbirdsales"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Total of Bird Sales"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvtotal"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Total "
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
-
-                <TextView
-                    android:id="@+id/tvtotalamount"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Total Amount"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
-            </LinearLayout>
         </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
 
 </FrameLayout>

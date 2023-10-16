@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.PairMaleBirdListActivity
@@ -39,6 +40,21 @@ class PairMaleBirdListAdapter
     override fun onBindViewHolder(holder: PairMaleBirdViewHolder, position: Int) {
         val bird = dataList[position]
 
+        if (bird.img.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+
+        } else {
+
+            Glide.with(context)
+                .load(bird.img)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+        }
         val maxIdentifierLength = 5 // Define your desired maximum length here
         val identifierText = if (bird.identifier?.length!! > maxIdentifierLength) {
             bird.identifier?.substring(0, maxIdentifierLength) + "..." // Add ellipsis
@@ -111,7 +127,7 @@ class PairMaleBirdViewHolder(
     private val dataList: MutableList<BirdData>,
     private val activity: PairMaleBirdListActivity
 ) : RecyclerView.ViewHolder(itemView) {
-
+    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
@@ -126,16 +142,28 @@ class PairMaleBirdViewHolder(
 
             val maleBirdKey = dataList[adapterPosition].birdKey
             val maleFlightKey = dataList[adapterPosition].flightKey
-            val maleBirdMutation = dataList[adapterPosition].mutation1
+            val mutation1 = dataList[adapterPosition].mutation1
+            val mutation2 = dataList[adapterPosition].mutation2
+            val mutation3 = dataList[adapterPosition].mutation3
+            val mutation4 = dataList[adapterPosition].mutation4
+            val mutation5 = dataList[adapterPosition].mutation5
+            val mutation6 = dataList[adapterPosition].mutation6
             val maleBird =
                 dataList[adapterPosition].identifier // Retrieve the cage name from the data list
             val cagekey = dataList[adapterPosition].cagekeymalevalue
             val cagebirdkey = dataList[adapterPosition].cagebirdmalekey
+            val image = dataList[adapterPosition].img
             val intent = Intent()
+            intent.putExtra("MaleGallery", image)
             intent.putExtra("MaleBirdId", maleBird)
             intent.putExtra("MaleBirdKey", maleBirdKey)
             intent.putExtra("MaleFlightKey", maleFlightKey)
-            intent.putExtra("MaleMutation", maleBirdMutation)
+            intent.putExtra("MaleMutation", mutation1)
+            intent.putExtra("MaleMutation2", mutation2)
+            intent.putExtra("MaleMutation3", mutation3)
+            intent.putExtra("MaleMutation4", mutation4)
+            intent.putExtra("MaleMutation5", mutation5)
+            intent.putExtra("MaleMutation6", mutation6)
             intent.putExtra("CageKeyMale",cagekey)
             intent.putExtra("CageBirdKeyMale",cagebirdkey)
             activity.setResult(Activity.RESULT_OK, intent)

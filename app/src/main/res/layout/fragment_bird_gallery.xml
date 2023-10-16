@@ -7,16 +7,34 @@
         android:orientation="vertical"
     tools:context=".fragments.DetailedFragment.BirdGalleryFragment">
 
-        <FrameLayout
-            android:id="@+id/frame_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
 
-        <LinearLayout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/layouttvnofound"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:text="No Gallery Found"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:fontFamily="sans-serif-black"
+            android:padding="2dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/imgRecyclerView"
@@ -25,7 +43,7 @@
                 android:scrollbarStyle="outsideInset"
                 android:scrollbars="vertical"/>
 
-
+    </LinearLayout>
 
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

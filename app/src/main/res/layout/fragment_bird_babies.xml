@@ -3,24 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bottom_nav_background"
     tools:context=".fragments.DetailedFragment.BirdBabiesFragment">
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/layouttvnofound"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No Descendants Found"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:fontFamily="sans-serif-black"
+            android:padding="2dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
         <LinearLayout
             android:id="@+id/ChildrensLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation ="horizontal"
-            android:weightSum="1">
+            android:orientation ="horizontal">
             <TextView
                 android:id="@+id/tvChildren"
                 android:visibility="gone"
                 android:padding="10dp"
                 android:layout_width="0dp"
+                android:textColor="@color/white_black"
+                android:background="@color/totals"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text = "Childrens" />
@@ -30,6 +53,8 @@
                 android:layout_width="0dp"
                 android:gravity="right"
                 android:layout_weight="1"
+                android:textColor="@color/white_black"
+                android:background="@color/totals"
                 android:layout_height="wrap_content"
                 android:text = "0" />
 
@@ -41,6 +66,6 @@
             android:scrollbarStyle="outsideInset"
             android:scrollbars="vertical"
             android:nestedScrollingEnabled ="false"/>
-
+    </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

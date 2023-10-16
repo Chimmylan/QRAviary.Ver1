@@ -2,14 +2,18 @@ package com.example.qraviaryapp.adapter
 
 import BirdData
 import PairData
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 import org.w3c.dom.Text
@@ -26,6 +30,41 @@ class PairListAdapter(
 
     override fun onBindViewHolder(holder: PairBirdViewHolder, position: Int) {
         val pairs = dataList[position]
+        val femaleimg = pairs.pairfemaleimg
+        val maleimg = pairs.pairmaleimg
+
+        holder.pairId.text = "${pairs.pairId}"
+
+        if (femaleimg.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.femaleimageview)
+
+        } else {
+            Glide.with(context)
+                .load(femaleimg)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.femaleimageview)
+        }
+        if (maleimg.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.maleimageview)
+
+        } else {
+            Glide.with(context)
+                .load(maleimg)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.maleimageview)
+        }
+        Log.d(TAG, "female $femaleimg")
+        Log.d(TAG, "male $maleimg")
         holder.dateId.text = pairs.pairDateBeg
         holder.femaleBird.text = pairs.pairFemale
         holder.femaleMutation.text = pairs.pairFemaleMutation
@@ -41,6 +80,9 @@ class PairListAdapter(
 
 class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairData>) :
     RecyclerView.ViewHolder(itemView) {
+    var pairId: TextView = itemView.findViewById(R.id.tvidpairs)
+    var maleimageview: ImageView = itemView.findViewById(R.id.maleImageView)
+    var femaleimageview: ImageView = itemView.findViewById(R.id.femaleImageView)
     var maleBird: TextView = itemView.findViewById(R.id.tvmaleid)
     var femaleBird: TextView = itemView.findViewById(R.id.tvfemaleid)
     var maleMutation: TextView = itemView.findViewById(R.id.tvMaleMutation)
@@ -50,7 +92,9 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-
+            bundle.putString("PairFemaleImg", dataList[adapterPosition].pairfemaleimg)
+            bundle.putString("PairMaleImg", dataList[adapterPosition].pairmaleimg)
+            bundle.putString("PairId", dataList[adapterPosition].pairId)
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
             bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)

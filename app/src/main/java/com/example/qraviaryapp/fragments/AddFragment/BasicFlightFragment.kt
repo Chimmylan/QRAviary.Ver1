@@ -56,6 +56,13 @@ class BasicFlightFragment : Fragment() {
     private lateinit var datepickerDialogLostDate: DatePickerDialog
     private lateinit var datepickerDialogDonatedDate: DatePickerDialog
 
+    //
+
+    val originFragment: OriginFragment = OriginFragment()
+
+    var motherKey: String? = null
+    var fatherKey: String? = null
+
     /*ImageView*/
     private lateinit var imageView: ImageView
 
@@ -181,7 +188,9 @@ class BasicFlightFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnLostDate, datepickerDialogLostDate)
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
 
+        //
 
+        //
 
         editTextContainer = view.findViewById(R.id.editTextContainer)
         availableLayout = view.findViewById(R.id.availableLayout)
@@ -510,7 +519,7 @@ class BasicFlightFragment : Fragment() {
         }
     }
 
-    fun birdDataGetters(callback: (birdId: String, NurseryId: String, newBundle: Bundle) -> Unit) {
+    fun birdDataGetters(callback: (birdId: String, NurseryId: String, newBundle: Bundle,soldId: String, cagebirdkey: String, cagekeyvalue: String) -> Unit) {
 
        /* val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
@@ -589,6 +598,9 @@ class BasicFlightFragment : Fragment() {
             donatedContact = dataDonatedContact,
             otherComments = dataOtherComments
         )
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
 
         var validInputs = false
         var validIdentifier = false
@@ -663,7 +675,7 @@ class BasicFlightFragment : Fragment() {
         val newBirdPref = userBird.push()
         val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
         val SoldBirdRef = SoldRef.push()
-        val soldId = SoldBirdRef.key
+        var soldId: String? = null
 
         val parentRef = newBirdPref.child("Parents")
         val newNurseryPref = NurseryBird.push()
@@ -671,12 +683,39 @@ class BasicFlightFragment : Fragment() {
         val birdId = newBirdPref.key
         val FlightId = newNurseryPref.key
         val args = Bundle()
-        args.putString("birdId", birdId)
-        args.putString("nurseryId", FlightId)
-        args.putString("SoldId", soldId)
+
         val originFragment = OriginFragment()
         originFragment.arguments = args
-
+        val mutation1 = hashMapOf(
+            "Mutation Name" to birdData.mutation1,
+            "Maturing Days" to mutation1MaturingDays,
+            "Incubating Days" to mutation1IncubatingDays
+        )
+        val mutation2 = hashMapOf(
+            "Mutation Name" to birdData.mutation2,
+            "Maturing Days" to mutation2MaturingDays,
+            "Incubating Days" to mutation2IncubatingDays
+        )
+        val mutation3 = hashMapOf(
+            "Mutation Name" to birdData.mutation3,
+            "Maturing Days" to mutation3MaturingDays,
+            "Incubating Days" to mutation3IncubatingDays
+        )
+        val mutation4 = hashMapOf(
+            "Mutation Name" to birdData.mutation4,
+            "Maturing Days" to mutation4MaturingDays,
+            "Incubating Days" to mutation4IncubatingDays
+        )
+        val mutation5 = hashMapOf(
+            "Mutation Name" to birdData.mutation5,
+            "Maturing Days" to mutation5MaturingDays,
+            "Incubating Days" to mutation5IncubatingDays
+        )
+        val mutation6 = hashMapOf(
+            "Mutation Name" to birdData.mutation6,
+            "Maturing Days" to mutation6MaturingDays,
+            "Incubating Days" to mutation6IncubatingDays
+        )
         val newBundle = Bundle()
 
         newBundle.putString("BirdIdentifier", birdData.identifier)
@@ -705,12 +744,12 @@ class BasicFlightFragment : Fragment() {
         newBundle.putString("BirdExchangeDate", birdData.exDate)
         newBundle.putString("BirdDonatedDate", birdData.donatedDate)
         newBundle.putString("BirdDonatedContact", birdData.donatedContact)
-        newBundle.putString("BirdMutation1", birdData.mutation1)
-        newBundle.putString("BirdMutation2", birdData.mutation2)
-        newBundle.putString("BirdMutation3", birdData.mutation3)
-        newBundle.putString("BirdMutation4", birdData.mutation4)
-        newBundle.putString("BirdMutation5", birdData.mutation5)
-        newBundle.putString("BirdMutation6", birdData.mutation6)
+        newBundle.putSerializable("BirdMutation1", mutation1)
+        newBundle.putSerializable("BirdMutation2", mutation2)
+        newBundle.putSerializable("BirdMutation3", mutation3)
+        newBundle.putSerializable("BirdMutation4", mutation4)
+        newBundle.putSerializable("BirdMutation5", mutation5)
+        newBundle.putSerializable("BirdMutation6", mutation6)
         newBundle.putString("BirdFather", birdData.father)
         newBundle.putString("BirdFatherKey", birdData.fatherKey)
         newBundle.putString("BirdMother", birdData.mother)
@@ -720,36 +759,7 @@ class BasicFlightFragment : Fragment() {
 
         Log.d(TAG, userId)
 
-        val mutation1 = mapOf(
-            "Mutation Name" to birdData.mutation1,
-            "Maturing Days" to mutation1MaturingDays,
-            "Incubating Days" to mutation1IncubatingDays
-        )
-        val mutation2 = mapOf(
-            "Mutation Name" to birdData.mutation2,
-            "Maturing Days" to mutation2MaturingDays,
-            "Incubating Days" to mutation2IncubatingDays
-        )
-        val mutation3 = mapOf(
-            "Mutation Name" to birdData.mutation3,
-            "Maturing Days" to mutation3MaturingDays,
-            "Incubating Days" to mutation3IncubatingDays
-        )
-        val mutation4 = mapOf(
-            "Mutation Name" to birdData.mutation4,
-            "Maturing Days" to mutation4MaturingDays,
-            "Incubating Days" to mutation4IncubatingDays
-        )
-        val mutation5 = mapOf(
-            "Mutation Name" to birdData.mutation5,
-            "Maturing Days" to mutation5MaturingDays,
-            "Incubating Days" to mutation5IncubatingDays
-        )
-        val mutation6 = mapOf(
-            "Mutation Name" to birdData.mutation6,
-            "Maturing Days" to mutation6MaturingDays,
-            "Incubating Days" to mutation6IncubatingDays
-        )
+
 
 
         if (validInputs) {
@@ -812,6 +822,14 @@ class BasicFlightFragment : Fragment() {
                 newNurseryPref.updateChildren(data)
 
             } else if (soldLayout.visibility == View.VISIBLE) {
+                soldId = SoldBirdRef.key
+                val date = inputDateFormat.parse(dataSoldSaleDate)
+                val formattedDate = outputDateFormat.format(date)
+
+                val monthYearParts = formattedDate.split(" - ")
+                val day = monthYearParts[0]
+                val month = monthYearParts[1]
+                val year = monthYearParts[2]
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -830,7 +848,9 @@ class BasicFlightFragment : Fragment() {
                     "Sale Contact" to birdData.saleContact,
                     "Flight Key" to FlightId,
                     "Bird Key" to birdId,
-                    "Sold Id" to soldId
+                    "Sold Id" to soldId,
+                    "Month" to month.toFloat(),
+                    "Year" to year.toFloat()
                 )
                 val solddata: Map<String, Any?> = hashMapOf(
                     "Bird Id" to birdId
@@ -952,13 +972,18 @@ class BasicFlightFragment : Fragment() {
             }
             if (birdId != null) {
                 if (FlightId != null) {
-                    callback(birdId, FlightId, newBundle)
+                    callback(birdId, FlightId, newBundle, soldId.toString(), cageBirdKey, cageKeyValue.toString())
+                    Log.d(TAG, "cagekeyflight $cageKeyValue")
                 }
             }
             Log.d(TAG, birdData.toString())
         } else {
             Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
         }
+
+        args.putString("birdId", birdId)
+        args.putString("nurseryId", FlightId)
+        args.putString("SoldId", soldId)
     }
 
 

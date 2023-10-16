@@ -81,10 +81,10 @@ class AddGalleryFragment : Fragment() {
         db = FirebaseDatabase.getInstance().reference
 
         val recyclerView: RecyclerView = view.findViewById(R.id.imgRecyclerView)
-        val gridLayoutManager =GridLayoutManager(requireContext(),2)
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.layoutManager = gridLayoutManager
         imageList = ArrayList()
-        imageAdapter = ImageGalleryAdapter(requireContext(),imageList)
+        imageAdapter = ImageGalleryAdapter(requireContext(), imageList)
         recyclerView.adapter = imageAdapter
         val fabCamera = view.findViewById<FloatingActionButton>(R.id.fabCamera)
 
@@ -115,7 +115,10 @@ class AddGalleryFragment : Fragment() {
                         1 -> {
                             // Choose from gallery
                             val galleryIntent =
-                                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                                Intent(
+                                    Intent.ACTION_PICK,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                )
                             startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE)
                         }
                     }
@@ -133,11 +136,11 @@ class AddGalleryFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == CAMERA_REQUEST_CODE){
-            if (grantResults.isNotEmpty() && grantResults[0] ==PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
@@ -169,6 +172,7 @@ class AddGalleryFragment : Fragment() {
             }
         }
     }
+
     private fun getImageUri(imageBitmap: Bitmap): Uri {
         val tempUri = requireContext().contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -183,13 +187,39 @@ class AddGalleryFragment : Fragment() {
         outputStream?.close()
         return tempUri!!
     }
-    fun uploadImageToStorage(birdId: String, NurseryId: String, newBundle: Bundle) {
+
+    fun uploadImageToStorage(
+        birdId: String,
+        NurseryId: String,
+        newBundle: Bundle,
+        motherKey: String,
+        fatherKey: String,
+        descendantfatherkey: String,
+        descendantmotherkey: String,
+        cagebirdkey: String,
+        cagekeyvalue: String,
+        soldId: String,
+        purchaseId: String
+    ) {
         storageRef = FirebaseStorage.getInstance().reference
         val currentUser = mAuth.currentUser?.uid
         val birdRef = db.child("Users").child("ID: $currentUser")
             .child("Birds").child(birdId).child("Gallery")
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Nursery Birds").child(NurseryId).child("Gallery")
+        val descendantsfather = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey)
+            .child("Gallery")
+        val descendantsmother = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey)
+            .child("Gallery")
+        val soldRef = db.child("Users").child("ID: $currentUser")
+            .child("Sold Items").child(soldId).child("Gallery")
+        val purchaseRef = db.child("Users").child("ID: $currentUser")
+            .child("Purchase Items").child(purchaseId).child("Gallery")
+        val cageRef = db.child("Users").child("ID: $currentUser").child("Cages")
+            .child("Nursery Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey)
+            .child("Gallery")
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 for (imageUri in imageList) {
@@ -197,8 +227,8 @@ class AddGalleryFragment : Fragment() {
                     val uploadTask = imageRef.putFile(imageUri)
                     val imgIdKey = birdRef.push()
                     val imgId = imgIdKey.key
-                    uploadTask.addOnSuccessListener {uploadTask ->
-                        if (uploadTask.bytesTransferred == uploadTask.totalByteCount){
+                    uploadTask.addOnSuccessListener { uploadTask ->
+                        if (uploadTask.bytesTransferred == uploadTask.totalByteCount) {
                             imageRef.downloadUrl.addOnSuccessListener { uri ->
                                 val imageUrl = uri.toString()
 
@@ -207,6 +237,22 @@ class AddGalleryFragment : Fragment() {
                                 )
                                 birdRef.setValue(data)
                                 nurseryRef.updateChildren(data)
+
+                                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                                    soldRef.updateChildren(data)
+                                }
+                                if (purchaseId != "null" && !purchaseId.isNullOrEmpty()) {
+                                    purchaseRef.updateChildren(data)
+                                }
+                                if (cagekeyvalue != "null" && !cagekeyvalue.isNullOrEmpty()) {
+                                    cageRef.updateChildren(data)
+                                }
+                                if (fatherKey != "null" && !fatherKey.isNullOrEmpty()) {
+                                    descendantsfather.updateChildren(data)
+                                }
+                                if (motherKey != "null" && !motherKey.isNullOrEmpty()) {
+                                    descendantsmother.updateChildren(data)
+                                }
                             }
                         }
 
@@ -218,28 +264,73 @@ class AddGalleryFragment : Fragment() {
         }
 
     }
-    fun FlightuploadImageToStorage(birdId: String, FlightId: String, newBundle: Bundle) {
+
+    fun FlightuploadImageToStorage(
+        birdId: String,
+        FlightId: String,
+        newBundle: Bundle,
+        motherKey: String,
+        fatherKey: String,
+        descendantfatherkey: String,
+        descendantmotherkey: String,
+        cagebirdkey: String,
+        cagekeyvalue: String,
+        soldId: String,
+        purchaseId: String
+    ) {
+
+        Log.d(ContentValues.TAG, "wwweeewww $soldId $purchaseId")
         storageRef = FirebaseStorage.getInstance().reference
         val currentUser = mAuth.currentUser?.uid
         val birdRef = db.child("Users").child("ID: $currentUser")
             .child("Birds").child(birdId).child("Gallery")
         val nurseryRef = db.child("Users").child("ID: $currentUser")
             .child("Flight Birds").child(FlightId).child("Gallery")
-        for (imageUri in imageList){
+        val soldRef = db.child("Users").child("ID: $currentUser")
+            .child("Sold Items").child(soldId).child("Gallery")
+        val descendantsfather = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(fatherKey).child("Descendants").child(descendantfatherkey)
+            .child("Gallery")
+        val descendantsmother = db.child("Users").child("ID: $currentUser")
+            .child("Flight Birds").child(motherKey).child("Descendants").child(descendantmotherkey)
+            .child("Gallery")
+        val purchaseRef = db.child("Users").child("ID: $currentUser")
+            .child("Purchase Items").child(purchaseId).child("Gallery")
+        val cageRef = db.child("Users").child("ID: $currentUser").child("Cages")
+            .child("Flight Cages").child(cagekeyvalue).child("Birds").child(cagebirdkey)
+            .child("Gallery")
+        for (imageUri in imageList) {
             val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
             val uploadTask = imageRef.putFile(imageUri)
             val imgIdKey = birdRef.push()
             val imgId = imgIdKey.key
             uploadTask.addOnSuccessListener {
+
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
+
 
                     val data: Map<String, Any?> = hashMapOf(
                         imgId.toString() to imageUrl
                     )
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
-
+                    Log.d(TAG, "cagekeyflightgallery $cagekeyvalue")
+                    if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                        soldRef.updateChildren(data)
+                    }
+                    if (purchaseId != "null" && !purchaseId.isNullOrEmpty()) {
+                        purchaseRef.updateChildren(data)
+                    }
+                    if (cagekeyvalue != "null" && !cagekeyvalue.isNullOrEmpty()) {
+                        cageRef.updateChildren(data)
+                    }
+                    if (fatherKey != "null" && !fatherKey.isNullOrEmpty()) {
+                        descendantsfather.updateChildren(data)
+                    }
+                    if (motherKey != "null" && !motherKey.isNullOrEmpty()) {
+                        descendantsmother.updateChildren(data)
+                    }
                 }
 
             }.addOnFailureListener {
@@ -248,7 +339,6 @@ class AddGalleryFragment : Fragment() {
         }
 
     }
-
 
 
     companion object {

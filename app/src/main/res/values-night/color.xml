@@ -14,7 +14,15 @@
     <color name="appbar">#FFFFFFFF</color>
     <color name="new_appbar_color">#333333</color>
     <color name="white_black">#272727</color>
-    <color name="black_white">#C4C1C1</color>
-    <color name="totalbirds">#535151</color>
-    <color name="filter">#6E6D6D</color>
+    <color name="black_white">#FFFFFF</color>
+    <color name="bg">#27005D</color>
+    <color name="bg1">#BEADFA</color>
+    <color name="toolbarcolor">#27005D</color>
+    <color name="totals">#9D76C1</color>
+    <color name="statusbar">#27005D</color>
+    <color name="fab">#27005D</color>
+    <color name="totalbirds">#D8D9DA</color>
+    <color name="filter">#DCD9D9</color>
+
+    <color name="colorDarkSemiTransparent">#C6000000</color>
 </resources>

@@ -22,9 +22,10 @@
             android:id="@+id/tvBirdCount"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:background="#E9E8E8"
+            android:background="@color/totals"
             android:gravity="center"
             android:text=" "
+            android:textColor="@color/black_white"
             android:textSize="16sp" />
         <TextView
             android:id="@+id/tvCurrent"

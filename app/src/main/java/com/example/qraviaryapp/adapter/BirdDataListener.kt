@@ -28,6 +28,7 @@ data class BirdData(
     var legband: String? = null,
     var identifier: String? = null,
     var gender: String? = null,
+    var mutation: String? = null,
     var mutation1: String? = null,
     var mutation2: String? = null,
     var mutation3: String? = null,
@@ -70,7 +71,22 @@ data class BirdData(
     var cagekeymalevalue: String? = null,
     var cagebirdmalekey: String? = null
 )
-
+data class BirdGenderBarChart(
+    var gender: String?
+)
+data class BirdStatusBarChart(
+    var status: String?
+)
+data class BirdBarChart(
+    var mutations: String?,
+    var gender: String?,
+    var status: String?,
+)
+data class PairBarChart(
+    var malemutations: String?,
+    var femalemutations: String?,
+    var status: String?,
+)
 data class CageData(
     var cage: String? = null,
     var cageId: String? = null,
@@ -90,17 +106,23 @@ data class MutationData(
     var mutationsMaturingDays: String? = null
 
 )
+data class DateTotalExpense(var date: String, var price: Double, var month: Double, var year: Double)
 
+data class MonthYearEntry(val monthYearValue: Float, val amount: Float)
 data class ExpensesData(
     var expenses: String? = null,
-    var price: String? = null,
+    var price: Double? =null,
+    var date: Double? = null,
     var expensesId: String? = null,
     var expensesCount: String? = null,
     var expensesComment: String? = null,
-    var expensesDate: String? = null
+    var expensesDate: String? = null,
+
 )
 
 data class PairData(
+    var pairfemaleimg: String? = null,
+    var pairmaleimg: String? = null,
     var pairKey: String? = null,
     var pairId: String? = null,
     var nest: String? = null,

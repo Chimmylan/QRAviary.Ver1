@@ -24,8 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".activities.detailedactivities.PreviousClutchesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.PreviousPairActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.detailedactivities.MoveEggActivity"
             android:exported="false" />
