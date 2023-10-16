@@ -14,7 +14,7 @@
     <color name="appbar">#FFFFFFFF</color>
     <color name="new_appbar_color">#333333</color>
     <color name="white_black">#272727</color>
-    <color name="black_white">#C4C1C1</color>
+    <color name="black_white">#FFFFFF</color>
     <color name="bg">#27005D</color>
     <color name="bg1">#BEADFA</color>
     <color name="toolbarcolor">#27005D</color>

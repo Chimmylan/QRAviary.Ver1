@@ -14,6 +14,9 @@
         <item name="android:statusBarColor">@color/bottom_nav_background</item>
 
     </style>
+    <style name="CategoryTitleStyle">
+        <item name="android:textColor">@color/purple_700</item> <!-- Change the color to your desired color -->
+    </style>
 
     <style name="MenuItemTextStyle">
         <item name="android:textColor">@color/white</item>
