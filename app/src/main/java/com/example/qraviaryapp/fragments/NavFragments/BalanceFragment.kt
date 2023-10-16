@@ -55,6 +55,7 @@ class BalanceFragment : Fragment() {
     var totalSpentValue = 0.0
     var totalBalanceValue = 0.0
     private lateinit var datePickerDialogBeginning: DatePickerDialog
+    private lateinit var datePickerDialogEnd: DatePickerDialog
     private var dateFromFormat: String? = null
     private var dateToFormat: String? = null
     private val decimalFormat = DecimalFormat("#,###,##0")
@@ -81,7 +82,7 @@ class BalanceFragment : Fragment() {
         dateTo = view.findViewById(R.id.btndateto)
         initDatePickers()
         showDatePickerDialog(requireContext(), dateFrom, datePickerDialogBeginning)
-        showDatePickerDialog(requireContext(), dateTo, datePickerDialogBeginning)
+        showDatePickerDialog(requireContext(), dateTo, datePickerDialogEnd)
         mAuth = FirebaseAuth.getInstance()
         val currentUserId = mAuth.currentUser?.uid
         val PurchasesRef =
@@ -182,6 +183,11 @@ class BalanceFragment : Fragment() {
             DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                dateFromFormat = makeDateString(day, month + 1, year)
                 dateFrom.text = dateFromFormat
+
+            }
+
+        val dateSetListenerEnd =
+            DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                 dateToFormat = makeDateString(day, month + 1, year)
                 dateTo.text = dateToFormat
             }
@@ -196,6 +202,10 @@ class BalanceFragment : Fragment() {
         datePickerDialogBeginning =
             DatePickerDialog(
                 requireContext(), style, dateSetListenerBeginning, year, month, day
+            )
+        datePickerDialogEnd =
+            DatePickerDialog(
+                requireContext(), style, dateSetListenerEnd, year, month, day
             )
 
     }
