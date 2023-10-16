@@ -228,7 +228,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
-                title == "Categories") {
+                title == "Categories"||title == "Settings") {
             hideMenuItems()
         } else {
             showMenuItems()
