@@ -111,9 +111,9 @@ class NurseryListActivity : AppCompatActivity() {
 
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
 
-
+                val adultingKey = itemSnapshot.key
                 val nurserykey = itemSnapshot.child("Nursery Key").value.toString()
-                val birdKey = itemSnapshot.key
+                val birdKey = itemSnapshot.child("Bird Key").value
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
                 val genderValue = itemSnapshot.child("Gender").value
@@ -203,10 +203,11 @@ class NurseryListActivity : AppCompatActivity() {
                 val father = FatherValue.toString() ?: ""
                 birdCount = snapshot.childrenCount.toInt()
 
+                data.adultingKey = adultingKey
                 data.cageKey = CageKey
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
-                data.birdKey = birdKey
+                data.birdKey = birdKey.toString()
                 data.nurseryKey = nurserykey
                 data.legband = legband
                 data.identifier = identifier

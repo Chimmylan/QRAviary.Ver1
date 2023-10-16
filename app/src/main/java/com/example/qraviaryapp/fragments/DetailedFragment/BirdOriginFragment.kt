@@ -137,6 +137,7 @@ class BirdOriginFragment : Fragment() {
         fromFlightAdapter = arguments?.getBoolean("fromFlightListAdapter") == true
         fromNurseryAdapter = arguments?.getBoolean("fromNurseryListAdapter") == true
         birdKey = arguments?.getString("BirdKey")
+        val nurseryKey = arguments?.getString("NurseryKey")
 
         Log.d(TAG, "FatherKey ORIGIN: ${birdFatherKey.toString()}")
         Log.d(TAG, "MotherKey ORIGIN: ${birdMotherKey.toString()}")
@@ -157,7 +158,7 @@ class BirdOriginFragment : Fragment() {
         }else if(fromNurseryAdapter){
             ParentRef =
                 dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Cages").child("Nursery Cages")
-                    .child(cageKey).child("Birds").child(birdKey.toString()).child("Parents")
+                    .child(cageKey).child("Birds").child(nurseryKey.toString()).child("Parents")
         }
         else {
             ParentRef = dbase.child("Users").child("ID: ${currenUserId.toString()}").child("Birds")
