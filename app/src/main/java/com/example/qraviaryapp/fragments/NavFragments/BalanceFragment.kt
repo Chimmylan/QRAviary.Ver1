@@ -1,15 +1,24 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
-import android.content.Context
+import BirdData
+import ExpensesData
+import android.annotation.SuppressLint
 import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import com.example.qraviaryapp.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.text.DecimalFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,6 +37,20 @@ class BalanceFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var totalBalance: TextView
+    private lateinit var totalSpent: TextView
+    private lateinit var totalReceive: TextView
+    private lateinit var totalExpenses: TextView
+    private lateinit var totalPurchases: TextView
+    private lateinit var dateFrom: Button
+    private lateinit var dateTo: Button
+    var totalExpensesValue = 0.0
+    var totalReceiveValue = 0.0
+    var totalPurchasesValue = 0.0
+    var totalSpentValue = 0.0
+    var totalBalanceValue = 0.0
+    private val decimalFormat = DecimalFormat("#,###,##0")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -41,43 +64,114 @@ class BalanceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_balance, container, false)
+        val view = inflater.inflate(R.layout.fragment_balance, container, false)
+        totalBalance = view.findViewById(R.id.balance)
+        totalSpent = view.findViewById(R.id.spent)
+        totalExpenses = view.findViewById(R.id.expense)
+        totalPurchases= view.findViewById(R.id.purchase)
+        totalReceive = view.findViewById(R.id.receive)
+        dateFrom = view.findViewById(R.id.btndatefrom)
+        dateTo = view.findViewById(R.id.btndateto)
 
+        mAuth = FirebaseAuth.getInstance()
+        val currentUserId = mAuth.currentUser?.uid
+        val PurchasesRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Purchase Items")
+        val ExpensesRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
+        val ReceiveRef =
+            FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Sold Items")
 
-      /*  snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
-        connectivityManager =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        ReceiveRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-        // Set up NetworkCallback to detect network changes
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
-                if (!isNetworkAvailable) {
-                    // Network was restored from offline, show Snackbar
-                    showSnackbar("Your Internet connection was restored")
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(BirdData::class.java)
+                    if (data != null) {
+                        val price = itemSnapshot.child("Sale Price").value
+                        val date = itemSnapshot.child("Sold Date").value.toString()
+
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+
+                        totalReceiveValue += priceValue
+
+                    }
+
                 }
-                isNetworkAvailable = true
+                    totalReceive.text = "₱"+decimalFormat.format(totalReceiveValue)
+                calculateTotalBalance()
             }
 
-            override fun onLost(network: Network) {
-                super.onLost(network)
-                // Network is offline, show Snackbar
-                showSnackbar("You are currently offline")
-                isNetworkAvailable = false
+            override fun onCancelled(databaseError: DatabaseError) {
             }
-        }
+        })
 
-        // Register the NetworkCallback
-        connectivityManager.registerDefaultNetworkCallback(networkCallback)
-*/
+        ExpensesRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(ExpensesData::class.java)
+                    if (data != null) {
+                        val price = itemSnapshot.child("Amount").value
+                        val date = itemSnapshot.child("Beginning").value.toString()
+
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+                        totalExpensesValue += priceValue
+                    }
+                }
+                totalExpenses.text = "₱"+decimalFormat.format(totalExpensesValue)
+                calculateTotalBalance()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
+        PurchasesRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("CutPasteId")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (itemSnapshot in dataSnapshot.children) {
+                    val data = itemSnapshot.getValue(BirdData::class.java)
+                    if (data != null) {
+                        val price= itemSnapshot.child("Buy Price").value
+                        val date = itemSnapshot.child("Bought On").value.toString()
 
 
-        return rootView
+                        val dateValue = date.toString()
+                        val priceValue = price.toString().toDouble()
+                        totalPurchasesValue += priceValue
+                    }
+
+
+                }
+
+                totalPurchases.text = "₱"+decimalFormat.format(totalPurchasesValue)
+                calculateTotalBalance()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
+
+        return view
     }
-  /*  private fun showSnackbar(message: String) {
+    private fun calculateTotalBalance() {
+        totalSpentValue = totalPurchasesValue + totalExpensesValue
+        totalSpent.text = "₱"+decimalFormat.format(totalSpentValue)
+
+        totalBalanceValue = totalReceiveValue - totalSpentValue
+        totalBalance.text = "₱"+decimalFormat.format(totalBalanceValue)
+    }
+    private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
-    }*/
+    }
 
     companion object {
         /**

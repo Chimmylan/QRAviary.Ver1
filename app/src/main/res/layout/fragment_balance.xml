@@ -41,13 +41,14 @@
                         android:textSize="20sp"
                         android:layout_weight="2"/>
                 <TextView
+                    android:id="@+id/balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_white"
                     android:text="1000"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
                     android:layout_weight="2"/>
                 </LinearLayout>
                 <Button
@@ -120,13 +121,14 @@
                             android:textColor="@color/white_black"
                             android:textSize="15sp" />
                         <TextView
+                            android:id="@+id/spent"
                             android:layout_width="match_parent"
                             android:layout_weight="2"
                             android:text="10000"
                             android:gravity="center"
                             android:textColor="@color/white_black"
                             android:fontFamily="sans-serif-black"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:layout_height="0dp"/>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -134,14 +136,16 @@
                             android:layout_weight="2"
                             android:orientation="vertical">
                             <TextView
+                                android:id="@+id/expense"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:padding="10dp"
                                 android:text="Expenses:"
                                 android:textColor="@color/white_black"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
                             <TextView
+                                android:id="@+id/purchase"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
@@ -149,7 +153,7 @@
                                 android:padding="10dp"
                                 android:text="Purchases:"
                                 android:textColor="@color/white_black"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -184,13 +188,14 @@
                             android:textColor="@color/black_white"
                             android:textSize="15sp" />
                         <TextView
+                            android:id="@+id/receive"
                             android:layout_width="match_parent"
                             android:layout_weight="2"
                             android:text="10000"
                             android:gravity="center"
                             android:textColor="@color/black_white"
                             android:fontFamily="sans-serif-black"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:layout_height="0dp"/>
                     </LinearLayout>
 
