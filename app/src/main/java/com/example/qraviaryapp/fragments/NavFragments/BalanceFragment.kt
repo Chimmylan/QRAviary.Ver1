@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.DecimalFormat
 import java.util.Calendar
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +60,9 @@ class BalanceFragment : Fragment() {
     private var dateFromFormat: String? = null
     private var dateToFormat: String? = null
     private val decimalFormat = DecimalFormat("#,###,##0")
+    private var dateExpensesValue: String? = null
+    private var datePurchasesValue: String? = null
+    private var dateReceiveValue: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -83,6 +87,8 @@ class BalanceFragment : Fragment() {
         initDatePickers()
         showDatePickerDialog(requireContext(), dateFrom, datePickerDialogBeginning)
         showDatePickerDialog(requireContext(), dateTo, datePickerDialogEnd)
+
+
         mAuth = FirebaseAuth.getInstance()
         val currentUserId = mAuth.currentUser?.uid
         val PurchasesRef =
@@ -104,7 +110,7 @@ class BalanceFragment : Fragment() {
 
                         val dateValue = date.toString()
                         val priceValue = price.toString().toDouble()
-
+                        dateReceiveValue = dateValue
                         totalReceiveValue += priceValue
 
                     }
@@ -130,7 +136,10 @@ class BalanceFragment : Fragment() {
 
                         val dateValue = date.toString()
                         val priceValue = price.toString().toDouble()
+                        dateExpensesValue = dateValue
                         totalExpensesValue += priceValue
+
+
                     }
                 }
                 totalExpenses.text = "Expenses: ₱"+decimalFormat.format(totalExpensesValue)
@@ -154,6 +163,7 @@ class BalanceFragment : Fragment() {
 
                         val dateValue = date.toString()
                         val priceValue = price.toString().toDouble()
+                        datePurchasesValue = dateValue
                         totalPurchasesValue += priceValue
                     }
 
@@ -178,6 +188,75 @@ class BalanceFragment : Fragment() {
         totalBalanceValue = totalReceiveValue - totalSpentValue
         totalBalance.text = "₱"+decimalFormat.format(totalBalanceValue)
     }
+    private fun calculateTotalPriceValues(startDate: String, endDate: String) {
+        totalExpensesValue = 0.0
+        totalPurchasesValue = 0.0
+        totalReceiveValue = 0.0
+
+        val currentUserId = mAuth.currentUser?.uid
+        val expensesRef = FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Expenses")
+        val purchasesRef = FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Purchase Items")
+        val receiveRef = FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Sold Items")
+
+        // Calculate total expenses within the date range
+        expensesRef.orderByChild("Beginning")
+            .startAt(startDate)
+            .endAt(endDate)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (itemSnapshot in dataSnapshot.children) {
+                        val price = itemSnapshot.child("Amount").value.toString().toDouble()
+                        totalExpensesValue += price
+                    }
+                    totalExpenses.text = "Expenses: ₱" + decimalFormat.format(totalExpensesValue)
+                    calculateTotalBalance()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle error
+                }
+            })
+
+        // Calculate total purchases within the date range
+        purchasesRef.orderByChild("Bought On")
+            .startAt(startDate)
+            .endAt(endDate)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (itemSnapshot in dataSnapshot.children) {
+                        val price = itemSnapshot.child("Buy Price").value.toString().toDouble()
+                        totalPurchasesValue += price
+                    }
+                    totalPurchases.text = "Purchase: ₱" + decimalFormat.format(totalPurchasesValue)
+                    calculateTotalBalance()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle error
+                }
+            })
+
+        // Calculate total receive within the date range
+        receiveRef.orderByChild("Sold Date")
+            .startAt(startDate)
+            .endAt(endDate)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (itemSnapshot in dataSnapshot.children) {
+                        val price = itemSnapshot.child("Sale Price").value.toString().toDouble()
+                        totalReceiveValue += price
+                    }
+                    totalReceive.text = "₱" + decimalFormat.format(totalReceiveValue)
+                    calculateTotalBalance()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle error
+                }
+            })
+    }
+
+
     private fun initDatePickers() {
         val dateSetListenerBeginning =
             DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
@@ -212,9 +291,34 @@ class BalanceFragment : Fragment() {
 
     fun showDatePickerDialog(context: Context, button: Button, datePickerDialog: DatePickerDialog) {
         button.setOnClickListener {
+            datePickerDialog.setOnDismissListener {
+                // Check if both dateFrom and dateTo have been selected
+                if (dateFromFormat != null && dateToFormat != null) {
+                    // Format the selected dates to a suitable format for Firebase queries
+                    val startDate = formatDateForFirebaseQuery(dateFromFormat!!)
+                    val endDate = formatDateForFirebaseQuery(dateToFormat!!)
+                    calculateTotalPriceValues(startDate, endDate)
+                }
+            }
             datePickerDialog.show()
         }
     }
+
+    private fun formatDateForFirebaseQuery(date: String): String {
+        // Assuming date format is "MMM dd yyyy" (e.g., "Jan 15 2023")
+        val parts = date.split(" ")
+        val month = getMonthNumber(parts[0])
+        val day = parts[1]
+        val year = parts[2]
+        return "$year-$month-$day"
+    }
+
+    private fun getMonthNumber(month: String): String {
+        // Convert month abbreviations to month numbers (e.g., "Jan" to "01")
+        val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+        return (months.indexOf(month) + 1).toString().padStart(2, '0')
+    }
+
 
     private fun makeDateString(day: Int, month: Int, year: Int): String {
         return getMonthFormat(month) + " " + day + " " + year
