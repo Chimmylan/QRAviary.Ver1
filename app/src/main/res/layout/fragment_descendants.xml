@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:background="@color/totals"
-                android:textColor="@color/white"
+                android:textColor="@color/black_white"
                 android:gravity="center"
                 android:text=" "
                 android:textSize="16sp" />

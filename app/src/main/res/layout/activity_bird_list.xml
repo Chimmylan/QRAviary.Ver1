@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/totalbirds"
-            android:textColor="@color/white"
+            android:textColor="@color/black_white"
             android:text="Total Birds:"
             android:textSize="16sp" />
 

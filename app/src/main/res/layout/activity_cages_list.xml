@@ -25,7 +25,7 @@
             android:layout_height="35dp"
             android:background="@color/totals"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black_white"
             android:text=" "
             android:textSize="16sp" /><!-- Set background color to grey -->
 
