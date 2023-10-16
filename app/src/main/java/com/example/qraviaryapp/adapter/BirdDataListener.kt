@@ -144,6 +144,14 @@ data class PairData(
     var paircagekeyMale: String? = null,
     var paircagebirdMale: String? = null,
     var paircagebirdFemale: String? = null,
+    var pairBirdMaleKey: String? = null,
+    var pairBirdFemaleKey: String? = null,
+    var pairMaleId: String? = null,
+    var pairFemaleId: String? = null,
+    var eggcagekeyFemale: String? = null,
+    var eggcagekeyMale: String? = null,
+    var eggcagebirdMale: String? = null,
+    var eggcagebirdFemale: String? = null,
 
 )
 
