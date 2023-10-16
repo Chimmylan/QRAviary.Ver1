@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
-    android:background="@color/statusbar"
+    android:background="#BEADFA"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -21,7 +21,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="Monitoring"
             app:menu="@menu/menu_toolbar"
-            app:titleTextColor="@color/white_black" />
+            app:titleTextColor="@color/black_white" />
 
         <FrameLayout
             android:id="@+id/frame_layout"

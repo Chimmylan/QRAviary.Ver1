@@ -65,7 +65,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 drawerLayout.addDrawerListener(this)
                 syncState()
             }
-        toggle.drawerArrowDrawable.color = ContextCompat.getColor(this, android.R.color.white)
+        toggle.drawerArrowDrawable.color = ContextCompat.getColor(this, R.color.black_white)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, MonitoringFragment()).commit()
@@ -112,7 +112,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         val fragment: Fragment
         val title: String
-        var isMonitoringFragment: Boolean
+        val isMonitoringFragment: Boolean
 
         when (item.itemId) {
             R.id.nav_birds -> {
@@ -134,6 +134,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_statistics -> {
                 fragment = StatisticsFragment()
                 title = "Statistics"
+
                 isMonitoringFragment = false
             }
             R.id.nav_mutations -> {
@@ -165,6 +166,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
                 title = "Balance"
+
                 isMonitoringFragment = false
             }
             R.id.nav_gallery -> {
@@ -208,9 +210,21 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
                 }
         } else {
-
-            toolbar.elevation = 0f
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+            if (title.equals("Balance")){
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white_black)))
+            }
+            else {
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(
+                    ColorDrawable(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.toolbarcolor
+                        )
+                    )
+                )
+            }
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
