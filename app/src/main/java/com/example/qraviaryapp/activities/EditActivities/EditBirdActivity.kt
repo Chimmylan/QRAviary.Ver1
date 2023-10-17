@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,6 +26,9 @@ import com.example.qraviaryapp.fragments.EditFragment.EditBasicFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditGalleryFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditOriginFragment
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
 
 class EditBirdActivity : AppCompatActivity(), BirdDataListener {
@@ -32,7 +36,57 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var tablayout: TabLayout
     private lateinit var spinner: Spinner
     private val BasicFragment: BasicFragment = BasicFragment()
+    private lateinit var ImageView: ImageView
+    private lateinit var BirdKey: String
+    private lateinit var FlightKey: String
+    private lateinit var BirdId: String
+    private lateinit var BirdLegband: String
+    private lateinit var BirdImage: String
+    private lateinit var BirdGender: String
+    private lateinit var BirdStatus: String
+    private lateinit var BirdDateBirth: String
+    private lateinit var BirdSalePrice: String
+    private lateinit var BirdBuyer: String
+    private lateinit var BirdDeathReason: String
+    private lateinit var BirdExchangeReason: String
+    private lateinit var BirdExchangeWith: String
+    private lateinit var BirdLostDetails: String
+    private lateinit var BirdAvailCage: String
+    private lateinit var BirdForsaleCage: String
+    private lateinit var BirdRequestedPrice: String
+    private lateinit var BirdComment: String
+    private lateinit var BirdBuyPrice: String
+    private lateinit var BirdBoughtOn: String
+    private lateinit var BirdBoughtBreeder: String
+    private lateinit var BirdBreeder: String
+    private lateinit var BirdDeceaseDate: String
+    private lateinit var BirdLostDate: String
+    private lateinit var BirdSoldDate: String
+    private lateinit var BirdExchangeDate: String
+    private lateinit var BirdDonatedDate: String
+    private lateinit var BirdDonatedContact: String
+    private lateinit var BirdMutation1: String
+    private lateinit var BirdMutation2: String
+    private lateinit var BirdMutation3: String
+    private lateinit var BirdMutation4: String
+    private lateinit var BirdMutation5: String
+    private lateinit var BirdMutation6: String
+    private lateinit var BirdFather: String
+    private lateinit var BirdFatherKey: String
+    private lateinit var BirdMother: String
+    private lateinit var BirdMotherKey: String
+    private var fromFlightAdapter: Boolean = false
+    private var fromNurseryAdapter: Boolean = false
+    private lateinit var cageKeyValue: String
+
+
+
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var currentUser: String
+    private lateinit var Auth: FirebaseAuth
     val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+    val newBundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -57,19 +111,112 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
+
+        val bundle = intent.extras
+        BirdId = bundle?.getString("BirdId").toString()
+        BirdLegband = bundle?.getString("BirdLegband").toString()
+        BirdKey = bundle?.getString("BirdKey").toString()
+        val nureseryKey = bundle?.getString("NurseryKey")
+        FlightKey = bundle?.getString("FlightKey").toString()
+        BirdImage = bundle?.getString("BirdImage").toString()
+        BirdGender = bundle?.getString("BirdGender").toString()
+        BirdStatus = bundle?.getString("BirdStatus").toString()
+        BirdDateBirth = bundle?.getString("BirdDateBirth").toString()
+        BirdSalePrice = bundle?.getString("BirdSalePrice").toString()
+        BirdBuyer = bundle?.getString("BirdBuyer").toString()
+        BirdDeathReason = bundle?.getString("BirdDeathReason").toString()
+        BirdExchangeWith = bundle?.getString("BirdExchangeWith").toString()
+        BirdLostDetails = bundle?.getString("BirdLostDetails").toString()
+        BirdAvailCage = bundle?.getString("BirdAvailCage").toString()
+        BirdForsaleCage = bundle?.getString("BirdForsaleCage").toString()
+        BirdExchangeReason = bundle?.getString("BirdDeathReason").toString()
+        BirdRequestedPrice = bundle?.getString("BirdRequestedPrice").toString()
+        BirdComment = bundle?.getString("BirdComment").toString()
+        BirdBuyPrice = bundle?.getString("BirdBuyPrice").toString()
+        BirdBoughtOn = bundle?.getString("BirdBoughtOn").toString()
+        BirdBoughtBreeder = bundle?.getString("BirdBoughtBreeder").toString()
+        BirdBreeder = bundle?.getString("BirdBreeder").toString()
+        BirdDeceaseDate= bundle?.getString("BirdDeceaseDate").toString()
+        BirdSoldDate = bundle?.getString("BirdSoldDate").toString()
+        BirdLostDate = bundle?.getString("BirdLostDate").toString()
+        BirdExchangeDate = bundle?.getString("BirdExchangeDate").toString()
+        BirdDonatedDate = bundle?.getString("BirdDonatedDate").toString()
+        BirdDonatedContact = bundle?.getString("BirdDonatedContact").toString()
+        BirdMutation1 = bundle?.getString("BirdMutation1").toString()
+        BirdMutation2 = bundle?.getString("BirdMutation2").toString()
+        BirdMutation3 = bundle?.getString("BirdMutation3").toString()
+        BirdMutation4 = bundle?.getString("BirdMutation4").toString()
+        BirdMutation5 = bundle?.getString("BirdMutation5").toString()
+        BirdMutation6 = bundle?.getString("BirdMutation6").toString()
+        BirdFather = bundle?.getString("BirdFather").toString()
+        BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
+        BirdMother= bundle?.getString("BirdMother").toString()
+        BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        cageKeyValue = bundle?.getString("CageKeyValue").toString()
+
+        newBundle.putString("NurseryKey", nureseryKey)
+        newBundle.putString("CageKey", cageKeyValue)
+        newBundle.putString("BirdKey", BirdKey)
+        newBundle.putString("FlightKey", FlightKey)
+        newBundle.putString("BirdId", BirdId)
+        newBundle.putString("BirdLegband", BirdLegband)
+        newBundle.putString("BirdImage", BirdImage)
+        newBundle.putString("BirdGender", BirdGender)
+        newBundle.putString("BirdStatus", BirdStatus)
+        newBundle.putString("BirdDateBirth", BirdDateBirth)
+        newBundle.putString("BirdSalePrice", BirdSalePrice)
+        newBundle.putString("BirdBuyer", BirdBuyer)
+        newBundle.putString("BirdDeathReason", BirdDeathReason)
+        newBundle.putString("BirdExchangeReason", BirdExchangeReason)
+        newBundle.putString("BirdExchangeWith", BirdExchangeWith)
+        newBundle.putString("BirdLostDetails", BirdLostDetails)
+        newBundle.putString("BirdAvailCage", BirdAvailCage)
+        newBundle.putString("BirdForsaleCage", BirdForsaleCage)
+        newBundle.putString("BirdRequestedPrice", BirdRequestedPrice)
+        newBundle.putString("BirdComment", BirdComment)
+        newBundle.putString("BirdBuyPrice", BirdBuyPrice)
+        newBundle.putString("BirdBoughtOn", BirdBoughtOn)
+        newBundle.putString("BirdBoughtBreeder", BirdBoughtBreeder)
+        newBundle.putString("BirdBreeder", BirdBreeder)
+        newBundle.putString("BirdDeceaseDate", BirdDeceaseDate)
+        newBundle.putString("BirdSoldDate", BirdSoldDate)
+        newBundle.putString("BirdLostDate", BirdLostDate)
+        newBundle.putString("BirdExchangeDate", BirdExchangeDate)
+        newBundle.putString("BirdDonatedDate", BirdDonatedDate)
+        newBundle.putString("BirdDonatedContact", BirdDonatedContact)
+        newBundle.putString("BirdMutation1", BirdMutation1)
+        newBundle.putString("BirdMutation2", BirdMutation2)
+        newBundle.putString("BirdMutation3", BirdMutation3)
+        newBundle.putString("BirdMutation4", BirdMutation4)
+        newBundle.putString("BirdMutation5", BirdMutation5)
+        newBundle.putString("BirdMutation6", BirdMutation6)
+        newBundle.putString("BirdFather", BirdFather)
+        newBundle.putString("BirdFatherKey", BirdFatherKey)
+        newBundle.putString("BirdMother", BirdMother)
+        newBundle.putString("BirdMotherKey", BirdMotherKey)
+        newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
+        newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
+
+
+
+
+
+
+
         viewPager = findViewById(R.id.viewPager)
         tablayout = findViewById(R.id.tablayout)
         viewPager.offscreenPageLimit = 3
 
 
-        val basicFragmentDeferred = EditBasicFragment()
-        val originFragmentDeferred = EditOriginFragment()
-        val galleryFragmentDeferred = EditGalleryFragment()
 
-        val basicFragment = basicFragmentDeferred
-        val originFragment = originFragmentDeferred
-        val galleryFragment = galleryFragmentDeferred
 
+
+        val basicFragment = EditBasicFragment()
+        val originFragment = EditOriginFragment()
+        val galleryFragment = EditGalleryFragment()
+        basicFragment.arguments = newBundle
+        originFragment.arguments = newBundle
+        galleryFragment.arguments = newBundle
         fragmentAdapter.addFragment(basicFragment, "Basic")
         fragmentAdapter.addFragment(originFragment, "Origin")
         fragmentAdapter.addFragment(galleryFragment, "Gallery")
@@ -78,6 +225,9 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         tablayout.setupWithViewPager(viewPager)
 
     }
+
+
+
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

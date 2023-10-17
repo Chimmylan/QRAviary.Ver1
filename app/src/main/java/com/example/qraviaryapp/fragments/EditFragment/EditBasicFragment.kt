@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -21,6 +23,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -42,6 +45,70 @@ class EditBasicFragment : Fragment() {
     private var param2: String? = null
     private lateinit var dbase: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
+    private var birdKey: String? = null
+    private var birdLegband: String? = null
+    private var birdGender: String? = null
+    private var birdStatus: String? = null
+    private var birdId: String? = null
+    private var birdsalePrice: String? = null
+    private var birdDateBirth: String? = null
+    private var birdMutation1: String? = null
+    private var birdMutation2: String? = null
+    private var birdMutation3: String? = null
+    private var birdMutation4: String? = null
+    private var birdMutation5: String? = null
+    private var birdMutation6: String? = null
+    private var birdBuyer: String? = null
+    private var birdDeathReason: String? = null
+    private var birdExchangeReason: String? = null
+    private var birdExchangeWith: String? = null
+    private var birdLostDetails: String? = null
+    private var birdAvailCage: String? = null
+    private var birdForsaleCage: String? = null
+    private var birdRequestedPrice: String? = null
+    private var birdComment: String? = null
+    private var birdBuyPrice: String? = null
+    private var birdBoughtOn: String? = null
+    private var birdBoughtBreeder: String? = null
+    private var birdBreeder: String? = null
+    private var birdDeceaseDate: String? = null
+    private var birdLostDate: String? = null
+    private var birdSoldDate: String? = null
+    private var birdExchangeDate: String? = null
+    private var birdDonatedDate: String? = null
+    private var birdDonatedContact: String? = null
+    private var fatherKey: String? = null
+    private var motherKey: String? = null
+
+    private lateinit var bird_gender: ImageView
+    private lateinit var bird_id: TextView
+    private lateinit var bird_status: TextView
+    private lateinit var bird_mutation: TextView
+    private lateinit var bird_age: TextView
+    private lateinit var bird_dateBirth: TextView
+    private lateinit var bird_salePrice: TextView
+    private lateinit var bird_buyer: TextView
+    private lateinit var bird_deathreason: TextView
+    private lateinit var bird_exchangereason: TextView
+    private lateinit var bird_exchangewith: TextView
+    private lateinit var bird_lostdetails: TextView
+    private lateinit var bird_availcage: TextView
+    private lateinit var bird_requestedprice: TextView
+    private lateinit var bird_comment: TextView
+    private lateinit var bird_buyprice: TextView
+    private lateinit var bird_boughton: TextView
+    private lateinit var bird_boughtbreeder: TextView
+    private lateinit var bird_breeder: TextView
+    private lateinit var bird_solddate: TextView
+    private lateinit var bird_deceasedate: TextView
+    private lateinit var bird_lostdate: TextView
+    private lateinit var bird_donateddate: TextView
+    private lateinit var bird_exchangedate: TextView
+    private lateinit var bird_donatedcontact: TextView
+    private lateinit var bird_legband: TextView
+    private lateinit var snackbar: Snackbar
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isNetworkAvailable = true
 
     private lateinit var datePickerDialogBirth: DatePickerDialog
     /*  private lateinit var datePickerDialogBanding: DatePickerDialog*/
@@ -154,6 +221,7 @@ class EditBasicFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_basic, container, false)
 
+
         datebirthButton = view.findViewById(R.id.btndatebirth)
         btnSoldSaleDate = view.findViewById(R.id.soldSaleDate)
         btnDonatedDate = view.findViewById(R.id.btnDonatedDate)
@@ -229,14 +297,70 @@ class EditBasicFragment : Fragment() {
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
 
 
+        birdKey = arguments?.getString("BirdKey")
+        birdGender = arguments?.getString("BirdGender")
+        birdLegband = arguments?.getString("BirdLegband")
+        birdStatus = arguments?.getString("BirdStatus")
+        birdId = arguments?.getString("BirdId")
+        birdDonatedContact = arguments?.getString("BirdDonatedContact")
+        birdsalePrice = arguments?.getString("BirdSalePrice")
+        birdDateBirth = arguments?.getString("BirdDateBirth")
+        birdBuyer = arguments?.getString("BirdBuyer")
+        birdDeathReason = arguments?.getString("BirdDeathReason")
+        birdExchangeReason = arguments?.getString("BirdExchangeReason")
+        birdExchangeWith = arguments?.getString("BirdExchangeWith")
+        birdLostDetails = arguments?.getString("BirdLostDetails")
+        birdAvailCage = arguments?.getString("BirdAvailCage")
+        birdForsaleCage = arguments?.getString("BirdForsaleCage")
+        birdRequestedPrice = arguments?.getString("BirdRequestedPrice")
+        birdComment = arguments?.getString("BirdComment")
+        birdBuyPrice = arguments?.getString("BirdBuyPrice")
+        birdBoughtOn = arguments?.getString("BirdBoughtOn")
+        birdBoughtBreeder = arguments?.getString("BirdBoughtBreeder")
+        birdBreeder = arguments?.getString("BirdBreeder")
+        birdDeceaseDate = arguments?.getString("BirdDeceaseDate")
+        birdSoldDate = arguments?.getString("BirdSoldDate")
+        birdLostDate = arguments?.getString("BirdLostDate")
+        birdExchangeDate = arguments?.getString("BirdExchangeDate")
+        birdDonatedDate = arguments?.getString("BirdDonatedDate")
+        birdMutation1 = arguments?.getString("BirdMutation1")
+        birdMutation2 = arguments?.getString("BirdMutation2")
+        birdMutation3 = arguments?.getString("BirdMutation3")
+        birdMutation4 = arguments?.getString("BirdMutation4")
+        birdMutation5 = arguments?.getString("BirdMutation5")
+        birdMutation6 = arguments?.getString("BirdMutation6")
+        fatherKey = arguments?.getString("BirdFatherKey")
+        motherKey = arguments?.getString("BirdMotherKey")
 
 
 
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+
+
+        etIdentifier.setText(birdId)
+
+        if (birdLegband != "null" || !birdLegband.isNullOrEmpty()){
+            etLegband.setText(birdLegband)
+        }
+
+        if (birdGender == "Female"){
+            rbFemale.isChecked
+        }
+        else if (birdGender == "Male"){
+            rbMale.isChecked
+        }
+        else{
+            rbUnknown.isChecked
+        }
+
+        datebirthButton.setText(birdDateBirth)
+
+        if (birdAvailCage != "null" || !birdAvailCage.isNullOrEmpty()){
+            etAvailCage.setText(birdAvailCage)
+        }
+
+
         return view
-
-
-
 
     }
     private fun initDatePickers() {

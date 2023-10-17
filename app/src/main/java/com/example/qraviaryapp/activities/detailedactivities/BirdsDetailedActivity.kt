@@ -84,6 +84,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var currentUser: String
     private lateinit var Auth: FirebaseAuth
+    val newBundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -99,7 +100,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference("Users")
 
-        val newBundle = Bundle()
+
 
 
         BirdId = bundle?.getString("BirdId").toString()
@@ -204,30 +205,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
         ImageView = findViewById(R.id.imageView)
 
         if (BirdImage.isEmpty() || BirdImage == "null") {
-//            val view = findViewById<View>(R.id.view)
-            val collapsingToolbar = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-//            val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
-//
-//            val params = collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
-//            params.scrollFlags = 0 // Remove the scroll flag
-//            collapsingToolbar.layoutParams = params
             Glide.with(this)
                 .load(R.drawable.nobirdimage)
                 .placeholder(R.drawable.nobirdimage)
                 .error(R.drawable.nobirdimage)
                 .into(ImageView)
-////            view.visibility = GONE
-
-//            val toolbar = findViewById<Toolbar>(R.id.toolbar)
-//            val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
-//
-//            // Set the height of the AppBarLayout to match the Toolbar's height
-//
-//            val toolbarLayoutParams = toolbar.layoutParams
-//            val appBarLayoutParams = view.layoutParams
-//            appBarLayoutParams.height = toolbarLayoutParams.height
-//            view.layoutParams = appBarLayoutParams
-//            ImageView.visibility = GONE
 
         } else {
             Glide.with(this)
@@ -281,6 +263,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_edit -> {
                 val i = Intent(this, EditBirdActivity::class.java)
+                i.putExtras(newBundle)
                 startActivity(i)
                 true
             }
