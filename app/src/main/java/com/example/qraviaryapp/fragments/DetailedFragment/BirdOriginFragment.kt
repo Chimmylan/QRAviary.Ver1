@@ -140,6 +140,7 @@ class BirdOriginFragment : Fragment() {
         Log.d(TAG, "FatherKey ORIGIN: ${birdFatherKey.toString()}")
         Log.d(TAG, "MotherKey ORIGIN: ${birdMotherKey.toString()}")
         Log.d(TAG, "birdKey ORIGIN: ${birdKey.toString()}")
+        Log.d(TAG, "NurseryKey ORIGIN: ${nurseryKey.toString()}")
         Log.d(TAG, "From flight: ${fromFlightAdapter}")
         Log.d(TAG, "From Nursery: ${fromNurseryAdapter}")
         Log.d(TAG, "birdCageKey ORIGIN: ${cageKey}")
