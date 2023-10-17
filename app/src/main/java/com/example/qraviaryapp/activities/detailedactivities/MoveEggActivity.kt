@@ -512,7 +512,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
             "Gender" to dataSelectedGen.text.toString(),
-            "Cage" to cageNameValue,
+            "Avail Cage" to cageNameValue,
             "Legband" to "",
         )
         val data1: Map<String, Any?> = hashMapOf(
@@ -529,7 +529,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
             "Gender" to dataSelectedGen.text.toString(),
-            "Cage" to cageNameValue,
+            "Avail Cage" to cageNameValue,
             "Legband" to "",
         )
 

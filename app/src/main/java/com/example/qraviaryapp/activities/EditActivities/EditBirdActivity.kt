@@ -110,53 +110,54 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         return when (item.itemId) {
             R.id.action_save -> {
 
-                val basicFragment = fragmentAdapter.getItem(0) as BasicFragment
-                val originFragment = fragmentAdapter.getItem(1) as OriginFragment
-                val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
-
-                lifecycleScope.launch {
-                    try {
-                        var birdId = ""
-                        var newBundle: Bundle = Bundle()
-                        var nurseryId = ""
-                        var soldId = ""
-                        var cagebirdkey = ""
-                        var cagekeyvalue = ""
-                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue->
-                            birdId = receivedbirdId
-                            nurseryId = NurseryId
-                            newBundle = receivednewBundle
-                            soldId = receivesoldId
-                            cagebirdkey = receivecagebirdkey
-                            cagekeyvalue = receivecagekeyvalue
-                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
-                                galleryFragment.uploadImageToStorage(
-                                    birdId, nurseryId, newBundle,
-                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
-                                    descendantmotherkey, cagebirdkey,cagekeyvalue,  soldId, purchaseId)
-                            }
-                            onBackPressed()
-                            finish()
-
-                        }
-
-
-
-                        // Now that the background work is done, switch to the main thread
-
-
-
-                    } catch (e: NullPointerException) {
-                        // Handle the exception if needed
-                        Toast.makeText(
-                            applicationContext,
-                            "Gender and Provenance in Origin tab must not be empty...",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
+//                val basicFragment = fragmentAdapter.getItem(0) as BasicFragment
+//                val originFragment = fragmentAdapter.getItem(1) as OriginFragment
+//                val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
+//
+//
+//                lifecycleScope.launch {
+//                    try {
+//                        var birdId = ""
+//                        var newBundle: Bundle = Bundle()
+//                        var nurseryId = ""
+//                        var soldId = ""
+//                        var cagebirdkey = ""
+//                        var cagekeyvalue = ""
+//                        basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue->
+//                            birdId = receivedbirdId
+//                            nurseryId = NurseryId
+//                            newBundle = receivednewBundle
+//                            soldId = receivesoldId
+//                            cagebirdkey = receivecagebirdkey
+//                            cagekeyvalue = receivecagekeyvalue
+//                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
+//                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId->
+//                                galleryFragment.uploadImageToStorage(
+//                                    birdId, nurseryId, newBundle,
+//                                    callBackMotherKey, callBackFatherKey, descendantfatherkey,
+//                                    descendantmotherkey, cagebirdkey,cagekeyvalue,  soldId, purchaseId)
+//                            }
+//                            onBackPressed()
+//                            finish()
+//
+//                        }
+//
+//
+//
+//                        // Now that the background work is done, switch to the main thread
+//
+//
+//
+//                    } catch (e: NullPointerException) {
+//                        // Handle the exception if needed
+//                        Toast.makeText(
+//                            applicationContext,
+//                            "Gender and Provenance in Origin tab must not be empty...",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                }
 
 
                 // Handle the Save button click here
