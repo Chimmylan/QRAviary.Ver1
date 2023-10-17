@@ -513,6 +513,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation6" to mutation6,
             "Gender" to dataSelectedGen.text.toString(),
             "CageKey" to cageKeyValue,
+            "Cage Bird Key" to nurseryCageRef.key,
             "Avail Cage" to cageNameValue,
             "Cage" to cageNameValue,
             "Legband" to "",
@@ -532,6 +533,8 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation6" to mutation6,
             "Gender" to dataSelectedGen.text.toString(),
             "CageKey" to cageKeyValue,
+            "Cage Bird Key" to nurseryCageRef.key,
+
             "Avail Cage" to cageNameValue,
             "Cage" to cageNameValue,
             "Legband" to "",

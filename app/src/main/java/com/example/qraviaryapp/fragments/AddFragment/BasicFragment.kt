@@ -777,7 +777,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
                     "CageKey" to cageKeyValue,
-                    "BirdCageKey" to cageReference.key,
+                    "Cage Bird Key" to cageReference.key,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
                     "Age" to ageInDays
@@ -804,7 +804,7 @@ class BasicFragment : Fragment() {
                     "Status" to birdData.status,
                     "Cage" to birdData.forSaleCage,
                     "CageKey" to cageKeyValue,
-                    "BirdCageKey" to cageReference.key,
+                    "Cage Bird Key" to cageReference.key,
                     "Requested Price" to birdData.reqPrice,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
