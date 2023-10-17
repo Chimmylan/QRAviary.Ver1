@@ -2,7 +2,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import EggData
 import PairData
-import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -11,28 +11,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.EggAdapter
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+
 class IncubatingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var token: FirebaseApp
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var adapter: EggAdapter
@@ -48,6 +52,20 @@ class IncubatingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_incubating, container, false)
 
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//            // Log and toast
+//            val msg = getString(R.string.default_web_client_id, token)
+//            Log.d(TAG, msg)
+//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+//        })
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
