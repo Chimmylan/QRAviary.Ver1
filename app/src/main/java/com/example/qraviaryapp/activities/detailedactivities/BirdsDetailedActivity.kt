@@ -14,6 +14,7 @@ import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.EditActivities.EditBirdActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBabiesFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
@@ -279,8 +280,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_edit -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
+                val i = Intent(this, EditBirdActivity::class.java)
+                startActivity(i)
                 true
             }
             R.id.menu_share -> {
