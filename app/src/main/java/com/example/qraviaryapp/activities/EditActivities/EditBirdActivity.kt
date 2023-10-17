@@ -2,10 +2,12 @@ package com.example.qraviaryapp.activities.EditActivities
 
 import BirdData
 import BirdDataListener
+import android.content.ContentValues
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -78,7 +80,9 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
-
+    private lateinit var cageBirdkey: String
+    private lateinit var cageKey: String
+    private lateinit var type: String
 
 
     private lateinit var databaseReference: DatabaseReference
@@ -113,6 +117,10 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
         val bundle = intent.extras
+        cageKey = bundle?.getString("CageKey").toString()
+        cageBirdkey = bundle?.getString("CageBirdKey").toString()
+        val breedingCageKey = bundle?.getString("BreedingCageKey").toString()
+        type = bundle?.getString("Type").toString()
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
@@ -136,7 +144,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         BirdBoughtOn = bundle?.getString("BirdBoughtOn").toString()
         BirdBoughtBreeder = bundle?.getString("BirdBoughtBreeder").toString()
         BirdBreeder = bundle?.getString("BirdBreeder").toString()
-        BirdDeceaseDate= bundle?.getString("BirdDeceaseDate").toString()
+        BirdDeceaseDate = bundle?.getString("BirdDeceaseDate").toString()
         BirdSoldDate = bundle?.getString("BirdSoldDate").toString()
         BirdLostDate = bundle?.getString("BirdLostDate").toString()
         BirdExchangeDate = bundle?.getString("BirdExchangeDate").toString()
@@ -150,10 +158,15 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         BirdMutation6 = bundle?.getString("BirdMutation6").toString()
         BirdFather = bundle?.getString("BirdFather").toString()
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
-        BirdMother= bundle?.getString("BirdMother").toString()
-        BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        BirdMother = bundle?.getString("BirdMother").toString()
+        BirdMotherKey = bundle?.getString("BirdMotherKey").toString()
         cageKeyValue = bundle?.getString("CageKeyValue").toString()
 
+        newBundle.putString("BreedingCageKey", breedingCageKey)
+        newBundle.putString("Type", type)
+        newBundle.putString("CageKey", cageKey)
+        Log.d(ContentValues.TAG, "$type $cageKey $breedingCageKey")
+        newBundle.putString("CageBirdKey", cageBirdkey)
         newBundle.putString("NurseryKey", nureseryKey)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
@@ -208,9 +221,6 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         viewPager.offscreenPageLimit = 3
 
 
-
-
-
         val basicFragment = EditBasicFragment()
         val originFragment = EditOriginFragment()
         val galleryFragment = EditGalleryFragment()
@@ -259,7 +269,26 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
+                val basicFragment = EditBasicFragment()
+                val originFragment = EditOriginFragment()
+                val galleryFragment = EditGalleryFragment()
 
+                var _birdKey = ""
+                var _flightKey = ""
+                var _nurseryKey= ""
+                var _cageFlightBirdKey = ""
+                var _cageNurseryBirdKey = ""
+                var _breedingCageKey = ""
+
+                basicFragment.editBird{birdKey, flightKey, nurseryKey, cageFlightBirdKey, cageNurseryBirdKey
+                ,breedingCageKey ->
+                    _birdKey = birdKey
+                    _flightKey = flightKey
+                    _nurseryKey = nurseryKey
+                    _cageFlightBirdKey = cageFlightBirdKey
+                    _cageNurseryBirdKey = cageNurseryBirdKey
+                    _breedingCageKey = breedingCageKey
+                }
 
 //                val basicFragment = fragmentAdapter.getItem(0) as BasicFragment
 //                val originFragment = fragmentAdapter.getItem(1) as OriginFragment

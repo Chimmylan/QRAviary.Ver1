@@ -72,6 +72,10 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+    private lateinit var cageBirdkey: String
+    private lateinit var cageKey: String
+    private lateinit var breedingCageKey: String
+    private lateinit var type: String
 
     //cages
     private var fromFlightAdapter: Boolean = false
@@ -102,7 +106,10 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
 
 
-
+        cageKey = bundle?.getString("CageKey").toString()
+        cageBirdkey = bundle?.getString("CageBirdKey").toString()
+        breedingCageKey = bundle?.getString("BreedingCage").toString()
+        type = bundle?.getString("Type").toString()
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
@@ -150,6 +157,10 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
         Log.d(TAG, "BIRDKEY NEW $BirdKey")
 
+        newBundle.putString("BreedingCageKey", breedingCageKey)
+        newBundle.putString("Type", type)
+        newBundle.putString("CageKey", cageKey)
+        newBundle.putString("CageBirdKey", cageBirdkey)
         newBundle.putString("NurseryKey", nureseryKey)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)

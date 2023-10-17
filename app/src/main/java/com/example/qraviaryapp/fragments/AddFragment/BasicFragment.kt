@@ -766,6 +766,7 @@ class BasicFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
+                    "Type" to "Nursery",
                     "Mutation1" to mutation1,
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,
@@ -790,6 +791,8 @@ class BasicFragment : Fragment() {
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
+                    "Type" to "Nursery",
+
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
@@ -826,6 +829,7 @@ class BasicFragment : Fragment() {
                 val month = monthYearParts[1]
                 val year = monthYearParts[2]
                 val data: Map<String, Any?> = hashMapOf(
+                    "Type" to "Nursery",
 
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -868,7 +872,9 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                   /* "Date of Banding" to birdData.dateOfBanding,*/
+                    "Type" to "Nursery",
+
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Death Date" to birdData.deathDate,
@@ -887,6 +893,8 @@ class BasicFragment : Fragment() {
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
+                    "Type" to "Nursery",
+
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,
                     "Mutation4" to mutation4,
@@ -912,6 +920,8 @@ class BasicFragment : Fragment() {
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
+                    "Type" to "Nursery",
+
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,
                     "Mutation4" to mutation4,
@@ -930,6 +940,8 @@ class BasicFragment : Fragment() {
                 newNurseryPref.updateChildren(data)
             } else if (donatedLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
+                    "Type" to "Nursery",
+
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
@@ -953,6 +965,8 @@ class BasicFragment : Fragment() {
             } else if (otherLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
+                    "Type" to "Nursery",
+
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,

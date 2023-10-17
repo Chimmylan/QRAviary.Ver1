@@ -766,6 +766,8 @@ class BasicFlightFragment : Fragment() {
             if (availableLayout.visibility == View.VISIBLE) {
 
                 val data: Map<String, Any?> = hashMapOf(
+                    "Type" to "Flight",
+
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
@@ -795,6 +797,7 @@ class BasicFlightFragment : Fragment() {
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
+                    "Type" to "Flight",
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
@@ -832,6 +835,7 @@ class BasicFlightFragment : Fragment() {
                 val year = monthYearParts[2]
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
+                    "Type" to "Flight",
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
@@ -862,6 +866,7 @@ class BasicFlightFragment : Fragment() {
             } else if (deceasedLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
+                    "Type" to "Flight",
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
@@ -884,6 +889,7 @@ class BasicFlightFragment : Fragment() {
             } else if (exchangeLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
+                    "Type" to "Flight",
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
@@ -909,6 +915,7 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
+                    "Type" to "Flight",
                     "Mutation1" to mutation1,
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,
@@ -932,6 +939,7 @@ class BasicFlightFragment : Fragment() {
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
                     "Mutation1" to mutation1,
+                    "Type" to "Flight",
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,
                     "Mutation4" to mutation4,
@@ -953,6 +961,7 @@ class BasicFlightFragment : Fragment() {
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
                     "Gender" to birdData.gender,
+                    "Type" to "Flight",
                     "Mutation1" to mutation1,
                     "Mutation2" to mutation2,
                     "Mutation3" to mutation3,

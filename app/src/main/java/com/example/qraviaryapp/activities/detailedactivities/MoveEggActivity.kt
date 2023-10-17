@@ -503,6 +503,8 @@ class MoveEggActivity : AppCompatActivity() {
             "Parents" to parent,
             "Date of Birth" to eggDate,
             "Nursery Key" to nurseryKey,
+            "Type" to "Nursery",
+
             "Status" to "Available",
             "Identifier" to etIdentifier.text.toString(),
             "Mutation1" to mutation1,
@@ -519,6 +521,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Legband" to "",
         )
         val data1: Map<String, Any?> = hashMapOf(
+            "Type" to "Nursery",
             "Bird Key" to birdKey,
             "Parents" to parent,
             "Date of Birth" to eggDate,

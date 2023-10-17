@@ -214,10 +214,9 @@ class MoveNurseryActivity : AppCompatActivity() {
 
     fun save() {
 
-        if (TextUtils.isEmpty(choosecage.text)){
+        if (TextUtils.isEmpty(choosecage.text)) {
             choosecage.error = "Cage must not be Empty"
-        }
-        else {
+        } else {
             val newFlightRef =
                 db.child("Users").child("ID: $userId").child("Flight Birds").push()
 
@@ -237,13 +236,21 @@ class MoveNurseryActivity : AppCompatActivity() {
             val key = newFlightRef.key
 
             newFlightRef.setValue(dataToCopy)
-            val updateData = hashMapOf<String, Any?>("Flight Key" to key)
+            val updateData = hashMapOf<String, Any?>(
+                "Flight Key" to key,
+                "Cage Bird Key" to flightCageRef.key,
+                "CageKey" to cageKeyValue,
+                "Type" to "Flight",
+            )
 
 
 
             birdPref.updateChildren(updateData)
+            birdPref.child("Nursery Key").removeValue()
             newFlightRef.updateChildren(updateData)
+            newFlightRef.child("Nursery Key").removeValue()
             flightCageRef.setValue(dataToCopy)
+            flightCageRef.child("Nursery Key").removeValue()
             flightCageRef.updateChildren(updateData)
             onBackPressed()
             finish()

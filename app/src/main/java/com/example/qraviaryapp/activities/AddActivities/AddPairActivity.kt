@@ -426,6 +426,8 @@ class AddPairActivity : AppCompatActivity() {
 
                                     newMaleBirdsPref.child("Status").setValue("Paired")
                                     newFemaleBirdsPref.child("Status").setValue("Paired")
+                                    newMaleBirdPref.child("BreedingCage").setValue(cageKeyValue)
+                                    newFemaleBirdPref.child("BreedingCage").setValue(cageKeyValue)
                                     cageReference.updateChildren(data)
                                     newFemaleBirdPref.updateChildren(femaleBirdPair)
                                     newMaleBirdPref.updateChildren(maleBirdPair)

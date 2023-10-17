@@ -102,7 +102,7 @@ class NurseryListAdapter(
 
         val datebirth = bird.dateOfBirth
         Log.d(TAG,"$maturingDays")
-        val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.US)
         val birthDate = datebirth?.let { dateFormat.parse(it) }
         val currentDate = Calendar.getInstance().time
 
@@ -120,7 +120,7 @@ class NurseryListAdapter(
                 val statusRef = db.child("Users").child("ID: ${currentUserId.toString()}").child("Cages").child("Nursery Cages")
                     .child(bird.cageKey.toString())
                     .child("Birds")
-                    .child(bird.birdKey.toString())
+                    .child(bird.adultingKey.toString())
 
                 statusRef.child("Status").setValue("Matured")
                 holder.chickImg.setImageResource(R.drawable.hatchcolor)
@@ -140,7 +140,7 @@ class NurseryListAdapter(
                 val intent = Intent(context, MoveNurseryActivity::class.java)
                 intent.putExtra("Nursery Key", bird.nurseryKey)
                 intent.putExtra("CageKeyValue", bird.cageKey)
-                intent.putExtra("BirdKey", bird.birdKey)
+                intent.putExtra("BirdKey", bird.adultingKey)
                 context.startActivity(intent)
             }
 

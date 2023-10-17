@@ -158,6 +158,10 @@ class BirdsFragment : Fragment() {
                 val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
                 val birdKey = itemSnapshot.key
+                val cageKey = itemSnapshot.child("CageKey").value.toString()
+                val breedingCageKey = itemSnapshot.child("BreedingCage").value.toString()
+                val cageBirdKey = itemSnapshot.child("Cage Bird Key").value.toString()
+                val type = itemSnapshot.child("Type").value.toString()
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
                 val genderValue = itemSnapshot.child("Gender").value
@@ -249,6 +253,10 @@ class BirdsFragment : Fragment() {
                 val image = getUrlImage(imageUrl)
 
                 birdCount++
+                data.breedingCage = breedingCageKey
+                data.cagebirdkey = cageBirdKey
+                data.cageKey = cageKey
+                data.type = type
                 data.bitmap = image
                 data.img = imageUrl
                 data.birdCount = birdCount.toString()
