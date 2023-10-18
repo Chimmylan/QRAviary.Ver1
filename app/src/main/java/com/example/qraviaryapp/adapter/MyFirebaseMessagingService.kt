@@ -15,15 +15,19 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 const val channelId = "notification_channel"
-const val channelName = "com.example.qraviaryapp"
+const val channelName = "com.example.qraviaryapp.adapter"
+
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        if (remoteMessage.getNotification() != null) {
+        if (remoteMessage.notification != null) {
 
-            showNotification(remoteMessage.notification!!.title!!,remoteMessage.notification!!.body!!)
+            showNotification(
+                remoteMessage.notification!!.title!!,
+                remoteMessage.notification!!.body!!
+            )
         }
     }
 
@@ -31,7 +35,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         title: String,
         message: String
     ): RemoteViews {
-        val remoteViews = RemoteViews("com.example.qraviaryapp", R.layout.notification)
+        val remoteViews = RemoteViews("com.example.qraviaryapp.adapter", R.layout.notification)
         remoteViews.setTextViewText(R.id.notification_title, title)
         remoteViews.setTextViewText(R.id.notification_description, message)
         remoteViews.setImageViewResource(
@@ -41,6 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         return remoteViews
     }
+
 
     fun showNotification(
         title: String,
@@ -69,25 +74,24 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent)
 
-        // A customized design for the notification can be
-        // set only for Android versions 4.1 and above. Thus
-        // condition for the same is checked here.
+
         builder = builder.setContent(getCustomDesign(title, message))
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-        // Check if the Android Version is greater than Oreo
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            notificationManager!!.createNotificationChannel(notificationChannel)
+            notificationManager?.createNotificationChannel(notificationChannel)
+
         }
-        notificationManager!!.notify(0, builder.build()) }
+        notificationManager?.notify(0, builder.build())
+    }
 
     override fun onNewToken(token: String) {
-        super.onNewToken(token)
         Log.d("FCM_TOKEN", token)
-        // Store or send this token to your server.
+
     }
 
 }

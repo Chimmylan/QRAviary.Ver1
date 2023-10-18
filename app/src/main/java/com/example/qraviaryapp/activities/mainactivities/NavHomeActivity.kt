@@ -2,14 +2,18 @@ package com.example.qraviaryapp.activities.mainactivities
 
 import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,9 +29,11 @@ import com.example.qraviaryapp.monitoring.MonitoringFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
 
@@ -75,8 +81,24 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            Log.d(TAG, "My token: $token")
+
+            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+        })
+
         checkElapsedTime()
     }
+
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()
