@@ -3,10 +3,15 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 import BirdData
 import android.animation.ObjectAnimator
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.Image
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,15 +25,21 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import com.example.qraviaryapp.adapter.channelId
+import com.example.qraviaryapp.adapter.channelName
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -116,11 +127,12 @@ class NurseryListAdapter(
 
             if (progressPercentage >= 100) {
                 progressPercentage = 100
+                sendNotification(bird, context)
 
                 val statusRef = db.child("Users").child("ID: ${currentUserId.toString()}").child("Cages").child("Nursery Cages")
                     .child(bird.cageKey.toString())
                     .child("Birds")
-                    .child(bird.birdKey.toString())
+                    .child(bird.adultingKey.toString())
 
                 statusRef.child("Status").setValue("Matured")
                 holder.chickImg.setImageResource(R.drawable.hatchcolor)
@@ -209,6 +221,47 @@ class NurseryListAdapter(
         }
     }
 }
+    private fun sendNotification(bird: BirdData, context: Context) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            notificationManager?.createNotificationChannel(notificationChannel)
+        }
+
+        val title = "Bird is matured"
+        val message = "Bird ID: ${bird.identifier} is now matured."
+
+        val intent = Intent(context, BirdsDetailedActivity::class.java)
+        // Set any data you want to pass to the detailed activity
+        intent.putExtra("BirdKey", bird.birdKey)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val builder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.logoqraviary)
+            .setAutoCancel(true)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(title)
+            .setContentText(message)
+
+        val notification = RemoteMessage.Builder("com.example.qraviaryapp")
+            .setMessageId(Integer.toString(0))
+            .addData("title", "Bird is matured")
+            .addData("body", "Bird ID: ${bird.identifier} is now matured")
+            .build()
+
+        notificationManager?.notify(0, builder.build())
+        FirebaseMessaging.getInstance().send(notification)
+    }
+
+
+
 
 class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {

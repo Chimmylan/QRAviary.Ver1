@@ -35,7 +35,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         title: String,
         message: String
     ): RemoteViews {
-        val remoteViews = RemoteViews("com.example.qraviaryapp.adapter", R.layout.notification)
+        val remoteViews = RemoteViews("com.example.qraviaryapp", R.layout.notification)
         remoteViews.setTextViewText(R.id.notification_title, title)
         remoteViews.setTextViewText(R.id.notification_description, message)
         remoteViews.setImageViewResource(
