@@ -7,6 +7,7 @@
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/bottom_nav_background"
     tools:context=".activities.detailedactivities.ClutchesDetailedActivity">
 
 

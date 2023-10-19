@@ -1,8 +1,11 @@
 package com.example.qraviaryapp.fragments.Pairs
 
 import EggData
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -15,11 +18,13 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
+import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -32,8 +37,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,7 +84,7 @@ class ClutchesFragment : Fragment() {
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
-
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -324,20 +334,22 @@ class ClutchesFragment : Fragment() {
             var incubatingCount = 0
             var laidCount = 0
             val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
+
             val formattedDate = currentDate.format(formatter)
             addButton.setOnClickListener {
                 val newEggs = EggData()
                 eggValue = numberPicker.value
                 if (checkBox.isChecked) {
 
-
                     Toast.makeText(
                         requireContext(),
                         "Checked $eggValue",
                         Toast.LENGTH_SHORT
                     ).show()
-
+                    val currentDateTime = LocalDateTime.now()
+                    val hatchingDateTime = currentDateTime.plusDays(incubatingDays.toLong())
                     for (i in 0 until eggValue) {
+
                         val clutches = newClutchRef.push()
                         eggCount++
                         incubatingCount++
@@ -345,17 +357,20 @@ class ClutchesFragment : Fragment() {
                             "Status" to defaultStatus,
                             "Date" to formattedDate,
                             "Incubating Days" to incubatingDays,
-                            "Maturing Days" to maturingDays
+                            "Maturing Days" to maturingDays,
+                            "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
                         )
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggIncubating = incubatingCount.toString()
                         newEggs.eggIncubationStartDate = formattedDate
-
+                        newEggs.estimatedHatchedDate = hatchingDateTime.format(formatter1)
                         clutches.updateChildren(data)
 
                     }
                     dataList.add(newEggs)
+
+                        setAlarmForEgg(requireContext(), hatchingDateTime.format(formatter1), dataList.size - 1)
 
 
                 } else if (!checkBox.isChecked) {
@@ -406,6 +421,36 @@ class ClutchesFragment : Fragment() {
         alertDialog.show()
 
     }
+    fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, MyAlarmReceiver::class.java)
+        intent.putExtra("egg_index", eggIndex) // Pass the index of the egg
+
+        val pendingIntent = PendingIntent.getBroadcast(context, eggIndex, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+    }
+
+//    fun setWorkForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+//        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+//        val epochMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+//
+//        val inputData = Data.Builder()
+//            .putInt("egg_index", eggIndex)
+//            .build()
+//
+//        val workRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
+//            .setInitialDelay(epochMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+//            .setInputData(inputData)
+//            .build()
+//
+//        WorkManager.getInstance(context).enqueue(workRequest)
+//    }
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {

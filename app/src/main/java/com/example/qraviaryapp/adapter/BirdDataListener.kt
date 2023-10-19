@@ -181,6 +181,7 @@ data class EggData(
     var eggDeadBeforeMovingToNursery: String? = null,
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
+    var estimatedHatchedDate: String? = null,
     var eggMaturingStartDate: String? = null,
     var eggcagekeyFemale: String? = null,
     var eggcagekeyMale: String? = null,
