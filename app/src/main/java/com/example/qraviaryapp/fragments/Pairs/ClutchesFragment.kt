@@ -84,6 +84,8 @@ class ClutchesFragment : Fragment() {
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
+    private lateinit var clutchkey: String
+    private lateinit var key: String
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,7 +155,7 @@ class ClutchesFragment : Fragment() {
         val snapshot = db.get().await()
         for (clutchSnapshot in snapshot.children) {
             val data = clutchSnapshot.getValue(EggData::class.java)
-            val key = clutchSnapshot.key.toString()
+            key = clutchSnapshot.key.toString()
             var incubatingCount = 0
             var laidCount = 0
             var hatchedCount = 0
@@ -351,6 +353,7 @@ class ClutchesFragment : Fragment() {
                     for (i in 0 until eggValue) {
 
                         val clutches = newClutchRef.push()
+                        clutchkey = clutches.key.toString()
                         eggCount++
                         incubatingCount++
                         val data: Map<String, Any?> = hashMapOf(
@@ -426,7 +429,19 @@ class ClutchesFragment : Fragment() {
 
         val intent = Intent(context, MyAlarmReceiver::class.java)
         intent.putExtra("egg_index", eggIndex) // Pass the index of the egg
-
+        intent.putExtra("pairmale", pairMale)
+        intent.putExtra("pairfemale", pairFemale)
+        intent.putExtra("clutchkey", clutchkey)
+        intent.putExtra("pairkey", pairKey)
+        intent.putExtra("Eggkey", key)
+        intent.putExtra("pairflightfemalekey", pairFlightFemaleKey)
+        intent.putExtra("pairflightmalekey", pairFlightMaleKey)
+        intent.putExtra("pairmalekey", pairMaleKey)
+        intent.putExtra("pairfemalekey", pairFemaleKey)
+        intent.putExtra("cagekeyfemale", pairCageKeyFemale)
+        intent.putExtra("cagekeymale", pairCageKeyMale)
+        intent.putExtra("cagebirdfemale", pairCageBirdFemale)
+        intent.putExtra("cagebirdmale", pairCageBirdMale)
         val pendingIntent = PendingIntent.getBroadcast(context, eggIndex, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)

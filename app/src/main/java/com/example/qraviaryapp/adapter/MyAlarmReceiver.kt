@@ -10,18 +10,49 @@ import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import android.os.Build
+import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 import com.example.qraviaryapp.activities.mainactivities.NavHomeActivity
 
 class MyAlarmReceiver : BroadcastReceiver() {
+    private lateinit var pairmale: String
+    private lateinit var pairfemale: String
+    private lateinit var clutchkey: String
+    private lateinit var pairkey: String
+    private lateinit var eggkey: String
+    private lateinit var pairflightfemalekey: String
+    private lateinit var pairflightmalekey: String
+    private lateinit var pairmalekey: String
+    private lateinit var pairfemalekey: String
+    private lateinit var cagekeymale: String
+    private lateinit var cagekeyfemale: String
+    private lateinit var cagebirdfemale: String
+    private lateinit var cagebirdmale: String
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent != null) {
             val eggIndex = intent.getIntExtra("egg_index", -1)
+            pairmale = intent.getStringExtra("pairmale").toString()
+            pairfemale = intent.getStringExtra("pairfemale").toString()
+            clutchkey = intent.getStringExtra("clutchkey").toString()
+            pairkey = intent.getStringExtra("pairkey").toString()
+            eggkey= intent.getStringExtra("eggkey").toString()
+            pairflightmalekey= intent.getStringExtra("pairflightmalekey").toString()
+            pairflightfemalekey= intent.getStringExtra("pairflightfemalekey").toString()
+            pairmalekey= intent.getStringExtra("pairmalekey").toString()
+            pairfemalekey= intent.getStringExtra("pairfemalekey").toString()
+            cagekeyfemale= intent.getStringExtra("cagekeyfemale").toString()
+            cagekeymale= intent.getStringExtra("cagekeymale").toString()
+            cagebirdmale= intent.getStringExtra("cagebirdmale").toString()
+            cagebirdfemale= intent.getStringExtra("cagebirdfemale").toString()
+
+
+
             if (eggIndex != -1) {
 
-                showNotification(context, "$eggIndex", "Egg is ready to hatch!", eggIndex)
+                showNotification(context, "$eggIndex of Pair $pairmale and $pairfemale", "Egg is Hatched Today!", eggIndex)
 
             }
         }
@@ -31,8 +62,23 @@ class MyAlarmReceiver : BroadcastReceiver() {
 
     private fun showNotification(context: Context?, title: String, message: String, notificationId: Int) {
         val channelId = "MyAlarmChannel"
+        val bundle = Bundle()
+        bundle.putString("PairKey", pairkey)
+        bundle.putString("EggKey", eggkey)
+        bundle.putString("PairFlightMaleKey", pairflightmalekey)
+        bundle.putString("PairFlightFemaleKey", pairflightfemalekey)
+        bundle.putString("PairMaleKey", pairmalekey)
+        bundle.putString("PairFemaleKey", pairfemalekey)
+        bundle.putString("PairMaleID",  pairmale)
+        bundle.putString("PairFemaleID",pairfemale)
+        bundle.putString("CageKeyFemale",cagekeyfemale)
+        bundle.putString("CageKeyMale", cagekeymale)
+        bundle.putString("CageBirdFemale",cagebirdfemale)
+        bundle.putString("CageBirdMale", cagebirdmale)
+        val intent = Intent(context, ClutchesDetailedActivity::class.java)
+        intent.putExtras(bundle)
 
-        val intent = Intent(context, NavHomeActivity::class.java)
+
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         if (context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.POST_NOTIFICATIONS) } == PackageManager.PERMISSION_GRANTED) {
