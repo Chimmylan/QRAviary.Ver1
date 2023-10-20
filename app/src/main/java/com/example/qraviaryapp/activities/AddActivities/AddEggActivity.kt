@@ -249,19 +249,33 @@ class AddEggActivity : AppCompatActivity() {
 
         if (incubatingLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnIncubating.text)
-        }
-        if (hatchedLinearLayout.visibility == View.VISIBLE) {
+            val data: Map<String, Any?> = hashMapOf(
+                "Incubating Days" to incubatingDays,
+                "Maturing Days" to maturingDays,
+                "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
+            )
+            //TODO: Current date else statement
+            eggRef.updateChildren(data)
+
+        } else if (hatchedLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnHatched.text)
+            val data: Map<String, Any?> = hashMapOf(
+                "Incubating Days" to incubatingDays,
+                "Maturing Days" to maturingDays,
+            )
+            //TODO: Current date else statement
+            eggRef.updateChildren(data)
+
+        } else {
+            val data: Map<String, Any?> = hashMapOf(
+                "Incubating Days" to incubatingDays,
+                "Maturing Days" to maturingDays,
+                "Date" to currentDate
+            )
+            eggRef.updateChildren(data)
         }
 
-        val data: Map<String, Any?> = hashMapOf(
-            "Incubating Days" to incubatingDays,
-            "Maturing Days" to maturingDays,
-            "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
 
-        )
-
-        eggRef.updateChildren(data)
 
         onBackPressed()
 
