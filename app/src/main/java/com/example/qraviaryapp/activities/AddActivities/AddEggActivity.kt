@@ -33,6 +33,7 @@ class AddEggActivity : AppCompatActivity() {
         supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Egg</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,6 +49,8 @@ class AddEggActivity : AppCompatActivity() {
             // Set the text color to black for non-night mode
             saveMenuItem.title = HtmlCompat.fromHtml("<font color='#000000'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
+
+
 
         return true
     }
