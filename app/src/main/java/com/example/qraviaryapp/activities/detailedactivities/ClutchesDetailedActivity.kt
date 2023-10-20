@@ -80,6 +80,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val i = Intent(this, AddEggActivity::class.java)
             i.putExtra("PairKey", pairKey)
+            i.putExtra("EggKey", eggKey)
 
             startActivity(i)
         }

@@ -18,6 +18,7 @@ import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -55,6 +56,9 @@ class AddEggActivity : AppCompatActivity() {
     private var pairKey: String? = null
     private var individualEggKey: String? = null
     private var currentUserId: String? = null
+    private lateinit var hatchingDateTime: LocalDateTime
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +78,10 @@ class AddEggActivity : AppCompatActivity() {
             )
         )
         val abcolortitle = resources.getColor(R.color.appbar)
-        supportActionBar?.title = HtmlCompat.fromHtml("<font color='$abcolortitle'>Add Egg</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+        supportActionBar?.title = HtmlCompat.fromHtml(
+            "<font color='$abcolortitle'>Add Egg</font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
@@ -109,17 +116,19 @@ class AddEggActivity : AppCompatActivity() {
 
         val currentUserId = mAuth.currentUser?.uid
 
-        val dbase = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
-            .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString()).child(individualEggKey.toString())
+        val dbase = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: ${currentUserId.toString()}")
+            .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString())
+            .child(individualEggKey.toString())
 
-        if (!edited){
+        if (!edited) {
             etMaturingDate.setText(maturingDays.toString())
             etIncubatingDate.setText(incubatingDays.toString())
-        }else{
+        } else {
             dbase.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot!=null){
-                        val maturingDaysValue =  snapshot.child("Maturing Days").value.toString()
+                    if (snapshot != null) {
+                        val maturingDaysValue = snapshot.child("Maturing Days").value.toString()
                         val incubatingDaysValue = snapshot.child("Incubating Days").value.toString()
 
                         etIncubatingDate.setText(incubatingDaysValue)
@@ -133,7 +142,6 @@ class AddEggActivity : AppCompatActivity() {
 
             })
         }
-
 
 
         var maturingDateText = ""
@@ -178,10 +186,16 @@ class AddEggActivity : AppCompatActivity() {
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#FFFFFF'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#FFFFFF'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         } else {
             // Set the text color to black for non-night mode
-            saveMenuItem.title = HtmlCompat.fromHtml("<font color='#000000'>Save</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            saveMenuItem.title = HtmlCompat.fromHtml(
+                "<font color='#000000'>Save</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
 
 
@@ -192,7 +206,26 @@ class AddEggActivity : AppCompatActivity() {
     fun saveEdit() {
         val eggRef =
             db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey.toString())
-                .child("Clutches").push()
+                .child("Clutches")
+                .child(eggKey.toString()).push()
+
+
+        val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val maturingValue =
+            sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+
+        val incubatingValue = sharedPrefs?.getString("incubatingValue", "21")
+        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
+
+        var currentDate = LocalDate.now()
+
+        val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
+
+        val formattedDate = currentDate.format(formatter)
+
+        val currentDateTime = LocalDateTime.now()
+        hatchingDateTime = currentDateTime.plusDays(incubatingDays.toLong())
 
 
         eggRef.child("Status").setValue(status)
@@ -200,14 +233,16 @@ class AddEggActivity : AppCompatActivity() {
         if (btnHatched.text.toString() == "TODAY") {
             // Set the incubating date to the current date and time
             val currentDateTime = LocalDateTime.now()
-            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+            val formattedDate =
+                currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
 
             btnHatched.text = formattedDate
         }
         if (btnIncubating.text.toString() == "TODAY") {
             // Set the incubating date to the current date and time
             val currentDateTime = LocalDateTime.now()
-            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+            val formattedDate =
+                currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
 
             btnIncubating.text = formattedDate
         }
@@ -219,10 +254,14 @@ class AddEggActivity : AppCompatActivity() {
             eggRef.child("Date").setValue(btnHatched.text)
         }
 
+        val data: Map<String, Any?> = hashMapOf(
+            "Incubating Days" to incubatingDays,
+            "Maturing Days" to maturingDays,
+            "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
 
+        )
 
-
-
+        eggRef.updateChildren(data)
 
         onBackPressed()
 
@@ -324,8 +363,6 @@ class AddEggActivity : AppCompatActivity() {
             else -> "JAN" // Default should never happen
         }
     }
-
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
