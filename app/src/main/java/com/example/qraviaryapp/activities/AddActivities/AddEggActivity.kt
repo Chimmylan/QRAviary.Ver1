@@ -219,7 +219,6 @@ class AddEggActivity : AppCompatActivity() {
         val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
         var currentDate = LocalDate.now()
-
         val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
         val formattedDate = currentDate.format(formatter)
@@ -232,17 +231,12 @@ class AddEggActivity : AppCompatActivity() {
 
         if (btnHatched.text.toString() == "TODAY") {
             // Set the incubating date to the current date and time
-            val currentDateTime = LocalDateTime.now()
-            val formattedDate =
-                currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+
 
             btnHatched.text = formattedDate
         }
         if (btnIncubating.text.toString() == "TODAY") {
             // Set the incubating date to the current date and time
-            val currentDateTime = LocalDateTime.now()
-            val formattedDate =
-                currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
 
             btnIncubating.text = formattedDate
         }
@@ -267,10 +261,11 @@ class AddEggActivity : AppCompatActivity() {
             eggRef.updateChildren(data)
 
         } else {
+
             val data: Map<String, Any?> = hashMapOf(
                 "Incubating Days" to incubatingDays,
                 "Maturing Days" to maturingDays,
-                "Date" to currentDate
+                "Date" to formattedDate
             )
             eggRef.updateChildren(data)
         }
