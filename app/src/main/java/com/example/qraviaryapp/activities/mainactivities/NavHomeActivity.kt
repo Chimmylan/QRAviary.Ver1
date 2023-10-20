@@ -22,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
+import com.example.qraviaryapp.adapter.MyFirebaseMessagingService
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
 import com.example.qraviaryapp.fragments.NavFragments.*
 import com.example.qraviaryapp.fragments.SettingsFragment
@@ -34,8 +35,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 
-class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
+class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var binding : ActivityNavHomeBinding
@@ -44,6 +46,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
     private lateinit var menu: Menu
+
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -57,7 +60,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setContentView(binding.root)
 
         mAuth = FirebaseAuth.getInstance()
-
+        val MyFirebaseMessagingService = MyFirebaseMessagingService()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this, gso)
         toolbar = findViewById(R.id.toolbar)
@@ -92,13 +95,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             // Log and toast
             Log.d(TAG, "My token: $token")
-
             Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
         })
+        
 
         checkElapsedTime()
     }
-
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()

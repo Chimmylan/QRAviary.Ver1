@@ -429,6 +429,7 @@ class ClutchesFragment : Fragment() {
     }
 
     fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(context, MyAlarmReceiver::class.java)
@@ -454,6 +455,7 @@ class ClutchesFragment : Fragment() {
         calendar.timeInMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
     }
 
 //    fun setWorkForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
