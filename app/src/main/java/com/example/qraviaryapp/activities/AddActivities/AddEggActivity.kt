@@ -211,6 +211,7 @@ class AddEggActivity : AppCompatActivity() {
 
 
         val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+
         val maturingValue =
             sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50

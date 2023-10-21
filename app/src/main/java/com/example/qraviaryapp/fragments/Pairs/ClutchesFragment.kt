@@ -88,6 +88,7 @@ class ClutchesFragment : Fragment() {
     private lateinit var clutchkey: String
     private var key: String = ""
     private lateinit var hatchingDateTime: LocalDateTime
+
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
