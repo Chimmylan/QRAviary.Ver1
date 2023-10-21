@@ -121,7 +121,7 @@ class AddEggActivity : AppCompatActivity() {
             .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString())
             .child(individualEggKey.toString())
 
-        if (!edited) {
+/*        if (!edited) {
             etMaturingDate.setText(maturingDays.toString())
             etIncubatingDate.setText(incubatingDays.toString())
         } else {
@@ -141,12 +141,18 @@ class AddEggActivity : AppCompatActivity() {
                 }
 
             })
-        }
+        }*/
 
 
-        var maturingDateText = ""
-        var incubatingDateText = ""
-        edit.setOnClickListener {
+
+        var maturingDateText =  sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
+        var incubatingDateText = sharedPrefs?.getString("incubatingValue", "21")
+
+        etIncubatingDate.setText(incubatingDateText)
+        etMaturingDate.setText(maturingDateText)
+
+
+            edit.setOnClickListener {
             etMaturingDate.isEnabled = true
             etIncubatingDate.isEnabled = true
 
@@ -157,10 +163,6 @@ class AddEggActivity : AppCompatActivity() {
                 val editor = newPrefs.edit()
                 editor.putBoolean("Edited", true)
                 editor.apply()
-
-                dbase.child("Incubating Days").setValue(etIncubatingDate.text.toString())
-                dbase.child("Maturing Days").setValue(etMaturingDate.text.toString())
-
 
                 // Disable the EditText fields after saving
                 etMaturingDate.isEnabled = false
@@ -245,8 +247,8 @@ class AddEggActivity : AppCompatActivity() {
         if (incubatingLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnIncubating.text)
             val data: Map<String, Any?> = hashMapOf(
-                "Incubating Days" to incubatingDays,
-                "Maturing Days" to maturingDays,
+                "Incubating Days" to etIncubatingDate.text.toString(),
+                "Maturing Days" to etMaturingDate.text.toString(),
                 "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
             )
             //TODO: Current date else statement
@@ -255,8 +257,8 @@ class AddEggActivity : AppCompatActivity() {
         } else if (hatchedLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnHatched.text)
             val data: Map<String, Any?> = hashMapOf(
-                "Incubating Days" to incubatingDays,
-                "Maturing Days" to maturingDays,
+                "Incubating Days" to etIncubatingDate.text.toString(),
+                "Maturing Days" to etMaturingDate.text.toString(),
             )
             //TODO: Current date else statement
             eggRef.updateChildren(data)
@@ -264,8 +266,8 @@ class AddEggActivity : AppCompatActivity() {
         } else {
 
             val data: Map<String, Any?> = hashMapOf(
-                "Incubating Days" to incubatingDays,
-                "Maturing Days" to maturingDays,
+                "Incubating Days" to etIncubatingDate.text.toString(),
+                "Maturing Days" to etMaturingDate.text.toString(),
                 "Date" to formattedDate
             )
             eggRef.updateChildren(data)
