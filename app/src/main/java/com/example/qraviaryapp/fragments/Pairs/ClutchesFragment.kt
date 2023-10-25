@@ -44,6 +44,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
+import java.util.Random
 import java.util.concurrent.TimeUnit
 
 // TODO: Rename parameter arguments, choose names that match
@@ -354,7 +355,7 @@ class ClutchesFragment : Fragment() {
                     val currentDateTime = LocalDateTime.now()
                     hatchingDateTime = currentDateTime.plusDays(incubatingDays.toLong())
                     for (i in 0 until eggValue) {
-
+                        val clutchesRandomID = kotlin.random.Random.nextInt()
                         val clutches = newClutchRef.push()
                         clutchkey = clutches.key.toString()
                         eggCount++
@@ -364,7 +365,8 @@ class ClutchesFragment : Fragment() {
                             "Date" to formattedDate,
                             "Incubating Days" to incubatingDays,
                             "Maturing Days" to maturingDays,
-                            "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
+                            "Estimated Hatching Date" to hatchingDateTime.format(formatter1),
+                            "Alarm ID" to clutchesRandomID
 
                         )
 
@@ -373,11 +375,12 @@ class ClutchesFragment : Fragment() {
                         newEggs.eggIncubationStartDate = formattedDate
                         newEggs.estimatedHatchedDate = hatchingDateTime.format(formatter1)
                         clutches.updateChildren(data)
-
+                        Log.d(ContentValues.TAG, "Alarm ID: $clutchesRandomID")
+                        setAlarmForEgg(requireContext(), hatchingDateTime.format(formatter1), clutchesRandomID)
                     }
                     dataList.add(newEggs)
 
-                    setAlarmForEgg(requireContext(), hatchingDateTime.format(formatter1), dataList.size - 1)
+
 
 
                 } else if (!checkBox.isChecked) {

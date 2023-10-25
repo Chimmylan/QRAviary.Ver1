@@ -48,16 +48,10 @@ class MyAlarmReceiver : BroadcastReceiver() {
             cagebirdmale= intent.getStringExtra("cagebirdmale").toString()
             cagebirdfemale= intent.getStringExtra("cagebirdfemale").toString()
 
-
-
             if (eggIndex != -1) {
-
                 showNotification(context, "$eggIndex of Pair $pairmale and $pairfemale", "Egg is Hatched Today!", eggIndex)
-
             }
         }
-
-
     }
 
     private fun showNotification(context: Context?, title: String, message: String, notificationId: Int) {
@@ -77,7 +71,6 @@ class MyAlarmReceiver : BroadcastReceiver() {
         bundle.putString("CageBirdMale", cagebirdmale)
         val intent = Intent(context, ClutchesDetailedActivity::class.java)
         intent.putExtras(bundle)
-
 
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 

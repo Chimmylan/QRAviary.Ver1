@@ -147,6 +147,7 @@ class NurseryListActivity : AppCompatActivity() {
                 } else {
                     ""
                 }
+                val maturingDays = itemSnapshot.child("Maturing Days").value.toString()
                 val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
                 val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
@@ -203,6 +204,7 @@ class NurseryListActivity : AppCompatActivity() {
                 val father = FatherValue.toString() ?: ""
                 birdCount = snapshot.childrenCount.toInt()
 
+                data.maturingDays = maturingDays
                 data.adultingKey = adultingKey
                 data.cageKey = CageKey
                 data.img = mainPic

@@ -1,8 +1,11 @@
 package com.example.qraviaryapp.activities.AddActivities
 
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +18,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -243,13 +248,15 @@ class AddEggActivity : AppCompatActivity() {
 
             btnIncubating.text = formattedDate
         }
+        val eggRandomID = kotlin.random.Random.nextInt()
 
         if (incubatingLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnIncubating.text)
             val data: Map<String, Any?> = hashMapOf(
                 "Incubating Days" to etIncubatingDate.text.toString(),
                 "Maturing Days" to etMaturingDate.text.toString(),
-                "Estimated Hatching Date" to hatchingDateTime.format(formatter1)
+                "Estimated Hatching Date" to hatchingDateTime.format(formatter1),
+                "Alarm ID" to eggRandomID
             )
             //TODO: Current date else statement
             eggRef.updateChildren(data)
@@ -273,10 +280,32 @@ class AddEggActivity : AppCompatActivity() {
             eggRef.updateChildren(data)
         }
 
+        setAlarmForEgg(this, hatchingDateTime.format(formatter1), eggRandomID)
+
 
 
         onBackPressed()
 
+
+    }
+    fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, MyAlarmReceiver::class.java)
+        intent.putExtra("egg_index", eggIndex) // Pass the index of the egg
+
+        intent.putExtra("pairkey", pairKey)
+
+
+        intent.putExtra("estimatedHatchDate", hatchingDateTime.format(formatter1))
+        val pendingIntent = PendingIntent.getBroadcast(context, eggIndex, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
 
     }
 
