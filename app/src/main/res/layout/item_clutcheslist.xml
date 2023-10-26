@@ -113,6 +113,13 @@
                 android:text="Number of Dead Before Ringing"
                 android:textSize="15sp"
                 android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvMove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Move Egg"
+                android:textSize="15sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

@@ -180,6 +180,7 @@ data class EggData(
     var eggAbandon: String? = null,
     var eggDeadInShell: String? = null,
     var eggDeadBeforeMovingToNursery: String? = null,
+    var eggMoved: String? = null,
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
     var estimatedHatchedDate: String? = null,
