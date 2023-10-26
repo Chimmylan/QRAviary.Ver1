@@ -177,6 +177,8 @@ class AdultingFragment : Fragment() {
                     } else {
                         ""
                     }
+                    val maturingDays = itemsnapshot.child("Maturing Days").value.toString()
+
                     val dateOfBandingValue = itemsnapshot.child("Date of Banding").value
                     val dateOfBirthValue = itemsnapshot.child("Date of Birth").value
                     val statusValue = itemsnapshot.child("Status").value
@@ -231,7 +233,7 @@ class AdultingFragment : Fragment() {
                     val boughtBreeder = breederContactValue.toString() ?: ""
                     val mother = MotherValue.toString() ?: ""
                     val father = FatherValue.toString() ?: ""
-
+                    data.maturingDays = maturingDays
                     data.adultingKey = adultingKey
                     data.cageKey = CageKey
                     data.img = mainPic

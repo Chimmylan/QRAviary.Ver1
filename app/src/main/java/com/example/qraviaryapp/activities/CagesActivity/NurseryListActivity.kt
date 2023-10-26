@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import BirdData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -203,7 +204,7 @@ class NurseryListActivity : AppCompatActivity() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
                 birdCount = snapshot.childrenCount.toInt()
-
+                Log.d(TAG, maturingDays)
                 data.maturingDays = maturingDays
                 data.adultingKey = adultingKey
                 data.cageKey = CageKey
