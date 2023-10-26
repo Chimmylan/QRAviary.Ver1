@@ -240,7 +240,7 @@ class StatisticsFragment : Fragment() {
             notSplit = false
             Log.d(ContentValues.TAG, isSplit.toString())
             // Show birds with only one mutation (split)
-            val splitBirdList = birdList.filter { it.mutations?.contains("x") != true }
+            val splitBirdList = birdList.filter { it.mutations?.contains("x") == true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), splitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart), birdList1)
@@ -251,7 +251,7 @@ class StatisticsFragment : Fragment() {
             notSplit = true
 
             // Show birds with combined mutations (not split)
-            val notSplitBirdList = birdList.filter { it.mutations?.contains("x") == true }
+            val notSplitBirdList = birdList.filter { it.mutations?.contains("x") != true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), notSplitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), notSplitBirdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart),birdList1)
