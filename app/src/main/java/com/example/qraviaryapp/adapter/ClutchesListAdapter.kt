@@ -1,8 +1,10 @@
 package com.example.qraviaryapp.adapter
 
 import EggData
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +37,7 @@ class ClutchesListAdapter(
         val deadBeforeMovingToNurseryCount = clutch.eggDeadBeforeMovingToNursery
         val incubateDate = clutch.eggIncubationStartDate
         val laidDate = clutch.eggLaidStartDate
+        val moveCount = clutch.eggMoved
 
         holder.tvTotal.text = eggCount
 
@@ -99,6 +102,14 @@ class ClutchesListAdapter(
         } else {
             holder.tvDeadBeforeMoving.visibility = View.GONE
         }
+        Log.d(ContentValues.TAG, moveCount.toString())
+        if ( moveCount != null && moveCount.toInt() > 0) {
+            holder.tvMoved.visibility = View.VISIBLE
+            holder.tvMoved.text = "$moveCount Moved Egg"
+            // You might want to set the date for hatched eggs here if applicable.
+        } else {
+            holder.tvMoved.visibility = View.GONE
+        }
     }
 
 
@@ -120,6 +131,7 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
     val tvBroken: TextView = itemView.findViewById(R.id.tvBroke)
     val tvDeadInShell: TextView = itemView.findViewById(R.id.tvDeadInShell)
     val tvDeadBeforeMoving: TextView = itemView.findViewById(R.id.tvDeadBeforeRinging)
+    val tvMoved: TextView = itemView.findViewById(R.id.tvMove)
     val tvDate: TextView = itemView.findViewById(R.id.tvDate)
 
     init {

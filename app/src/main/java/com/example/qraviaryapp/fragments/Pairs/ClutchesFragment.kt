@@ -168,6 +168,7 @@ class ClutchesFragment : Fragment() {
             var abandonCount = 0
             var deadInShellCount = 0
             var deadBeforeMovingToNurseryCount = 0
+            var moveCount = 0
             var eggsCount = 0
 
             if (data != null) {
@@ -264,6 +265,17 @@ class ClutchesFragment : Fragment() {
                         data.eggKey = key
                         data.eggCount = eggsCount.toString()
                         data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
+                        data.eggLaidStartDate = eggDate
+
+                    }
+                    if (eggStatus == "Moved") {
+
+                        moveCount++
+                        Log.d(ContentValues.TAG, laidCount.toString())
+                        data.pairKey = pairKey
+                        data.eggKey = key
+                        data.eggCount = eggsCount.toString()
+                        data.eggMoved = moveCount.toString()
                         data.eggLaidStartDate = eggDate
 
                     }
