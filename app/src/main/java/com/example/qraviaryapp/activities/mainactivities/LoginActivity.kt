@@ -112,13 +112,31 @@ class LoginActivity : AppCompatActivity() {
             navigateToSecondActivity()
         }
         googleBtn.setOnClickListener {
+            // Show the progress bar
             showGoogleProgressBar()
 
+            // Record the start time
+            val startTime = System.currentTimeMillis()
+
+            // Execute the signIn function
+            signIn()
+
+            // Calculate the elapsed time
+            val elapsedTime = System.currentTimeMillis() - startTime
+
+            // Calculate the delay for hiding the progress bar
+            val delayMillis = if (elapsedTime < 3000) {
+                3000 - elapsedTime
+            } else {
+                0
+            }
+
+            // Hide the progress bar after the calculated delay
             Handler().postDelayed({
                 hideGoogleProgressBar()
-            signIn()
-            }, 3000)
+            }, delayMillis)
         }
+
 
     }
     private fun signIn() {
@@ -425,6 +443,5 @@ class LoginActivity : AppCompatActivity() {
     fun forgot(view: View) {}
     fun reg(view: View) {
         startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-        finish()
     }
 }

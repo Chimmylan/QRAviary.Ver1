@@ -96,7 +96,7 @@ class NavPurchasesFragment : Fragment() {
         viewPager = view.findViewById(R.id.viewPager)
         tablayout = view.findViewById(R.id.tablayout)
 
-        fragmentAdapter.addFragment(expensesFragment, "EXPENSES")
+        fragmentAdapter.addFragment(expensesFragment, "PURCHASES")
         fragmentAdapter.addFragment(chartFragment, "CHART")
         viewPager.adapter = fragmentAdapter
         tablayout.setupWithViewPager(viewPager)

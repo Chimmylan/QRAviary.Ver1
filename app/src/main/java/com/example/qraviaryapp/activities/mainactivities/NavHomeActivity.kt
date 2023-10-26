@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.mainactivities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.ContentValues.TAG
@@ -95,7 +96,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             // Log and toast
             Log.d(TAG, "My token: $token")
-            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
         })
         
 
@@ -132,6 +133,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         val fragment: Fragment
@@ -175,17 +177,17 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 fragment = ExpensesFragment()
                 title = "Expenses"
 
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_sales -> {
                 fragment = NavSalesFragment()
                 title = "Sales"
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_purchases -> {
                 fragment = NavPurchasesFragment()
                 title = "Purchases"
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
@@ -222,24 +224,15 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
                 hideMenuItems()
-                isMonitoringFragment = true
+                isMonitoringFragment = false
             }
         }
         if (!isMonitoringFragment) {
-            if(title == "Expenses" || title == "Purchases" || title == "Sales"){
-                toolbar.elevation = 0f
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
-            }else{
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
-                }
+
         } else {
-            if (title.equals("Balance")){
-                toolbar.elevation = 0f
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white_black)))
-            }
-            else {
-                toolbar.elevation = 0f
+            toolbar.elevation = 0f
                 supportActionBar?.setBackgroundDrawable(
                     ColorDrawable(
                         ContextCompat.getColor(
@@ -248,7 +241,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         )
                     )
                 )
-            }
+            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||

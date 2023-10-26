@@ -6,10 +6,14 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical"
-    android:background="@drawable/loginbg1"
+    android:background="@drawable/loginbg2"
     tools:context=".activities.mainactivities.LoginActivity">
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
@@ -66,7 +70,7 @@
                 android:id="@+id/etLogEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@drawable/transparent_bg"
 
                 android:inputType="textEmailAddress"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
@@ -92,7 +96,7 @@
                 android:layout_width="match_parent"
 
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@drawable/transparent_bg"
                 android:hint="Password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -227,7 +231,7 @@
                 android:layout_marginLeft="8dp"
                 android:onClick="reg"
                 android:textColor="@color/loginpurple"
-                android:text="Sign up"
+                android:text="SIGN UP"
                 android:textSize="15sp"
                 android:textStyle="bold" />
             <TextView
@@ -240,5 +244,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </LinearLayout>
 </LinearLayout>

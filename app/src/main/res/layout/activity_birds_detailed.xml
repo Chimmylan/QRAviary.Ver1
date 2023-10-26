@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
+
                 app:contentInsetStart="0dp"
                 app:contentInsetStartWithNavigation="0dp"
                 app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
@@ -71,8 +72,8 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbarcolor"
             app:tabMode="scrollable"
-            app:tabIndicatorColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorColor="@color/purpledark"
+            app:tabSelectedTextColor="@color/loginpurple"
             app:tabTextAppearance="@style/TabLayoutTextStyle"
             app:tabTextColor="@color/appbar_color"/>
 
