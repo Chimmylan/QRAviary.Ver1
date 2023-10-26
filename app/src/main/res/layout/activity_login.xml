@@ -4,31 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D9DADA"
-    android:orientation="vertical"
 
+    android:orientation="vertical"
+    android:background="@drawable/loginbg1"
     tools:context=".activities.mainactivities.LoginActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:gravity="center"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="Sign In"
+            android:textStyle="bold"
+            android:textColor="@color/loginpurple"
+            android:textSize="30sp" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="363dp"
-            android:layout_height="112dp"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/logoo" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="30dp"
         android:layout_gravity="center"
         android:orientation="vertical">
 
@@ -36,34 +39,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="16dp"
-            android:gravity="center_horizontal"
-            android:text="Hello! Welcome back! "
-            android:textColor="@color/black"
-            android:textSize="30sp"
+            android:textColor="@color/loginpurple"
+            android:text="Welcome Back!"
+
+            android:textSize="20sp"
             android:textStyle="bold" />
 
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutemail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
-            app:boxStrokeColor="#000000"
+
+            app:boxBackgroundColor="@color/purpledark"
             app:endIconMode="clear_text"
             app:helperText=" "
             app:helperTextEnabled="true"
             app:helperTextTextColor="#5A0808"
-            app:hintTextColor="#000000"
+            android:textColorHint="@color/purplelight"
             app:placeholderText="ex:qraviary@gmail.com"
             app:startIconDrawable="@drawable/ic_email"
-            app:startIconTint="#1E1D1D">
+            app:startIconTint="@color/purpledark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etLogEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#E9F2F3"
+                android:background="@color/white"
+
                 android:inputType="textEmailAddress"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
@@ -72,39 +76,71 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutpass"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxStrokeColor="#000000"
+            app:boxBackgroundColor="@color/purpledark"
             app:endIconMode="password_toggle"
+            app:endIconTint="@color/purpledark"
             app:helperText=" "
             app:helperTextTextColor="#5A0808"
-            app:hintTextColor="#000000"
+            android:textColorHint="@color/purplelight"
             app:startIconDrawable="@drawable/ic_lock"
-            app:startIconTint="#1E1D1D">
+            app:startIconTint="@color/purpledark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etLogPass"
                 android:layout_width="match_parent"
+
                 android:layout_height="match_parent"
-                android:background="#E9F2F3"
+                android:background="@color/white"
                 android:hint="Password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
 
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            <CheckBox
+                android:id="@+id/tvremember"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="forgot"
+                android:text="Remember Me"
+                android:textColor="@color/loginpurple"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvforgot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="forgot"
+
+                android:text="forgot password?"
+                android:textColor="@color/loginpurple"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
             <LinearLayout
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="#444545"
+                    android:layout_height="45dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/loginpurple"
                     android:onClick="login">
                     <TextView
                         android:id="@+id/textbtn"
@@ -124,26 +160,7 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:orientation="horizontal">
 
-
-            <TextView
-                android:id="@+id/tvforgot"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="forgot"
-                android:text="Forgot Password?"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -156,6 +173,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textColor="@color/purplelight"
                 android:text="____________ or sign in with ___________"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -198,7 +216,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Not registered yet?"
+                android:textColor="@color/purplelight"
+                android:text="Dont have an account?"
                 android:textSize="16sp" />
 
             <TextView
@@ -207,11 +226,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:onClick="reg"
-                android:text="Register here"
-                android:textColor="#000"
+                android:textColor="@color/loginpurple"
+                android:text="Sign up"
                 android:textSize="15sp"
                 android:textStyle="bold" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/purplelight"
+                android:text="here"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
