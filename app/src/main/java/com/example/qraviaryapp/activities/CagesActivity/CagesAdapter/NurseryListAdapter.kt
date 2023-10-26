@@ -112,7 +112,7 @@ class NurseryListAdapter(
         )
 
         val datebirth = bird.dateOfBirth
-        Log.d(TAG,"$maturingDays")
+        Log.d(TAG,"${bird.maturingDays}")
         val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
         val birthDate = datebirth?.let { dateFormat.parse(it) }
         val currentDate = Calendar.getInstance().time
