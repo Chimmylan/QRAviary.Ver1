@@ -94,7 +94,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         Auth = FirebaseAuth.getInstance()
         currentUser = Auth.currentUser?.uid.toString()
         toolbar= findViewById(R.id.toolbar)
-        toolbar.elevation = 0f
+        supportActionBar?.elevation = 0f
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val bundle = intent.extras
