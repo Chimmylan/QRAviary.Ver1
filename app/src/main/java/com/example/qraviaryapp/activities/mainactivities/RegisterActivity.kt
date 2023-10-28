@@ -393,56 +393,75 @@ class RegisterActivity : AppCompatActivity() {
                 mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-
-
-
                             val userId = mAuth.currentUser!!.uid
-                            val myRef = dbase.child("Users").child("ID: $userId")
 
-                            val userReference = dbase.child("Users")
-                            userReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    if (dataSnapshot.hasChild("ID: $userId")) {
-                                        Log.d(TAG, "Main Page")
-                                        // TODO: User already exists, navigate to the main page.
+                            // Send email verification link
+                            mAuth.currentUser!!.sendEmailVerification()
+                                .addOnCompleteListener { verificationTask ->
+                                    if (verificationTask.isSuccessful) {
+                                        // Email verification link sent successfully
+                                        // You can add a Toast message or handle this as needed.
+                                        Toast.makeText(
+                                            this@RegisterActivity,
+                                            "Verification email sent, please check your inbox",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+
+                                        val myRef = dbase.child("Users").child("ID: $userId")
+
+                                        val userReference = dbase.child("Users")
+                                        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                if (dataSnapshot.hasChild("ID: $userId")) {
+                                                    Log.d(TAG, "Main Page")
+                                                    // TODO: User already exists, navigate to the main page.
+                                                } else {
+                                                    Log.d(TAG, "Get Started Page")
+                                                    // TODO: User does not exist, navigate to the Get Started page.
+
+                                                    // Since the user does not exist, create a new entry in the database
+                                                    val userData = hashMapOf(
+                                                        "UserID" to userId,
+                                                        "Email" to email,
+                                                        "Password" to password,
+                                                        "Username" to username // Add the username to the userData HashMap
+                                                    )
+                                                    myRef.setValue(userData).addOnSuccessListener {
+                                                        Toast.makeText(
+                                                            this@RegisterActivity,
+                                                            "User registered successfully",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+
+                                                        //TODO Make the user go to the Get Started Page
+                                                        startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
+                                                        finish()
+
+                                                    }.addOnFailureListener {
+                                                        Toast.makeText(
+                                                            this@RegisterActivity,
+                                                            "User registration failed",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                    userReference.child("ID: $userId").setValue(userData)
+                                                }
+                                            }
+
+                                            override fun onCancelled(databaseError: DatabaseError) {
+                                                // Handle the error as needed.
+                                                Log.e(TAG, "Error occurred: ${databaseError.message}")
+                                            }
+                                        })
                                     } else {
-                                        Log.d(TAG, "Get Started Page")
-                                        // TODO: User does not exist, navigate to the Get Started page.
-
-                                        // Since the user does not exist, create a new entry in the database
-                                        val userData = hashMapOf(
-                                            "UserID" to userId,
-                                            "Email" to email,
-                                            "Password" to password,
-                                            "Username" to username // Add the username to the userData HashMap
-                                        )
-                                        myRef.setValue(userData).addOnSuccessListener {
-                                            Toast.makeText(
-                                                this@RegisterActivity,
-                                                "User registered successfully",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            //TODO Make the user go to the Get Started Page
-                                            startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
-                                            finish()
-                                        }.addOnFailureListener {
-                                            Toast.makeText(
-                                                this@RegisterActivity,
-                                                "User registration failed",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                        userReference.child("ID: $userId").setValue(userData)
+                                        // Handle email verification sending failure here if needed
+                                        Toast.makeText(
+                                            this@RegisterActivity,
+                                            "Failed to send verification email",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
-
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                    // Handle the error as needed.
-                                    Log.e(TAG, "Error occurred: ${databaseError.message}")
-                                }
-                            })
-
-
                         } else {
                             val errorCode = (task.exception as FirebaseAuthException).errorCode
                             if (errorCode == "ERROR_INVALID_EMAIL") {
