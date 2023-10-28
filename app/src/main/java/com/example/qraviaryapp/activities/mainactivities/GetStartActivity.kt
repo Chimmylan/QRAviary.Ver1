@@ -88,7 +88,7 @@ class GetStartActivity : AppCompatActivity() {
     }
 
     private fun navigateToHomeActivity() {
-        val intent = Intent(this@GetStartActivity, NavHomeActivity::class.java)
+        val intent = Intent(this@GetStartActivity, LoginActivity::class.java)
         startActivity(intent)
         finish() // Finish this activity to prevent going back to it
     }
