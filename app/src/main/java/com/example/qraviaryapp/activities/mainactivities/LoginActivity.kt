@@ -393,11 +393,7 @@ class LoginActivity : AppCompatActivity() {
                                     ).show()
                                 }
                                 else{
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        "User not verified",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    showErrornotVerified("User not verified")
                                 }
 
 //                                val rememberUser = rememberme.isChecked
@@ -442,6 +438,17 @@ class LoginActivity : AppCompatActivity() {
         val alertDialog = AlertDialog.Builder(this)
             .setMessage(errorMessage)
             .setPositiveButton("Try Again") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
+    private fun showErrornotVerified(errorMessage: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setPositiveButton("Okay") { dialog, _ ->
                 dialog.dismiss()
             }
             .setCancelable(false)

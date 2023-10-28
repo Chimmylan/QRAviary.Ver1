@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -356,8 +357,7 @@ class RegisterActivity : AppCompatActivity() {
 
         showProgressBar()
 
-        Handler().postDelayed({
-            hideProgressBar()
+
 
             if (TextUtils.isEmpty(email)) {
                 layoutemail.helperText = "Email cannot be empty"
@@ -392,6 +392,7 @@ class RegisterActivity : AppCompatActivity() {
             if (valid) {
                 mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
+                        hideProgressBar()
                         if (task.isSuccessful) {
                             val userId = mAuth.currentUser!!.uid
 
@@ -427,22 +428,14 @@ class RegisterActivity : AppCompatActivity() {
                                                         "Username" to username // Add the username to the userData HashMap
                                                     )
                                                     myRef.setValue(userData).addOnSuccessListener {
-                                                        Toast.makeText(
-                                                            this@RegisterActivity,
-                                                            "User registered successfully",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
+                                                        showSuccessSnackbar("User registered successfully")
 
                                                         //TODO Make the user go to the Get Started Page
                                                         startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
                                                         finish()
 
                                                     }.addOnFailureListener {
-                                                        Toast.makeText(
-                                                            this@RegisterActivity,
-                                                            "User registration failed",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
+                                                        showErrorSnackbar("User registration failed")
                                                     }
                                                     userReference.child("ID: $userId").setValue(userData)
                                                 }
@@ -463,6 +456,7 @@ class RegisterActivity : AppCompatActivity() {
                                     }
                                 }
                         } else {
+                            hideProgressBar()
                             val errorCode = (task.exception as FirebaseAuthException).errorCode
                             if (errorCode == "ERROR_INVALID_EMAIL") {
                                 layoutemail.helperText = "Invalid Email"
@@ -478,8 +472,24 @@ class RegisterActivity : AppCompatActivity() {
                     }
             } else {
 //            Toast.makeText(this@RegisterActivity, "Invalid Inputs", Toast.LENGTH_LONG).show()
-            }
-        }, 3000)
+        }
+    }
+    private fun showSuccessSnackbar(message: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showErrorSnackbar(message: String) {
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        )
+        snackbar.view.setBackgroundColor(Color.parseColor("#5A0808")) // Set background color for error
+        snackbar.show()
     }
 
     fun login(view: View) {
