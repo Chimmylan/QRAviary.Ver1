@@ -19,6 +19,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.example.qraviaryapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -239,7 +240,7 @@ class RegisterActivity : AppCompatActivity() {
                             finish()
                         } else {
                             Log.d(TAG, "Get Started Page")
-                            startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
+                            startActivity(Intent(this@RegisterActivity, GetStart1Activity::class.java))
                             finish()
 
                             // Since the user does not exist, create a new entry in the database
@@ -404,14 +405,15 @@ class RegisterActivity : AppCompatActivity() {
                             // Send email verification link
                             mAuth.currentUser!!.sendEmailVerification()
                                 .addOnCompleteListener { verificationTask ->
+                                    hideProgressBar()
                                     if (verificationTask.isSuccessful) {
-                                        // Email verification link sent successfully
-                                        // You can add a Toast message or handle this as needed.
-                                        Toast.makeText(
-                                            this@RegisterActivity,
-                                            "Verification email sent, please check your inbox",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+//                                        showVerified("Verification email sent, please check your inbox")
+                                        showVerifiedMessage("Verification email sent, please check your inbox")
+//                                        Toast.makeText(
+//                                            this@RegisterActivity,
+//                                            "Verification email sent, please check your inbox",
+//                                            Toast.LENGTH_SHORT
+//                                        ).show()
 
                                         val myRef = dbase.child("Users").child("ID: $userId")
 
@@ -501,6 +503,17 @@ class RegisterActivity : AppCompatActivity() {
 
         }
     }
+    private fun showVerified(errorMessage: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+//            .setPositiveButton("Already checked") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
     private fun showSuccessSnackbar(message: String) {
         Snackbar.make(
             findViewById(android.R.id.content),
@@ -508,7 +521,29 @@ class RegisterActivity : AppCompatActivity() {
             Snackbar.LENGTH_SHORT
         ).show()
     }
+    private fun showVerifiedMessage(message: String) {
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
 
+        Snackbar.make(
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
+            message,
+            Snackbar.LENGTH_SHORT
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            snackbarView.setBackgroundColor(Color.parseColor("#800080"))
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
+    }
     private fun showErrorSnackbar(message: String) {
         val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
         val marginInDp = 40 // Define the margin in dp

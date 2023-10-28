@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:id="@+id/coordinatorLayout"
     android:orientation="vertical"
     android:background="@drawable/loginbg2"
     tools:context=".activities.mainactivities.LoginActivity">
@@ -144,6 +144,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     app:cardCornerRadius="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
                     app:cardBackgroundColor="@color/loginpurple"
                     android:onClick="login">
                     <TextView
@@ -245,4 +248,4 @@
 
     </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

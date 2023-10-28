@@ -152,6 +152,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 app:cardCornerRadius="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground"
                 app:cardBackgroundColor="@color/loginpurple"
                 android:onClick="reg">
 

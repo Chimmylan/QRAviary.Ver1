@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class GetStartActivity : AppCompatActivity() {
+class GetStart1Activity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,10 +89,10 @@ class GetStartActivity : AppCompatActivity() {
     }
 
     private fun navigateToHomeActivity() {
-        val intent = Intent(this@GetStartActivity, LoginActivity::class.java)
+        val intent = Intent(this@GetStart1Activity, NavHomeActivity::class.java)
         startActivity(intent)
         finish() // Finish this activity to prevent going back to it
-        snackbarMessage = "User registered successfully"
+        snackbarMessage = "Welcome Back!"
     }
 
     companion object {

@@ -32,9 +32,13 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.graphics.Color
 import android.util.Log
+import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AlertDialog
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -54,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var dbase: DatabaseReference
 //    private var KEY_EMAIL: String = "email"
-//    private var KEY_REMEMBER_ME: String = "rememberUser"
+//    private var KEY_REMEMBER_ME: String = "remember00User"
 //    private var KEY_IS_LOGGED_IN: String = "isLoggedIn"
 
 
@@ -92,6 +96,11 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
         val isRemembered = sharedPreferences.getBoolean("rememberUser", false)
 
+        if (GetStartActivity.snackbarMessage != null) {
+            showSnackbar(GetStartActivity.snackbarMessage!!)
+            // Reset the message to prevent showing it again
+            GetStartActivity.snackbarMessage = null
+        }
         if (isRemembered) {
             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
             finish()
@@ -224,7 +233,7 @@ class LoginActivity : AppCompatActivity() {
                             finish()
                         } else {
                             Log.d(TAG, "Get Started Page")
-                            startActivity(Intent(this@LoginActivity, GetStartActivity::class.java))
+                            startActivity(Intent(this@LoginActivity, GetStart1Activity::class.java))
                             finish()
                             // Since the user does not exist, create a new entry in the database
                             val userData = hashMapOf("Name" to uid)
@@ -276,6 +285,7 @@ class LoginActivity : AppCompatActivity() {
         progressBar.visibility = View.INVISIBLE
         textbtn.visibility = View.VISIBLE
     }
+    private var loginAttempts = 0
     fun login(view: View) {
         val email = lemail.text.toString()
         val password = lpass.text.toString()
@@ -283,8 +293,7 @@ class LoginActivity : AppCompatActivity() {
 
         showProgressBar()
 
-        Handler().postDelayed({
-            hideProgressBar()
+
             if (!isOnline()) {
                 // Show message to connect to the internet
 
@@ -299,7 +308,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
 
                 }
                 else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !isOnline()) {
@@ -308,7 +318,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
                 else if (TextUtils.isEmpty(email) && !isOnline()) {
                     layoutemail.helperText = "Email cannot be empty"
@@ -319,7 +330,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
                 else if (!TextUtils.isEmpty(email) && !isOnline()) {
 
@@ -328,7 +340,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
                 else if (TextUtils.isEmpty(password) && !isOnline()) {
                     layoutpass.helperText = "Password cannot be empty"
@@ -338,7 +351,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
                 else if (!TextUtils.isEmpty(password) && !isOnline()) {
                     Toast.makeText(
@@ -346,7 +360,8 @@ class LoginActivity : AppCompatActivity() {
                         "Please connect to the internet and try again later",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
 //            Toast.makeText(
 //                this,
@@ -362,78 +377,106 @@ class LoginActivity : AppCompatActivity() {
                     layoutpass.helperText = "Password cannot be empty"
                     vibrateAnimation(layoutemail)
                     vibrateAnimation(layoutpass)
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 } else if (TextUtils.isEmpty(email) && isOnline()) {
                     layoutemail.helperText = "Email cannot be empty"
                     vibrateAnimation(layoutemail)
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 } else if (TextUtils.isEmpty(password) && isOnline()) {
                     layoutpass.helperText = "Password cannot be empty"
                     vibrateAnimation(layoutpass)
-                    return@postDelayed
+                    hideProgressBar()
+                    return
                 }
                 // Check for internet connection
                 else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isOnline()) {
                     mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this) { task ->
+                            hideProgressBar()
                             if (task.isSuccessful) {
-                                if(mAuth.currentUser?.isEmailVerified == true){
-
+                                if (mAuth.currentUser?.isEmailVerified == true) {
                                     startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
                                     finish()
-//                                {
-//                                    putExtra(KEY_REMEMBER_ME, rememberUser)
-//                                }
-//                                startActivity(intent)
-
                                     Toast.makeText(
                                         this@LoginActivity,
                                         "User logged in successfully",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                }
-                                else{
-                                    showErrornotVerified("User not verified")
-                                }
-
-//                                val rememberUser = rememberme.isChecked
-//                                val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//                                editor.putString(KEY_EMAIL, lemail.text.toString())
-//                                editor.putBoolean(KEY_REMEMBER_ME, rememberUser)
-//                                editor.putBoolean(KEY_IS_LOGGED_IN, true)
-//                                editor.apply()
-
-                            } else {
-
-                                val exception = task.exception
-                                if (exception is FirebaseAuthException) {
-                                    val errorCode = exception.errorCode
-                                    when (errorCode) {
-                                        "ERROR_INVALID_EMAIL", "ERROR_WRONG_PASSWORD" -> {
-                                            // Show the error message in an AlertDialog
-                                            showErrorMessageDialog("Invalid email or password")
-                                        }
-
-                                        else -> {
-                                           /* layoutemail.helperText = "Invalid Email"*/
-                                           /* layoutpass.helperText = "Invalid Password"*/
-                                            showErrorMessageDialog("Did you forget your password?")
-                                        }
-                                    }
                                 } else {
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        "Error occurred while logging in",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    showSnackBar(
+                                        "Email Not Verified",
+                                        "Please verify your email now. You cannot login without email verification",
+                                        "Continue"
+                                    )
+                                }
+                            } else {
+                                loginAttempts++
+                                if (loginAttempts >= 3) {
+                                    // Open the "Forgot Password" dialog here
+                                    showDialogForgetPass(
+                                        "Did you forget your password?",
+                                        "Continue to change your password",
+                                        "Continue",
+                                        "Try Again"
+                                    )
+                                    loginAttempts = 0 // Reset the counter
+                                } else {
+                                    val exception = task.exception
+                                    if (exception is FirebaseAuthException) {
+                                        val errorCode = exception.errorCode
+                                        when (errorCode) {
+                                            "ERROR_INVALID_EMAIL", "ERROR_WRONG_PASSWORD" -> {
+                                                // Show the error message in an AlertDialog
+                                                showErrorMessageDialog("Invalid email or password")
+                                            }
+                                            else -> {
+                                                showDialogForgetPass(
+                                                    "Did you forget your password?",
+                                                    "Continue to change your password",
+                                                    "Continue",
+                                                    "Try Again"
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Error occurred while logging in",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             }
                         }
-
                 }
             }
-        }, 3000)
     }
+    private fun showSnackbar(message: String) {
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
+
+        Snackbar.make(
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
+            message,
+            Snackbar.LENGTH_SHORT
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            snackbarView.setBackgroundColor(Color.parseColor("#800080"))
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
+    }
+
     private fun showErrorMessageDialog(errorMessage: String) {
         val alertDialog = AlertDialog.Builder(this)
             .setMessage(errorMessage)
@@ -445,10 +488,11 @@ class LoginActivity : AppCompatActivity() {
 
         alertDialog.show()
     }
-    private fun showErrornotVerified(errorMessage: String) {
+    private fun showSnackBar(title: String, errorMessage: String, button: String) {
         val alertDialog = AlertDialog.Builder(this)
             .setMessage(errorMessage)
-            .setPositiveButton("Okay") { dialog, _ ->
+            .setTitle(title)
+            .setPositiveButton(button) { dialog, _ ->
                 dialog.dismiss()
             }
             .setCancelable(false)
@@ -456,6 +500,22 @@ class LoginActivity : AppCompatActivity() {
 
         alertDialog.show()
     }
+    private fun showDialogForgetPass(title: String, errorMessage: String, button: String, negbutton: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setTitle(title)
+            .setPositiveButton(button) { dialog, _ ->
+                startActivity(Intent(this@LoginActivity, ForgotPassActivity::class.java))
+            }
+            .setNegativeButton(negbutton) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
+
     fun forgot(view: View) {}
     fun reg(view: View) {
         startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
