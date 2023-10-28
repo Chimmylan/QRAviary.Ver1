@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="16dp"
             android:textColor="@color/loginpurple"
-            android:text="Welcome Back!"
+
 
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -52,11 +52,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutemail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
+            app:boxStrokeColor="@color/loginpurple"
+            app:boxStrokeWidth="2dp"
 
-            app:boxBackgroundColor="@color/purpledark"
             app:endIconMode="clear_text"
             app:helperText=" "
             app:helperTextEnabled="true"
@@ -142,7 +144,7 @@
                 android:orientation="horizontal">
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="40dp"
                     app:cardCornerRadius="20dp"
                     android:clickable="true"
                     android:focusable="true"

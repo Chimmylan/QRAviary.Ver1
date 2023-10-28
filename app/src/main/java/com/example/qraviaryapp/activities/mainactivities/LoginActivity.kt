@@ -286,173 +286,237 @@ class LoginActivity : AppCompatActivity() {
         textbtn.visibility = View.VISIBLE
     }
     private var loginAttempts = 0
+//    fun login(view: View) {
+//        val email = lemail.text.toString()
+//        val password = lpass.text.toString()
+//
+//
+//        showProgressBar()
+//
+//
+//        if (!isOnline()) {
+//            // Show message to connect to the internet
+//
+//            if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password) && !isOnline()) {
+//                layoutemail.helperText = "Email cannot be empty"
+//                layoutpass.helperText = "Password cannot be empty"
+//                vibrateAnimation(layoutemail)
+//                vibrateAnimation(layoutpass)
+//
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//
+//            }
+//            else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !isOnline()) {
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//            }
+//            else if (TextUtils.isEmpty(email) && !isOnline()) {
+//                layoutemail.helperText = "Email cannot be empty"
+//                vibrateAnimation(layoutemail)
+//
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//            }
+//            else if (!TextUtils.isEmpty(email) && !isOnline()) {
+//
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//            }
+//            else if (TextUtils.isEmpty(password) && !isOnline()) {
+//                layoutpass.helperText = "Password cannot be empty"
+//                vibrateAnimation(layoutpass)
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//            }
+//            else if (!TextUtils.isEmpty(password) && !isOnline()) {
+//                Toast.makeText(
+//                    this,
+//                    "Please connect to the internet and try again later",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                hideProgressBar()
+//                return
+//            }
+////            Toast.makeText(
+////                this,
+////                "Please connect to the internet and try again later",
+////                Toast.LENGTH_LONG
+////            ).show()
+////
+////            return
+//        }
+//        else if (isOnline()) {
+//            if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password) && isOnline()) {
+//                layoutemail.helperText = "Email cannot be empty"
+//                layoutpass.helperText = "Password cannot be empty"
+//                vibrateAnimation(layoutemail)
+//                vibrateAnimation(layoutpass)
+//                hideProgressBar()
+//                return
+//            } else if (TextUtils.isEmpty(email) && isOnline()) {
+//                layoutemail.helperText = "Email cannot be empty"
+//                vibrateAnimation(layoutemail)
+//                hideProgressBar()
+//                return
+//            } else if (TextUtils.isEmpty(password) && isOnline()) {
+//                layoutpass.helperText = "Password cannot be empty"
+//                vibrateAnimation(layoutpass)
+//                hideProgressBar()
+//                return
+//            }
+//            // Check for internet connection
+//            else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isOnline()) {
+//                mAuth.signInWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener(this) { task ->
+//                        hideProgressBar()
+//                        if (task.isSuccessful) {
+//                            if(mAuth.currentUser?.isEmailVerified == true){
+//
+//                                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+//                                finish()
+//
+//
+//                                Toast.makeText(
+//                                    this@LoginActivity,
+//                                    "User logged in successfully",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
+//                            else{
+//                                showSnackBar("Email Not Verified",
+//                                    "Please verify your email now. You cannot login without email verification",
+//                                    "Continue")
+//                            }
+//
+//
+//
+//                        } else {
+//
+//                            val exception = task.exception
+//                            if (exception is FirebaseAuthException) {
+//                                val errorCode = exception.errorCode
+//                                when (errorCode) {
+//                                    "ERROR_INVALID_EMAIL", "ERROR_WRONG_PASSWORD" -> {
+//                                        // Show the error message in an AlertDialog
+//                                        showErrorMessageDialog("Invalid email or password")
+//                                        hideProgressBar()
+//                                    }
+//
+//                                    else -> {
+//                                        /* layoutemail.helperText = "Invalid Email"*/
+//                                        /* layoutpass.helperText = "Invalid Password"*/
+//                                        showDialogForgetPass("Did you forget your password?",
+//                                            "Continue to change your password",
+//                                            "Continue", "Try Again")
+//                                        hideProgressBar()
+//                                    }
+//                                }
+//                            } else {
+//                                Toast.makeText(
+//                                    this@LoginActivity,
+//                                    "Error occurred while logging in",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
+//                        }
+//                    }
+//
+//            }
+//        }
+//
+//    }
+
     fun login(view: View) {
         val email = lemail.text.toString()
         val password = lpass.text.toString()
 
+        if (TextUtils.isEmpty(email)) {
+            layoutemail.helperText = "Email cannot be empty"
+            vibrateAnimation(layoutemail)
+            return
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            layoutpass.helperText = "Password cannot be empty"
+            vibrateAnimation(layoutpass)
+            return
+        }
+
+        if (!isOnline()) {
+            Toast.makeText(this, "Please connect to the internet and try again later", Toast.LENGTH_LONG).show()
+            return
+        }
 
         showProgressBar()
 
-
-            if (!isOnline()) {
-                // Show message to connect to the internet
-
-                if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password) && !isOnline()) {
-                    layoutemail.helperText = "Email cannot be empty"
-                    layoutpass.helperText = "Password cannot be empty"
-                    vibrateAnimation(layoutemail)
-                    vibrateAnimation(layoutpass)
-
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-
-                }
-                else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !isOnline()) {
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-                }
-                else if (TextUtils.isEmpty(email) && !isOnline()) {
-                    layoutemail.helperText = "Email cannot be empty"
-                    vibrateAnimation(layoutemail)
-
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-                }
-                else if (!TextUtils.isEmpty(email) && !isOnline()) {
-
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-                }
-                else if (TextUtils.isEmpty(password) && !isOnline()) {
-                    layoutpass.helperText = "Password cannot be empty"
-                    vibrateAnimation(layoutpass)
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-                }
-                else if (!TextUtils.isEmpty(password) && !isOnline()) {
-                    Toast.makeText(
-                        this,
-                        "Please connect to the internet and try again later",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    hideProgressBar()
-                    return
-                }
-//            Toast.makeText(
-//                this,
-//                "Please connect to the internet and try again later",
-//                Toast.LENGTH_LONG
-//            ).show()
-//
-//            return
-             }
-            else if (isOnline()) {
-                if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password) && isOnline()) {
-                    layoutemail.helperText = "Email cannot be empty"
-                    layoutpass.helperText = "Password cannot be empty"
-                    vibrateAnimation(layoutemail)
-                    vibrateAnimation(layoutpass)
-                    hideProgressBar()
-                    return
-                } else if (TextUtils.isEmpty(email) && isOnline()) {
-                    layoutemail.helperText = "Email cannot be empty"
-                    vibrateAnimation(layoutemail)
-                    hideProgressBar()
-                    return
-                } else if (TextUtils.isEmpty(password) && isOnline()) {
-                    layoutpass.helperText = "Password cannot be empty"
-                    vibrateAnimation(layoutpass)
-                    hideProgressBar()
-                    return
-                }
-                // Check for internet connection
-                else if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isOnline()) {
-                    mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this) { task ->
-                            hideProgressBar()
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                hideProgressBar()
+                if (task.isSuccessful) {
+                    if (mAuth.currentUser?.isEmailVerified == true) {
+                        startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                        finish()
+                        Toast.makeText(this@LoginActivity, "User logged in successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        showSnackBar(
+                            "Email Not Verified",
+                            "Please verify your email now. You cannot login without email verification",
+                            "Continue"
+                        )
+                    }
+                } else {
+                    FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
+                        .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                if (mAuth.currentUser?.isEmailVerified == true) {
-                                    startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
-                                    finish()
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        "User logged in successfully",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    showSnackBar(
-                                        "Email Not Verified",
-                                        "Please verify your email now. You cannot login without email verification",
-                                        "Continue"
-                                    )
-                                }
-                            } else {
-                                loginAttempts++
-                                if (loginAttempts >= 3) {
-                                    // Open the "Forgot Password" dialog here
+                                val signInMethods = task.result?.signInMethods
+                                if (signInMethods.isNullOrEmpty()) {
                                     showDialogForgetPass(
-                                        "Did you forget your password?",
-                                        "Continue to change your password",
-                                        "Continue",
+                                        "No account found. Create a new account?",
+                                        "It looks like $email isn't connected to an account. You can create a new account or try again",
+                                        "Create",
                                         "Try Again"
                                     )
-                                    loginAttempts = 0 // Reset the counter
                                 } else {
-                                    val exception = task.exception
-                                    if (exception is FirebaseAuthException) {
-                                        val errorCode = exception.errorCode
-                                        when (errorCode) {
-                                            "ERROR_INVALID_EMAIL", "ERROR_WRONG_PASSWORD" -> {
-                                                // Show the error message in an AlertDialog
-                                                showErrorMessageDialog("Invalid email or password")
-                                            }
-                                            else -> {
-                                                showDialogForgetPass(
-                                                    "Did you forget your password?",
-                                                    "Continue to change your password",
-                                                    "Continue",
-                                                    "Try Again"
-                                                )
-                                            }
-                                        }
-                                    } else {
-                                        Toast.makeText(
-                                            this@LoginActivity,
-                                            "Error occurred while logging in",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
+                                    showDialogForgetPass(
+                                        "Did you forget your password?",
+                                        "We can help you log into your account if you've forgotten your password.",
+                                        "Forgot Password",
+                                        "Try Again"
+                                    )
                                 }
                             }
+
                         }
                 }
             }
     }
+
     private fun showSnackbar(message: String) {
         val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
         val marginInDp = 40 // Define the margin in dp
