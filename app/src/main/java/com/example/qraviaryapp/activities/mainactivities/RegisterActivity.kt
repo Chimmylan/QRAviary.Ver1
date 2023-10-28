@@ -1,5 +1,7 @@
 package com.example.qraviaryapp.activities.mainactivities
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -13,8 +15,11 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.example.qraviaryapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.GoogleAuthProvider
@@ -428,14 +433,14 @@ class RegisterActivity : AppCompatActivity() {
                                                         "Username" to username // Add the username to the userData HashMap
                                                     )
                                                     myRef.setValue(userData).addOnSuccessListener {
-                                                        showSuccessSnackbar("User registered successfully")
+                                                        Toast.makeText(this@RegisterActivity, "User registered successfully", Toast.LENGTH_LONG).show()
 
                                                         //TODO Make the user go to the Get Started Page
                                                         startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
                                                         finish()
 
                                                     }.addOnFailureListener {
-                                                        showErrorSnackbar("User registration failed")
+
                                                     }
                                                     userReference.child("ID: $userId").setValue(userData)
                                                 }
@@ -457,21 +462,43 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                         } else {
                             hideProgressBar()
+
                             val errorCode = (task.exception as FirebaseAuthException).errorCode
                             if (errorCode == "ERROR_INVALID_EMAIL") {
+                                showErrorSnackbar("User registration failed")
                                 layoutemail.helperText = "Invalid Email"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
+                                vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_EMAIL_ALREADY_IN_USE") {
+                                showErrorSnackbar("User registration failed")
                                 layoutemail.helperText = "Email already in use"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
+                                vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_WEAK_PASSWORD") {
                                 layoutpass.helperText = "Password should be at least 8 characters"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
+                                vibrateAnimation(layoutpass)
                             }
                         }
                     }
             } else {
-//            Toast.makeText(this@RegisterActivity, "Invalid Inputs", Toast.LENGTH_LONG).show()
+
+                showProgressBar()
+
+                Handler().postDelayed({
+                    hideProgressBar()
+                    if (!validEmail) {
+                        vibrateAnimation(layoutemail)
+                    }
+                    if (!validPass) {
+                        vibrateAnimation(layoutpass)
+                    }
+                    if (!validConfiPass) {
+                        vibrateAnimation(layoutconpass)
+                    }
+                    showErrorSnackbar("User registration failed")
+                }, 1000) // 1000 milliseconds = 1 second
+
         }
     }
     private fun showSuccessSnackbar(message: String) {
@@ -483,14 +510,43 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun showErrorSnackbar(message: String) {
-        val snackbar = Snackbar.make(
-            findViewById(android.R.id.content),
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
+
+        Snackbar.make(
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
             message,
             Snackbar.LENGTH_SHORT
-        )
-        snackbar.view.setBackgroundColor(Color.parseColor("#5A0808")) // Set background color for error
-        snackbar.show()
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            snackbarView.setBackgroundColor(Color.RED)
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
     }
+    private fun vibrateAnimation(view: View) {
+        val shakeAnimation = ObjectAnimator.ofPropertyValuesHolder(
+            view,
+            PropertyValuesHolder.ofFloat("translationX", 0f, -10f, 10f, -10f, 10f, 0f),
+            PropertyValuesHolder.ofFloat("translationY", 0f, -10f, 10f, -10f, 10f, 0f)
+        ).apply {
+            duration = 300 // Duration of the animation in milliseconds
+            interpolator = AccelerateDecelerateInterpolator() // Optional: adjust the animation's interpolation
+            repeatCount = 1 // Number of times the animation should repeat
+        }
+
+        // Start the animation
+        shakeAnimation.start()
+    }
+
 
     fun login(view: View) {
         startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
