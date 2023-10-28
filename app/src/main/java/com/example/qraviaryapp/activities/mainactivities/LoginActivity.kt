@@ -377,6 +377,28 @@ class LoginActivity : AppCompatActivity() {
                     mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
+                                if(mAuth.currentUser?.isEmailVerified == true){
+
+                                    startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                                    finish()
+//                                {
+//                                    putExtra(KEY_REMEMBER_ME, rememberUser)
+//                                }
+//                                startActivity(intent)
+
+                                    Toast.makeText(
+                                        this@LoginActivity,
+                                        "User logged in successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                else{
+                                    Toast.makeText(
+                                        this@LoginActivity,
+                                        "User not verified",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
 
 //                                val rememberUser = rememberme.isChecked
 //                                val editor: SharedPreferences.Editor = sharedPreferences.edit()
@@ -384,19 +406,6 @@ class LoginActivity : AppCompatActivity() {
 //                                editor.putBoolean(KEY_REMEMBER_ME, rememberUser)
 //                                editor.putBoolean(KEY_IS_LOGGED_IN, true)
 //                                editor.apply()
-
-                                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
-                                finish()
-//                                {
-//                                    putExtra(KEY_REMEMBER_ME, rememberUser)
-//                                }
-//                                startActivity(intent)
-
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "User logged in successfully",
-                                    Toast.LENGTH_SHORT
-                                ).show()
 
                             } else {
 
