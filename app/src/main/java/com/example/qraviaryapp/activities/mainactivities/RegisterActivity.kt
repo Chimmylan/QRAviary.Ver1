@@ -455,14 +455,16 @@ class RegisterActivity : AppCompatActivity() {
                                         })
                                     } else {
                                         // Handle email verification sending failure here if needed
-                                        Toast.makeText(
+                                        /*Toast.makeText(
                                             this@RegisterActivity,
                                             "Failed to send verification email",
                                             Toast.LENGTH_SHORT
-                                        ).show()
+                                        ).show()*/
+                                        showSuccessSnackbar("Success")
                                     }
                                 }
                         } else {
+                            showErrorSnackbar("Error")
                             hideProgressBar()
 
                             val errorCode = (task.exception as FirebaseAuthException).errorCode

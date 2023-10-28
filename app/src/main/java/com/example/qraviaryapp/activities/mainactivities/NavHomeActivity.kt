@@ -108,12 +108,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val elapsedTime = currentTimeMillis - appStoppedTime
         val thresholdTime = 60000 // 5 seconds in milliseconds
 
-        if (elapsedTime >= thresholdTime) {
-            // Show the splash activity
-            val intent = Intent(this, SplashActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+//        if (elapsedTime >= thresholdTime) {
+//            // Show the splash activity
+//            val intent = Intent(this, SplashActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//        }
     }
 
     override fun onPause() {
