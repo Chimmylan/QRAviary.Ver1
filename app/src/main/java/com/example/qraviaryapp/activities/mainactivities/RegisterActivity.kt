@@ -407,13 +407,9 @@ class RegisterActivity : AppCompatActivity() {
                                 .addOnCompleteListener { verificationTask ->
                                     hideProgressBar()
                                     if (verificationTask.isSuccessful) {
-//                                        showVerified("Verification email sent, please check your inbox")
+
                                         showVerifiedMessage("Verification email sent, please check your inbox")
-//                                        Toast.makeText(
-//                                            this@RegisterActivity,
-//                                            "Verification email sent, please check your inbox",
-//                                            Toast.LENGTH_SHORT
-//                                        ).show()
+
 
                                         val myRef = dbase.child("Users").child("ID: $userId")
 
@@ -431,7 +427,6 @@ class RegisterActivity : AppCompatActivity() {
                                                     val userData = hashMapOf(
                                                         "UserID" to userId,
                                                         "Email" to email,
-                                                        "Password" to password,
                                                         "Username" to username // Add the username to the userData HashMap
                                                     )
                                                     myRef.setValue(userData).addOnSuccessListener {
@@ -454,12 +449,6 @@ class RegisterActivity : AppCompatActivity() {
                                             }
                                         })
                                     } else {
-                                        // Handle email verification sending failure here if needed
-                                        /*Toast.makeText(
-                                            this@RegisterActivity,
-                                            "Failed to send verification email",
-                                            Toast.LENGTH_SHORT
-                                        ).show()*/
                                         showSuccessSnackbar("Success")
                                     }
                                 }
@@ -505,17 +494,7 @@ class RegisterActivity : AppCompatActivity() {
 
         }
     }
-    private fun showVerified(errorMessage: String) {
-        val alertDialog = AlertDialog.Builder(this)
-            .setMessage(errorMessage)
-//            .setPositiveButton("Already checked") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-            .setCancelable(false)
-            .create()
 
-        alertDialog.show()
-    }
     private fun showSuccessSnackbar(message: String) {
         Snackbar.make(
             findViewById(android.R.id.content),
@@ -580,7 +559,7 @@ class RegisterActivity : AppCompatActivity() {
             repeatCount = 1 // Number of times the animation should repeat
         }
 
-        // Start the animation
+
         shakeAnimation.start()
     }
 

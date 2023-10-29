@@ -493,7 +493,7 @@ class LoginActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 val signInMethods = task.result?.signInMethods
                                 if (signInMethods.isNullOrEmpty()) {
-                                    showDialogForgetPass(
+                                    showDialogForgetPass1(
                                         "No account found. Create a new account?",
                                         "It looks like $email isn't connected to an account. You can create a new account or try again",
                                         "Create",
@@ -583,6 +583,21 @@ class LoginActivity : AppCompatActivity() {
             .setTitle(title)
             .setPositiveButton(button) { dialog, _ ->
                 startActivity(Intent(this@LoginActivity, ForgotPassActivity::class.java))
+            }
+            .setNegativeButton(negbutton) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
+    private fun showDialogForgetPass1(title: String, errorMessage: String, button: String, negbutton: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setTitle(title)
+            .setPositiveButton(button) { dialog, _ ->
+                startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
             }
             .setNegativeButton(negbutton) { dialog, _ ->
                 dialog.dismiss()
