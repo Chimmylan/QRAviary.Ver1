@@ -127,6 +127,8 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        forgot.setOnClickListener { forgot() }
+
 
     }
     private fun signIn() {
@@ -591,7 +593,9 @@ class LoginActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    fun forgot(view: View) {}
+    fun forgot() {
+        startActivity(Intent(this@LoginActivity, ForgotPassActivity::class.java))
+    }
     fun reg(view: View) {
         startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
     }
