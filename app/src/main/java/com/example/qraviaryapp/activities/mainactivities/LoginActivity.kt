@@ -17,6 +17,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -60,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
 //    private var KEY_REMEMBER_ME: String = "remember00User"
 //    private var KEY_IS_LOGGED_IN: String = "isLoggedIn"
 
-
+    private lateinit var textgooglebtn: LinearLayout
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var googleBtn: CardView
@@ -83,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
         googleprogressbar = findViewById(R.id.btnprogressbar1)
         // FrameLayout = findViewById(R.id.etLogPass)
         textbtn = findViewById(R.id.textbtn)
-
+        textgooglebtn= findViewById(R.id.txtgooglebtn)
         val reg = findViewById<CardView>(R.id.tvRegisterHere)
         val forgot = findViewById<TextView>(R.id.tvforgot)
 
@@ -274,11 +275,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showGoogleProgressBar() {
         googleprogressbar.visibility = View.VISIBLE
+        textgooglebtn.visibility = View.GONE
     }
 
     private fun hideGoogleProgressBar() {
         googleprogressbar.visibility = View.INVISIBLE
-
+        textgooglebtn.visibility =  View.VISIBLE
     }
 
     private fun hideProgressBar() {
