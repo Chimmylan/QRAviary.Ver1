@@ -147,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="forgot"
+
                 android:text="Remember Me"
 
                 android:visibility="gone"
@@ -164,7 +164,8 @@
 
                 android:text="Forgot password?"
                 android:textColor="@drawable/texthover"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                tools:ignore="OnClick" />
         </LinearLayout>
 
         <LinearLayout
@@ -220,6 +221,11 @@
                 android:indeterminateTint="@color/white"
                 android:visibility="gone"/>
             </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="20dp"
+            android:gravity="bottom"
+            android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
@@ -236,6 +242,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:text="Create new account"
                 android:background="@drawable/cardview_border"
                 android:gravity="center"
@@ -243,7 +250,7 @@
                 android:textColor="@color/loginpurple"
                 android:textSize="16sp"/>
         </androidx.cardview.widget.CardView>
-
+        </LinearLayout>
 
 
 
