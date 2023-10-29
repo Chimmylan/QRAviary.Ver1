@@ -37,6 +37,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
@@ -64,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
-    private lateinit var googleBtn: ImageView
+    private lateinit var googleBtn: CardView
 
     companion object {
         private const val RC_SIGN_IN = 1000
@@ -84,10 +85,9 @@ class LoginActivity : AppCompatActivity() {
        // FrameLayout = findViewById(R.id.etLogPass)
         textbtn = findViewById(R.id.textbtn)
 
-        val reg = findViewById<TextView>(R.id.tvRegisterHere)
+        val reg = findViewById<CardView>(R.id.tvRegisterHere)
         val forgot = findViewById<TextView>(R.id.tvforgot)
-        reg.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        forgot.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
 
         mAuth = FirebaseAuth.getInstance()
         //val currentUserId = mAuth.currentUser?.uid
@@ -123,32 +123,14 @@ class LoginActivity : AppCompatActivity() {
         googleBtn.setOnClickListener {
             // Show the progress bar
             showGoogleProgressBar()
-
-            // Record the start time
-            val startTime = System.currentTimeMillis()
-
-            // Execute the signIn function
             signIn()
 
-            // Calculate the elapsed time
-            val elapsedTime = System.currentTimeMillis() - startTime
-
-            // Calculate the delay for hiding the progress bar
-            val delayMillis = if (elapsedTime < 3000) {
-                3000 - elapsedTime
-            } else {
-                0
-            }
-
-            // Hide the progress bar after the calculated delay
-            Handler().postDelayed({
-                hideGoogleProgressBar()
-            }, delayMillis)
         }
 
 
     }
     private fun signIn() {
+
         val signInIntent = gsc.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -159,6 +141,7 @@ class LoginActivity : AppCompatActivity() {
             PropertyValuesHolder.ofFloat("translationY", 0f, -10f, 10f, -10f, 10f, 0f)
         ).apply {
             duration = 300 // Duration of the animation in milliseconds
+
             interpolator = AccelerateDecelerateInterpolator() // Optional: adjust the animation's interpolation
             repeatCount = 1 // Number of times the animation should repeat
         }
@@ -218,6 +201,7 @@ class LoginActivity : AppCompatActivity() {
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         mAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+            hideGoogleProgressBar()
             if (task.isSuccessful) {
                 val currentUser = mAuth.currentUser
                 val uid = currentUser?.uid ?: ""
@@ -456,15 +440,22 @@ class LoginActivity : AppCompatActivity() {
         val email = lemail.text.toString()
         val password = lpass.text.toString()
 
+
         if (TextUtils.isEmpty(email)) {
-            layoutemail.helperText = "Email cannot be empty"
+            showSnackBar("Email required", "Enter your email to continue", "OK")
             vibrateAnimation(layoutemail)
             return
         }
 
         if (TextUtils.isEmpty(password)) {
-            layoutpass.helperText = "Password cannot be empty"
+            showSnackBar("Password required", "Enter your email to continue", "OK")
             vibrateAnimation(layoutpass)
+            return
+        }
+        if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password) ){
+            showSnackBar("Email required", "Enter your email to continue", "OK")
+            vibrateAnimation(layoutpass)
+            vibrateAnimation(layoutemail)
             return
         }
 
@@ -474,12 +465,16 @@ class LoginActivity : AppCompatActivity() {
         }
 
         showProgressBar()
-
+        lpass.isEnabled = false
+        lemail.isEnabled = false
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 hideProgressBar()
+                lpass.isEnabled = true
+                lemail.isEnabled = true
                 if (task.isSuccessful) {
                     if (mAuth.currentUser?.isEmailVerified == true) {
+
                         startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
                         finish()
                         Toast.makeText(this@LoginActivity, "User logged in successfully", Toast.LENGTH_SHORT).show()
@@ -510,8 +505,24 @@ class LoginActivity : AppCompatActivity() {
                                         "Try Again"
                                     )
                                 }
-                            }
+                            }else {
+                                // Handle the task failure (e.g., show an error dialog)
+                                val exception = task.exception
+                                if (exception is FirebaseAuthException) {
+                                    // Handle specific errors
+                                    when (exception.errorCode) {
+                                        "ERROR_INVALID_EMAIL", "ERROR_WRONG_PASSWORD" -> {
+                                            showErrorMessageDialog(
+                                                "Invalid email or password.")
 
+                                        }
+
+                                        else -> {
+                                            // Handle other errors
+                                        }
+                                    }
+                                }
+                            }
                         }
                 }
             }
