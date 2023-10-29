@@ -496,20 +496,16 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     if (mAuth.currentUser?.isEmailVerified == true) {
 
-
-
-                        if (!isAccountInSharedPreferences(email)){
-                            addAccount(email, password)
-
-                            startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
-                            finish()
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "User logged in successfully",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }else
-                        {
+                        if (!isAccountInSharedPreferences(email)) {
+                            saveLoginDialog(
+                                "Save your login info",
+                                "We'll save the login info for you, so you won't need to enter it next time you log in.",
+                                "Save",
+                                "Not now",
+                                email,
+                                password
+                            )
+                        } else {
                             Toast.makeText(
                                 this@LoginActivity,
                                 "User already saved",
@@ -567,20 +563,44 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
+
+    private fun saveLoginDialog(
+        title: String,
+        errorMessage: String,
+        button: String,
+        negbutton: String,
+        email: String,
+        password: String,
+
+        ) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setTitle(title)
+            .setPositiveButton(button) { dialog, which ->
+                addAccount(email, password)
+                startActivity(Intent(this@LoginActivity, ManageUserActivity::class.java))
+            }
+            .setNegativeButton(negbutton) { dialog, which ->
+                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
+
     fun isAccountInSharedPreferences(username: String?): Boolean {
         val maxAccounts = 4
-
         for (i in 1..maxAccounts) {
             val userKey = "user$i"
             val passKey = "userpass$i"
-            if (sharedPreferences.getString(userKey, "") == username){
+            if (sharedPreferences.getString(userKey, "") == username) {
                 return true
             }
         }
-
-
         return false
     }
+
     fun addAccount(username: String?, password: String?) {
         val editor = sharedPreferences.edit()
         val maxAccounts = 4
@@ -595,9 +615,11 @@ class LoginActivity : AppCompatActivity() {
                 return
             }
         }
-
-        Log.e(TAG,"All account slots are occupied. Please delete an account to add a new one.");
-    }
+        Toast.makeText(
+            this@LoginActivity,
+            "All slots are full, saving failed. Try deleting some saved accounts",
+            Toast.LENGTH_SHORT
+        ).show()    }
 
     private fun showSnackbar(message: String) {
         val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
@@ -668,7 +690,13 @@ class LoginActivity : AppCompatActivity() {
 
         alertDialog.show()
     }
-    private fun showDialogForgetPass1(title: String, errorMessage: String, button: String, negbutton: String) {
+
+    private fun showDialogForgetPass1(
+        title: String,
+        errorMessage: String,
+        button: String,
+        negbutton: String
+    ) {
         val alertDialog = AlertDialog.Builder(this)
             .setMessage(errorMessage)
             .setTitle(title)
