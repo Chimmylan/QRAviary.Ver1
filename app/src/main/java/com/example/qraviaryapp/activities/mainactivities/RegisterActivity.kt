@@ -20,6 +20,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.example.qraviaryapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -36,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.*
 
 class RegisterActivity : AppCompatActivity() {
+
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var rusername: TextInputEditText
@@ -49,10 +51,10 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var googleprogressbar: ProgressBar
     private lateinit var textbtn: TextView
-
+    private lateinit var textgooglebtn: LinearLayout
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
-    private lateinit var googleBtn: ImageView
+    private lateinit var googleBtn: CardView
     companion object {
         private const val RC_SIGN_IN = 1000
     }
@@ -72,12 +74,12 @@ class RegisterActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.btnprogressbar)
         googleprogressbar = findViewById(R.id.btnprogressbar1)
         textbtn = findViewById(R.id.textbtn)
-
+        textgooglebtn= findViewById(R.id.txtgooglebtn)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
-        val login = findViewById<TextView>(R.id.tvLoginHere)
-        login.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        val login = findViewById<CardView>(R.id.tvLoginHere)
+
 
 
         remail.addTextChangedListener(object : TextWatcher {
@@ -156,12 +158,14 @@ class RegisterActivity : AppCompatActivity() {
 
 
     }
-    private fun showGoogleProgressBar(){
+    private fun showGoogleProgressBar() {
         googleprogressbar.visibility = View.VISIBLE
+        textgooglebtn.visibility = View.GONE
     }
+
     private fun hideGoogleProgressBar() {
         googleprogressbar.visibility = View.INVISIBLE
-
+        textgooglebtn.visibility =  View.VISIBLE
     }
     private fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
