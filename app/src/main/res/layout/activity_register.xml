@@ -222,9 +222,12 @@
                 android:background="@android:color/transparent"
                 android:id="@+id/google_btn">
                 <LinearLayout
-                    android:id="@+id/txtgooglebtn"
                     android:layout_width="match_parent"
                     android:background="@drawable/button_style"
+                    android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/txtgooglebtn"
+                    android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
                     <ImageView
@@ -249,12 +252,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </LinearLayout>
+                </LinearLayout>
                 <ProgressBar
                     android:id="@+id/btnprogressbar1"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center"
-                    android:indeterminateTint="@color/white"
+                    android:indeterminateTint="@color/black"
                     android:visibility="gone"/>
             </androidx.cardview.widget.CardView>
 

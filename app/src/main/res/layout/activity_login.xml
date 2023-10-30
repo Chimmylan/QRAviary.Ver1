@@ -10,6 +10,7 @@
     tools:context=".activities.mainactivities.LoginActivity">
     <ScrollView
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         android:fillViewport="true">
 
@@ -192,51 +193,55 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:cardCornerRadius="20dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackground"
-            android:background="@android:color/transparent"
-            android:id="@+id/google_btn">
-            <LinearLayout
-                android:id="@+id/txtgooglebtn"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:background="@drawable/button_style"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-            <ImageView
+                android:layout_height="40dp"
 
-                android:padding="5dp"
-                android:layout_weight="4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/google1"
-                />
-                <TextView
-
-                    android:layout_weight="2"
+                app:cardCornerRadius="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground"
+                android:background="@android:color/transparent"
+                android:id="@+id/google_btn">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sign in With Google"
-                    android:gravity="center"
-                    android:textColor="#1F1E1E"
-                    android:textSize="16sp"/>
-                <TextView
-                    android:layout_weight="4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
+                    android:background="@drawable/button_style"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/txtgooglebtn"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <ImageView
 
-            <ProgressBar
-                android:id="@+id/btnprogressbar1"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/white"
-                android:visibility="gone"/>
+                            android:padding="5dp"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/google1"
+                            />
+                        <TextView
+
+                            android:layout_weight="2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Sign in With Google"
+                            android:gravity="center"
+                            android:textColor="#1F1E1E"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/btnprogressbar1"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/black"
+                    android:visibility="gone"/>
             </androidx.cardview.widget.CardView>
         <LinearLayout
             android:layout_width="match_parent"

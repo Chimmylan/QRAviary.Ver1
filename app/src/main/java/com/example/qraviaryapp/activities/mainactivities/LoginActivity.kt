@@ -127,7 +127,6 @@ class LoginActivity : AppCompatActivity() {
             // Show the progress bar
             showGoogleProgressBar()
             signIn()
-
         }
 
         forgot.setOnClickListener { forgot() }
@@ -136,7 +135,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
-
+        hideProgressBar()
         val signInIntent = gsc.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -188,30 +187,24 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSignInResult(data: Intent) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
-            // Get the signed-in account
+
             val account = task.getResult(ApiException::class.java)
             if (account != null) {
-                // The user is authenticated, and the email address is associated with a Google account
                 val email = account.email
-
                 Log.d(ContentValues.TAG, "Authenticated")
-                // Now you can check if the email address already exists in your backend or database
-                // Proceed with your app's logic accordingly
+
             } else {
-                // Account is null, handle sign-in failure
-                // Show an error message or take appropriate action
+
                 Log.d(ContentValues.TAG, "Not Authenticated")
             }
         } catch (e: ApiException) {
-            // Handle sign-in failure (e.g., user canceled the sign-in)
-            // Show an error message or take appropriate action
+
         }
     }
 
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         mAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
-            hideGoogleProgressBar()
             if (task.isSuccessful) {
                 val currentUser = mAuth.currentUser
                 val uid = currentUser?.uid ?: ""
@@ -479,11 +472,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         if (!isOnline()) {
-            Toast.makeText(
-                this,
-                "Please connect to the internet and try again later",
-                Toast.LENGTH_LONG
-            ).show()
+            showErrorSnackbar("Please connect to the internet and try again later")
             return
         }
 
@@ -631,6 +620,29 @@ class LoginActivity : AppCompatActivity() {
             val snackbarView = snackbar.view
 
             snackbarView.setBackgroundColor(Color.parseColor("#800080"))
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
+    }
+    private fun showErrorSnackbar(message: String) {
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
+
+        Snackbar.make(
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
+            message,
+            Snackbar.LENGTH_SHORT
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            snackbarView.setBackgroundColor(Color.RED)
             val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
 
             // Set gravity to top

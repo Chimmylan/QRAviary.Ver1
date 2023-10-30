@@ -4,13 +4,18 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -35,6 +40,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -55,6 +65,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var googleBtn: CardView
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isnetworkAvailable = true
     companion object {
         private const val RC_SIGN_IN = 1000
     }
@@ -77,9 +89,29 @@ class RegisterActivity : AppCompatActivity() {
         textgooglebtn= findViewById(R.id.txtgooglebtn)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
-
+        connectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val login = findViewById<CardView>(R.id.tvLoginHere)
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isnetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSuccessSnackbar("Your Internet connection was restored")
+                }
+                isnetworkAvailable = true
+            }
 
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSuccessSnackbar("You are currently offline")
+                isnetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
         remail.addTextChangedListener(object : TextWatcher {
@@ -207,23 +239,20 @@ class RegisterActivity : AppCompatActivity() {
     private fun handleSignInResult(data: Intent) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
-            // Get the signed-in account
+
             val account = task.getResult(ApiException::class.java)
             if (account != null) {
-                // The user is authenticated, and the email address is associated with a Google account
+
                 val email = account.email
 
                 Log.d(ContentValues.TAG,"Authenticated")
-                // Now you can check if the email address already exists in your backend or database
-                // Proceed with your app's logic accordingly
+
             } else {
-                // Account is null, handle sign-in failure
-                // Show an error message or take appropriate action
+
                 Log.d(ContentValues.TAG,"Not Authenticated")
             }
         } catch (e: ApiException) {
-            // Handle sign-in failure (e.g., user canceled the sign-in)
-            // Show an error message or take appropriate action
+
         }
     }
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
@@ -247,7 +276,6 @@ class RegisterActivity : AppCompatActivity() {
                             startActivity(Intent(this@RegisterActivity, GetStart1Activity::class.java))
                             finish()
 
-                            // Since the user does not exist, create a new entry in the database
                             val userData = hashMapOf("Name" to uid)
                             userReference.child("ID: $uid").setValue(userData)
                         }
@@ -259,8 +287,6 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 })
 
-                // Sign-in success, navigate to the second activity
-                //navigateToSecondActivity()
             } else {
                 // Sign-in failed
                 Toast.makeText(applicationContext, "Google sign-in failed", Toast.LENGTH_SHORT).show()
@@ -288,6 +314,11 @@ class RegisterActivity : AppCompatActivity() {
             layoutemail.error = "Email cannot be empty"
         }
     }
+//    private fun validatePass(password: String) {
+//        if (!TextUtils.isEmpty(password)) {
+//            val passRegex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$\n")
+//        }
+//    }
     private fun validateUsername(username: String) {
         if (TextUtils.isEmpty(username)) {
             layoutname.helperText = "Username cannot be empty"
@@ -358,149 +389,206 @@ class RegisterActivity : AppCompatActivity() {
         val password = rpass.text.toString()
         val conpassword = cpass.text.toString()
         val emailRegex = Regex("^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})")
-
+        val passRegex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$")
         var validEmail = false
         var validPass = false
         var validConfiPass = false
         var validUsername = false
 
-
         showProgressBar()
+        val isNetworkAvailable = isNetworkAvailable()
+        if (!isNetworkAvailable) {
+            hideProgressBar()
+            showErrorSnackbar("No internet connection.")
+            return
+        }
 
+        if (isNetworkAvailable && isSlowNetwork()) {
+            hideProgressBar()
+            showErrorSnackbar( "Slow internet unable to register.")
+            return
+        }
 
+        if (TextUtils.isEmpty(email)) {
+            layoutemail.helperText = "Email cannot be empty"
+        } else if (!emailRegex.matches(email)) {
+            layoutemail.helperText = "Invalid email input"
+        } else {
+            validEmail = true
+        }
 
-            if (TextUtils.isEmpty(email)) {
-                layoutemail.helperText = "Email cannot be empty"
-            } else if (!emailRegex.matches(email)) {
-                layoutemail.helperText = "Invalid email input"
-            } else {
-                validEmail = true
-            }
-            if (TextUtils.isEmpty(username)) {
-                layoutname.helperText = "Username cannot be empty"
-            }
-            else {
-                validEmail = true
-            }
-            if (TextUtils.isEmpty(password)) {
-                layoutpass.helperText = "Password cannot be empty"
-            } else {
-                validPass = true
-            }
+        if (TextUtils.isEmpty(username)) {
+            layoutname.helperText = "Username cannot be empty"
+        } else {
+            validUsername = true
+        }
 
-            if (TextUtils.isEmpty(conpassword)) {
-                layoutconpass.helperText = "Password cannot be empty"
-            }
-            else if (password != conpassword) {
-                layoutconpass.helperText = "Password does not match"
-            } else {
-                validConfiPass = true
-            }
+        if (TextUtils.isEmpty(password)) {
+            layoutpass.helperText = "Password cannot be empty"
+        } else {
+            validPass = true
+        }
 
-            val valid = validEmail && validConfiPass && validPass
+        if (TextUtils.isEmpty(conpassword)) {
+            layoutconpass.helperText = "Confirm Password cannot be empty"
+        } else if (password != conpassword) {
+            layoutconpass.helperText = "Password does not match"
+        } else {
+            validConfiPass = true
+        }
 
-            if (valid) {
-                mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        hideProgressBar()
-                        if (task.isSuccessful) {
-                            val userId = mAuth.currentUser!!.uid
+        val valid = validEmail && validConfiPass && validPass && validUsername
 
-                            // Send email verification link
-                            mAuth.currentUser!!.sendEmailVerification()
-                                .addOnCompleteListener { verificationTask ->
-                                    hideProgressBar()
-                                    if (verificationTask.isSuccessful) {
+        if (valid) {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    hideProgressBar()
+                    if (task.isSuccessful) {
+                        val userId = mAuth.currentUser!!.uid
 
-                                        showVerifiedMessage("Verification email sent, please check your inbox")
+                        // Send email verification link
+                        mAuth.currentUser!!.sendEmailVerification()
+                            .addOnCompleteListener { verificationTask ->
+                                hideProgressBar()
+                                if (verificationTask.isSuccessful) {
+                                    showVerifiedMessage("Verification email sent, please check your inbox")
 
+                                    val myRef = dbase.child("Users").child("ID: $userId")
 
-                                        val myRef = dbase.child("Users").child("ID: $userId")
+                                    val userReference = dbase.child("Users")
+                                    userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                            if (dataSnapshot.hasChild("ID: $userId")) {
+                                                Log.d(TAG, "Main Page")
+                                                // TODO: User already exists, navigate to the main page.
+                                            } else {
+                                                Log.d(TAG, "Get Started Page")
+                                                // TODO: User does not exist, navigate to the Get Started page.
 
-                                        val userReference = dbase.child("Users")
-                                        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                if (dataSnapshot.hasChild("ID: $userId")) {
-                                                    Log.d(TAG, "Main Page")
-                                                    // TODO: User already exists, navigate to the main page.
-                                                } else {
-                                                    Log.d(TAG, "Get Started Page")
-                                                    // TODO: User does not exist, navigate to the Get Started page.
+                                                // Since the user does not exist, create a new entry in the database
+                                                val userData = hashMapOf(
+                                                    "UserID" to userId,
+                                                    "Email" to email,
+                                                    "Username" to username // Add the username to the userData HashMap
+                                                )
+                                                myRef.setValue(userData).addOnSuccessListener {
+                                                    Toast.makeText(this@RegisterActivity, "User registered successfully", Toast.LENGTH_LONG).show()
 
-                                                    // Since the user does not exist, create a new entry in the database
-                                                    val userData = hashMapOf(
-                                                        "UserID" to userId,
-                                                        "Email" to email,
-                                                        "Username" to username // Add the username to the userData HashMap
-                                                    )
-                                                    myRef.setValue(userData).addOnSuccessListener {
-                                                        Toast.makeText(this@RegisterActivity, "User registered successfully", Toast.LENGTH_LONG).show()
+                                                    //TODO Make the user go to the Get Started Page
+                                                    startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
+                                                    finish()
+                                                }.addOnFailureListener {
 
-                                                        //TODO Make the user go to the Get Started Page
-                                                        startActivity(Intent(this@RegisterActivity, GetStartActivity::class.java))
-                                                        finish()
-
-                                                    }.addOnFailureListener {
-
-                                                    }
-                                                    userReference.child("ID: $userId").setValue(userData)
                                                 }
+                                                userReference.child("ID: $userId").setValue(userData)
                                             }
+                                        }
 
-                                            override fun onCancelled(databaseError: DatabaseError) {
-                                                // Handle the error as needed.
-                                                Log.e(TAG, "Error occurred: ${databaseError.message}")
-                                            }
-                                        })
-                                    } else {
-                                        showSuccessSnackbar("Success")
-                                    }
+                                        override fun onCancelled(databaseError: DatabaseError) {
+                                            // Handle the error as needed.
+                                            Log.e(TAG, "Error occurred: ${databaseError.message}")
+                                        }
+                                    })
+                                } else {
+                                    showSuccessSnackbar("Success")
                                 }
-                        } else {
-                            showErrorSnackbar("Error")
-                            hideProgressBar()
+                            }
+                    } else {
+                        showErrorSnackbar("Error")
+                        hideProgressBar()
 
-                            val errorCode = (task.exception as FirebaseAuthException).errorCode
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            val errorCode = exception.errorCode
+
                             if (errorCode == "ERROR_INVALID_EMAIL") {
-                                showErrorSnackbar("User registration failed")
                                 layoutemail.helperText = "Invalid Email"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
                                 vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_EMAIL_ALREADY_IN_USE") {
-                                showErrorSnackbar("User registration failed")
                                 layoutemail.helperText = "There is an existing account associated with this email"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
                                 vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_WEAK_PASSWORD") {
                                 layoutpass.helperText = "Password should be at least 8 characters"
-                                layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
+                                layoutpass.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
                                 vibrateAnimation(layoutpass)
                             }
                         }
                     }
-            } else {
-
-                showProgressBar()
-
-
-
-                    if (!validEmail) {
-                        hideProgressBar()
-                        vibrateAnimation(layoutemail)
-                    }
-                    if (!validPass) {
-                        hideProgressBar()
-                        vibrateAnimation(layoutpass)
-                    }
-                    if (!validConfiPass) {
-                        hideProgressBar()
-                        vibrateAnimation(layoutconpass)
-                    }
-
-
+                }
+        } else {
+            hideProgressBar()
+            if (!validEmail) {
+                vibrateAnimation(layoutemail)
+            }
+            if (!validPass) {
+                vibrateAnimation(layoutpass)
+            }
+            if (!validUsername) {
+                vibrateAnimation(layoutname)
+            }
+            if (!validConfiPass) {
+                vibrateAnimation(layoutconpass)
+            }
         }
     }
 
+    fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        if (networkInfo != null && networkInfo.isConnected) {
+            // Check the network type
+            if (networkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                // It's a fast Wi-Fi connection
+                return true
+            } else if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+                // It's a mobile data connection
+                val networkClass = getNetworkClass(networkInfo.subtype)
+                if (networkClass == NetworkClass.SLOW) {
+                    return false
+                }
+                return true
+            }
+        }
+        return false
+    }
+    private fun getNetworkClass(subtype: Int): NetworkClass {
+        return when (subtype) {
+            TelephonyManager.NETWORK_TYPE_GPRS,
+            TelephonyManager.NETWORK_TYPE_EDGE,
+            TelephonyManager.NETWORK_TYPE_CDMA,
+            TelephonyManager.NETWORK_TYPE_1xRTT,
+            TelephonyManager.NETWORK_TYPE_IDEN -> NetworkClass.SLOW
+            else -> NetworkClass.FAST
+        }
+    }
+    private fun isSlowNetwork(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        if (networkInfo != null && networkInfo.isConnected) {
+            // Check the network type
+            if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+                val networkClass = getNetworkClass(networkInfo.subtype)
+                return networkClass == NetworkClass.SLOW
+            }
+        }
+        return false
+    }
+    enum class NetworkClass {
+        SLOW, FAST
+    }
+    fun showSlowInternetConnectionMessage() {
+
+      showErrorSnackbar("Unable to Register due slow internet connection")
+    }
+
+
+    fun showNoInternetConnectionMessage() {
+        showErrorSnackbar("Please connect to the internet and try again later")
+    }
     private fun showSuccessSnackbar(message: String) {
         Snackbar.make(
             findViewById(android.R.id.content),
