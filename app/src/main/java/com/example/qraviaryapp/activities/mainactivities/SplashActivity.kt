@@ -32,13 +32,13 @@ class SplashActivity : AppCompatActivity() {
                 val currentTimeMillis = System.currentTimeMillis()
                 sharedPreferencess.edit().putLong("appStoppedTime", currentTimeMillis).apply()
                 val intent =
-                    Intent(this@SplashActivity, LoginActivity::class.java)
+                    Intent(this@SplashActivity, SaveLoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }, 3000)
         }else{
             val intent =
-                Intent(this@SplashActivity, LoginActivity::class.java)
+                Intent(this@SplashActivity, SaveLoginActivity::class.java)
             startActivity(intent)
             finish()
         }
