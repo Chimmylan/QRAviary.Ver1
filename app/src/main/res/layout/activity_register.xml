@@ -69,7 +69,11 @@
                 android:textColorHint="@color/purplelight"
                 app:placeholderText="ex:qraviary@gmail.com"
                 app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="@color/purpledark">
+                app:startIconTint="@color/purpledark"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusBottomEnd="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRegEmail"
@@ -89,7 +93,11 @@
             app:helperTextTextColor="#5A0808"
             android:textColorHint="@color/purplelight"
             app:startIconDrawable="@drawable/person_fill0_wght400_grad0_opsz48"
-            app:startIconTint="@color/purpledark">
+            app:startIconTint="@color/purpledark"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etRegUsername"
@@ -110,7 +118,11 @@
             app:startIconTint="@color/purpledark"
             android:textColorHint="@color/purplelight"
             app:helperTextTextColor="#5A0808"
-            app:startIconDrawable="@drawable/ic_lock">
+            app:startIconDrawable="@drawable/ic_lock"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etRegPass"
@@ -132,7 +144,11 @@
             app:startIconTint="@color/purpledark"
             android:textColorHint="@color/purplelight"
             app:helperTextTextColor="#5A0808"
-            app:startIconDrawable="@drawable/ic_lock">
+            app:startIconDrawable="@drawable/ic_lock"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etConPass"

@@ -468,7 +468,7 @@ class RegisterActivity : AppCompatActivity() {
                                 vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_EMAIL_ALREADY_IN_USE") {
                                 showErrorSnackbar("User registration failed")
-                                layoutemail.helperText = "Email already in use"
+                                layoutemail.helperText = "There is an existing account associated with this email"
                                 layoutemail.setHelperTextColor(ColorStateList.valueOf(Color.parseColor("#5A0808")))
                                 vibrateAnimation(layoutemail)
                             } else if (errorCode == "ERROR_WEAK_PASSWORD") {
@@ -482,19 +482,21 @@ class RegisterActivity : AppCompatActivity() {
 
                 showProgressBar()
 
-                Handler().postDelayed({
-                    hideProgressBar()
+
+
                     if (!validEmail) {
+                        hideProgressBar()
                         vibrateAnimation(layoutemail)
                     }
                     if (!validPass) {
+                        hideProgressBar()
                         vibrateAnimation(layoutpass)
                     }
                     if (!validConfiPass) {
+                        hideProgressBar()
                         vibrateAnimation(layoutconpass)
                     }
-                    showErrorSnackbar("User registration failed")
-                }, 1000) // 1000 milliseconds = 1 second
+
 
         }
     }

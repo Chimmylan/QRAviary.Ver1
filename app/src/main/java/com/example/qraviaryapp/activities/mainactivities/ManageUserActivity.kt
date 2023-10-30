@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
@@ -18,7 +19,7 @@ class ManageUserActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<AccountData>
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var adapter: ManageUserAdapter
-
+    private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +29,12 @@ class ManageUserActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         dataList = ArrayList()
         sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE )
+        imageView = findViewById(R.id.imageView)
 
 
+        imageView.setOnClickListener{
+            onBackPressed()
+        }
 
         val accounts = getSavedAccounts(4)
         recyclerView.layoutManager = GridLayoutManager(this,1)
