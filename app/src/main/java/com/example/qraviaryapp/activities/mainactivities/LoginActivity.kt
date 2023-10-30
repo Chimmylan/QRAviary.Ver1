@@ -580,7 +580,7 @@ class LoginActivity : AppCompatActivity() {
             .setTitle(title)
             .setPositiveButton(button) { dialog, which ->
                 addAccount(email, password)
-                startActivity(Intent(this@LoginActivity, ManageUserActivity::class.java))
+                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
             }
             .setNegativeButton(negbutton) { dialog, which ->
                 startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))

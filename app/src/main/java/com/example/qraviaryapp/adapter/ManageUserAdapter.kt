@@ -2,9 +2,8 @@ package com.example.qraviaryapp.adapter
 
 import AccountData
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -17,10 +16,15 @@ class ManageUserAdapter(
     private val context: Context,
     private val dataList: MutableList<AccountData>
 ) : RecyclerView.Adapter<AccountViewHolder>() {
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {
 
         val view = LayoutInflater.from(context).inflate(R.layout.item_manageuser, parent, false)
 
+        sharedPreferences = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
         return AccountViewHolder(view, dataList)
     }
@@ -33,7 +37,7 @@ class ManageUserAdapter(
         holder.tvEmail.text = account.username
 
         holder.optionmenu.setOnClickListener { view ->
-            showPopupMenu(view)
+            showPopupMenu(view,dataList[position])
         }
     }
 
@@ -43,8 +47,22 @@ class ManageUserAdapter(
 
     }
 
-}
-    private fun showPopupMenu(view: View) {
+    fun deleteAccount(username: String, password: String){
+        val maxAccount = 4
+
+        for(i in 1..maxAccount){
+            val userKey = "user$i"
+            val passKey = "userpass$i"
+            val userName = sharedPreferences.getString(userKey, "")
+            val userPassword = sharedPreferences.getString(passKey, "")
+            if (userName == username && userPassword == password ){
+                sharedPreferences.edit().remove(userKey).apply()
+                sharedPreferences.edit().remove(passKey).apply()
+            }
+        }
+    }
+
+    private fun showPopupMenu(view: View, dataList: AccountData) {
         val popupMenu = PopupMenu(view.context, view)
         popupMenu.menuInflater.inflate(R.menu.useroption, popupMenu.menu)
 
@@ -55,7 +73,8 @@ class ManageUserAdapter(
                     return@setOnMenuItemClickListener true
                 }
                 R.id.menu_delete -> {
-                    // Handle the delete action here
+
+                    deleteAccount(dataList.username.toString(), dataList.password.toString())
                     return@setOnMenuItemClickListener true
                 }
                 else -> false
@@ -64,6 +83,11 @@ class ManageUserAdapter(
 
         popupMenu.show()
     }
+
+}
+
+
+
 
 class AccountViewHolder(itemView: View, private val dataList: MutableList<AccountData>) :
     RecyclerView.ViewHolder(itemView) {

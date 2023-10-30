@@ -302,12 +302,30 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+
     fun signOut() {
         mAuth.signOut()
         gsc.signOut().addOnCompleteListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-            this.finish()
+            if (isAnyAccountOccupyingASlot()){
+                startActivity(Intent(this, SaveLoginActivity::class.java))
+                this.finish()
+            }
+            else{
+                startActivity(Intent(this, LoginActivity::class.java))
+                this.finish()
+            }
+
         }
+    }
+    fun isAnyAccountOccupyingASlot(): Boolean {
+        val maxAccounts = 4
+        for (i in 1..maxAccounts) {
+            val userKey = "user$i"
+            if (sharedPreferences.contains(userKey)) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun replaceFragment(fragment : Fragment){

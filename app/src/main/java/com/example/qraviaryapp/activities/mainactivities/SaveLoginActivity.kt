@@ -37,6 +37,7 @@ class SaveLoginActivity : AppCompatActivity() {
         log = findViewById(R.id.log)
         reg = findViewById(R.id.reg)
 
+
         val accounts = getSavedAccounts(4)
         recyclerView.layoutManager = GridLayoutManager(this,1)
         adapter = SaveLoginAdapter(this,accounts)
