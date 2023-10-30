@@ -57,6 +57,13 @@ class SaveLoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+
+
+    }
+
     fun getSavedAccounts(maxAccounts: Int): MutableList<AccountData> {
         val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val dataList = mutableListOf<AccountData>()

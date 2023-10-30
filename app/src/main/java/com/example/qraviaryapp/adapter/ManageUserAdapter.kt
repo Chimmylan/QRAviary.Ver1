@@ -32,11 +32,6 @@ class ManageUserAdapter(
         return AccountViewHolder(view, dataList)
     }
 
-//    fun removeItem(position: Int) {
-//        dataList.removeAt(position)
-//        originalList.removeAt(position)
-//        notifyItemRemoved(position)
-//    }
 
 
 
@@ -67,6 +62,12 @@ class ManageUserAdapter(
             if (userName == username && userPassword == password ){
                 sharedPreferences.edit().remove(userKey).apply()
                 sharedPreferences.edit().remove(passKey).apply()
+                // Remove the item from the dataList
+                val removedItem = dataList.find { it.username == username && it.password == password }
+                removedItem?.let { dataList.remove(it) }
+                // Notify the adapter about the data change
+                adapter.notifyDataSetChanged()
+                return  // Exit the loop after finding and removing the item
             }
         }
     }
