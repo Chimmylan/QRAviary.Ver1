@@ -590,11 +590,26 @@ class RegisterActivity : AppCompatActivity() {
         showErrorSnackbar("Please connect to the internet and try again later")
     }
     private fun showSuccessSnackbar(message: String) {
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
+
         Snackbar.make(
-            findViewById(android.R.id.content),
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
             message,
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
     }
     private fun showVerifiedMessage(message: String) {
         val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
