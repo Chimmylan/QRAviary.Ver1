@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.mainactivities
 import AccountData
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,7 +34,7 @@ class ManageUserActivity : AppCompatActivity() {
 
 
         imageView.setOnClickListener{
-            onBackPressed()
+            startActivity(Intent(this, SaveLoginActivity::class.java))
         }
 
         val accounts = getSavedAccounts(4)
@@ -61,5 +62,7 @@ class ManageUserActivity : AppCompatActivity() {
         Log.d(TAG, dataList.toString())
         return dataList
     }
+
+
 
 }

@@ -508,11 +508,7 @@ class LoginActivity : AppCompatActivity() {
                                 password
                             )
                         } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "User already saved",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
                         }
 
                     } else {

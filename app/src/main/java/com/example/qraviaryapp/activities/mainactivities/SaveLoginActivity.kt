@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.mainactivities
 
 import AccountData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -38,11 +39,15 @@ class SaveLoginActivity : AppCompatActivity() {
         reg = findViewById(R.id.reg)
 
 
+
         val accounts = getSavedAccounts(4)
         recyclerView.layoutManager = GridLayoutManager(this,1)
         adapter = SaveLoginAdapter(this,accounts)
         recyclerView.adapter = adapter
 
+        if(!isAnyAccountOccupyingASlot()){
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
 
         imageView.setOnClickListener{
             startActivity(Intent(this, ManageUserActivity::class.java))
@@ -55,13 +60,35 @@ class SaveLoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
+
+
     }
 
     override fun onResume() {
         super.onResume()
 
+        // Clear the dataList to ensure it's up to date
+        dataList.clear()
 
+        // Repopulate the dataList with saved accounts
+        val accounts = getSavedAccounts(4)
+        dataList.addAll(accounts)
+        adapter.notifyDataSetChanged()
+        Log.d(TAG,dataList.toString())
+        if(!isAnyAccountOccupyingASlot()){
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
 
+    fun isAnyAccountOccupyingASlot(): Boolean {
+        val maxAccounts = 4
+        for (i in 1..maxAccounts) {
+            val userKey = "user$i"
+            if (sharedPreferences.contains(userKey)) {
+                return true
+            }
+        }
+        return false
     }
 
     fun getSavedAccounts(maxAccounts: Int): MutableList<AccountData> {
@@ -78,9 +105,7 @@ class SaveLoginActivity : AppCompatActivity() {
             if (!username.isNullOrBlank() && !password.isNullOrBlank()) {
                 dataList.add(AccountData(username, password))
             }
-            Log.d(ContentValues.TAG, "$username $password")
         }
-        Log.d(ContentValues.TAG, dataList.toString())
         return dataList
     }
 
