@@ -19,15 +19,24 @@ class ManageUserAdapter(
 
     private lateinit var sharedPreferences: SharedPreferences
 
-
+    private lateinit var originalList: MutableList<AccountData>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {
 
         val view = LayoutInflater.from(context).inflate(R.layout.item_manageuser, parent, false)
+
+        originalList = dataList
+
 
         sharedPreferences = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
         return AccountViewHolder(view, dataList)
     }
+
+//    fun removeItem(position: Int) {
+//        dataList.removeAt(position)
+//        originalList.removeAt(position)
+//        notifyItemRemoved(position)
+//    }
 
 
 
@@ -37,7 +46,7 @@ class ManageUserAdapter(
         holder.tvEmail.text = account.username
 
         holder.optionmenu.setOnClickListener { view ->
-            showPopupMenu(view,dataList[position])
+            showPopupMenu(view,dataList[position], this)
         }
     }
 
@@ -47,7 +56,7 @@ class ManageUserAdapter(
 
     }
 
-    fun deleteAccount(username: String, password: String){
+    fun deleteAccount(username: String, password: String, adapter: ManageUserAdapter){
         val maxAccount = 4
 
         for(i in 1..maxAccount){
@@ -62,7 +71,7 @@ class ManageUserAdapter(
         }
     }
 
-    private fun showPopupMenu(view: View, dataList: AccountData) {
+    private fun showPopupMenu(view: View, dataList: AccountData, adapter: ManageUserAdapter) {
         val popupMenu = PopupMenu(view.context, view)
         popupMenu.menuInflater.inflate(R.menu.useroption, popupMenu.menu)
 
@@ -74,7 +83,9 @@ class ManageUserAdapter(
                 }
                 R.id.menu_delete -> {
 
-                    deleteAccount(dataList.username.toString(), dataList.password.toString())
+                    deleteAccount(dataList.username.toString(), dataList.password.toString(), adapter)
+
+
                     return@setOnMenuItemClickListener true
                 }
                 else -> false
