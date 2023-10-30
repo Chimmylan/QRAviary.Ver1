@@ -29,6 +29,7 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="20dp"
@@ -37,11 +38,18 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/logo1"/>
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutemail"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -236,7 +244,7 @@
             android:gravity="bottom"
             android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="20dp"
+
             android:layout_width="match_parent"
             android:layout_height="40dp"
             app:cardCornerRadius="20dp"
@@ -263,6 +271,7 @@
 
 
 
+    </LinearLayout>
     </LinearLayout>
     </LinearLayout>
     </ScrollView>
