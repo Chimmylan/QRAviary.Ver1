@@ -134,7 +134,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
 
     private fun showCageAddDialog() {
 
-
+        storageRef = FirebaseStorage.getInstance().reference
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
@@ -187,31 +187,17 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         "Cage" to newCageNumber.toInt()
                     )
                     pushKey.updateChildren(data)
-
+                    alertDialog.dismiss()
                     val bundleData = JSONObject()
 
+                    bundleData.put("CageType", "Breeding")
                     bundleData.put("CageKey", "${pushKey.key}")
                     bundleData.put("CageNumber", newCageNumber)
 
-                    alertDialog.dismiss()
-                    storageRef = FirebaseStorage.getInstance().reference
 
-                    val imageUri = generateQRCodeUri(bundleData.toString())
 
-                    val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-                    val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+                    qrAdd(bundleData, pushKey)
 
-                    uploadTask?.addOnSuccessListener { task ->
-                        imageRef.downloadUrl.addOnSuccessListener{ uri->
-                            val imageUrl = uri.toString()
-
-                            val dataQR: Map<String, Any?> = hashMapOf(
-                                "QR" to imageUrl
-                            )
-
-                            pushKey.updateChildren(dataQR)
-                        }
-                    }
 
                     val newCage = CageData()
                     newCage.cage = newCageNumber
@@ -252,7 +238,16 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                                 "Cage" to newCageNumber
                             )
 
-                            db.push().updateChildren(data)
+                            pushKey.updateChildren(data)
+
+                            val bundleData = JSONObject()
+
+                            bundleData.put("CageType", "Breeding")
+                            bundleData.put("CageKey", "${pushKey.key}")
+                            bundleData.put("CageNumber", newCageNumber)
+
+                            qrAdd(bundleData, pushKey)
+
 
                             val newCage = CageData()
                             newCage.cage = newCageNumber.toString()
@@ -311,6 +306,25 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         return Uri.fromFile(imageFile)
     }
 
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
+    }
 
 
     private suspend fun getDataFromDataBase(): List<CageData> = withContext(Dispatchers.IO) {
@@ -337,10 +351,11 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                 val key = itemSnapshot.key.toString()
 
                 val cageName = itemSnapshot.child("Cage").value
+                val cageQR = itemSnapshot.child("QR").value
                 val cageNameValue = cageName.toString()
 
 
-
+                data.cageQR = cageQR.toString()
                 data.cage = cageNameValue
                 data.cageId = key
                 cageCount++

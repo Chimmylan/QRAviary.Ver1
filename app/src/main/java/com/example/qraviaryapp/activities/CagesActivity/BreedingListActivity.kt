@@ -38,6 +38,7 @@ import kotlinx.coroutines.withContext
 class BreedingListActivity : AppCompatActivity() {
     private lateinit var CageKey: String
     private lateinit var CageName: String
+    private lateinit var CageQR: String
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
     private lateinit var dataList: ArrayList<PairData>
@@ -69,6 +70,8 @@ class BreedingListActivity : AppCompatActivity() {
 
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
+        CageQR = intent?.getStringExtra("CageQR").toString()
+
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>B$CageName</font>",
@@ -134,8 +137,16 @@ class BreedingListActivity : AppCompatActivity() {
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Breeding Cages").child(CageKey).child("Pair Birds")
 
+        val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Breeding Cages").child(CageKey)
+
+        val qrSnapshot = qrRef.get().await()
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
+
+        CageQR = qrSnapshot.child("QR").value.toString()
+
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(PairData::class.java)
             if (data != null) {
@@ -185,6 +196,8 @@ class BreedingListActivity : AppCompatActivity() {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
+
+
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
@@ -244,6 +257,7 @@ class BreedingListActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true
             }

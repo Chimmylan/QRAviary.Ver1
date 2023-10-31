@@ -96,10 +96,12 @@ class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData
                 dataList[adapterPosition].cage // Retrieve the cage name from the data list
             val cageKey =
                 dataList[adapterPosition].cageId
+            val cageQR = dataList[adapterPosition].cageQR
 
             val intent = Intent(itemView.context, BreedingListActivity::class.java)
             intent.putExtra("CageName", cageName)
             intent.putExtra("CageKey", cageKey)
+            intent.putExtra("CageQR", cageQR)
             itemView.context.startActivity(intent)
         }
 

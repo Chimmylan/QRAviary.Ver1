@@ -99,6 +99,7 @@ data class PairBarChart(
 )
 
 data class CageData(
+    var cageQR:String? =null,
     var cage: String? = null,
     var cageId: String? = null,
     var cageCount: String? = null,

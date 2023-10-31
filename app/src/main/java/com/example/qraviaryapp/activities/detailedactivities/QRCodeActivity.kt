@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -35,6 +36,9 @@ class QRCodeActivity : AppCompatActivity() {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
+        val qr = intent?.getStringExtra("CageQR")
+        Toast.makeText(this, qr, Toast.LENGTH_SHORT).show()
     }
 
 

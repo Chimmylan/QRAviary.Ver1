@@ -2,12 +2,14 @@ package com.example.qraviaryapp.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,8 @@ import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.*
+import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
+import com.example.qraviaryapp.activities.CagesActivity.FlightListActivity
 import com.example.qraviaryapp.activities.mainactivities.LoginActivity
 import com.example.qraviaryapp.activities.mainactivities.SettingsActivity
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
@@ -217,28 +221,65 @@ class ScanFragment : Fragment() {
             isFlashEnabled = false
 
             decodeCallback = DecodeCallback {
-                try {
-                    val jsonData = JSONObject(it.text)
-                    val key = jsonData.getString("CageKey")
-                    val cageNumber = jsonData.getString("CageNumber")
-
-                    //if has cagekey
-                    // means we are scanning the cages
-
-
-                    activity.runOnUiThread {
-                        Toast.makeText(requireContext(), "$key , $cageNumber", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                catch (e: JSONException){
-
-                }
+                breedinCageScanner(it.text)
+                flightCageScanner(it.text)
 
             }
         }
 
         scannerView.setOnClickListener {
             codeScanner.startPreview()
+        }
+    }
+
+    fun breedinCageScanner(string: String){
+        try {
+            val jsonData = JSONObject(string)
+            if (jsonData.has("CageKey")){
+                if (jsonData.getString("CageType") == "Breeding"){
+                    val key = jsonData.getString("CageKey")
+                    val cageNumber = jsonData.getString("CageNumber")
+
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), jsonData.toString(), Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, jsonData.toString())
+                    }
+                    val i = Intent(requireContext(), BreedingListActivity::class.java)
+                    i.putExtra("CageKey", key)
+                    i.putExtra("CageName", cageNumber)
+
+                    startActivity(i)
+                }
+            }
+
+            //if has cagekey
+            // means we are scanning the cages
+        }
+        catch (e: JSONException){
+
+        }
+    }
+
+    fun flightCageScanner(string: String){
+        try {
+            val jsonData = JSONObject(string)
+            if (jsonData.has("CageKey")){
+                if (jsonData.getString("CageType") == "Flight"){
+                    val key = jsonData.getString("CageKey")
+                    val cageNumber = jsonData.getString("CageNumber")
+
+                    val i = Intent(requireContext(), FlightListActivity::class.java)
+                    i.putExtra("CageKey", key)
+                    i.putExtra("CageName", cageNumber)
+                    startActivity(i)
+                }
+            }
+
+            //if has cagekey
+            // means we are scanning the cages
+        }
+        catch (e: JSONException){
+
         }
     }
 
