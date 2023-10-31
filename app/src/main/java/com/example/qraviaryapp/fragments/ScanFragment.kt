@@ -28,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import org.json.JSONException
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -215,9 +217,23 @@ class ScanFragment : Fragment() {
             isFlashEnabled = false
 
             decodeCallback = DecodeCallback {
-                activity.runOnUiThread {
-                    Toast.makeText(requireContext(), it.text, Toast.LENGTH_SHORT).show()
+                try {
+                    val jsonData = JSONObject(it.text)
+                    val key = jsonData.getString("CageKey")
+                    val cageNumber = jsonData.getString("CageNumber")
+
+                    //if has cagekey
+                    // means we are scanning the cages
+
+
+                    activity.runOnUiThread {
+                        Toast.makeText(requireContext(), "$key , $cageNumber", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                catch (e: JSONException){
+
+                }
+
             }
         }
 

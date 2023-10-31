@@ -40,11 +40,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -541,12 +537,17 @@ class RegisterActivity : AppCompatActivity() {
         if (networkInfo != null && networkInfo.isConnected) {
             // Check the network type
             if (networkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                Toast.makeText(this,"WIFI CONNECTION", Toast.LENGTH_SHORT).show()
                 // It's a fast Wi-Fi connection
                 return true
             } else if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
                 // It's a mobile data connection
+                Toast.makeText(this,"MOBILE CONNECTION", Toast.LENGTH_SHORT).show()
+
                 val networkClass = getNetworkClass(networkInfo.subtype)
-                if (networkClass == NetworkClass.SLOW) {
+                if (!networkInfo.isConnected) {
+                    Toast.makeText(this,"MOBILE CONNECTION IS SLOW", Toast.LENGTH_SHORT).show()
+
                     return false
                 }
                 return true
@@ -554,6 +555,32 @@ class RegisterActivity : AppCompatActivity() {
         }
         return false
     }
+
+    fun performTaskWithTimeout() {
+        runBlocking {
+            try {
+                val result = withTimeout(5000) {
+                    // Perform your time-consuming task here
+                    // For example, a network request, computation, or any other operation
+                    // Replace this with your actual task
+                    val taskResult = performTimeConsumingTask()
+                    taskResult
+                }
+                // The task completed within the timeout
+                // You can handle the result here
+            } catch (e: TimeoutCancellationException) {
+                // The task took too long and was cancelled
+                // You can handle a timeout error here
+            }
+        }
+    }
+
+    suspend fun performTimeConsumingTask(): String {
+        // Simulate a time-consuming task
+        kotlinx.coroutines.delay(6000)
+        return "Task completed"
+    }
+
     private fun getNetworkClass(subtype: Int): NetworkClass {
         return when (subtype) {
             TelephonyManager.NETWORK_TYPE_GPRS,

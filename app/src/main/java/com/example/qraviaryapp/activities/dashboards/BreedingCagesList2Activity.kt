@@ -6,9 +6,11 @@ import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
@@ -33,7 +35,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.qrcode.QRCodeWriter
@@ -42,7 +46,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class BreedingCagesList2Activity : AppCompatActivity(){
 
@@ -55,6 +63,9 @@ class BreedingCagesList2Activity : AppCompatActivity(){
     private lateinit var editText: EditText
     private lateinit var totalBirds: TextView
     private var cageCount = 0
+
+    private var storageRef = Firebase.storage.reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -129,6 +140,8 @@ class BreedingCagesList2Activity : AppCompatActivity(){
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Breeding Cages")
 
+        val pushKey = db.push()
+
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
@@ -169,40 +182,38 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
-                    // Generate the QR code for the new cage
-                    val qrCode = generateQRCode(newCageNumber)
+                    // User entered a custom cage name, use it
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Cage" to newCageNumber.toInt()
+                    )
+                    pushKey.updateChildren(data)
 
-                    // Upload the QR code image to Firebase Storage
-                    val storageRef = FirebaseStorage.getInstance().reference.child("qr_codes")
-                    val qrCodeRef = storageRef.child("$newCageNumber.png")
-                    val baos = ByteArrayOutputStream()
-                    qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos)
-                    val data = baos.toByteArray()
+                    val bundleData = JSONObject()
 
-                    val uploadTask = qrCodeRef.putBytes(data)
-                    uploadTask.addOnSuccessListener { taskSnapshot ->
+                    bundleData.put("CageKey", "${pushKey.key}")
+                    bundleData.put("CageNumber", newCageNumber)
 
-                        val qrCodeUrl = taskSnapshot.storage.downloadUrl.toString()
-                        Log.d("FirebaseStorage", "QR Code URL: $qrCodeUrl")
-                        // Now, save the QR code URL in the Realtime Database
-                        val db = FirebaseDatabase.getInstance().reference.child("Users")
-                            .child("ID: ${currentUserId.toString()}").child("Cages")
-                            .child("Breeding Cages")
+                    alertDialog.dismiss()
+                    storageRef = FirebaseStorage.getInstance().reference
 
-                        val data: Map<String, Any?> = hashMapOf(
-                            "Cage" to newCageNumber.toInt(),
-                            "QRCodeUrl" to qrCodeUrl
-                        )
-                        db.push().updateChildren(data)
+                    val imageUri = generateQRCodeUri(bundleData.toString())
 
-                        alertDialog.dismiss()
+                    val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+                    val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
 
-                        // Rest of your code...
-                    }.addOnFailureListener {
-                        // Handle the error
+                    uploadTask?.addOnSuccessListener { task ->
+                        imageRef.downloadUrl.addOnSuccessListener{ uri->
+                            val imageUrl = uri.toString()
+
+                            val dataQR: Map<String, Any?> = hashMapOf(
+                                "QR" to imageUrl
+                            )
+
+                            pushKey.updateChildren(dataQR)
+                        }
                     }
 
-                val newCage = CageData()
+                    val newCage = CageData()
                     newCage.cage = newCageNumber
                     dataList.add(newCage)
                     adapter.notifyItemInserted(dataList.size - 1)
@@ -277,12 +288,29 @@ class BreedingCagesList2Activity : AppCompatActivity(){
     }
 
 
-    private fun generateQRCode(cageNumber: String): Bitmap {
+    private fun generateQRCodeUri(bundleCageData: String): Uri? {
         val multiFormatWriter = MultiFormatWriter()
-        val bitMatrix = multiFormatWriter.encode(cageNumber, BarcodeFormat.QR_CODE, 400, 400)
+        val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
         val barcodeEncoder = BarcodeEncoder()
-        return barcodeEncoder.createBitmap(bitMatrix)
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return Uri.fromFile(imageFile)
     }
+
 
 
     private suspend fun getDataFromDataBase(): List<CageData> = withContext(Dispatchers.IO) {
