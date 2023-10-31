@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -57,10 +58,11 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var rememberme: CheckBox
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var dbase: DatabaseReference
-//    private var KEY_EMAIL: String = "email"
+    //    private var KEY_EMAIL: String = "email"
 //    private var KEY_REMEMBER_ME: String = "remember00User"
 //    private var KEY_IS_LOGGED_IN: String = "isLoggedIn"
-
+    private lateinit var connectivityManager: ConnectivityManager
+    private var isnetworkAvailable = true
     private lateinit var textgooglebtn: LinearLayout
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
@@ -95,6 +97,29 @@ class LoginActivity : AppCompatActivity() {
         dbase = FirebaseDatabase.getInstance().reference
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
         val isRemembered = sharedPreferences.getBoolean("rememberUser", false)
+        connectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                if (!isnetworkAvailable) {
+                    // Network was restored from offline, show Snackbar
+                    showSuccessSnackbar("Your Internet connection was restored")
+                }
+                isnetworkAvailable = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                // Network is offline, show Snackbar
+                showSuccessSnackbar("You are currently offline")
+                isnetworkAvailable = false
+            }
+        }
+
+        // Register the NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
 
@@ -607,7 +632,28 @@ class LoginActivity : AppCompatActivity() {
             "All slots are full, saving failed. Try deleting some saved accounts",
             Toast.LENGTH_SHORT
         ).show()    }
+    private fun showSuccessSnackbar(message: String) {
+        val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
+        val marginInDp = 40 // Define the margin in dp
 
+        Snackbar.make(
+            coordinatorLayout, // Use the CoordinatorLayout as the parent view
+            message,
+            Snackbar.LENGTH_SHORT
+        ).also { snackbar ->
+            val snackbarView = snackbar.view
+
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+
+            // Set gravity to top
+            params.gravity = Gravity.TOP
+
+            // Set top margin in dp
+            params.topMargin = (marginInDp * resources.displayMetrics.density).toInt()
+
+            snackbarView.layoutParams = params
+        }.show()
+    }
     private fun showSnackbar(message: String) {
         val coordinatorLayout = findViewById<View>(R.id.coordinatorLayout)
         val marginInDp = 40 // Define the margin in dp

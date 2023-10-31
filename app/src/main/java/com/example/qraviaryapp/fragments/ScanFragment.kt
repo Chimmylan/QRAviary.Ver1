@@ -49,6 +49,7 @@ class ScanFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
+    private lateinit var generate: MaterialButton
     private lateinit var options: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,19 +65,20 @@ class ScanFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_scan, container, false)
-        options = view.findViewById(R.id.options)
+
         mAuth = FirebaseAuth.getInstance()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireActivity(), gso)
+        generate = view.findViewById(R.id.GenerateQR)
 
-        options.setOnClickListener {
-            showPopupMenu(options)
+        generate.setOnClickListener {
+            startActivity(Intent(requireContext(), GenerateQrActivity::class.java))
         }
+//
 
-       addmanually= view.findViewById(R.id.AddManually)
-        addmanually.setOnClickListener {
-            showPopupDialog()
-        }
+//        addmanually.setOnClickListener {
+//            showPopupDialog()
+//        }
         return view
     }
     private fun showLogoutConfirmationDialog() {
@@ -99,25 +101,7 @@ class ScanFragment : Fragment() {
             requireActivity().finish()
         }
     }
-    private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(requireContext(), view)
-        popupMenu.inflate(R.menu.home_menu)
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_settings -> {
-                    val intent = Intent(requireContext(), SettingsActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_logout -> {
-                    showLogoutConfirmationDialog()
-                    true
-                }
-                else -> false
-            }
-        }
-        popupMenu.show()
-    }
+
     private fun showCageAddDialog() {
         val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
@@ -142,79 +126,79 @@ class ScanFragment : Fragment() {
         alertDialog.show()
 
     }
-    private fun showPopupDialog() {
-
-        val dialog = Dialog(requireContext())
-        dialog.setContentView(R.layout.popup_dialog_layout)
-
-        val birdcv =dialog.findViewById<CardView>(R.id.birdcv)
-        val paircv =dialog.findViewById<CardView>(R.id.paircv)
-        val cagecv =dialog.findViewById<CardView>(R.id.cagescv)
-        val eggcv =dialog.findViewById<CardView>(R.id.eggcv)
-        val salecv =dialog.findViewById<CardView>(R.id.salescv)
-        val purchasescv =dialog.findViewById<CardView>(R.id.purchasescv)
-        val incubatingcv =dialog.findViewById<CardView>(R.id.incubatingcv)
-        val maturingcv =dialog.findViewById<CardView>(R.id.maturingcv)
-        birdcv.setOnClickListener {
-
-            showCageAddDialog()
-        }
-        paircv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddPairActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-       cagecv.setOnClickListener {
-
-            val intent = Intent(requireContext(), PairsDetailedActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        eggcv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddEggActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        salecv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddSaleActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        purchasescv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddPurchaseActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        incubatingcv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddIncubatingActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        maturingcv.setOnClickListener {
-
-            val intent = Intent(requireContext(), AddMaturingActivity::class.java)
-            startActivity(intent)
-            dialog.dismiss()
-            true
-        }
-        textclose = dialog.findViewById(R.id.txtclose)
-        textclose.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
-    }
+    //    private fun showPopupDialog() {
+//
+//        val dialog = Dialog(requireContext())
+//        dialog.setContentView(R.layout.popup_dialog_layout)
+//
+//        val birdcv =dialog.findViewById<CardView>(R.id.birdcv)
+//        val paircv =dialog.findViewById<CardView>(R.id.paircv)
+//        val cagecv =dialog.findViewById<CardView>(R.id.cagescv)
+//        val eggcv =dialog.findViewById<CardView>(R.id.eggcv)
+//        val salecv =dialog.findViewById<CardView>(R.id.salescv)
+//        val purchasescv =dialog.findViewById<CardView>(R.id.purchasescv)
+//        val incubatingcv =dialog.findViewById<CardView>(R.id.incubatingcv)
+//        val maturingcv =dialog.findViewById<CardView>(R.id.maturingcv)
+//        birdcv.setOnClickListener {
+//
+//            showCageAddDialog()
+//        }
+//        paircv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddPairActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//       cagecv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), PairsDetailedActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        eggcv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddEggActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        salecv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddSaleActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        purchasescv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddPurchaseActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        incubatingcv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddIncubatingActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        maturingcv.setOnClickListener {
+//
+//            val intent = Intent(requireContext(), AddMaturingActivity::class.java)
+//            startActivity(intent)
+//            dialog.dismiss()
+//            true
+//        }
+//        textclose = dialog.findViewById(R.id.txtclose)
+//        textclose.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        dialog.show()
+//    }
     private lateinit var codeScanner: CodeScanner
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val scannerView = view.findViewById<CodeScannerView>(R.id.scanner_view)

@@ -26,6 +26,7 @@ import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
 import com.example.qraviaryapp.adapter.MyFirebaseMessagingService
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
 import com.example.qraviaryapp.fragments.NavFragments.*
+import com.example.qraviaryapp.fragments.ScanFragment
 import com.example.qraviaryapp.fragments.SettingsFragment
 import com.example.qraviaryapp.monitoring.MonitoringFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -168,6 +169,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 title = "Mutations"
                 isMonitoringFragment = false
             }
+            R.id.nav_scanner-> {
+                fragment = ScanFragment()
+                title = "QR Reader"
+                isMonitoringFragment = false
+            }
             R.id.nav_aldulting -> {
                 fragment = AdultingFragment()
                 title = "Adulting"
@@ -246,7 +252,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
-                title == "Categories"||title == "Settings") {
+                title == "Categories"||title == "Settings"|| title == "QR Reader") {
             hideMenuItems()
         } else {
             showMenuItems()
