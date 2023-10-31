@@ -262,6 +262,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                startActivity(i)
+                true
+            }
             R.id.menu_edit -> {
                 val i = Intent(this, EditBirdActivity::class.java)
                 i.putExtras(newBundle)
