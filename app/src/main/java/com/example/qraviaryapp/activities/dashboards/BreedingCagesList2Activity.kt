@@ -2,6 +2,9 @@ package com.example.qraviaryapp.activities.dashboards
 
 import CageData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -30,10 +33,16 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.qrcode.QRCodeWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 class BreedingCagesList2Activity : AppCompatActivity(){
 
@@ -160,15 +169,40 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
-                    // User entered a custom cage name, use it
-                    val data: Map<String, Any?> = hashMapOf(
-                        "Cage" to newCageNumber.toInt()
-                    )
-                    db.push().updateChildren(data)
+                    // Generate the QR code for the new cage
+                    val qrCode = generateQRCode(newCageNumber)
 
-                    alertDialog.dismiss()
+                    // Upload the QR code image to Firebase Storage
+                    val storageRef = FirebaseStorage.getInstance().reference.child("qr_codes")
+                    val qrCodeRef = storageRef.child("$newCageNumber.png")
+                    val baos = ByteArrayOutputStream()
+                    qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                    val data = baos.toByteArray()
 
-                    val newCage = CageData()
+                    val uploadTask = qrCodeRef.putBytes(data)
+                    uploadTask.addOnSuccessListener { taskSnapshot ->
+
+                        val qrCodeUrl = taskSnapshot.storage.downloadUrl.toString()
+                        Log.d("FirebaseStorage", "QR Code URL: $qrCodeUrl")
+                        // Now, save the QR code URL in the Realtime Database
+                        val db = FirebaseDatabase.getInstance().reference.child("Users")
+                            .child("ID: ${currentUserId.toString()}").child("Cages")
+                            .child("Breeding Cages")
+
+                        val data: Map<String, Any?> = hashMapOf(
+                            "Cage" to newCageNumber.toInt(),
+                            "QRCodeUrl" to qrCodeUrl
+                        )
+                        db.push().updateChildren(data)
+
+                        alertDialog.dismiss()
+
+                        // Rest of your code...
+                    }.addOnFailureListener {
+                        // Handle the error
+                    }
+
+                val newCage = CageData()
                     newCage.cage = newCageNumber
                     dataList.add(newCage)
                     adapter.notifyItemInserted(dataList.size - 1)
@@ -242,6 +276,13 @@ class BreedingCagesList2Activity : AppCompatActivity(){
 
     }
 
+
+    private fun generateQRCode(cageNumber: String): Bitmap {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(cageNumber, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        return barcodeEncoder.createBitmap(bitMatrix)
+    }
 
 
     private suspend fun getDataFromDataBase(): List<CageData> = withContext(Dispatchers.IO) {
