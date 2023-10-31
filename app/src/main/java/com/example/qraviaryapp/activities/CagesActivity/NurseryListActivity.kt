@@ -4,12 +4,14 @@ import BirdData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
+import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -282,9 +285,20 @@ class NurseryListActivity : AppCompatActivity() {
 
 
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.qr_option, menu)
+
+
+
+        return true
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                startActivity(i)
+                true
+            }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true

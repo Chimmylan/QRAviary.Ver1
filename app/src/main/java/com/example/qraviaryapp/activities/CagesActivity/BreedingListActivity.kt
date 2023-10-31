@@ -2,12 +2,14 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import PairData
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -20,6 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListPreviousAdapter
+import com.example.qraviaryapp.activities.EditActivities.EditBirdActivity
+import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
+import com.example.qraviaryapp.activities.detailedactivities.SellActivity
 import com.example.qraviaryapp.adapter.PairListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -168,6 +173,13 @@ class BreedingListActivity : AppCompatActivity() {
         dataList.sortBy { it.pairDateBeg }
         dataList
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.qr_option, menu)
+
+
+
+        return true
+    }
 
     private suspend fun getDataFromPreviousDatabase(): List<PairData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
@@ -230,6 +242,11 @@ class BreedingListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                startActivity(i)
+                true
+            }
 
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
