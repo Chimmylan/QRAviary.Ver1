@@ -75,6 +75,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
+    private lateinit var CageQR: String
 //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -184,8 +185,23 @@ class PairsDetailedActivity : AppCompatActivity() {
             val db = FirebaseDatabase.getInstance().reference.child("Users")
                 .child("ID: ${currentUserId.toString()}").child("Pairs")
                 .child(pairKey)
+//            val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
+//                .child("ID: ${currentUserId.toString()}").child("Pairs")
+//                .child(pairKey)
+//
+//                qrRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        CageQR = snapshot.child("QR").value.toString()
+//                    }
+//                        override fun onCancelled(error: DatabaseError) {
+//                            TODO("Not yet implemented")
+//                        }
+//
+//                    })
+
             db.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    CageQR = snapshot.child("QR").value.toString()
                     if (snapshot.child("Separate Date").exists()){
                         tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
                     }else
@@ -238,6 +254,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true
             }

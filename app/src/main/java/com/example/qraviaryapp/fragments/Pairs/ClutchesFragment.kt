@@ -7,7 +7,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +21,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getExternalCacheDirs
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,12 +35,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -89,8 +103,9 @@ class ClutchesFragment : Fragment() {
     private lateinit var clutchkey: String
     private var key: String = ""
     private lateinit var hatchingDateTime: LocalDateTime
-
+    private var storageRef = Firebase.storage.reference
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -302,6 +317,48 @@ class ClutchesFragment : Fragment() {
 //        totalclutch.text = "Total Clutch: $clutchCount"
         dataList
     }
+    private fun generateQRCodeUri(bundleCageData: String): Uri? {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir =  requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return Uri.fromFile(imageFile)
+    }
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
+    }
     private fun showEggDialog() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
@@ -434,7 +491,21 @@ class ClutchesFragment : Fragment() {
                         Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                     }
                 }
-
+                val bundleData = JSONObject()
+                bundleData.put("PairKey",pairKey)
+                bundleData.put("ClutchKey",  newClutchRef.key)
+                bundleData.put("EggKey", key)
+                bundleData.put("PairFlightMaleKey", pairFlightMaleKey)
+                bundleData.put("PairFlightFemaleKey", pairFlightFemaleKey)
+                bundleData.put("PairMaleKey", pairMaleKey)
+                bundleData.put("PairFemaleKey", pairFemaleKey)
+                bundleData.put("PairMaleID", pairMale)
+                bundleData.put("PairFemaleID", pairFemale)
+                bundleData.put("CageKeyFemale", pairCageKeyFemale)
+                bundleData.put("CageKeyMale", pairCageKeyMale)
+                bundleData.put("CageBirdFemale",pairCageBirdFemale)
+                bundleData.put("CageBirdMale",pairCageBirdMale)
+                qrAdd(bundleData, newClutchRef)
                 alertDialog.dismiss()
             }
 

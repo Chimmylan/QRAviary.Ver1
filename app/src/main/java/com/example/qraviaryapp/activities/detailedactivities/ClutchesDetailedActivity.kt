@@ -25,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -55,6 +57,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var pairCageBirdFemale: String
     private lateinit var totalegg: TextView
     private var eggCount = 0
+    private var storageRef = Firebase.storage.reference
+    private lateinit var CageQR: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -124,10 +128,13 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
-
+        val qrRef =  FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: ${currenUserId.toString()}").child("Pairs")
+            .child(pairKey).child("Clutches").child("QR")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
-
+        val qrSnapshot = qrRef.get().await()
+        CageQR = qrSnapshot.child("QR").value.toString()
         for (eggSnapshot in snapshot.children) {
             val data = eggSnapshot.getValue(EggData::class.java)
             if (data != null) {
@@ -249,6 +256,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true
             }
