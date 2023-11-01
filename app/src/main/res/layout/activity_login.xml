@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
     android:orientation="vertical"
-    android:background="@drawable/loginbg2"
+    android:background="@drawable/logobg3"
     tools:context=".activities.mainactivities.LoginActivity">
     <ScrollView
         android:layout_width="match_parent"
@@ -40,8 +40,7 @@
             android:layout_height="100dp"
             android:scaleType="centerCrop"
             android:layout_marginTop="70dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/logo1"/>
+            android:layout_marginBottom="10dp" />
 
         </LinearLayout>
         <LinearLayout
@@ -247,6 +246,7 @@
             android:layout_width="match_parent"
             android:paddingBottom="20dp"
             android:gravity="bottom"
+            android:layout_marginBottom="10dp"
             android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
 
@@ -256,7 +256,7 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?selectableItemBackground"
-            android:backgroundTint="@android:color/transparent"
+            android:backgroundTint="@color/zxing_transparent"
             android:id="@+id/tvRegisterHere"
             android:onClick="reg">
 

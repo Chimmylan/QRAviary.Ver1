@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
-    android:background="@drawable/loginbg2"
+    android:background="@drawable/regbg"
 
     tools:context=".activities.mainactivities.RegisterActivity">
 
@@ -33,14 +33,13 @@
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
                     android:layout_marginTop="30dp"
-                    android:layout_marginBottom="20dp"
-                    android:src="@drawable/logo1"/>
+                    android:layout_marginBottom="20dp" />
 
             </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="10"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:orientation="vertical">
@@ -267,6 +266,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:paddingBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="bottom"
                 android:layout_height="match_parent">
                 <androidx.cardview.widget.CardView
@@ -276,6 +276,7 @@
                     app:cardCornerRadius="20dp"
                     android:clickable="true"
                     android:focusable="true"
+
                     android:foreground="?selectableItemBackground"
                     android:backgroundTint="@android:color/transparent"
                     android:id="@+id/tvLoginHere"
@@ -289,6 +290,7 @@
                         android:text="I already have an account"
                         android:background="@drawable/cardview_border"
                         android:gravity="center"
+
                         android:textColor="@color/loginpurple"
                         android:textSize="16sp"/>
                 </androidx.cardview.widget.CardView>
