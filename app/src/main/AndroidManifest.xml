@@ -35,6 +35,9 @@
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.detailedactivities.MoveEggScanActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.detailedactivities.QRCodeActivity"
             android:exported="false" />
         <activity
@@ -54,8 +57,8 @@
             android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" />
         <activity
             android:name=".activities.mainactivities.GetStart1Activity"
-            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" />
         <activity
             android:name=".monitoring.IncubatorActivity"
             android:exported="false" />

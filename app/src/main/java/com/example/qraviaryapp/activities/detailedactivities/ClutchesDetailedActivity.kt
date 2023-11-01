@@ -128,123 +128,129 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
-        val qrRef =  FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currenUserId.toString()}").child("Pairs")
-            .child(pairKey).child("Clutches").child("QR")
+
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
-        val qrSnapshot = qrRef.get().await()
-        CageQR = qrSnapshot.child("QR").value.toString()
+
+        CageQR = snapshot.child("QR").value.toString()
         for (eggSnapshot in snapshot.children) {
-            val data = eggSnapshot.getValue(EggData::class.java)
-            if (data != null) {
-                val individualEggKey = eggSnapshot.key.toString()
+            if (eggSnapshot.key != "QR") {
+                val data = eggSnapshot.getValue(EggData::class.java)
+                if (data != null) {
+                    val individualEggKey = eggSnapshot.key.toString()
 
 
-                val statusValue = eggSnapshot.child("Status").value.toString()
-                val dateValue = eggSnapshot.child("Date").value.toString()
-                val incubatingDateValue = eggSnapshot.child("Incubating Days").value.toString()
-                val maturingDateValue = eggSnapshot.child("Maturing Days").value.toString()
-                val birdkey = eggSnapshot.child("Bird Key").value.toString()
-                val cage = eggSnapshot.child("Cage").value.toString()
-                val Datebirth = eggSnapshot.child("Date of Birth").value.toString()
-                val gender = eggSnapshot.child("Gender").value.toString()
-                val Identifier = eggSnapshot.child("Identifier").value.toString()
-                val statusAvailable = eggSnapshot.child("Status1").value.toString()
-                val Legband = eggSnapshot.child("Legband").value.toString()
-                val NurseryKey = eggSnapshot.child("Cage").value.toString()
-                val mutation1Value = if (eggSnapshot.hasChild("Mutation1")) {
-                    eggSnapshot.child("Mutation1").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
-                val mutation2Value = if (eggSnapshot.hasChild("Mutation2")) {
-                    eggSnapshot.child("Mutation2").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
-                val mutation3Value = if (eggSnapshot.hasChild("Mutation3")) {
-                    eggSnapshot.child("Mutation3").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
-                val mutation4Value = if (eggSnapshot.hasChild("Mutation4")) {
-                    eggSnapshot.child("Mutation4").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
-                val mutation5Value = if (eggSnapshot.hasChild("Mutation5")) {
-                    eggSnapshot.child("Mutation5").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
-                val mutation6Value = if (eggSnapshot.hasChild("Mutation6")) {
-                    eggSnapshot.child("Mutation6").child("Mutation Name").value.toString()
-                } else {
-                    ""
-                }
+                    val statusValue = eggSnapshot.child("Status").value.toString()
+                    val dateValue = eggSnapshot.child("Date").value.toString()
+                    val incubatingDateValue = eggSnapshot.child("Incubating Days").value.toString()
+                    val maturingDateValue = eggSnapshot.child("Maturing Days").value.toString()
+                    val birdkey = eggSnapshot.child("Bird Key").value.toString()
+                    val cage = eggSnapshot.child("Cage").value.toString()
+                    val Datebirth = eggSnapshot.child("Date of Birth").value.toString()
+                    val gender = eggSnapshot.child("Gender").value.toString()
+                    val Identifier = eggSnapshot.child("Identifier").value.toString()
+                    val statusAvailable = eggSnapshot.child("Status1").value.toString()
+                    val Legband = eggSnapshot.child("Legband").value.toString()
+                    val NurseryKey = eggSnapshot.child("Cage").value.toString()
+                    val mutation1Value = if (eggSnapshot.hasChild("Mutation1")) {
+                        eggSnapshot.child("Mutation1").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
+                    val mutation2Value = if (eggSnapshot.hasChild("Mutation2")) {
+                        eggSnapshot.child("Mutation2").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
+                    val mutation3Value = if (eggSnapshot.hasChild("Mutation3")) {
+                        eggSnapshot.child("Mutation3").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
+                    val mutation4Value = if (eggSnapshot.hasChild("Mutation4")) {
+                        eggSnapshot.child("Mutation4").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
+                    val mutation5Value = if (eggSnapshot.hasChild("Mutation5")) {
+                        eggSnapshot.child("Mutation5").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
+                    val mutation6Value = if (eggSnapshot.hasChild("Mutation6")) {
+                        eggSnapshot.child("Mutation6").child("Mutation Name").value.toString()
+                    } else {
+                        ""
+                    }
 
-                val FatherValue = eggSnapshot.child("Parents").child("Father").value.toString()
-                val MotherValue = eggSnapshot.child("Parents").child("Mother").value.toString()
-                val fatherKeyValue = eggSnapshot.child("Parents").child("FatherKey").value.toString()
-                val motherKeyValue = eggSnapshot.child("Parents").child("MotherKey").value.toString()
-                val fatherBirdKeyValue = eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
-                val motherBirdKeyValue = eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
+                    val FatherValue = eggSnapshot.child("Parents").child("Father").value.toString()
+                    val MotherValue = eggSnapshot.child("Parents").child("Mother").value.toString()
+                    val fatherKeyValue =
+                        eggSnapshot.child("Parents").child("FatherKey").value.toString()
+                    val motherKeyValue =
+                        eggSnapshot.child("Parents").child("MotherKey").value.toString()
+                    val fatherBirdKeyValue =
+                        eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
+                    val motherBirdKeyValue =
+                        eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
 
 
-                if (statusValue == "Incubating") {
-                    data.eggIncubating = statusValue
-                    data.eggIncubationStartDate = dateValue
+                    if (statusValue == "Incubating") {
+                        data.eggIncubating = statusValue
+                        data.eggIncubationStartDate = dateValue
+                    }
+                    if (statusValue == "Laid") {
+                        data.eggLaid = statusValue
+                        data.eggLaidStartDate = dateValue
+                    }
+                    eggCount = snapshot.childrenCount.toInt()
+                    data.eggCount = eggCount.toString()
+                    data.pairKey = pairKey
+                    data.eggKey = eggKey
+                    data.individualEggKey = individualEggKey
+                    data.eggStatus = statusValue
+                    data.eggDate = dateValue
+                    data.eggIncubationStartDate = incubatingDateValue
+                    data.eggMaturingStartDate = maturingDateValue
+                    data.pairFlightMaleKey = pairFlightMaleKey
+                    data.pairFlightFemaleKey = pairFlightFemaleKey
+                    data.pairMaleId = pairMaleID
+                    data.pairFemaleId = pairFemaleID
+                    data.pairBirdFemaleKey = pairBirdFemaleKey
+                    data.pairBirdMaleKey = pairBirdMaleKey
+                    data.eggcagebirdMale = pairCageBirdMale
+                    data.eggcagebirdFemale = pairCageBirdFemale
+                    data.eggcagekeyMale = pairCageKeyMale
+                    data.eggcagekeyFemale = pairCageKeyFemale
+                    data.birdkey = birdkey
+                    data.datebirth = Datebirth
+                    data.legband = Legband
+                    data.identifier = Identifier
+                    data.cage = cage
+                    data.nurserykey = NurseryKey
+                    data.gender = gender
+                    data.mutation2 = mutation2Value
+                    data.mutation1 = mutation1Value
+                    data.mutation6 = mutation6Value
+                    data.mutation3 = mutation3Value
+                    data.mutation4 = mutation4Value
+                    data.mutation5 = mutation5Value
+                    data.father = FatherValue
+                    data.fatherkey = fatherKeyValue
+                    data.mother = MotherValue
+                    data.fatherbirdkey = fatherBirdKeyValue
+                    data.motherbirdkey = motherBirdKeyValue
+                    data.motherkey = motherKeyValue
+                    data.status1 = statusAvailable
+                    dataList.add(data)
                 }
-                if (statusValue == "Laid") {
-                    data.eggLaid = statusValue
-                    data.eggLaidStartDate = dateValue
-                }
-                eggCount = snapshot.childrenCount.toInt()
-                data.eggCount = eggCount.toString()
-                data.pairKey = pairKey
-                data.eggKey = eggKey
-                data.individualEggKey = individualEggKey
-                data.eggStatus = statusValue
-                data.eggDate = dateValue
-                data.eggIncubationStartDate = incubatingDateValue
-                data.eggMaturingStartDate = maturingDateValue
-                data.pairFlightMaleKey = pairFlightMaleKey
-                data.pairFlightFemaleKey = pairFlightFemaleKey
-                data.pairMaleId = pairMaleID
-                data.pairFemaleId = pairFemaleID
-                data.pairBirdFemaleKey = pairBirdFemaleKey
-                data.pairBirdMaleKey = pairBirdMaleKey
-                data.eggcagebirdMale = pairCageBirdMale
-                data.eggcagebirdFemale = pairCageBirdFemale
-                data.eggcagekeyMale = pairCageKeyMale
-                data.eggcagekeyFemale = pairCageKeyFemale
-                data.birdkey = birdkey
-                data.datebirth = Datebirth
-                data.legband = Legband
-                data.identifier = Identifier
-                data.cage = cage
-                data.nurserykey = NurseryKey
-                data.gender = gender
-                data.mutation2 = mutation2Value
-                data.mutation1 = mutation1Value
-                data.mutation6 = mutation6Value
-                data.mutation3 = mutation3Value
-                data.mutation4 = mutation4Value
-                data.mutation5 = mutation5Value
-                data.father = FatherValue
-                data.fatherkey = fatherKeyValue
-                data.mother= MotherValue
-                data.fatherbirdkey = fatherBirdKeyValue
-                data.motherbirdkey = motherBirdKeyValue
-                data.motherkey = motherKeyValue
-                data.status1 = statusAvailable
-                dataList.add(data)
             }
         }
-        totalegg.text = "Total Eggs: $eggCount"
-        dataList
-    }
+            totalegg.text = "Total Eggs: $eggCount"
+            dataList
+
+        }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.qr_option, menu)
 

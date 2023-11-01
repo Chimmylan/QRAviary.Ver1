@@ -189,7 +189,7 @@
             <Button
                 android:id="@+id/movebtn"
                 android:layout_width="match_parent"
-                android:text="Move"
+                android:text="SCAN"
                 android:backgroundTint="@color/bottom_nav_background"
                 android:elevation="5dp"
                 android:textColor="@color/black_white"

@@ -188,7 +188,6 @@ class ClutchesFragment : Fragment() {
 
             if (data != null) {
                 for (eggSnapshot in clutchSnapshot.children) {
-                    val eggData = eggSnapshot.getValue(EggData::class.java)
 
                     val eggStatus = eggSnapshot.child("Status").value.toString()
                     val eggDate = eggSnapshot.child("Date").value.toString()
@@ -438,6 +437,13 @@ class ClutchesFragment : Fragment() {
                             "Alarm ID" to clutchesRandomID
 
                         )
+                        val bundleData = JSONObject()
+                        bundleData.put("IncubatingStartDate",incubatingDays)
+                        bundleData.put("MaturingStartDate",  maturingDays)
+                        bundleData.put("EggKey", key)
+                        bundleData.put("IndividualEggKey", clutches.key)
+                        bundleData.put("PairKey", pairKey)
+                        qrAdd(bundleData, clutches)
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggIncubating = incubatingCount.toString()
@@ -470,6 +476,13 @@ class ClutchesFragment : Fragment() {
                             "Incubating Days" to incubatingDays,
                             "Maturing Days" to maturingDays
                         )
+                        val bundleData = JSONObject()
+                        bundleData.put("IncubatingStartDate",incubatingDays)
+                        bundleData.put("MaturingStartDate",  maturingDays)
+                        bundleData.put("EggKey", key)
+                        bundleData.put("IndividualEggKey", clutches.key)
+                        bundleData.put("PairKey", pairKey)
+                        qrAdd(bundleData, clutches)
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggLaid = laidCount.toString()
