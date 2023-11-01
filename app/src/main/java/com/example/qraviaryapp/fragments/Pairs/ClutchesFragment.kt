@@ -507,7 +507,7 @@ class ClutchesFragment : Fragment() {
                 val bundleData = JSONObject()
                 bundleData.put("PairKey",pairKey)
                 bundleData.put("ClutchKey",  newClutchRef.key)
-                bundleData.put("EggKey", key)
+                bundleData.put("EggKey", newClutchRef.key)
                 bundleData.put("PairFlightMaleKey", pairFlightMaleKey)
                 bundleData.put("PairFlightFemaleKey", pairFlightFemaleKey)
                 bundleData.put("PairMaleKey", pairMaleKey)
