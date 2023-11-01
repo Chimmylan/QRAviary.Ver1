@@ -5,10 +5,13 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.*
 import android.content.ContentValues.TAG
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -24,6 +27,15 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
 
 class AddPairActivity : AppCompatActivity() {
@@ -73,6 +85,7 @@ class AddPairActivity : AppCompatActivity() {
     private var parentAndChild = false
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var  storageRef: StorageReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -108,6 +121,7 @@ class AddPairActivity : AppCompatActivity() {
         etCage = findViewById(R.id.etcage)
         etNest = findViewById(R.id.etnest)
         etComment = findViewById(R.id.etcomment)
+        storageRef = FirebaseStorage.getInstance().reference
 
         btnFemale = findViewById(R.id.btnFemale)
         btnMale = findViewById(R.id.btnMale)
@@ -338,7 +352,7 @@ class AddPairActivity : AppCompatActivity() {
                 val maleParentRef = newMaleBirdsPref.child("Parents")
 
 
-                val newPairPref = userBird.push()
+                val newPairPref = userBird.push() //pairkey
 
                 var validMale = false
                 var validFemale = false
@@ -382,27 +396,27 @@ class AddPairActivity : AppCompatActivity() {
                         if (validMale && validFemale) {
 
                             val data: Map<String, Any?> = hashMapOf(
-                                "Pair ID" to newPairNumber,
-                                "Male" to bird.pairMale,
-                                "Male Mutation" to bird.pairMaleGender,
-                                "Female" to bird.pairFemale,
-                                "Female Mutation" to bird.pairFemaleGender,
-                                "Beginning" to bird.pairDateBeg,
-                                "Cage" to bird.pairCage,
+                                "Pair ID" to newPairNumber,// idnumberPairID
+                                "Male" to bird.pairMale,//MaleId
+                                "Male Mutation" to bird.pairMaleGender,//MaleGender
+                                "Female" to bird.pairFemale,//FemalId
+                                "Female Mutation" to bird.pairFemaleGender,//FemaleGender
+                                "Beginning" to bird.pairDateBeg,//beginningDat
+                                "Cage" to bird.pairCage,//
                                 "Nest" to bird.nest,
                                 "Comment" to bird.pairComment,
                                 "MaleIdentifier" to btnMaleIdValue,
                                 "FemaleIdentifier" to btnFemaleIdValue,
-                                "Male Bird Key" to btnMaleValueKey,
-                                "Female Bird Key" to btnFemaleValueKey,
-                                "Male Flight Key" to btnMaleFlightValueKey,
-                                "Female Flight Key" to btnFemaleFlightValueKey,
-                                "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue,
-                                "CageKeyFlightMaleValue" to cageKeyFlightMaleValue,
-                                "CageKeyFemale" to CageBirdKeyMother,
-                                "CageKeyMale" to CageBirdKeyFather,
-                                "Female Gallery" to femalegallery,
-                                "Male Gallery" to malegallery
+                                "Male Bird Key" to btnMaleValueKey,//pairmalekey
+                                "Female Bird Key" to btnFemaleValueKey,//pairfemalekey
+                                "Male Flight Key" to btnMaleFlightValueKey,// pairmaleflightkey
+                                "Female Flight Key" to btnFemaleFlightValueKey, //pairFemalefligtkey
+                                "CageKeyFlightFemaleValue" to cageKeyFlightFemaleValue, //cageke
+                                "CageKeyFlightMaleValue" to cageKeyFlightMaleValue, //cagekey
+                                "CageKeyFemale" to CageBirdKeyMother,//CageKeyFemale
+                                "CageKeyMale" to CageBirdKeyFather, //CageKeyMale
+                                "Female Gallery" to femalegallery, //FemaleIMG
+                                "Male Gallery" to malegallery //MaleImg
                             )
 
                             val maleBirdPair: Map<String, Any?> = hashMapOf(
@@ -413,6 +427,29 @@ class AddPairActivity : AppCompatActivity() {
                                 "Identifier" to btnMaleIdValue,
                                 "Bird Key" to btnMaleValueKey
                             )
+
+                            val bundleData = JSONObject()
+
+                            bundleData.put("PairFemaleImg",femalegallery)
+                            bundleData.put("PairMaleImg",malegallery)
+                            bundleData.put("PairId", newPairNumber)
+                            bundleData.put("PairMaleKey", btnMaleValueKey)
+                            bundleData.put("PairFemaleKey", btnFemaleValueKey)
+                            bundleData.put("PairFlightMaleKey", btnMaleFlightValueKey)
+                            bundleData.put("PairFlightFemaleKey", btnFemaleFlightValueKey)
+                            bundleData.put("PairKey", newPairPref.key)
+                            bundleData.put("MaleID", bird.pairMale)
+                            bundleData.put("FemaleID", bird.pairFemale)
+                            bundleData.put("BeginningDate", bird.pairDateBeg)
+                            bundleData.put("MaleGender", bird.pairMaleGender)
+                            bundleData.put("FemaleGender", bird.pairFemaleGender)
+                            bundleData.put("CageKeyFemale", CageBirdKeyMother)
+                            bundleData.put("CageKeyMale", CageBirdKeyFather)
+                            bundleData.put("CageBirdFemale", cageKeyFlightFemaleValue)
+                            bundleData.put("CageBirdMale", cageKeyFlightMaleValue)
+
+                            qrAdd(bundleData, newPairPref)
+
 
 
                             Log.d(ContentValues.TAG, parentAndChild.toString())
@@ -475,6 +512,45 @@ class AddPairActivity : AppCompatActivity() {
         })
 
 
+    }
+    private fun generateQRCodeUri(bundleCageData: String): Uri? {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return Uri.fromFile(imageFile)
+    }
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+        val imageUri = generateQRCodeUri(bundle.toString())
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

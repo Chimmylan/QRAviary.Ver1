@@ -234,12 +234,12 @@ class LoginActivity : AppCompatActivity() {
                 val currentUser = mAuth.currentUser
                 val uid = currentUser?.uid ?: ""
                 val email = currentUser?.email ?: ""
-
+                Log.d(TAG, uid)
                 val userReference = dbase.child("Users")
 
-                userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                userReference.child("ID: $uid").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        if (dataSnapshot.hasChild("ID: $uid")) {
+                        if (dataSnapshot.exists()) {
                             Log.d(TAG, "Main Page")
                             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
                             finish()
@@ -248,8 +248,8 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(Intent(this@LoginActivity, GetStart1Activity::class.java))
                             finish()
                             // Since the user does not exist, create a new entry in the database
-                            val userData = hashMapOf("Name" to uid)
-                            userReference.child("ID: $uid").setValue(userData)
+                            val userData: Map<String, Any?> = hashMapOf("Name" to uid)
+                            userReference.child("ID: $uid").updateChildren(userData)
                         }
                     }
 

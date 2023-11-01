@@ -92,24 +92,24 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("PairFemaleImg", dataList[adapterPosition].pairfemaleimg)
-            bundle.putString("PairMaleImg", dataList[adapterPosition].pairmaleimg)
-            bundle.putString("PairId", dataList[adapterPosition].pairId)
-            bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
-            bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
-            bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)
-            bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)
-            bundle.putString("PairKey", dataList[adapterPosition].pairKey)
-            bundle.putString("MaleID", dataList[adapterPosition].pairMale)
-            bundle.putString("FemaleID", dataList[adapterPosition].pairFemale)
-            bundle.putString("BeginningDate", dataList[adapterPosition].pairDateBeg)
-            bundle.putString("SeparateDate", dataList[adapterPosition].pairDateSep)
-            bundle.putString("MaleGender", dataList[adapterPosition].pairMaleMutation)
-            bundle.putString("FemaleGender", dataList[adapterPosition].pairFemaleMutation)
-            bundle.putString("CageKeyFemale", dataList[adapterPosition].paircagekeyFemale)
-            bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)
-            bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)
-            bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)
+            bundle.putString("PairFemaleImg", dataList[adapterPosition].pairfemaleimg)//
+            bundle.putString("PairMaleImg", dataList[adapterPosition].pairmaleimg)//
+            bundle.putString("PairId", dataList[adapterPosition].pairId)//
+            bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)//
+            bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)//
+            bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)//
+            bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)//
+            bundle.putString("PairKey", dataList[adapterPosition].pairKey)//
+            bundle.putString("MaleID", dataList[adapterPosition].pairMale)//
+            bundle.putString("FemaleID", dataList[adapterPosition].pairFemale)//
+            bundle.putString("BeginningDate", dataList[adapterPosition].pairDateBeg)//
+            bundle.putString("SeparateDate", dataList[adapterPosition].pairDateSep)// /toodo
+            bundle.putString("MaleGender", dataList[adapterPosition].pairMaleMutation)//
+            bundle.putString("FemaleGender", dataList[adapterPosition].pairFemaleMutation)//
+            bundle.putString("CageKeyFemale", dataList[adapterPosition].paircagekeyFemale)//
+            bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)//
+            bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)//
+            bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)//
             val i = Intent(itemView.context, PairsDetailedActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

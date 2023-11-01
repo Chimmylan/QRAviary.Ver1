@@ -223,6 +223,8 @@ class ScanFragment : Fragment() {
             decodeCallback = DecodeCallback {
                 breedinCageScanner(it.text)
                 flightCageScanner(it.text)
+                nurseryCageScanner(it.text)
+                pairScanner(it.text)
 
             }
         }
@@ -277,6 +279,80 @@ class ScanFragment : Fragment() {
 
             //if has cagekey
             // means we are scanning the cages
+        }
+        catch (e: JSONException){
+
+        }
+    }
+    fun nurseryCageScanner(string: String){
+        try {
+            val jsonData = JSONObject(string)
+            if (jsonData.has("CageKey")){
+                if (jsonData.getString("CageType") == "Nursery"){
+                    val key = jsonData.getString("CageKey")
+                    val cageNumber = jsonData.getString("CageNumber")
+
+                    val i = Intent(requireContext(), FlightListActivity::class.java)
+                    i.putExtra("CageKey", key)
+                    i.putExtra("CageName", cageNumber)
+                    startActivity(i)
+                }
+            }
+
+            //if has cagekey
+            // means we are scanning the cages
+        }
+        catch (e: JSONException){
+
+        }
+    }
+
+    fun pairScanner(string: String){
+        try {
+            val jsonData = JSONObject(string)
+
+            val pairFemaleImg = jsonData.get("PairFemaleImg")
+            val pairMaleImg = jsonData.get("PairMaleImg")
+            val pairId = jsonData.get("PairId")
+            val pairMaleKey = jsonData.get("PairMaleKey")
+            val pairFemaleKey = jsonData.get("PairFemaleKey")
+            val pairFlightMaleKey = jsonData.get("PairFlightMaleKey")
+            val pairFlightFemaleKey = jsonData.get("PairFlightFemaleKey")
+            val pairKey = jsonData.get("PairKey")
+            val maleID = jsonData.get("MaleID")
+            val femaleID = jsonData.get("FemaleID")
+            val beginningDate = jsonData.get("BeginningDate")
+            val maleGender = jsonData.get("MaleGender")
+            val femaleGender = jsonData.get("FemaleGender")
+            val cageKeyFemale = jsonData.get("CageKeyFemale")
+            val cageKeyMale = jsonData.get("CageKeyMale")
+            val cageBirdFemale = jsonData.get("CageBirdFemale")
+            val cageBirdMale = jsonData.get("CageBirdMale")
+
+            val bundle = Bundle()
+            bundle.putString("PairFemaleImg", pairFemaleImg.toString())//
+            bundle.putString("PairMaleImg", pairMaleImg.toString())//
+            bundle.putString("PairId", pairId.toString())//
+            bundle.putString("PairMaleKey", pairMaleKey.toString())//
+            bundle.putString("PairFemaleKey", pairFemaleKey.toString())//
+            bundle.putString("PairFlightMaleKey", pairFlightMaleKey.toString())//
+            bundle.putString("PairFlightFemaleKey", pairFlightFemaleKey.toString())//
+            bundle.putString("PairKey", pairKey.toString())//
+            bundle.putString("MaleID", maleID.toString())//
+            bundle.putString("FemaleID", femaleID.toString())//
+            bundle.putString("BeginningDate", beginningDate.toString())//
+
+            bundle.putString("MaleGender", maleGender.toString())//
+            bundle.putString("FemaleGender", femaleGender.toString())//
+            bundle.putString("CageKeyFemale", cageKeyFemale.toString())//
+            bundle.putString("CageKeyMale", cageKeyMale.toString())//
+            bundle.putString("CageBirdFemale", cageBirdFemale.toString())//
+            bundle.putString("CageBirdMale", cageBirdMale.toString())//
+            val i = Intent(requireContext(), PairsDetailedActivity::class.java)
+            i.putExtras(bundle)
+            startActivity(i)
+
+
         }
         catch (e: JSONException){
 
