@@ -23,8 +23,9 @@ class GetStart1Activity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(progressBar)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
-        showProgressBar(progressBar)
         insertDataToFirebase()
+        showProgressBar(progressBar)
+
     }
 
     private fun showProgressBar(progressBar: ProgressBar) {

@@ -55,7 +55,7 @@ class EggClutchesListAdapter(
 
         holder.tvStatus.text = eggs.eggStatus
         holder.tvDate.text = eggs.eggDate
-        val maturingDay: Int? = eggs.eggMaturingStartDate?.toInt()
+        //val maturingDay: Int? = eggs.eggMaturingStartDate?.toInt()
         val incubatingDays = eggs.eggIncubationStartDate
 
         val incubatedays: Int? = incubatingDays?.toInt()
