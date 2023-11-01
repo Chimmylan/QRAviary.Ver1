@@ -3,5 +3,7 @@
     <item
         android:id="@+id/menu_qr"
         android:title="QR Code"/>
-
+    <item
+        android:id="@+id/menu_delete"
+        android:title="Delete"/>
 </menu>

@@ -261,7 +261,10 @@ class BreedingListActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+            R.id.menu_delete -> {
 
+                true
+            }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true

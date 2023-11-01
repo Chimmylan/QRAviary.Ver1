@@ -4,6 +4,7 @@ import EggData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -235,7 +236,11 @@ class PairsDetailedActivity : AppCompatActivity() {
 
                 true
             }
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                startActivity(i)
+                true
+            }
             R.id.menu_seperate ->{
                 showSeparateConfirmation()
                 true

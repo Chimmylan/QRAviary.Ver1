@@ -5,10 +5,13 @@ import ClickListener
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
@@ -33,10 +36,20 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
 
@@ -47,6 +60,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var adapter: CageListAdapter
     private lateinit var editText: EditText
     private lateinit var fabBtn: FloatingActionButton
+    private var storageRef = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -112,15 +126,57 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
 //            }
 //        }
 //    }
+private fun generateQRCodeUri(bundleCageData: String): Uri? {
+    val multiFormatWriter = MultiFormatWriter()
+    val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+    val barcodeEncoder = BarcodeEncoder()
+    val bitmap = barcodeEncoder.createBitmap(bitMatrix)
 
+    // Create a file to store the QR code image
+    val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+    try {
+        val stream = FileOutputStream(imageFile)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        stream.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
+
+    // Convert the file URI to a string and return
+    return Uri.fromFile(imageFile)
+}
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
+    }
     private fun showCageAddDialog() {
 
-
+        storageRef = FirebaseStorage.getInstance().reference
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Breeding Cages")
 
+        val pushKey = db.push()
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
@@ -165,10 +221,18 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                     val data: Map<String, Any?> = hashMapOf(
                         "Cage" to newCageNumber.toInt()
                     )
-                    db.push().updateChildren(data)
+                    pushKey.updateChildren(data)
 
                     alertDialog.dismiss()
+                    val bundleData = JSONObject()
 
+                    bundleData.put("CageType", "Breeding")
+                    bundleData.put("CageKey", "${pushKey.key}")
+                    bundleData.put("CageNumber", newCageNumber)
+
+
+
+                    qrAdd(bundleData, pushKey)
                     val newCage = CageData()
                     newCage.cage = newCageNumber
                     dataList.add(newCage)
@@ -208,8 +272,14 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                                 "Cage" to newCageNumber
                             )
 
-                            db.push().updateChildren(data)
+                            pushKey.updateChildren(data)
+                            val bundleData = JSONObject()
 
+                            bundleData.put("CageType", "Breeding")
+                            bundleData.put("CageKey", "${pushKey.key}")
+                            bundleData.put("CageNumber", newCageNumber)
+
+                            qrAdd(bundleData, pushKey)
                             val newCage = CageData()
                             newCage.cage = newCageNumber.toString()
                             dataList.add(newCage)
@@ -261,10 +331,13 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 val pairCount = pairBird.childrenCount
                 data.cagePairBirdCount = pairCount.toString()
                 data.cageId = key
+
+
+                val cageQR = itemSnapshot.child("QR").value
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
-
+                data.cageQR = cageQR.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {

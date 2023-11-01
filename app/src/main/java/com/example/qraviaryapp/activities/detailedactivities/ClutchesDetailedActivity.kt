@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
@@ -237,9 +238,24 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         totalegg.text = "Total Eggs: $eggCount"
         dataList
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.qr_option, menu)
 
+
+
+        return true
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                startActivity(i)
+                true
+            }
+            R.id.menu_delete -> {
+
+                true
+            }
 
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment

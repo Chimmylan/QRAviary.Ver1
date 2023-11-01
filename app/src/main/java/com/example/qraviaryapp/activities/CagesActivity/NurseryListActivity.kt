@@ -41,7 +41,7 @@ class NurseryListActivity : AppCompatActivity() {
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var adapter: NurseryListAdapter
-
+    private lateinit var CageQR: String
     private lateinit var totalBirds: TextView
     private var birdCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,9 +104,13 @@ class NurseryListActivity : AppCompatActivity() {
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Nursery Cages").child(CageKey).child("Birds")
+        val qrRef= FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Nursery Cages").child(CageKey)
         val dataList = ArrayList<BirdData>()
         val snapshot = db.get().await()
-
+        val qrSnapshot = qrRef.get().await()
+        CageQR = qrSnapshot.child("QR").value.toString()
         for (itemSnapshot in snapshot.children) {
 
             val data = itemSnapshot.getValue(BirdData::class.java)
@@ -296,7 +300,12 @@ class NurseryListActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
                 startActivity(i)
+                true
+            }
+            R.id.menu_delete -> {
+
                 true
             }
             android.R.id.home -> {

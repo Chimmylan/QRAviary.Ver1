@@ -41,7 +41,7 @@ class CageListAdapter(
         val itemRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: ${currentUserId.toString()}")
             .child("Cages").child(cageId.toString())
         holder.tvCage.text = cage.cage
-        holder.tvCount.text = "${cage.cagePairBirdCount} Pairs"
+        holder.tvCount.text = cage.cagePairBirdCount + " Pairs"
 
         val cageName = cage.cage
 

@@ -75,7 +75,8 @@ data class BirdData(
     var cagekeymalevalue: String? = null,
     var cagebirdmalekey: String? = null,
     var adultingKey: String? = null,
-    var maturingDays: String? = null
+    var maturingDays: String? = null,
+    var qr: String? = null
 )
 
 data class BirdGenderBarChart(
