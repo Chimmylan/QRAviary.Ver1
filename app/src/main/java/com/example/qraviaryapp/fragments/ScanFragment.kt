@@ -41,7 +41,7 @@ import org.json.JSONObject
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private const val CAMERA_REQUEST_CODE = 101
+const val CAMERA_REQUEST_CODE = 101
 
 /**
  * A simple [Fragment] subclass.
