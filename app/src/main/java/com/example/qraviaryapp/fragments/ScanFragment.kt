@@ -492,7 +492,7 @@ class ScanFragment : Fragment() {
         val bundle = Bundle()
 
         bundle.putString("BirdKey", birdKey)//
-        //bundle.putString("FlightKey", flightKey)
+        bundle.putString("FlightKey", flightKey)
         bundle.putString("BirdLegband", birdLegband)
         bundle.putString("BirdId", birdId)
         bundle.putString("BirdImage", birdImg)

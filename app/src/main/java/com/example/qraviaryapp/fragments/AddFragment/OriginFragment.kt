@@ -889,7 +889,7 @@ class OriginFragment : Fragment() {
         birdId: String,
         FlightId: String,
         newBundle: Bundle, soldId: String,
-        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit
+        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String, originBundle: Bundle) -> Unit
     ) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
@@ -956,6 +956,16 @@ class OriginFragment : Fragment() {
         val motherKey = newBundle.getString("BirdMotherKey")
         val cageKeyValue = newBundle.getString("CageKeyValue")
         val cageBirdKey = newBundle.getString("CageBirdKeyValue")
+
+
+        val newOriginBundle = Bundle()
+
+        newOriginBundle.putString("BirdFather", birdData.father)
+        newOriginBundle.putString("BirdMother", birdData.mother)
+        newOriginBundle.putString("BirdMotherKey", birdMotherKey)
+        newOriginBundle.putString("BirdFatherKey", birdFatherKey)
+
+
 
         Log.d(TAG, birdIdentifier.toString())
         val userId = mAuth.currentUser?.uid.toString()
@@ -1606,7 +1616,8 @@ class OriginFragment : Fragment() {
             birdFatherKey.toString(),
             descendantsfatherkey.toString(),
             descendantsmotherkey.toString(),
-            purchaseId.toString()
+            purchaseId.toString(),
+            newOriginBundle
         )
     }
 

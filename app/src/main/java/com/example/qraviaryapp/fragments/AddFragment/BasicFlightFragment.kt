@@ -718,44 +718,53 @@ class BasicFlightFragment : Fragment() {
         )
         val newBundle = Bundle()
 
-        newBundle.putString("BirdIdentifier", birdData.identifier)
-        newBundle.putString("BirdLegband", birdData.legband)
-        newBundle.putString("BirdImage", birdData.img)
-        newBundle.putString("BirdGender", birdData.gender)
-        newBundle.putString("BirdStatus", birdData.status)
-        newBundle.putString("BirdDateBirth", birdData.dateOfBirth)
-        newBundle.putString("BirdSalePrice", birdData.soldPrice)
-        newBundle.putString("BirdBuyer", birdData.saleContact)
-        newBundle.putString("BirdDeathReason", birdData.deathReason)
-        newBundle.putString("BirdExchangeReason", birdData.exReason)
-        newBundle.putString("BirdExchangeWith", birdData.exContact)
-        newBundle.putString("BirdLostDetails", birdData.lostDetails)
-        newBundle.putString("BirdAvailCage", birdData.availCage)
-        newBundle.putString("BirdForsaleCage", birdData.forSaleCage)
-        newBundle.putString("BirdRequestedPrice", birdData.reqPrice)
-        newBundle.putString("BirdComment", birdData.otherComments)
-        newBundle.putString("BirdBuyPrice", birdData.buyPrice)
-        newBundle.putString("BirdBoughtOn", birdData.boughtDate)
-        newBundle.putString("BirdBoughtBreeder", birdData.breederContact)
-        newBundle.putString("BirdBreeder", birdData.otOtherContact)
-        newBundle.putString("BirdDeceaseDate", birdData.deathDate)
-        newBundle.putString("BirdSoldDate", birdData.soldDate)
-        newBundle.putString("BirdLostDate", birdData.lostDate)
-        newBundle.putString("BirdExchangeDate", birdData.exDate)
-        newBundle.putString("BirdDonatedDate", birdData.donatedDate)
-        newBundle.putString("BirdDonatedContact", birdData.donatedContact)
-        newBundle.putSerializable("BirdMutation1", mutation1)
-        newBundle.putSerializable("BirdMutation2", mutation2)
-        newBundle.putSerializable("BirdMutation3", mutation3)
-        newBundle.putSerializable("BirdMutation4", mutation4)
-        newBundle.putSerializable("BirdMutation5", mutation5)
-        newBundle.putSerializable("BirdMutation6", mutation6)
-        newBundle.putString("BirdFather", birdData.father)
-        newBundle.putString("BirdFatherKey", birdData.fatherKey)
-        newBundle.putString("BirdMother", birdData.mother)
-        newBundle.putString("BirdMotherKey", birdData.motherKey)
-        newBundle.putString("CageKeyValue", cageKeyValue)
+        newBundle.putString("BirdIdentifier", birdData.identifier)//
+        newBundle.putString("BirdLegband", birdData.legband)//
+        newBundle.putString("BirdImage", birdData.img)//
+        newBundle.putString("BirdKey", newBirdPref.key)//
+        newBundle.putString("FlightKey", newNurseryPref.key)
+        newBundle.putString("BirdGender", birdData.gender)//
+        newBundle.putString("BirdStatus", birdData.status)//
+        newBundle.putString("BirdDateBirth", birdData.dateOfBirth)//
+        newBundle.putString("BirdSalePrice", birdData.soldPrice)//
+        newBundle.putString("BirdBuyer", birdData.saleContact)//
+        newBundle.putString("BirdDeathReason", birdData.deathReason)//
+        newBundle.putString("BirdExchangeReason", birdData.exReason)//
+        newBundle.putString("BirdExchangeWith", birdData.exContact)//
+        newBundle.putString("BirdLostDetails", birdData.lostDetails)//
+        newBundle.putString("BirdAvailCage", birdData.availCage)//
+        newBundle.putString("BirdForsaleCage", birdData.forSaleCage)//
+        newBundle.putString("BirdRequestedPrice", birdData.reqPrice)//
+        newBundle.putString("BirdComment", birdData.otherComments)//
+        newBundle.putString("BirdBuyPrice", birdData.buyPrice)//
+        newBundle.putString("BirdBoughtOn", birdData.boughtDate)//
+        newBundle.putString("BirdBoughtBreeder", birdData.breederContact)//
+        newBundle.putString("BirdBreeder", birdData.otOtherContact)//
+        newBundle.putString("BirdDeceaseDate", birdData.deathDate)//
+        newBundle.putString("BirdSoldDate", birdData.soldDate)//
+        newBundle.putString("BirdLostDate", birdData.lostDate)//
+        newBundle.putString("BirdExchangeDate", birdData.exDate)//
+        newBundle.putString("BirdDonatedDate", birdData.donatedDate)//
+        newBundle.putString("BirdDonatedContact", birdData.donatedContact)//
+        newBundle.putSerializable("BirdMutation1", mutation1)//
+        newBundle.putSerializable("BirdMutation2", mutation2)//
+        newBundle.putSerializable("BirdMutation3", mutation3)//
+        newBundle.putSerializable("BirdMutation4", mutation4)//
+        newBundle.putSerializable("BirdMutation5", mutation5)//
+        newBundle.putSerializable("BirdMutation6", mutation6)//
+        newBundle.putString("BirdMutation1Name", birdData.mutation1)//
+        newBundle.putString("BirdMutation2Name", birdData.mutation2)//
+        newBundle.putString("BirdMutation3Name", birdData.mutation3)//
+        newBundle.putString("BirdMutation4Name", birdData.mutation4)//
+        newBundle.putString("BirdMutation5Name", birdData.mutation5)//
+        newBundle.putString("BirdMutation6Name", birdData.mutation6)//
+        newBundle.putString("BirdFather", birdData.father)//
+        newBundle.putString("BirdFatherKey", birdData.fatherKey)//
+        newBundle.putString("BirdMother",birdData.mother)//
+        newBundle.putString("BirdMotherKey", birdData.motherKey)//
+        newBundle.putString("CageKeyValue", cageKeyValue)//
         newBundle.putString("CageBirdKeyValue", cageBirdKey)
+        newBundle.putBoolean("fromFlightAdapterList", true)//
 
         Log.d(TAG, userId)
 
