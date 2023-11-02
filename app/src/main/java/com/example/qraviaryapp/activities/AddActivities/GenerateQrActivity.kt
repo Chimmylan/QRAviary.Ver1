@@ -34,6 +34,7 @@ import com.example.qraviaryapp.R
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
     }
 
 

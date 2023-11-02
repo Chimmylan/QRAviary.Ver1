@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
+import com.example.qraviaryapp.activities.AddActivities.AddEggScanActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -264,7 +265,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_scan -> {
-
+                val i = Intent(this, AddEggScanActivity::class.java)
                 true
             }
             R.id.menu_delete -> {
