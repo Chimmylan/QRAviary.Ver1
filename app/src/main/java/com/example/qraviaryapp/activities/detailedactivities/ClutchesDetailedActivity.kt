@@ -263,6 +263,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+            R.id.menu_scan -> {
+
+                true
+            }
             R.id.menu_delete -> {
 
                 true

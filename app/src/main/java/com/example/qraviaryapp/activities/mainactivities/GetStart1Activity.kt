@@ -25,7 +25,7 @@ class GetStart1Activity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference
         insertDataToFirebase()
         showProgressBar(progressBar)
-
+        navigateToHomeActivity()
     }
 
     private fun showProgressBar(progressBar: ProgressBar) {

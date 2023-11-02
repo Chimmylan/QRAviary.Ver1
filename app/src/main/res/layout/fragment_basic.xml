@@ -289,15 +289,6 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <!--<TextView
-                        android:id="@+id/tvdatebanding"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Date of banding (*)"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:paddingLeft="16dp" />-->
 
                     <TextView
                         android:id="@+id/tvdatebirth"
@@ -317,22 +308,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                   <!-- <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btndateband"
-                        android:layout_width="0dp"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Pick Date"
-                        app:iconTint="@color/black"
-                        android:layout_margin="10dp"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:textAlignment="textStart"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-
-                        android:onClick="openDatebandPicker"/>-->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btndatebirth"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"

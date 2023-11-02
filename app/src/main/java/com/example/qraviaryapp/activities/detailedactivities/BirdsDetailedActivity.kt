@@ -24,8 +24,11 @@ import com.example.qraviaryapp.fragments.DetailedFragment.BirdPairingFragment
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class BirdsDetailedActivity : AppCompatActivity() {
@@ -72,12 +75,12 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
-
+    private lateinit var mAuth: FirebaseAuth
     //cages
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
-
+    private lateinit var CageQR: String
 
 
     private lateinit var databaseReference: DatabaseReference
@@ -102,7 +105,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         databaseReference = database.getReference("Users")
 
 
-
+        mAuth = FirebaseAuth.getInstance()
 
         BirdId = bundle?.getString("BirdId").toString()//
         BirdLegband = bundle?.getString("BirdLegband").toString()//
@@ -242,8 +245,17 @@ class BirdsDetailedActivity : AppCompatActivity() {
         fragmentAdapter.addFragment(birdGalleryFragment, "GALLERY")
         viewPager.adapter = fragmentAdapter
         tablayout.setupWithViewPager(viewPager)
-
-
+        val currentUserId = mAuth.currentUser?.uid
+        val qrRef = FirebaseDatabase.getInstance().getReference("Users").child("ID: ${currentUserId.toString()}")
+            .child("Birds").child(BirdKey)
+        qrRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                CageQR = dataSnapshot.child("QR").value.toString()
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle errors or onCancelled event
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -264,6 +276,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true
             }

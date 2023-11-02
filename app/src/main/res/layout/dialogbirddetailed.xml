@@ -1,123 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bottom_nav_background"
-    tools:context=".fragments.DetailedFragment.BirdBasicFragment">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:orientation="horizontal">
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Id"
+            android:layout_marginBottom="1dp" />
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Legband"
+            android:layout_marginBottom="1dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/incubation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_weight="1"
+            android:layout_marginBottom="16dp" />
+        <EditText
+            android:id="@+id/matured"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:layout_marginBottom="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
         android:background="@color/white_black"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="horizontal">
+
 
             <TextView
-                android:id="@+id/tvMutation"
+                android:id="@+id/tvdatebirth"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:textColor="@color/black_white"
-                android:text="Mutation"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textSize="20sp"
-                android:text="Status"
-                android:textColor="@color/black_white"
-                android:gravity="center"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <TextView
-                android:id="@+id/tvId"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textSize="30sp"
-                android:text="ID"
-                android:textColor="@color/black_white"
-                android:layout_weight="2"/>
-
-            <ImageView
-                android:id="@+id/imgGender"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:src="@drawable/unknown"
-                android:textSize="20sp" />
+                android:layout_height="wrap_content"
+                android:text="Date of birth"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
 
         </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvLegband"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btndatebirth"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
-                android:textColor="@color/black_white"
-                android:text="Legband"
-                android:textSize="20sp" />
-
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/tvAge"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:text="Age"
-                android:textColor="@color/black_white"
-                android:padding="5dp"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/tvdateBirth"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:textColor="@color/black_white"
-                android:padding="5dp"
-                android:text="Date of Birth"
-                android:layout_weight="1"/>
-
+                android:text="Pick Date"
+                app:iconTint="@color/black"
+                android:layout_margin="10dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:textAlignment="textStart"
+                app:icon="@drawable/drop_down"
+                app:iconGravity="end"
+                android:onClick="openDatebirthPicker"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -461,5 +438,28 @@
                 android:layout_weight="1"/>
 
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:text="Save" />
     </LinearLayout>
 </LinearLayout>
