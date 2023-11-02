@@ -138,7 +138,7 @@ class MoveEggActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         currentUserId = mAuth.currentUser?.uid
-        choosecage = findViewById(R.id.btnnurserycage)
+        //choosecage = findViewById(R.id.btnnurserycage)
 
         etIdentifier = findViewById(R.id.etIdentifier)
         addBtn = findViewById(R.id.addBtn)
@@ -166,6 +166,8 @@ class MoveEggActivity : AppCompatActivity() {
         pairCageBirdMale= intent.getStringExtra("CageBirdMale").toString()
         pairCageKeyMale= intent.getStringExtra("CageKeyMale").toString()
         pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
+        cageNameValue = intent.getStringExtra("CageName").toString()
+        cageKeyValue = intent.getStringExtra("CageKey").toString()
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
@@ -205,13 +207,13 @@ class MoveEggActivity : AppCompatActivity() {
 
         }
 
-        choosecage.setOnClickListener {
-            val requestCode = 7
-            val intent = Intent(this, NurseryCagesListActivity::class.java)
-            startActivityForResult(intent, requestCode)
-
-
-        }
+//        choosecage.setOnClickListener {
+//            val requestCode = 7
+//            val intent = Intent(this, NurseryCagesListActivity::class.java)
+//            startActivityForResult(intent, requestCode)
+//
+//
+//        }
         AddMutation()
         RemoveLastMutation()
     }
@@ -378,15 +380,15 @@ class MoveEggActivity : AppCompatActivity() {
             }
         }
 
-        if (requestCode == 7) {
-            if (resultCode == RESULT_OK) {
-                cageNameValue = data?.getStringExtra("CageName").toString()
-                cageKeyValue = data?.getStringExtra("CageKey").toString()
-                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
-                Log.d(ContentValues.TAG, "cage Key : $cageKeyValue")
-                choosecage.setText(cageNameValue)
-            }
-        }
+//        if (requestCode == 7) {
+//            if (resultCode == RESULT_OK) {
+//                cageNameValue = data?.getStringExtra("CageName").toString()
+//                cageKeyValue = data?.getStringExtra("CageKey").toString()
+//                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
+//                Log.d(ContentValues.TAG, "cage Key : $cageKeyValue")
+//                choosecage.setText(cageNameValue)
+//            }
+//        }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_add_bird, menu)

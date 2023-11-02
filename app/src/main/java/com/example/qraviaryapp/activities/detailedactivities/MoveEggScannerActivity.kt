@@ -1,10 +1,13 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -17,7 +20,10 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.FlightListActivity
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
+import org.json.JSONException
+import org.json.JSONObject
 
 class MoveEggScannerActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -50,6 +56,12 @@ class MoveEggScannerActivity : AppCompatActivity() {
         setupPermission()
         codeScanner = CodeScanner(activity, scannerView)
 
+
+
+
+
+
+
         codeScanner.apply {
 
             autoFocusMode = AutoFocusMode.SAFE
@@ -59,6 +71,61 @@ class MoveEggScannerActivity : AppCompatActivity() {
 
             decodeCallback = DecodeCallback {
 
+                try {
+                    val jsonData = JSONObject(it.text)
+                    if (jsonData.has("CageKey")) {
+                        if (jsonData.getString("CageType") == "Nursery") {
+                            val key = jsonData.getString("CageKey")
+                            val cageNumber = jsonData.getString("CageNumber")
+
+
+                            val incubatingstartdate = intent.getStringExtra("IncubatingStartDate")
+                            val maturingstartdate = intent.getStringExtra("MaturingStartDate")
+                            val eggkey = intent.getStringExtra("EggKey")
+                            val individualeggkey = intent.getStringExtra("IndividualEggKey")
+                            val pairkey = intent.getStringExtra("PairKey")
+                            val pairflightmalekey = intent.getStringExtra("PairFlightMaleKey")
+                            val pairflightfemalekey = intent.getStringExtra("PairFlightFemaleKey")
+                            val pairmalekey = intent.getStringExtra("PairMaleKey")
+                            val pairfemalekey = intent.getStringExtra("PairFemaleKey")
+                            val pairmaleid = intent.getStringExtra("PairMaleID")
+                            val pairfemaleid = intent.getStringExtra("PairFemaleID")
+                            val dateofbirth = intent.getStringExtra("DateOfBirth")
+                            val cagekeyfemale = intent.getStringExtra("CageKeyFemale")
+                            val cagekeymale = intent.getStringExtra("CageKeyMale")
+                            val cagebirdfemale = intent.getStringExtra("CageBirdFemale")
+                            val cagebirdmale = intent.getStringExtra("CageBirdMale")
+
+                            val intent = Intent(this@MoveEggScannerActivity, MoveEggActivity::class.java)
+                            intent.putExtra("CageKey", key)
+                            intent.putExtra("CageName", cageNumber)
+                            intent.putExtra("IncubatingStartDate",incubatingstartdate)
+                            intent.putExtra("MaturingStartDate", maturingstartdate)
+                            intent.putExtra("EggKey", eggkey)
+                            intent.putExtra("IndividualEggKey", individualeggkey)
+                            intent.putExtra("PairKey", pairkey)
+                            intent.putExtra("PairFlightMaleKey", pairflightmalekey)
+                            intent.putExtra("PairFlightFemaleKey", pairflightfemalekey)
+                            intent.putExtra("PairMaleKey", pairmalekey)
+                            intent.putExtra("PairFemaleKey", pairfemalekey)
+                            intent.putExtra("PairMaleID", pairmaleid)
+                            intent.putExtra("PairFemaleID", pairfemaleid)
+                            intent.putExtra("DateOfBirth", dateofbirth)
+                            intent.putExtra("CageKeyFemale",cagekeyfemale)
+                            intent.putExtra("CageKeyMale",cagekeymale)
+                            intent.putExtra("CageBirdFemale",cagebirdfemale)
+                            intent.putExtra("CageBirdMale",cagebirdmale)
+
+
+                            startActivity(intent)
+                        }
+                    }
+
+                    //if has cagekey
+                    // means we are scanning the cages
+                } catch (e: JSONException) {
+
+                }
 
 
             }
@@ -67,45 +134,13 @@ class MoveEggScannerActivity : AppCompatActivity() {
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
-        val incubatingstartdate = intent.getStringExtra("IncubatingStartDate")
-        val maturingstartdate = intent.getStringExtra("MaturingStartDate")
-        val eggkey = intent.getStringExtra("EggKey")
-        val individualeggkey = intent.getStringExtra("IndividualEggKey")
-        val pairkey = intent.getStringExtra("PairKey")
-        val pairflightmalekey = intent.getStringExtra("PairFlightMaleKey")
-        val pairflightfemalekey = intent.getStringExtra("PairFlightFemaleKey")
-        val pairmalekey = intent.getStringExtra("PairMaleKey")
-        val pairfemalekey = intent.getStringExtra("PairFemaleKey")
-        val pairmaleid = intent.getStringExtra("PairMaleID")
-        val pairfemaleid = intent.getStringExtra("PairFemaleID")
-        val dateofbirth = intent.getStringExtra("DateOfBirth")
-        val cagekeyfemale = intent.getStringExtra("CageKeyFemale")
-        val cagekeymale = intent.getStringExtra("CageKeyMale")
-        val cagebirdfemale = intent.getStringExtra("CageBirdFemale")
-        val cagebirdmale = intent.getStringExtra("CageBirdMale")
-
-
-        val bundle = Bundle()
-        bundle.putString("IncubatingStartDate", incubatingstartdate)
-        bundle.putString("MaturingStartDate", maturingstartdate)
-        bundle.putString("EggKey", eggkey)
-        bundle.putString("IndividualEggKey", individualeggkey)
-        bundle.putString("PairKey", pairkey)
-        bundle.putString("PairFlightMaleKey", pairflightmalekey)
-        bundle.putString("PairFlightFemaleKey", pairflightfemalekey)
-        bundle.putString("PairMaleKey", pairmalekey)
-        bundle.putString("PairFemaleKey", pairfemalekey)
-        bundle.putString("PairMaleID", pairmaleid)
-        bundle.putString("PairFemaleID", pairfemaleid)
-        bundle.putString("DateOfBirth", dateofbirth)
-        bundle.putString("CageKeyFemale", cagekeyfemale)
-        bundle.putString("CageKeyMale", cagekeymale)
-        bundle.putString("CageBirdFemale", cagebirdfemale)
-        bundle.putString("CageBirdMale", cagebirdmale)
-
 
     }
 
+    fun moveEgg(){
+
+
+    }
 
     override fun onResume() {
         super.onResume()

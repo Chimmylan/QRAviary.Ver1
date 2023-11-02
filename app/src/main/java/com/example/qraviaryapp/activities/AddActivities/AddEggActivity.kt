@@ -6,10 +6,13 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +25,15 @@ import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -63,7 +75,7 @@ class AddEggActivity : AppCompatActivity() {
     private var currentUserId: String? = null
     private lateinit var hatchingDateTime: LocalDateTime
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
-
+    private var storageRef = FirebaseStorage.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -280,6 +292,15 @@ class AddEggActivity : AppCompatActivity() {
             eggRef.updateChildren(data)
         }
 
+        val bundleData = JSONObject()
+        bundleData.put("IncubatingStartDate",etIncubatingDate.text.toString())
+        bundleData.put("MaturingStartDate",  etMaturingDate.text.toString())
+        bundleData.put("EggKey", eggKey)
+        bundleData.put("IndividualEggKey", eggRef.key)
+        bundleData.put("PairKey", pairKey)
+        qrAdd(bundleData, eggRef)
+
+
         setAlarmForEgg(this, hatchingDateTime.format(formatter1), eggRandomID)
 
 
@@ -288,6 +309,50 @@ class AddEggActivity : AppCompatActivity() {
 
 
     }
+
+    private fun generateQRCodeUri(bundleCageData: String): Uri? {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir =  getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return Uri.fromFile(imageFile)
+    }
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
+    }
+
     fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
