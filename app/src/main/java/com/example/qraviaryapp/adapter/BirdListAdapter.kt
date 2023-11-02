@@ -157,7 +157,7 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
 
         itemView.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("BirdKey", dataList[adapterPosition].birdKey)
+            bundle.putString("BirdKey", dataList[adapterPosition].birdKey)//
             bundle.putString("FlightKey", dataList[adapterPosition].flightKey)
             bundle.putString("BirdLegband", dataList[adapterPosition].legband)
             bundle.putString("BirdId", dataList[adapterPosition].identifier)

@@ -24,6 +24,7 @@ import com.example.qraviaryapp.activities.AddActivities.*
 import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
 import com.example.qraviaryapp.activities.CagesActivity.FlightListActivity
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
+import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.example.qraviaryapp.activities.mainactivities.LoginActivity
 import com.example.qraviaryapp.activities.mainactivities.SettingsActivity
@@ -233,6 +234,7 @@ class ScanFragment : Fragment() {
                 nurseryCageScanner(it.text)
                 pairScanner(it.text)
                 clutchesScanner(it.text)
+                detailedBirdScanner(it.text)
 
 
             }
@@ -385,7 +387,7 @@ class ScanFragment : Fragment() {
             val cageBirdMale = jsonObject.get("CageBirdMale")
 
             val bundle = Bundle()
-           Log.d(TAG, "LOG")
+            Log.d(TAG, "LOG")
 
             bundle.putString("PairKey", pairKey.toString())
             bundle.putString("EggKey", eggKey.toString())
@@ -438,6 +440,96 @@ class ScanFragment : Fragment() {
             Log.e(TAG, "JSON Parsing Error: ${e.message}")
             e.printStackTrace()
         }
+    }
+
+    fun detailedBirdScanner(string: String) {
+
+        val jsonObject = JSONObject(string)
+
+        Log.d(TAG, "DetailedScanning")
+
+        val i = Intent(requireContext(), BirdsDetailedActivity::class.java)
+
+        val birdKey = jsonObject.optString("BirdKey", "")
+        val nurseryKey = jsonObject.optString("NurseryKey", "")
+        val flightKey = jsonObject.optString("FlightKey", "")
+        val birdLegband = jsonObject.optString("BirdLegband", "")
+        val birdId = jsonObject.optString("BirdId", "")
+        val birdImg = jsonObject.optString("BirdImage", "")
+        val birdGender = jsonObject.optString("BirdGender", "")
+        val birdStatus = jsonObject.optString("BirdStatus", "")
+        val birdDateBirth = jsonObject.optString("BirdDateBirth", "")
+        val birdSalePrice = jsonObject.optString("BirdSalePrice", "")
+        val birdBuyer = jsonObject.optString("BirdBuyer", "")
+        val birdDeatherReason = jsonObject.optString("BirdDeathReason", "")
+        val birdExchangeReason = jsonObject.optString("BirdExchangeReason", "")
+        val birdExchangeWith = jsonObject.optString("BirdExchangeWith", "")
+        val birdLostDetails = jsonObject.optString("BirdLostDetails", "")
+        val birdAvailCage = jsonObject.optString("BirdAvailCage", "")
+        val birdForSaleCage = jsonObject.optString("BirdForsaleCage", "")
+        val birdRequestedPrice = jsonObject.optString("BirdRequestedPrice", "")
+        val birdBuyPrice = jsonObject.optString("BirdBuyPrice", "")
+        val birdBoughtOn = jsonObject.optString("BirdBoughtOn", "")
+        val birdBoughtBreeder = jsonObject.optString("BirdBoughtBreeder", "")
+        val birdMutation1 = jsonObject.optString("BirdMutation1", "")
+        val birdMutation2 = jsonObject.optString("BirdMutation2", "")
+        val birdMutation3 = jsonObject.optString("BirdMutation3", "")
+        val birdMutation4 = jsonObject.optString("BirdMutation4", "")
+        val birdMutation5 = jsonObject.optString("BirdMutation5", "")
+        val birdMutation6 = jsonObject.optString("BirdMutation6", "")
+        val birdSoldDate = jsonObject.optString("BirdSoldDate", "")
+        val birdDeceasedDate = jsonObject.optString("BirdDeceaseDate", "")
+        val birdExchangeDate = jsonObject.optString("BirdExchangeDate", "")
+        val birdLostDate = jsonObject.optString("BirdLostDate", "")
+        val birdDonatedDate = jsonObject.optString("BirdDonatedDate", "")
+        val birdDonatedContact = jsonObject.optString("BirdDonatedContact", "")
+        val birdFather = jsonObject.optString("BirdFather", "")
+        val birdFatherKey = jsonObject.optString("BirdFatherKey", "")
+        val birdMother = jsonObject.optString("BirdMother", "")
+        val birdMotherKey = jsonObject.optString("BirdMotherKey", "")
+
+
+        val bundle = Bundle()
+
+        bundle.putString("BirdKey", birdKey)//
+        //bundle.putString("FlightKey", flightKey)
+        bundle.putString("BirdLegband", birdLegband)
+        bundle.putString("BirdId", birdId)
+        bundle.putString("BirdImage", birdImg)
+        bundle.putString("BirdGender", birdGender)
+        bundle.putString("BirdStatus", birdStatus)
+        bundle.putString("BirdDateBirth", birdDateBirth)
+        bundle.putString("BirdSalePrice", birdSalePrice)
+        bundle.putString("BirdBuyer", birdBuyer)
+        bundle.putString("BirdDeathReason", birdDeatherReason)
+        bundle.putString("BirdExchangeReason", birdExchangeReason)
+        bundle.putString("BirdExchangeWith", birdExchangeWith)
+        bundle.putString("BirdLostDetails", birdLostDetails)
+        bundle.putString("BirdAvailCage", birdAvailCage)
+        bundle.putString("BirdForsaleCage", birdForSaleCage)
+        bundle.putString("BirdRequestedPrice", birdRequestedPrice)
+        bundle.putString("BirdBuyPrice", birdBuyPrice)
+        bundle.putString("BirdBoughtOn", birdBoughtOn)
+        bundle.putString("BirdBoughtBreeder", birdBoughtBreeder)
+        bundle.putString("BirdMutation1", birdMutation1)
+        bundle.putString("BirdMutation2", birdMutation2)
+        bundle.putString("BirdMutation3", birdMutation3)
+        bundle.putString("BirdMutation4", birdMutation4)
+        bundle.putString("BirdMutation5", birdMutation5)
+        bundle.putString("BirdMutation6", birdMutation6)
+        bundle.putString("BirdSoldDate", birdSoldDate)
+        bundle.putString("BirdDeceaseDate", birdDeceasedDate)
+        bundle.putString("BirdExchangeDate", birdExchangeDate)
+        bundle.putString("BirdLostDate", birdLostDate)
+        bundle.putString("BirdDonatedDate", birdDonatedDate)
+        bundle.putString("BirdDonatedContact", birdDonatedContact)
+        bundle.putString("BirdFather", birdFather)
+        bundle.putString("BirdFatherKey", birdFatherKey)
+        bundle.putString("BirdMother", birdMother)
+        bundle.putString("BirdMotherKey", birdMotherKey)
+        i.putExtras(bundle)
+        startActivity(i)
+
     }
 
 

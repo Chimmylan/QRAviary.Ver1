@@ -162,7 +162,13 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
+    fun addOirigin(
+        birdId: String,
+        NurseryId: String,
+        newBundle: Bundle,
+        soldId: String,
+        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String, originBundle: Bundle) -> Unit
+    ) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -172,6 +178,7 @@ class OriginFragment : Fragment() {
         val dataBreederOtContact = etOtBreederContact.text.toString()
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
+
 
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
@@ -229,11 +236,36 @@ class OriginFragment : Fragment() {
         val userId = mAuth.currentUser?.uid.toString()
 
 
+        val bundle = Bundle()
+
+        bundle.putString("BreederContact", birdData.breederContact)
+        bundle.putString("Provenance", birdData.provenance)
+        bundle.putString("BuyPrice", birdData.buyPrice)
+        bundle.putString("BoughtDate", birdData.boughtDate)
+        bundle.putString("OtOtherComment", birdData.otOtherContact)
+        bundle.putString("Father", birdData.father)
+        bundle.putString("Mother", birdData.mother)
+        bundle.putString("BirdFather", birdData.father)//
+        bundle.putString("BirdFatherKey", birdData.fatherKey)//
+        bundle.putString("BirdMother",birdData.mother)//
+        bundle.putString("BirdMotherKey", birdData.motherKey)//
+
+
+        val newOriginBundle = Bundle()
+
+        newOriginBundle.putString("BirdFather", birdData.father)
+        newOriginBundle.putString("BirdMother", birdData.mother)
+        newOriginBundle.putString("BirdMotherKey", birdMotherKey)
+        newOriginBundle.putString("BirdFatherKey", birdFatherKey)
+
+
+
 
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString())
+                    .child("Parents")
             }!!
         }
 
@@ -268,7 +300,7 @@ class OriginFragment : Fragment() {
             val day = monthYearParts[0]
             val month = monthYearParts[1]
             val year = monthYearParts[2]
-            if (btnFather.text == "None" && btnMother.text == "None" ) {
+            if (btnFather.text == "None" && btnMother.text == "None") {
                 Log.d(TAG, "NONEEE")
                 val descendantdata: Map<String, Any?> = hashMapOf(
                     "ChildKey" to birdId,
@@ -488,10 +520,10 @@ class OriginFragment : Fragment() {
                 "MotherKey" to birdMotherKey
             )
 
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(parentdata)
             }
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
                 soldidref.updateChildren(parentdata)
             }
             purchaseRef.updateChildren(parentdata)
@@ -661,7 +693,7 @@ class OriginFragment : Fragment() {
                 "MotherKey" to birdMotherKey
             )
 
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(parentdata)
             }
             if (soldId != "null" && !soldId.isNullOrEmpty()) {
@@ -832,24 +864,33 @@ class OriginFragment : Fragment() {
                 "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(data)
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
                 soldidref.updateChildren(data)
             }
 
         }
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
+        callback(
+            birdMotherKey.toString(),
+            birdFatherKey.toString(),
+            descendantsfatherkey.toString(),
+            descendantsmotherkey.toString(),
+            purchaseId.toString(),
+            newOriginBundle
+        )
     }
 
 
-    fun addFlightOrigin(birdId: String,
-    FlightId: String,
-    newBundle: Bundle,soldId: String,
-    callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String,  purchaseId: String) -> Unit) {
+    fun addFlightOrigin(
+        birdId: String,
+        FlightId: String,
+        newBundle: Bundle, soldId: String,
+        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit
+    ) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -878,7 +919,6 @@ class OriginFragment : Fragment() {
 
         val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
-
 
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
@@ -923,7 +963,8 @@ class OriginFragment : Fragment() {
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString())
+                    .child("Parents")
             }!!
         }
 
@@ -947,7 +988,7 @@ class OriginFragment : Fragment() {
             .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-       var purchaseId: String? = null
+        var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
@@ -1185,10 +1226,10 @@ class OriginFragment : Fragment() {
                 "BirdFatherKey" to birdBirdsFatherKey,
                 "BirdMotherKey" to birdBirdsMotherKey,
             )
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(parentdata)
             }
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
                 soldidref.updateChildren(parentdata)
             }
             purchaseRef.updateChildren(parentdata)
@@ -1369,7 +1410,7 @@ class OriginFragment : Fragment() {
                 "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(parentdata)
             }
             if (soldId != "null" && !soldId.isNullOrEmpty()) {
@@ -1395,12 +1436,12 @@ class OriginFragment : Fragment() {
                 "BirdMotherKey" to birdBirdsMotherKey,
                 "MotherKey" to birdMotherKey
             )
-            if (!cageKeyValue.isNullOrEmpty()){
+            if (!cageKeyValue.isNullOrEmpty()) {
                 cageReference.updateChildren(data)
             }
             relationshipRef.updateChildren(data)
             nurseryRelationshipRef.updateChildren(data)
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
+            if (soldId != "null" && !soldId.isNullOrEmpty()) {
                 soldidref.updateChildren(data)
             }
             if (btnFather.text == "None" && btnMother.text == "None") {
@@ -1560,11 +1601,23 @@ class OriginFragment : Fragment() {
             }
         }
 
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
+        callback(
+            birdMotherKey.toString(),
+            birdFatherKey.toString(),
+            descendantsfatherkey.toString(),
+            descendantsmotherkey.toString(),
+            purchaseId.toString()
+        )
     }
 
-    interface OriginFragmentCallback{
-        fun onOriginDatSaved(birdId: String, nurseryId: String, newBundle: Bundle, birdMotherKey: String?, birdFatherKey: String?)
+    interface OriginFragmentCallback {
+        fun onOriginDatSaved(
+            birdId: String,
+            nurseryId: String,
+            newBundle: Bundle,
+            birdMotherKey: String?,
+            birdFatherKey: String?
+        )
     }
 
     fun radioSelection() {
