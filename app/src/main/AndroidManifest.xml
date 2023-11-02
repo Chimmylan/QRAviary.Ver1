@@ -38,6 +38,9 @@
             android:name=".activities.detailedactivities.MoveEggScannerActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.detailedactivities.MoveNurseryScannerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.detailedactivities.QRCodeActivity"
             android:exported="false" />
         <activity
