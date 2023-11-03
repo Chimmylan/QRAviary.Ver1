@@ -264,7 +264,7 @@ class FlightListActivity : AppCompatActivity() {
 
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.qr_option, menu)
+        menuInflater.inflate(R.menu.cageoption, menu)
 
 
 

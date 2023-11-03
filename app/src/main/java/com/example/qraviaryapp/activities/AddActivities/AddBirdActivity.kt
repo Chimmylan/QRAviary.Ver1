@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.AddActivities
 import BirdData
 import BirdDataListener
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -128,6 +129,10 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_qr -> {
+                startActivity(Intent(this, AddBirdScanActivity::class.java))
+                true
+            }
             R.id.action_save -> {
 
                 val basicFragment = fragmentAdapter.getItem(0) as BasicFragment

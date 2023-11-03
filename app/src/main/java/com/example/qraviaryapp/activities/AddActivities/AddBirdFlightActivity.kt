@@ -134,6 +134,10 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_qr -> {
+                startActivity(Intent(this, AddBirdScanActivity::class.java))
+                true
+            }
             R.id.action_save -> {
 
                 val basicFragment = fragmentAdapter.getItem(0) as BasicFlightFragment
