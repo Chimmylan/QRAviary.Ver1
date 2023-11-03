@@ -138,28 +138,6 @@ class AddEggActivity : AppCompatActivity() {
             .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString())
             .child(individualEggKey.toString())
 
-/*        if (!edited) {
-            etMaturingDate.setText(maturingDays.toString())
-            etIncubatingDate.setText(incubatingDays.toString())
-        } else {
-            dbase.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot != null) {
-                        val maturingDaysValue = snapshot.child("Maturing Days").value.toString()
-                        val incubatingDaysValue = snapshot.child("Incubating Days").value.toString()
-
-                        etIncubatingDate.setText(incubatingDaysValue)
-                        etMaturingDate.setText(maturingDaysValue)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
-        }*/
-
 
 
         var maturingDateText =  sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
