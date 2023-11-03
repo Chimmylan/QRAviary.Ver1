@@ -345,7 +345,7 @@ class GenerateBirdFragment : Fragment() {
             startActivityForResult(i, requestCode)
         }
 
-       )
+
 
         AddMutation()
         RemoveLastMutation()
