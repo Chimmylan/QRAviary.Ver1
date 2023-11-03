@@ -2,27 +2,37 @@ package com.example.qraviaryapp.fragments.generateFragment
 
 import BirdData
 import BirdDataListener
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
+import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
+import com.example.qraviaryapp.activities.dashboards.MutationsActivity
+import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,6 +50,7 @@ class GenerateBirdFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var datePickerDialogBirth: DatePickerDialog
+
     /*  private lateinit var datePickerDialogBanding: DatePickerDialog*/
     private lateinit var datePickerDialogSoldDate: DatePickerDialog
     private lateinit var datePickerDialogDeathDate: DatePickerDialog
@@ -98,6 +109,7 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var tvLegband: TextView
     private lateinit var tvIdentifier: TextView
     private lateinit var etLegband: EditText
+
     /*Layouts*/
     private lateinit var editTextContainer: LinearLayout
     private lateinit var availableLayout: LinearLayout
@@ -129,10 +141,40 @@ class GenerateBirdFragment : Fragment() {
     private var mutation5MaturingDays: String? = null
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
-        private var status: String? = null
+    private var status: String? = null
     private lateinit var cageReference: DatabaseReference
+
     //endregion
     private lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var btnGenerate: MaterialButton
+
+    private lateinit var dataSelectedGen: RadioButton
+
+    private lateinit var qrImage: ImageView
+
+    //
+
+    private var boughtFormattedDate: String? = null
+    private lateinit var datePickerDialogBought: DatePickerDialog
+
+    private lateinit var boughtLayout: LinearLayout
+    private lateinit var otLayout: LinearLayout
+    private lateinit var radioGroup: RadioGroup
+    private lateinit var radioButtonMe: RadioButton
+    private lateinit var radioButtonBought: RadioButton
+    private lateinit var radioButtonOther: RadioButton
+
+    private lateinit var boughtDateBtn: MaterialButton
+    private lateinit var etBreederContact: EditText
+    private lateinit var etBuyPrice: EditText
+    private lateinit var etOtBreederContact: EditText
+
+    private lateinit var btnFather: MaterialButton
+    private lateinit var btnMother: MaterialButton
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var dbase: DatabaseReference
+
 
     var birdData = BirdData()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +190,7 @@ class GenerateBirdFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-       val view = inflater.inflate(R.layout.fragment_generate_bird, container, false)
+        val view = inflater.inflate(R.layout.fragment_generate_bird, container, false)
 
         datebirthButton = view.findViewById(R.id.btndatebirth)
         btnSoldSaleDate = view.findViewById(R.id.soldSaleDate)
@@ -217,8 +259,577 @@ class GenerateBirdFragment : Fragment() {
         btnMutation5 = view.findViewById(R.id.mutationBtn5)
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
+
+        btnGenerate = view.findViewById(R.id.generate)
+
+        //
+
+        boughtLayout = view.findViewById(R.id.boughtLayout)
+        otLayout = view.findViewById(R.id.otLayout)
+        radioGroup = view.findViewById(R.id.radioGroupprovenance)
+        radioButtonMe = view.findViewById(R.id.radioButtonMe)
+        radioButtonBought = view.findViewById(R.id.radioButtonBought)
+        radioButtonOther = view.findViewById(R.id.radioButtonOther)
+
+        boughtDateBtn = view.findViewById(R.id.boughtDate)
+        etBreederContact = view.findViewById(R.id.etBreederContact)
+        etBuyPrice = view.findViewById(R.id.etBuyPrice)
+        etOtBreederContact = view.findViewById(R.id.otherContact)
+        btnFather = view.findViewById(R.id.btnFather)
+        btnMother = view.findViewById(R.id.btnMother)
+
+        qrImage = view.findViewById(R.id.qrImage)
+
+        rbUnknown.isChecked
+
+        btnMutation1.setOnClickListener {
+            val requestCode = 1 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation2.setOnClickListener {
+            val requestCode = 2 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation3.setOnClickListener {
+            val requestCode = 3 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation4.setOnClickListener {
+            val requestCode = 4 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation5.setOnClickListener {
+            val requestCode = 5 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation6.setOnClickListener {
+            val requestCode = 6 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+
+        etAvailCage.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
+            startActivityForResult(intent, requestCode)
+        }
+        etForSaleCage.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+
+        boughtLayout.visibility = View.GONE
+        otLayout.visibility = View.GONE
+
+        btnFather.setOnClickListener {
+            val requestCode = 8
+            val i = Intent(requireContext(), MaleBirdListActivity::class.java)
+            startActivityForResult(i, requestCode)
+        }
+        btnMother.setOnClickListener {
+            val requestCode = 9
+            val i = Intent(requireContext(), FemaleBirdListActivity::class.java)
+            startActivityForResult(i, requestCode)
+        }
+
+        val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
+        val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
+        val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
+        val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
+        val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)
+        val dataSoldSaleDate = getTextFromVisibleDatePicker(btnSoldSaleDate, soldLayout)
+        val dataDeathDate = getTextFromVisibleDatePicker(btnDeathDate, deceasedLayout)
+        val dataDeathReason = getTextFromVisibleEditText(etDeathReason, deceasedLayout)
+        val dataExDate = getTextFromVisibleDatePicker(btnExDate, exchangeLayout)
+        val dataExReason = getTextFromVisibleEditText(etExReason, exchangeLayout)
+        val dataExContact = getTextFromVisibleEditText(etExWith, exchangeLayout)
+        val dataLostDate = getTextFromVisibleDatePicker(btnLostDate, lostLayout)
+        val dataLostDetails = getTextFromVisibleEditText(etLostDetails, lostLayout)
+        val dataDonatedDate = getTextFromVisibleDatePicker(btnDonatedDate, donatedLayout)
+        val dataDonatedContact = getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
+        val dataOtherComments = getTextFromVisibleEditText(etOtherComm, otherLayout)
+
+        AddMutation()
+        RemoveLastMutation()
+        OnActiveSpinner()
+        radioSelection()
+
+
+
+
+
+
+
+
+        btnGenerate.setOnClickListener {
+            val selectedOption: Int = rgGender.checkedRadioButtonId
+            dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
+
+            val selectedMutations = mutableListOf<String?>()
+            val spinners = arrayOf(
+                btnMutation1,
+                btnMutation2,
+                btnMutation3,
+                btnMutation4,
+                btnMutation5,
+                btnMutation6
+            )
+
+            for (i in spinners.indices) {
+                if (spinners[i].visibility == View.VISIBLE) {
+                    selectedMutations.add(spinners[i].text.toString())
+                } else {
+                    selectedMutations.add(null)
+                }
+            }
+
+            val mutation1 = hashMapOf(
+                "Mutation Name" to birdData.mutation1,
+                "Maturing Days" to mutation1MaturingDays,
+                "Incubating Days" to mutation1IncubatingDays
+            )
+            val mutation2 =  hashMapOf(
+                "Mutation Name" to birdData.mutation2,
+                "Maturing Days" to mutation2MaturingDays,
+                "Incubating Days" to mutation2IncubatingDays
+            )
+            val mutation3 = hashMapOf(
+                "Mutation Name" to birdData.mutation3,
+                "Maturing Days" to mutation3MaturingDays,
+                "Incubating Days" to mutation3IncubatingDays
+            )
+            val mutation4 = hashMapOf(
+                "Mutation Name" to birdData.mutation4,
+                "Maturing Days" to mutation4MaturingDays,
+                "Incubating Days" to mutation4IncubatingDays
+            )
+            val mutation5 = hashMapOf(
+                "Mutation Name" to birdData.mutation5,
+                "Maturing Days" to mutation5MaturingDays,
+                "Incubating Days" to mutation5IncubatingDays
+            )
+            val mutation6 = hashMapOf(
+                "Mutation Name" to birdData.mutation6,
+                "Maturing Days" to mutation6MaturingDays,
+                "Incubating Days" to mutation6IncubatingDays
+            )
+
+
+            val birdData = JSONObject()
+
+
+
+            birdData.put("Identifier", etIdentifier.text.toString())
+            birdData.put("LegBand", etLegband.text.toString())
+            birdData.put("Gender", dataSelectedGen.text.toString())
+            birdData.put("Mutation1", selectedMutations[0])
+            birdData.put("Mutation2", selectedMutations[1])
+            birdData.put("Mutation3", selectedMutations[2])
+            birdData.put("Mutation4", selectedMutations[3])
+            birdData.put("Mutation5", selectedMutations[4])
+            birdData.put("Mutation6", selectedMutations[5])
+            birdData.put("Mutation1Map", mutation1)
+            birdData.put("Mutation2Map", mutation2)
+            birdData.put("Mutation3Map", mutation3)
+            birdData.put("Mutation4Map", mutation4)
+            birdData.put("Mutation5Map", mutation5)
+            birdData.put("Mutation6Map", mutation6)
+            birdData.put("BirthDate", birthFormattedDate)
+            birdData.put("Status", status)
+            birdData.put("AvailableCage", dataAvailCage)
+            birdData.put("ForSaleCage", dataSaleCage)
+            birdData.put("SoldDate", soldFormattedDate)
+            birdData.put("SoldPrice", dataSoldSalePrice)
+            birdData.put("SoldContact", dataSoldContact)
+            birdData.put("DeceasedDate", deathFormattedDate)
+            birdData.put("DeceasedReason", dataDeathReason)
+            birdData.put("ExchangedDate", exchangeFormattedDate)
+            birdData.put("ExchangedReason", dataExReason)
+            birdData.put("ExchangedContact", dataExContact)
+            birdData.put("LostDate", lostFormattedDate)
+            birdData.put("LostDetailes", dataLostDetails)
+            birdData.put("DonatedDate", donatedFormattedDate)
+            birdData.put("DonatedContact", dataDonatedContact)
+            birdData.put("OtherComment", dataOtherComments)
+            birdData.put("FatherId", btnFather.text.toString())
+            birdData.put("FatherKey", birdFatherKey)
+            birdData.put("FatherBirdKey", birdBirdsFatherKey)
+            birdData.put("MotherId", btnMother.text.toString())
+            birdData.put("MotherKey", birdMotherKey)
+            birdData.put("MotherBirdKey", birdBirdsMotherKey)
+            birdData.put("CageName", cageNameValue)
+            birdData.put("CageKey", cageKeyValue)
+
+            qrImage.setImageBitmap(generateQRCodeUri(birdData.toString()))
+        }
+
         return view
     }
+
+    public var birdFatherKey: String? = null
+    public var birdMotherKey: String? = null
+    private var birdBirdsFatherKey: String? = null
+    private var birdBirdsMotherKey: String? = null
+
+
+    private lateinit var cageNameValue: String
+    private var cageKeyValue: String? = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                val btnMutation1Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation1MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation1IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+
+                btnMutation1.text = btnMutation1Value
+
+
+            }
+        }
+        if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation2Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation2MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation2IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation2.text = btnMutation2Value
+            }
+        }
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation3Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation3MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation3IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation3.text = btnMutation3Value
+            }
+        }
+        if (requestCode == 4) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation4Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation4MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation4IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation4.text = btnMutation4Value
+            }
+        }
+        if (requestCode == 5) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation5Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation5MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation5IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation5.text = btnMutation5Value
+            }
+        }
+        if (requestCode == 6) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation6Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation6MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation6IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation6.text = btnMutation6Value
+            }
+        }
+        if (requestCode == 7) {
+            if (resultCode == Activity.RESULT_OK) {
+                cageNameValue = data?.getStringExtra("CageName").toString()
+                cageKeyValue = data?.getStringExtra("CageKey").toString()
+                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
+                Log.d(ContentValues.TAG, "cage key : $cageKeyValue")
+                if (availableLayout.visibility == View.VISIBLE) {
+                    etAvailCage.setText(cageNameValue)
+                } else if (forSaleLayout.visibility == View.VISIBLE) {
+                    etForSaleCage.setText(cageNameValue)
+                }
+            }
+        }
+
+        if (requestCode == 8) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnFatherValue: String = data?.getStringExtra("MaleBirdId").toString()
+                val btnFatherMutationValue: String =
+                    data?.getStringExtra("MaleBirdMutation").toString()
+                birdFatherKey = data?.getStringExtra("MaleFlightKey").toString()
+                birdBirdsFatherKey = data?.getStringExtra("MaleBirdKey").toString()
+                btnFather.text = btnFatherValue
+            }
+        }
+        if (requestCode == 9) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMotherValue: String = data?.getStringExtra("FemaleBirdId").toString()
+                val btnMotherMutationValue: String =
+                    data?.getStringExtra("FemaleBirdMutation").toString()
+                birdMotherKey = data?.getStringExtra("FemaleFlightKey").toString()
+                birdBirdsMotherKey = data?.getStringExtra("FemaleBirdKey").toString()
+                btnMother.text = btnMotherValue
+            }
+        }
+    }
+
+
+    private fun generateQRCodeUri(bundleBirdData: String): Bitmap? {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(bundleBirdData, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return bitmap
+    }
+
+    fun radioSelection() {
+
+        radioGroup.setOnCheckedChangeListener { group, checkId ->
+            val radio: RadioButton = requireView().findViewById(checkId)
+
+            when (checkId) {
+                R.id.radioButtonMe -> {
+                    Toast.makeText(requireContext(), radio.text, Toast.LENGTH_LONG).show()
+                    boughtLayout.visibility = View.GONE
+                    otLayout.visibility = View.GONE
+
+                }
+                R.id.radioButtonBought -> {
+                    boughtLayout.visibility = View.VISIBLE
+                    otLayout.visibility = View.GONE
+                }
+                R.id.radioButtonOther -> {
+                    otLayout.visibility = View.VISIBLE
+                    boughtLayout.visibility = View.GONE
+                }
+                else -> {
+                    // handle other cases if needed
+                }
+            }
+        }
+
+    }
+
+    private var spinnerCount = 0
+
+    fun AddMutation() {
+
+        btnMutation2.visibility = View.GONE
+        btnMutation3.visibility = View.GONE
+        btnMutation4.visibility = View.GONE
+        btnMutation5.visibility = View.GONE
+        btnMutation6.visibility = View.GONE
+
+        addBtn.setOnClickListener {
+
+            when (spinnerCount) {
+
+                0 -> {
+                    btnMutation2.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                1 -> {
+                    btnMutation3.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                2 -> {
+                    btnMutation4.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                3 -> {
+                    btnMutation5.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                4 -> {
+                    btnMutation6.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "added $spinnerCount", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        }
+    }
+
+    fun RemoveLastMutation() {
+        removeBtn.setOnClickListener {
+
+            when (spinnerCount) {
+                0 -> {
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                1 -> {
+                    spinnerCount--
+                    btnMutation2.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                2 -> {
+                    spinnerCount--
+                    btnMutation3.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                3 -> {
+
+                    spinnerCount--
+                    btnMutation4.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                4 -> {
+
+                    spinnerCount--
+                    btnMutation5.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                else -> {
+                    spinnerCount--
+                    btnMutation6.visibility = View.GONE
+
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun getTextFromVisibleEditText(editText: EditText, layout: View): String {
+        return if (layout.visibility == View.VISIBLE) {
+            editText.text.toString()
+        } else {
+            ""
+        }
+    }
+
+    private fun getTextFromVisibleMaterialButton(
+        materialbtn: MaterialButton,
+        layout: View
+    ): String {
+        return if (layout.visibility == View.VISIBLE) {
+            materialbtn.text.toString()
+        } else {
+            ""
+        }
+    }
+
+    private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
+        return if (layout.visibility == View.VISIBLE) {
+            Button.text.toString()
+        } else {
+            ""
+        }
+    }
+
+
+    fun OnActiveSpinner() {
+        val spinnerItems = resources.getStringArray(R.array.Status)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerStatus.adapter = adapter
+
+        spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+
+                val selectedItem = p0?.getItemAtPosition(p2).toString()
+                status = selectedItem
+                availableLayout.visibility = View.GONE
+                forSaleLayout.visibility = View.GONE
+                soldLayout.visibility = View.GONE
+                deceasedLayout.visibility = View.GONE
+                exchangeLayout.visibility = View.GONE
+                lostLayout.visibility = View.GONE
+                donatedLayout.visibility = View.GONE
+                otherLayout.visibility = View.GONE
+
+                when (p0?.getItemAtPosition(p2).toString()) {
+                    "Available" -> {
+
+                        availableLayout.visibility = View.VISIBLE
+
+                    }
+                    "For Sale" -> {
+                        forSaleLayout.visibility = View.VISIBLE
+
+                    }
+                    "Sold" -> {
+                        soldLayout.visibility = View.VISIBLE
+                    }
+                    "Deceased" -> {
+                        deceasedLayout.visibility = View.VISIBLE
+                    }
+                    "Exchanged" -> {
+                        exchangeLayout.visibility = View.VISIBLE
+                    }
+                    "Lost" -> {
+                        lostLayout.visibility = View.VISIBLE
+                    }
+                    "Donated" -> {
+                        donatedLayout.visibility = View.VISIBLE
+                    }
+                    "Other" -> {
+                        otherLayout.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        editTextContainer.visibility = View.GONE
+                    }
+                }
+
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+        return
+
+    }
+
+
     private fun initDatePickers() {
         val dateSetListenerBirth =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
@@ -313,6 +924,7 @@ class GenerateBirdFragment : Fragment() {
             else -> "JAN" // Default should never happen
         }
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
