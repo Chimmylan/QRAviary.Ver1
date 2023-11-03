@@ -399,32 +399,32 @@ class GenerateBirdFragment : Fragment() {
             }
 
             val mutation1 = hashMapOf(
-                "Mutation Name" to birdData.mutation1,
+                "Mutation Name" to selectedMutations[0],
                 "Maturing Days" to mutation1MaturingDays,
                 "Incubating Days" to mutation1IncubatingDays
             )
             val mutation2 =  hashMapOf(
-                "Mutation Name" to birdData.mutation2,
+                "Mutation Name" to selectedMutations[1],
                 "Maturing Days" to mutation2MaturingDays,
                 "Incubating Days" to mutation2IncubatingDays
             )
             val mutation3 = hashMapOf(
-                "Mutation Name" to birdData.mutation3,
+                "Mutation Name" to selectedMutations[2],
                 "Maturing Days" to mutation3MaturingDays,
                 "Incubating Days" to mutation3IncubatingDays
             )
             val mutation4 = hashMapOf(
-                "Mutation Name" to birdData.mutation4,
+                "Mutation Name" to selectedMutations[3],
                 "Maturing Days" to mutation4MaturingDays,
                 "Incubating Days" to mutation4IncubatingDays
             )
             val mutation5 = hashMapOf(
-                "Mutation Name" to birdData.mutation5,
+                "Mutation Name" to selectedMutations[4],
                 "Maturing Days" to mutation5MaturingDays,
                 "Incubating Days" to mutation5IncubatingDays
             )
             val mutation6 = hashMapOf(
-                "Mutation Name" to birdData.mutation6,
+                "Mutation Name" to selectedMutations[5],
                 "Maturing Days" to mutation6MaturingDays,
                 "Incubating Days" to mutation6IncubatingDays
             )
