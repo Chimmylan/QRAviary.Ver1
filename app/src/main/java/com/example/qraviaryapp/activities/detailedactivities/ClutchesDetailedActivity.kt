@@ -266,6 +266,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_scan -> {
                 val i = Intent(this, AddEggScanActivity::class.java)
+                startActivity(i)
                 true
             }
             R.id.menu_delete -> {

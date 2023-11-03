@@ -102,7 +102,7 @@
                 android:id="@+id/etincubationdays"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:enabled="false" />
+                />
 
         </LinearLayout>
 
@@ -133,7 +133,7 @@
                 android:id="@+id/etmaturingdays"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:enabled="false" />
+                />
 
         </LinearLayout>
 
