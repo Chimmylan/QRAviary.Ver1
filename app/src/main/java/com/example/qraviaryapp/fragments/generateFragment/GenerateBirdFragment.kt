@@ -345,22 +345,7 @@ class GenerateBirdFragment : Fragment() {
             startActivityForResult(i, requestCode)
         }
 
-        val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
-        val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
-        val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
-        val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
-        val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)
-        val dataSoldSaleDate = getTextFromVisibleDatePicker(btnSoldSaleDate, soldLayout)
-        val dataDeathDate = getTextFromVisibleDatePicker(btnDeathDate, deceasedLayout)
-        val dataDeathReason = getTextFromVisibleEditText(etDeathReason, deceasedLayout)
-        val dataExDate = getTextFromVisibleDatePicker(btnExDate, exchangeLayout)
-        val dataExReason = getTextFromVisibleEditText(etExReason, exchangeLayout)
-        val dataExContact = getTextFromVisibleEditText(etExWith, exchangeLayout)
-        val dataLostDate = getTextFromVisibleDatePicker(btnLostDate, lostLayout)
-        val dataLostDetails = getTextFromVisibleEditText(etLostDetails, lostLayout)
-        val dataDonatedDate = getTextFromVisibleDatePicker(btnDonatedDate, donatedLayout)
-        val dataDonatedContact = getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
-        val dataOtherComments = getTextFromVisibleEditText(etOtherComm, otherLayout)
+       )
 
         AddMutation()
         RemoveLastMutation()
@@ -377,6 +362,23 @@ class GenerateBirdFragment : Fragment() {
         btnGenerate.setOnClickListener {
             val selectedOption: Int = rgGender.checkedRadioButtonId
             dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
+
+            val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
+            val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
+            val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
+            val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
+            val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)
+            val dataSoldSaleDate = getTextFromVisibleDatePicker(btnSoldSaleDate, soldLayout)
+            val dataDeathDate = getTextFromVisibleDatePicker(btnDeathDate, deceasedLayout)
+            val dataDeathReason = getTextFromVisibleEditText(etDeathReason, deceasedLayout)
+            val dataExDate = getTextFromVisibleDatePicker(btnExDate, exchangeLayout)
+            val dataExReason = getTextFromVisibleEditText(etExReason, exchangeLayout)
+            val dataExContact = getTextFromVisibleEditText(etExWith, exchangeLayout)
+            val dataLostDate = getTextFromVisibleDatePicker(btnLostDate, lostLayout)
+            val dataLostDetails = getTextFromVisibleEditText(etLostDetails, lostLayout)
+            val dataDonatedDate = getTextFromVisibleDatePicker(btnDonatedDate, donatedLayout)
+            val dataDonatedContact = getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
+            val dataOtherComments = getTextFromVisibleEditText(etOtherComm, otherLayout)
 
             val selectedMutations = mutableListOf<String?>()
             val spinners = arrayOf(
