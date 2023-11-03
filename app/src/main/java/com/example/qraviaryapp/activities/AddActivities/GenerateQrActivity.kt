@@ -11,8 +11,16 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.adapter.FragmentAdapter
+import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
+import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
+import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
+import com.example.qraviaryapp.fragments.generateFragment.GenerateBirdFragment
+import com.example.qraviaryapp.fragments.generateFragment.GenerateEggFragment
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.tabs.TabLayout
 
 class GenerateQrActivity : AppCompatActivity() {
         private lateinit var togglebutton: MaterialButtonToggleGroup
@@ -20,6 +28,9 @@ class GenerateQrActivity : AppCompatActivity() {
         private lateinit var btnbird: Button
         private lateinit var egglayout: LinearLayout
         private lateinit var birdlayout: LinearLayout
+    private lateinit var viewPager: ViewPager
+    private lateinit var tablayout: TabLayout
+    val fragmentAdapter = FragmentAdapter(supportFragmentManager)
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -44,29 +55,47 @@ class GenerateQrActivity : AppCompatActivity() {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-            togglebutton =findViewById(R.id.toggleButtonGroup)
-            egglayout = findViewById(R.id.egglayout)
-            birdlayout = findViewById(R.id.birdlayout)
-            btnegg = findViewById(R.id.btnegg)
+            viewPager = findViewById(R.id.viewPager)
+            tablayout = findViewById(R.id.tablayout)
+            viewPager.offscreenPageLimit = 2
+            val basicFragmentDeferred = GenerateEggFragment()
+            val originFragmentDeferred = GenerateBirdFragment()
 
 
-            togglebutton.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            val basicFragment = basicFragmentDeferred
+            val originFragment = originFragmentDeferred
 
-                if (isChecked) {
-                    when (checkedId) {
-                        R.id.btnegg -> {
-                            egglayout.visibility = View.VISIBLE
-                            birdlayout.visibility = View.GONE
 
-                        }
-                        R.id.btnbird -> {
-                            birdlayout.visibility = View.VISIBLE
-                            egglayout.visibility = View.GONE
-                        }
-                    }
-                }
+            fragmentAdapter.addFragment(basicFragment, "Egg")
+            fragmentAdapter.addFragment(originFragment, "Bird")
 
-            }
+
+            viewPager.adapter = fragmentAdapter
+            tablayout.setupWithViewPager(viewPager)
+//            togglebutton =findViewById(R.id.toggleButtonGroup)
+//            egglayout = findViewById(R.id.egglayout)
+//            birdlayout = findViewById(R.id.birdlayout)
+//            btnegg = findViewById(R.id.btnegg)
+//
+//
+//            togglebutton.addOnButtonCheckedListener { group, checkedId, isChecked ->
+//
+//                if (isChecked) {
+//                    when (checkedId) {
+//                        R.id.btnegg -> {
+//                            egglayout.visibility = View.VISIBLE
+//                            birdlayout.visibility = View.GONE
+//
+//                        }
+//                        R.id.btnbird -> {
+//                            birdlayout.visibility = View.VISIBLE
+//                            egglayout.visibility = View.GONE
+//                        }
+//                    }
+//                }
+//
+//            }
+
     }
 
 

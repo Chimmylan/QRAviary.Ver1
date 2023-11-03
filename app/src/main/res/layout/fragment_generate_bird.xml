@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bottom_nav_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.generateFragment.GenerateBirdFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+
+            android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="250dp"
+                android:layout_height="300dp">
+
+                <ImageView
+                    android:layout_width="204dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/qr" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/birdlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvidentifier"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Identifier (*)"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:paddingLeft="16dp" />
+            <TextView
+                android:id="@+id/tvLegband"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Legband"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:paddingLeft="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutIdentifier"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="#5A0808"
+                app:hintTextColor="#000000"
+                app:startIconTint="#1E1D1D"> <!-- Set visibility to "GONE" when needed -->
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIdentifier"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutlegband"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="#5A0808"
+                app:hintTextColor="#000000"
+                app:startIconTint="#1E1D1D"> <!-- Set visibility to "GONE" when needed -->
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLegband"
+                    android:layout_width="match_parent"
+                    android:maxLines="1"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvsex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Sex (*) "
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingLeft="16dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <RadioButton
+                android:id="@+id/radioButtonFemale"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Female" />
+
+            <RadioButton
+                android:id="@+id/radioButtonMale"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/radioButtonUnknown"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Unknown" />
+
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:weightSum="5">
+            <TextView
+                android:id="@+id/tvmutation"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:text="Mutation (*) "
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addBtn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="add +"
+                android:textSize="10sp"
+                android:textColor="@color/black_white"
+                android:backgroundTint="@color/new_appbar_color"
+                android:textAlignment="center"
+
+                app:iconGravity="textEnd" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/removeBtn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Del -"
+                android:textSize="10sp"
+                android:textColor="@color/black_white"
+                android:backgroundTint="@color/new_appbar_color"
+                android:textAlignment="center"
+                app:iconGravity="textEnd" />
+
+        </LinearLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <GridLayout
+                android:id="@+id/spinnerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:rowCount="3"
+                android:padding="5dp">
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:id="@+id/mutationBtn1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mutationBtn2"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mutationBtn3"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mutationBtn4"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mutationBtn5"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mutationBtn6"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_val"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/black"
+                    android:text="None"
+                    android:textColor="#000000"/>
+
+            </GridLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvdatebirth"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Date of birth"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btndatebirth"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pick Date"
+                app:iconTint="@color/black"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:textAlignment="textStart"
+                app:icon="@drawable/drop_down"
+                app:iconGravity="end"
+                android:onClick="openDatebirthPicker"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvstatus"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status (*) "
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingLeft="16dp" />
+
+        <Spinner
+            android:id="@+id/spinnerstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_black"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/editTextContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/availableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cage (*)"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:id="@+id/etAvailCage"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:hint="Choose Cage"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+
+            </LinearLayout>
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/forSaleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:weightSum="3">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cage (*)"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:id="@+id/etForSaleCage"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:hint="Choose Cage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:minHeight="48dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Requested Price (*)"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etForSaleReqPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:layout_margin="5dp"
+                    />
+
+            </LinearLayout>
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/soldLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text= "Sold Date"
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="16dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text= "Sale Price (*) "
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="16dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+
+                    android:weightSum="1">
+
+                    <Button
+                        android:id="@+id/soldSaleDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="Pick Date"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        style="?android:spinnerStyle"
+                        android:onClick="openSoldDatePicker"
+                        />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/soldSalePrice"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:padding="15dp"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Add Contact "
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="16dp" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSaleContact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:padding="15dp"
+                        android:layout_margin="10dp"
+                        android:textAlignment="textStart"
+                        app:iconGravity="end"
+                        />
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+
+            <LinearLayout
+                android:id="@+id/deceasedLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Death Date"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deathDate"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pick Date"
+                    android:onClick="openDeathDatePicker"
+                    app:iconTint="@color/black"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Death Reason"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/deathReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:maxLines="1"
+                    android:layout_margin="10dp"
+                    android:padding="10dp" />
+
+
+
+
+            </LinearLayout>
+            <!--                   +++++++=========================++++++++++++++++++++++++++ -->
+
+            <LinearLayout
+                android:id="@+id/exchangeLayout"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Exchange Date"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/exDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:hint="Pick date"
+                    android:layout_margin="10dp"
+                    app:iconTint="@color/black"
+                    android:onClick="openExchangeDatePicker"
+                    />
+
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Exchange Reason"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/exReason"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    android:maxLines="1"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content"
+
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Exchange Contact"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/exchangeWithBtn"
+                    android:layout_toEndOf="@+id/soldBuyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:maxLines="1"
+                    android:layout_margin="10dp"
+                    android:textAlignment="textStart"
+                    app:iconGravity="end"
+                    />
+
+
+            </LinearLayout>
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/lostLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lost Date"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lostDateBtn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pick Date"
+                    android:layout_margin="10dp"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/drop_down"
+                    android:onClick="openLostDatePicker"
+                    app:iconTint="@color/black"
+                    app:iconGravity="end"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lost Details"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLostDetails"
+                    android:layout_width="match_parent"
+                    android:maxLines="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"/>
+
+
+
+
+            </LinearLayout>
+
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/donatedLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Donated Date"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDonatedDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="openDonatedDatePicker"
+                    android:text="Pick Date"
+                    android:layout_margin="10dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" Add Donated Contact"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDonateChooseContact"
+                    android:layout_toEndOf="@+id/soldBuyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
+                    app:iconGravity="end"
+                    />
+
+            </LinearLayout>
+
+            <!-- +++++++=========================++++++++++++++++++++++++++ -->
+            <LinearLayout
+                android:id="@+id/otherLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:layout_marginTop="10dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etOthersComm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    />
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvfather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Father "
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:minHeight="48dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/drop_down"
+                app:iconGravity="end"
+                app:iconTint="@color/black"
+                android:text="None"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/tvmother"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mother "
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMother"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:minHeight="48dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/drop_down"
+                app:iconGravity="end"
+                app:iconTint="@color/black"
+                android:text="None"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/tvprovenance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Provenance "
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="16dp" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupprovenance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:id="@+id/radioButtonMe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Me" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonBought"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Bought" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOther"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Other" />
+
+            </RadioGroup>
+
+
+
+
+
+            <LinearLayout
+                android:id="@+id/boughtLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBreederContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Breeder Contact"
+                    android:textAlignment="textStart"
+                    app:iconGravity="end" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBuyPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:hint="Buy Price" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/boughtDate"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Pick Date"
+                        android:textAlignment="textStart"
+                        app:icon="@drawable/drop_down"
+                        app:iconGravity="end" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/otLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/otherContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/soldBuyer"
+                    android:hint="Breeder Contact"
+                    android:textAlignment="textStart"
+                    app:iconGravity="end" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    </ScrollView>
+</FrameLayout>
