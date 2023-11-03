@@ -1,9 +1,12 @@
 package com.example.qraviaryapp.fragments.generateFragment
 
+import android.Manifest
+import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +15,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
 import com.google.zxing.BarcodeFormat
@@ -39,9 +45,10 @@ class GenerateEggFragment : Fragment() {
     private lateinit var etIncubatingDays: EditText
     private lateinit var etMaturingDays: EditText
     private lateinit var qrImage: ImageView
-
+    private lateinit var btndownload: MaterialButton
+    private lateinit var qrimageLayout: LinearLayout
     private var status: String? = null
-
+    private val eggData = JSONObject()
 
     private lateinit var generateBtn: MaterialButton
 
@@ -69,11 +76,12 @@ class GenerateEggFragment : Fragment() {
         etMaturingDays = view.findViewById(R.id.etmaturingdays)
         generateBtn = view.findViewById(R.id.generate)
         qrImage = view.findViewById(R.id.QRimage)
-
+        btndownload = view.findViewById(R.id.btndownload)
+        qrimageLayout = view.findViewById(R.id.qrimagelayout)
         OnActiveSpinner()
 
         generateBtn.setOnClickListener {
-            val eggData = JSONObject()
+
 
             eggData.put("EggStatus", status)
             eggData.put("MaturingDays", etMaturingDays.text.toString())
@@ -82,12 +90,86 @@ class GenerateEggFragment : Fragment() {
 
             qrImage.setImageBitmap(generateQRCodeUri(eggData.toString()))
         }
+        btndownload.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // Permission is already granted. You can proceed with saving the image.
+                saveImage()
+            } else {
+                // Request the WRITE_EXTERNAL_STORAGE permission.
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+            }
+        }
 
 
 
 
         return view
     }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted, you can now save the image.
+                    saveImage()
+                } else {
+                    // Permission denied, show a message or handle it accordingly.
+                    Toast.makeText(requireContext(), "Permission denied. Image cannot be saved.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    fun captureLayoutAsBitmap(view: View): Bitmap {
+        view.isDrawingCacheEnabled = true
+        view.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(view.drawingCache)
+        view.isDrawingCacheEnabled = false // Release the cache
+        return bitmap
+    }
+
+
+//    fun saveImage(){
+//        qrimageLayout.isDrawingCacheEnabled = true
+//        qrimageLayout.buildDrawingCache()
+//        qrimageLayout.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+//        val bitmap: Bitmap? = qrimageLayout.drawingCache
+//
+//        save(bitmap)
+//    }
+        fun saveImage() {
+            val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
+
+             save(layoutBitmap)
+        }
+
+    fun save(bitmap: Bitmap?) {
+        val displayName = "image.jpg"
+        val mimeType = "image/jpeg"
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        }
+
+        val resolver = requireActivity().contentResolver
+        val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        try {
+            if (imageUri != null) {
+                resolver.openOutputStream(imageUri)?.use { outputStream ->
+                    bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+            }
+
+            Toast.makeText(requireContext(), "Image saved to gallery", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+
 
     private fun generateQRCodeUri(bundleEggData: String): Bitmap? {
         val multiFormatWriter = MultiFormatWriter()
@@ -153,6 +235,7 @@ class GenerateEggFragment : Fragment() {
     }
 
     companion object {
+        private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // You can choose any integer value
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

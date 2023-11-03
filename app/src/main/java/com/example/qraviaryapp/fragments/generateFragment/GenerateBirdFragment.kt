@@ -278,7 +278,7 @@ class GenerateBirdFragment : Fragment() {
         btnFather = view.findViewById(R.id.btnFather)
         btnMother = view.findViewById(R.id.btnMother)
 
-        qrImage = view.findViewById(R.id.qrImage)
+        qrImage = view.findViewById(R.id.QRimage)
 
         rbUnknown.isChecked
 
