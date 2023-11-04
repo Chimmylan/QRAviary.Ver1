@@ -31,6 +31,7 @@
                     android:padding="5dp"
                     android:layout_gravity="center"
                     android:src="@drawable/cagess"
+                    app:tint="@color/black_white"
                     android:contentDescription="Bird Image"
                     android:scaleType="fitCenter"/>
                 <TextView

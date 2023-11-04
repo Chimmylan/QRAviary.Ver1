@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bottom_nav_background"
     tools:context=".activities.EditActivities.EditEggActivity">
 
 
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/white_black"
         android:weightSum="5"
         tools:ignore="MissingConstraints">
 
@@ -18,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/white_black"
+
         android:orientation="vertical"
         android:weightSum="2">
         <LinearLayout
@@ -56,7 +58,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,13 +76,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:minHeight="48dp"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     app:icon="@drawable/drop_down"
                     app:iconGravity="end"
-                    app:iconTint="@color/black"
+                    app:iconTint="@color/black_white"
                     android:text="TODAY"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black_white"/>
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
