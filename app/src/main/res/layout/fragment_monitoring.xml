@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/bottom_background"
+    android:background="@color/bottom_nav_background"
     android:layout_height="match_parent">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white_black"
         android:layout_margin="5dp"
         android:elevation="10dp"
-        android:background="@color/white"
+
         android:paddingBottom="10dp"
         android:orientation="vertical">
         <LinearLayout
@@ -42,8 +43,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:backgroundTint="@color/white_black"
         android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/text_view_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center"
+            android:text="25°C" />
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/CircularDeterminateProgressBar"
@@ -53,19 +62,14 @@
         android:layout_height="150dp"
         android:progress="25" />
 
-    <TextView
-        android:id="@+id/text_view_progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:gravity="center"
-        android:text="25°C" />
+
 
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:backgroundTint="@color/white_black"
         android:layout_height="match_parent">
     <ProgressBar
         android:id="@+id/progress_bar2"
@@ -121,9 +125,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:buttonTint="@color/purpledark"
+        android:buttonTint="@color/itemimagebg"
         android:checked="true"
-        android:textColor="@color/purpledark"
+        android:textColor="@color/black_white"
         android:textStyle="bold"
         android:text="FAN">
 

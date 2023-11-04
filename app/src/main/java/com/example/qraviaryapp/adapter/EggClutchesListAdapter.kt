@@ -116,8 +116,9 @@ class EggClutchesListAdapter(
                     animator.duration = 1000
                     animator.start()
                     if (progressPercentage in 1..99) {
-                        holder.eggImg.setImageResource(R.drawable.hatchcolor)
+                        holder.eggImg.setImageResource(R.drawable.eggcolor)
                     }
+
 
                     val remainingDays = incubatedays - ageInDays
 
