@@ -344,8 +344,14 @@ class AddPairActivity : AppCompatActivity() {
                 val newMaleBirdsPref =
                     db.child("Users").child("ID: $userId").child("Birds")
                         .child(btnMaleValueKey.toString())
+                val newMaleFlightBirdsPref =
+                    db.child("Users").child("ID: $userId").child("Flight Birds")
+                        .child(btnMaleFlightValueKey.toString())
+
                 val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
                     .child(btnFemaleValueKey.toString())
+                val newFemaleFlightBirdsPref = db.child("Users").child("ID: $userId").child("Flight Birds")
+                    .child(btnFemaleFlightValueKey.toString())
 
                 //Checking parent ref
                 val femaleParentRef = newFemaleBirdsPref.child("Parents")
@@ -482,7 +488,10 @@ class AddPairActivity : AppCompatActivity() {
                             } else {
 
                                 newMaleBirdsPref.child("Status").setValue("Paired")
+                                newMaleFlightBirdsPref.child("Status").setValue("Paired")
                                 newFemaleBirdsPref.child("Status").setValue("Paired")
+                                newFemaleFlightBirdsPref.child("Status").setValue("Paired")
+
                                 cageReference.updateChildren(data)
                                 newFemaleBirdPref.updateChildren(femaleBirdPair)
                                 newMaleBirdPref.updateChildren(maleBirdPair)

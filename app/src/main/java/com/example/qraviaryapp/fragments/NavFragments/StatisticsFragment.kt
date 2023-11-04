@@ -193,17 +193,18 @@ class StatisticsFragment : Fragment() {
                     val malebird = maleBird.toString()
                     for (clutchSnapshot in clutchesSnapshot.children) {
                         for (eggSnapshot in clutchSnapshot.children) {
-                            val clutchData = eggSnapshot.getValue(EggData::class.java)
-                            if (clutchData != null) {
-                                val status = eggSnapshot.child("Status").value
+                            val eggKey = eggSnapshot.key
+                            if (eggKey != "QR"){
+                                val clutchData = eggSnapshot.getValue(EggData::class.java)
+                                if (clutchData != null) {
+                                    val status = eggSnapshot.child("Status").value
 
-                                val eggstatus = status.toString()
+                                    val eggstatus = status.toString()
 
+                                    val pairBarChart = PairBarChart(malebird, femalebird, eggstatus)
 
-
-                                val pairBarChart = PairBarChart(malebird, femalebird, eggstatus)
-
-                                birdList1.add(pairBarChart)
+                                    birdList1.add(pairBarChart)
+                                }
                             }
                         }
                     }

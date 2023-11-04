@@ -43,6 +43,7 @@ class GetStart1Activity : AppCompatActivity() {
 
         db.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val mutation = dataSnapshot
                 if (dataSnapshot.exists()) {
                     Log.d(ContentValues.TAG, "Main Page")
                     startActivity(Intent(this@GetStart1Activity, NavHomeActivity::class.java))
@@ -88,7 +89,7 @@ class GetStart1Activity : AppCompatActivity() {
                             )
 
                             // Set the data in Firebase
-                            db.child(key).removeValue()
+                            db.removeValue()
                             db.child(key).setValue(mutationData)
                         }
                     }
