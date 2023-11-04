@@ -235,7 +235,7 @@ class GenerateEggFragment : Fragment() {
     }
 
     companion object {
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // You can choose any integer value
+        const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // You can choose any integer value
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

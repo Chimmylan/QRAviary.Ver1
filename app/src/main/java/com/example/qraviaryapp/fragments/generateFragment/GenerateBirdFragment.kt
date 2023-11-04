@@ -2,6 +2,7 @@ package com.example.qraviaryapp.fragments.generateFragment
 
 import BirdData
 import BirdDataListener
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -9,15 +10,18 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
@@ -148,9 +152,9 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var btnGenerate: MaterialButton
-
+    private lateinit var btndownload: MaterialButton
     private lateinit var dataSelectedGen: RadioButton
-
+    private lateinit var qrimageLayout: LinearLayout
     private lateinit var qrImage: ImageView
 
     //
@@ -191,7 +195,8 @@ class GenerateBirdFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_generate_bird, container, false)
-
+        btndownload = view.findViewById(R.id.btndownload)
+        qrimageLayout = view.findViewById(R.id.qrimagelayout)
         datebirthButton = view.findViewById(R.id.btndatebirth)
         btnSoldSaleDate = view.findViewById(R.id.soldSaleDate)
         btnDonatedDate = view.findViewById(R.id.btnDonatedDate)
@@ -478,7 +483,83 @@ class GenerateBirdFragment : Fragment() {
             qrImage.setImageBitmap(generateQRCodeUri(birdData.toString()))
         }
 
+        btndownload.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // Permission is already granted. You can proceed with saving the image.
+                saveImage()
+            } else {
+                // Request the WRITE_EXTERNAL_STORAGE permission.
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    GenerateEggFragment.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
+                )
+            }
+        }
+
+
+
+
         return view
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            GenerateEggFragment.WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted, you can now save the image.
+                    saveImage()
+                } else {
+                    // Permission denied, show a message or handle it accordingly.
+                    Toast.makeText(requireContext(), "Permission denied. Image cannot be saved.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    fun captureLayoutAsBitmap(view: View): Bitmap {
+        view.isDrawingCacheEnabled = true
+        view.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(view.drawingCache)
+        view.isDrawingCacheEnabled = false // Release the cache
+        return bitmap
+    }
+
+
+    //    fun saveImage(){
+//        qrimageLayout.isDrawingCacheEnabled = true
+//        qrimageLayout.buildDrawingCache()
+//        qrimageLayout.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+//        val bitmap: Bitmap? = qrimageLayout.drawingCache
+//
+//        save(bitmap)
+//    }
+    fun saveImage() {
+        val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
+
+        save(layoutBitmap)
+    }
+
+    fun save(bitmap: Bitmap?) {
+        val displayName = "image.jpg"
+        val mimeType = "image/jpeg"
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        }
+
+        val resolver = requireActivity().contentResolver
+        val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        try {
+            if (imageUri != null) {
+                resolver.openOutputStream(imageUri)?.use { outputStream ->
+                    bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+            }
+
+            Toast.makeText(requireContext(), "Image saved to gallery", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     public var birdFatherKey: String? = null
@@ -928,6 +1009,7 @@ class GenerateBirdFragment : Fragment() {
     }
 
     companion object {
+//        private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

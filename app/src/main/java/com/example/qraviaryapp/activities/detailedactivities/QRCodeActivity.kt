@@ -22,6 +22,7 @@ import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.facebook.devicerequests.internal.DeviceRequestsHelper.generateQRCode
+import com.google.android.material.button.MaterialButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
@@ -65,9 +66,9 @@ class QRCodeActivity : AppCompatActivity() {
             .load(qrCodeUrl)
             .into(qrcode)
 
-        val cardView = findViewById<CardView>(R.id.cardView)
+//        val cardView = findViewById<CardView>(R.id.cardView)
 
-        val saveButton = findViewById<Button>(R.id.saveButton)
+        val saveButton = findViewById<MaterialButton>(R.id.saveButton)
         saveButton.setOnClickListener {
             // Check for permission to write to external storage
 
