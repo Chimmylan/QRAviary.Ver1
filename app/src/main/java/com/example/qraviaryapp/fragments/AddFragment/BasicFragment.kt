@@ -18,6 +18,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
@@ -146,7 +147,7 @@ class BasicFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
 
-
+    private lateinit var cagescan: CardView
     private var status: String? = null
     private lateinit var cageReference: DatabaseReference
     //endregion
@@ -239,6 +240,7 @@ class BasicFragment : Fragment() {
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
 
+        cagescan = view.findViewById(R.id.cagescan)
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
 

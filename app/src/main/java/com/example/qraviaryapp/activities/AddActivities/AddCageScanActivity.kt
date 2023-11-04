@@ -18,14 +18,14 @@ import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
 
-class AddEggScanActivity : AppCompatActivity() {
+class AddCageScanActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
-        setContentView(R.layout.activity_add_egg_scan)
+        setContentView(R.layout.activity_add_cage_scan)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.elevation = 0f
         supportActionBar?.setBackgroundDrawable(
@@ -38,7 +38,7 @@ class AddEggScanActivity : AppCompatActivity() {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Scan Egg QR</font>",
+            "<font color='$abcolortitle'>Scan Generate Bird QR</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.*
@@ -149,7 +150,7 @@ class BasicFlightFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
 
-
+    private lateinit var cagescan: CardView
     private var status: String? = null
     private lateinit var cageReference: DatabaseReference
     //endregion
@@ -244,6 +245,8 @@ class BasicFlightFragment : Fragment() {
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
 
+
+        cagescan = view.findViewById(R.id.cagescan)
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
