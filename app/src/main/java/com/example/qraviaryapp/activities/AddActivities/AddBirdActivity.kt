@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -50,6 +51,8 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private val BasicFragment: BasicFragment = BasicFragment()
     private val storageRef = FirebaseStorage.getInstance().reference
     val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -73,6 +76,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+        progressBar = findViewById(R.id.progressBar)
 
         viewPager = findViewById(R.id.viewPager)
         tablayout = findViewById(R.id.tablayout)
@@ -139,7 +143,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 val originFragment = fragmentAdapter.getItem(1) as OriginFragment
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
-
+                progressBar.visibility = View.VISIBLE
                 lifecycleScope.launch {
                     try {
                         var birdId = ""
@@ -180,16 +184,18 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
                             }
-                            onBackPressed()
-                            finish()
+
+
 
                         }
-
-
+                        progressBar.visibility = View.GONE
+                        onBackPressed()
+                        finish()
                         // Now that the background work is done, switch to the main thread
 
 
                     } catch (e: NullPointerException) {
+                        progressBar.visibility = View.GONE
                         // Handle the exception if needed
                         Toast.makeText(
                             applicationContext,
@@ -356,6 +362,12 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 )
                 nurseryKey.updateChildren(dataQR)
                 birdKey.updateChildren(dataQR)
+                progressBar.visibility = View.GONE
+                Toast.makeText(
+                    applicationContext,
+                    "Bird data saved successfully.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

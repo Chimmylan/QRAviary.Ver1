@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -49,6 +50,7 @@ class PairsFragment : Fragment() {
     private lateinit var previous: TextView
     private var femalegallery: String? = null
     private var malegallery: String? = null
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,6 +65,7 @@ class PairsFragment : Fragment() {
 
         val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
         recyclerView1.layoutManager = gridLayoutManager1
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         dataList1 = ArrayList()
         adapter1 = PreviousPairAdapter(requireContext(), dataList1)
         recyclerView1.adapter = adapter1
@@ -283,6 +286,7 @@ class PairsFragment : Fragment() {
     }
 
     private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
@@ -296,6 +300,9 @@ class PairsFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            }
+            finally {
+                loadingProgressBar.visibility = View.GONE
             }
         }
         lifecycleScope.launch {
@@ -311,6 +318,9 @@ class PairsFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            }
+            finally {
+                loadingProgressBar.visibility = View.GONE
             }
         }
     }
