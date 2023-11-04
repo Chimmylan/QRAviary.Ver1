@@ -271,6 +271,7 @@ class AddEggActivity : AppCompatActivity() {
         }
 
         val bundleData = JSONObject()
+        bundleData.put("EggClutchQR", true)
         bundleData.put("IncubatingStartDate",etIncubatingDate.text.toString())
         bundleData.put("MaturingStartDate",  etMaturingDate.text.toString())
         bundleData.put("EggKey", eggKey)

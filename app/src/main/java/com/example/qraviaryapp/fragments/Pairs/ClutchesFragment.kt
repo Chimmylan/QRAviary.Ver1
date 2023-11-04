@@ -510,6 +510,7 @@ class ClutchesFragment : Fragment() {
                     }
                 }
                 val bundleData = JSONObject()
+                bundleData.put("ClutchQR",true)
                 bundleData.put("PairKey",pairKey)
                 bundleData.put("ClutchKey",  newClutchRef.key)
                 bundleData.put("EggKey", newClutchRef.key)

@@ -271,6 +271,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
         val jsonData = JSONObject()
 
+        jsonData.put("BirdDetailedQR", true)
         jsonData.put("BirdKey", birdKey)//
         jsonData.put("FlightKey", flightKey)
         jsonData.put("BirdLegband", birdLegband)

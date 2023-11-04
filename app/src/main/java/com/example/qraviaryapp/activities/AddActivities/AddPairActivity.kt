@@ -430,6 +430,7 @@ class AddPairActivity : AppCompatActivity() {
 
                             val bundleData = JSONObject()
 
+                            bundleData.put("PairQR", true)
                             bundleData.put("PairFemaleImg",femalegallery)
                             bundleData.put("PairMaleImg",malegallery)
                             bundleData.put("PairId", newPairNumber)
