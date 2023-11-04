@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:id="@+id/layoutprogressbar"
-            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -57,7 +57,6 @@
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:src="@drawable/egg1"
-
                                 android:contentDescription="Chick Image"
                                 android:scaleType="centerCrop" />
                             <!--app:tint="#186F65"-->
@@ -134,6 +133,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:src="@drawable/eggclutches"
+                app:tint = "@color/black_white"
                 android:contentDescription="Bird Image"
                 android:scaleType="fitCenter"/>
 
@@ -151,12 +151,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Status"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"/>
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
 
@@ -176,6 +178,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Date"
+                android:textColor="@color/black_white"
                 android:gravity="center"
                 android:padding="5dp"/>
             <LinearLayout
@@ -183,6 +186,7 @@
                 android:layout_width="match_parent"
                 android:visibility="gone"
                 android:layout_weight="1"
+                android:textColor="@color/black_white"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:layout_height="match_parent">

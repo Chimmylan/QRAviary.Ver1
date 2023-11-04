@@ -31,6 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
+                    android:textColor="@color/black_white"
                     android:layout_gravity="center"
                     android:textSize="15sp"/>
                 <ImageView
@@ -39,6 +40,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:src="@drawable/eggclutches"
+                    app:tint="@color/black_white"
                     android:contentDescription="Bird Image"
                     android:scaleType="fitCenter"/>
             </androidx.cardview.widget.CardView>
@@ -55,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Moved in Nursery"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
             <TextView
@@ -62,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number Incubating"
+                android:textColor="@color/black_white"
                 android:visibility="gone"
                 android:textSize="15sp"/>
             <TextView
@@ -69,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number Laid"
+                android:textColor="@color/black_white"
                 android:visibility="gone"
                 android:textSize="15sp"/>
             <TextView
@@ -76,12 +81,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number Hatched"
+                android:textColor="@color/black_white"
                 android:visibility="gone"
                 android:textSize="15sp"/>
             <TextView
                 android:id="@+id/tvBroke"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black_white"
                 android:text="Number of Broken"
                 android:textSize="15sp"
                 android:visibility="gone"/>
@@ -90,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Not Fertilized"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
             <TextView
@@ -97,6 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Broken"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
             <TextView
@@ -104,6 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Dead In Shell"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
             <TextView
@@ -111,12 +121,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Dead Before Ringing"
+                android:textColor="@color/black_white"
                 android:textSize="15sp"
                 android:visibility="gone"/>
             <TextView
                 android:id="@+id/tvMove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black_white"
                 android:text="Number of Move Egg"
                 android:textSize="15sp"
                 android:visibility="gone"/>
@@ -136,6 +148,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black_white"
                 android:text="Date"
                 android:padding="10dp"/>
         </LinearLayout>

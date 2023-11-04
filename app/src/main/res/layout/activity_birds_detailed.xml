@@ -75,7 +75,7 @@
             android:background="@color/toolbarcolor"
             app:tabMode="scrollable"
             app:tabIndicatorColor="@color/purpledark"
-            app:tabSelectedTextColor="@color/loginpurple"
+            app:tabSelectedTextColor="@color/purplelight"
             app:tabTextAppearance="@style/TabLayoutTextStyle"
             app:tabTextColor="@color/appbar_color"/>
 

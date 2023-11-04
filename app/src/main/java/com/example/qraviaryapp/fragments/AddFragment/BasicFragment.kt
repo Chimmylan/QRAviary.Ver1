@@ -242,9 +242,9 @@ class BasicFragment : Fragment() {
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
 
         cagescan = view.findViewById(R.id.cagescan)
-
-        startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-
+        cagescan.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
 
