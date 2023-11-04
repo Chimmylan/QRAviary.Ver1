@@ -11,6 +11,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +19,8 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -36,11 +39,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 class AddBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
@@ -144,8 +149,10 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
                 progressBar.visibility = View.VISIBLE
+
                 lifecycleScope.launch {
                     try {
+
                         var birdId = ""
                         var newBundle: Bundle = Bundle()
                         var nurseryId = ""
@@ -188,12 +195,15 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
                         }
-                        progressBar.visibility = View.GONE
-                        onBackPressed()
-                        finish()
-                        // Now that the background work is done, switch to the main thread
 
 
+
+
+
+                        Handler().postDelayed({
+                            progressBar.visibility = View.GONE
+                            showMessageDialog("Bird Data saved Successfully")
+                        },4000)
                     } catch (e: NullPointerException) {
                         progressBar.visibility = View.GONE
                         // Handle the exception if needed
@@ -217,7 +227,21 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+    private fun showMessageDialog(errorMessage: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setPositiveButton("Ok") { dialog, _ ->
 
+                onBackPressed()
+                finish()
+                dialog.dismiss()
+
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
     fun nurseryToDetailedScanner(basicFragmentBundle: Bundle, originFragmentBundle: Bundle) {
 
         val birdKey = basicFragmentBundle.getString("BirdKey")//
@@ -363,11 +387,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 nurseryKey.updateChildren(dataQR)
                 birdKey.updateChildren(dataQR)
                 progressBar.visibility = View.GONE
-                Toast.makeText(
-                    applicationContext,
-                    "Bird data saved successfully.",
-                    Toast.LENGTH_SHORT
-                ).show()
+
             }
         }
     }
