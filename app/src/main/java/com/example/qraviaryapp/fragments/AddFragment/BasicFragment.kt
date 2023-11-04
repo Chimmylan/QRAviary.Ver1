@@ -1170,6 +1170,11 @@ class BasicFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG,"ID:::: ${arguments?.getString("BirdIdentifier")}")
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

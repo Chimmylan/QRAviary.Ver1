@@ -17,6 +17,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.qraviaryapp.R
@@ -28,6 +29,9 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,6 +51,12 @@ class GenerateEggFragment : Fragment() {
     private lateinit var qrImage: ImageView
     private lateinit var btndownload: MaterialButton
     private lateinit var qrimageLayout: LinearLayout
+
+    private lateinit var statusTv: TextView
+    private lateinit var dateTv: TextView
+    private lateinit var incubatingDaysTv: TextView
+    private lateinit var maturingDaysTv: TextView
+
     private var status: String? = null
     private val eggData = JSONObject()
 
@@ -78,14 +88,29 @@ class GenerateEggFragment : Fragment() {
         qrImage = view.findViewById(R.id.QRimage)
         btndownload = view.findViewById(R.id.btndownload)
         qrimageLayout = view.findViewById(R.id.qrimagelayout)
+        statusTv = view.findViewById(R.id.eggStatus)
+        dateTv = view.findViewById(R.id.eggDate)
+        incubatingDaysTv = view.findViewById(R.id.eggIncubatingDays)
+        maturingDaysTv = view.findViewById(R.id.eggMaturingDays)
         OnActiveSpinner()
 
         generateBtn.setOnClickListener {
 
+            var currentDate = LocalDate.now()
+            val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
+            val formattedDate = currentDate.format(formatter)
+            eggData.put("AddEggQR", true)
             eggData.put("EggStatus", status)
+            eggData.put("EggDate", formattedDate)
             eggData.put("MaturingDays", etMaturingDays.text.toString())
             eggData.put("IncubatingDays", etIncubatingDays.text.toString())
+
+            statusTv.text = "Status: $status"
+            dateTv.text = "Date: $formattedDate"
+            maturingDaysTv.text = "Maturing Days: ${etMaturingDays.text}"
+            incubatingDaysTv.text = "Incubating Days: ${etIncubatingDays.text}"
+
 
 
             qrImage.setImageBitmap(generateQRCodeUri(eggData.toString()))

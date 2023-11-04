@@ -119,7 +119,7 @@ class AddEggActivity : AppCompatActivity() {
         /* incubatingStartDate = intent.getStringExtra("IncubatingStartDate")
          maturingStartDate = intent.getStringExtra("MaturingStartDate")*/
         eggKey = intent.getStringExtra("EggKey")
-        individualEggKey = intent.getStringExtra("IndividualEggKey")
+//        individualEggKey = intent.getStringExtra("IndividualEggKey")
         pairKey = intent.getStringExtra("PairKey")
 
 
@@ -131,12 +131,12 @@ class AddEggActivity : AppCompatActivity() {
         val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
         val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
-        val currentUserId = mAuth.currentUser?.uid
+//        val currentUserId = mAuth.currentUser?.uid
 
-        val dbase = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}")
-            .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString())
-            .child(individualEggKey.toString())
+//        val dbase = FirebaseDatabase.getInstance().reference.child("Users")
+//            .child("ID: ${currentUserId.toString()}")
+//            .child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString())
+//            .child(individualEggKey.toString())
 
 
 

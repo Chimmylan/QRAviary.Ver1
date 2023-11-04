@@ -31,6 +31,7 @@ import com.example.qraviaryapp.fragments.AddFragment.BasicFlightFragment
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
+import com.example.qraviaryapp.fragments.NavFragments.GalleryFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -58,6 +59,16 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     private var dbase = FirebaseDatabase.getInstance().reference
     private val BasicFragment: BasicFragment = BasicFragment()
     val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+
+
+    private var birdIdentifier: String? = null
+
+    private lateinit var basicFragment: BasicFlightFragment
+    private lateinit var originFragment: OriginFragment
+    private lateinit var galleryFragment: AddGalleryFragment
+
+    private var qrBundle = Bundle()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -92,9 +103,9 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         val originFragmentDeferred = OriginFragment()
         val galleryFragmentDeferred = AddGalleryFragment()
 
-        val basicFragment = basicFragmentDeferred
-        val originFragment = originFragmentDeferred
-        val galleryFragment = galleryFragmentDeferred
+        basicFragment = basicFragmentDeferred
+        originFragment = originFragmentDeferred
+        galleryFragment = galleryFragmentDeferred
 
         fragmentAdapter.addFragment(basicFragment, "Basic")
         fragmentAdapter.addFragment(originFragment, "Origin")
@@ -135,7 +146,9 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_qr -> {
-                startActivity(Intent(this, AddBirdScanActivity::class.java))
+                val requestCode = 0
+                val intent = Intent(this, AddBirdScanActivity::class.java)
+                startActivityForResult(intent, requestCode)
                 true
             }
             R.id.action_save -> {
@@ -207,6 +220,19 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0){
+            if (resultCode == RESULT_OK){
+                birdIdentifier = data?.getStringExtra("BirdIdentifier").toString()
+                qrBundle.putString("BirdIdentifier", birdIdentifier)
+                Log.d(TAG,"ID:: $birdIdentifier")
+                basicFragment.arguments = qrBundle
+
+            }
         }
     }
 

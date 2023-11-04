@@ -266,6 +266,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_scan -> {
                 val i = Intent(this, AddEggScanActivity::class.java)
+                i.putExtra("PairKey", pairKey)
+                i.putExtra("EggKey", eggKey)
                 startActivity(i)
                 true
             }

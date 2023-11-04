@@ -34,6 +34,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -179,6 +180,18 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dbase: DatabaseReference
 
+    private lateinit var tvBirdId: TextView
+    private lateinit var tvBirdLegband: TextView
+    private lateinit var tvBirdSex: TextView
+    private lateinit var tvBirdMutation: TextView
+    private lateinit var tvBirdDateOfBirth: TextView
+    private lateinit var tvBirdStatus: TextView
+    private lateinit var tvBirdCage: TextView
+    private lateinit var tvBirdFather: TextView
+    private lateinit var tvBirdMother: TextView
+    private lateinit var tvBirdBuyPrice: TextView
+    private lateinit var tvBirdBreederContact: TextView
+
 
     var birdData = BirdData()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -284,6 +297,18 @@ class GenerateBirdFragment : Fragment() {
         btnMother = view.findViewById(R.id.btnMother)
 
         qrImage = view.findViewById(R.id.QRimage)
+
+        tvBirdId = view.findViewById(R.id.BirdId)
+        tvBirdLegband = view.findViewById(R.id.BirdLegBand)
+        tvBirdSex  = view.findViewById(R.id.BirdSex)
+        tvBirdMutation  = view.findViewById(R.id.BirdMutation)
+        tvBirdDateOfBirth  = view.findViewById(R.id.BirdDateOfBirth)
+        tvBirdStatus = view.findViewById(R.id.BirdStatus)
+        tvBirdCage  = view.findViewById(R.id.BirdCage)
+        tvBirdFather  = view.findViewById(R.id.BirdFather)
+        tvBirdMother = view.findViewById(R.id.BirdMother)
+        tvBirdBuyPrice = view.findViewById(R.id.BirdBuyPrice)
+        tvBirdBreederContact = view.findViewById(R.id.BirdBreederContact)
 
         rbUnknown.isChecked
 
@@ -438,7 +463,7 @@ class GenerateBirdFragment : Fragment() {
             val birdData = JSONObject()
 
 
-
+            birdData.put("AddBirdQR", true)
             birdData.put("Identifier", etIdentifier.text.toString())
             birdData.put("LegBand", etLegband.text.toString())
             birdData.put("Gender", dataSelectedGen.text.toString())
@@ -479,6 +504,39 @@ class GenerateBirdFragment : Fragment() {
             birdData.put("MotherBirdKey", birdBirdsMotherKey)
             birdData.put("CageName", cageNameValue)
             birdData.put("CageKey", cageKeyValue)
+
+            val nonNullMutations = listOf(
+                selectedMutations[0],
+                selectedMutations[1],
+                selectedMutations[2],
+                selectedMutations[3],
+                selectedMutations[4],
+                selectedMutations[5]
+            ).filter { !it.isNullOrBlank() }
+            val NonNullMutations = mutableListOf<String>()
+            for (mutation in nonNullMutations) {
+                if (mutation != "null") {
+                    NonNullMutations.add(mutation.toString())
+                }
+            }
+            val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
+                NonNullMutations.joinToString(" x ")
+
+            } else {
+                "Mutation: None"
+            }
+
+            tvBirdId.text = "BirdId: ${etIdentifier.text}"
+            tvBirdLegband.text = "Legband: ${etLegband.text}"
+            tvBirdSex.text = "Sex: ${dataSelectedGen.text}"
+            tvBirdMutation.text = "Mutation: $CombinedMutations"
+            tvBirdDateOfBirth.text = "Date of Birth: $birthFormattedDate"
+            tvBirdStatus.text = "Status: $status"
+            tvBirdCage.text = "Cage: $cageNameValue"
+            tvBirdFather.text = "Father: ${btnFather.text}"
+            tvBirdMother.text = "Mother: ${btnMother.text}"
+            tvBirdBuyPrice.text = "Buy Price: ${etBuyPrice.text}"
+            tvBirdBreederContact.text = "Breeder Contact: ${etBreederContact.text}"
 
             qrImage.setImageBitmap(generateQRCodeUri(birdData.toString()))
         }

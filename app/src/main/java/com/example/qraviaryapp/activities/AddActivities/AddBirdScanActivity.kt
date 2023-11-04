@@ -1,5 +1,7 @@
 package com.example.qraviaryapp.activities.AddActivities
 
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -17,6 +19,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
+import org.json.JSONObject
 
 class AddBirdScanActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -62,7 +65,16 @@ class AddBirdScanActivity : AppCompatActivity() {
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
-            decodeCallback = DecodeCallback {}
+            decodeCallback = DecodeCallback {
+                val jsonData = JSONObject(it.text)
+                if (jsonData.has("AddBirdQR")){
+
+                    val i = Intent()
+                    i.putExtra("BirdIdentifier", jsonData.getString("Identifier"))
+                    activity.setResult(Activity.RESULT_OK, i)
+                    activity.finish()
+                }
+            }
         }
 
         scannerView.setOnClickListener {
