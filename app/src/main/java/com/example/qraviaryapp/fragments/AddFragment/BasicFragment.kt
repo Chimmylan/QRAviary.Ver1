@@ -21,6 +21,7 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.AddActivities.AddCageScanActivity
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
@@ -241,6 +242,9 @@ class BasicFragment : Fragment() {
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
 
         cagescan = view.findViewById(R.id.cagescan)
+
+        startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
 

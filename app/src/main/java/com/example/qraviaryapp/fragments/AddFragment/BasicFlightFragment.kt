@@ -18,6 +18,7 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.AddActivities.AddCageScanActivity
 import com.example.qraviaryapp.activities.dashboards.*
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
@@ -247,6 +248,9 @@ class BasicFlightFragment : Fragment() {
 
 
         cagescan = view.findViewById(R.id.cagescan)
+        cagescan.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
