@@ -185,7 +185,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                                     purchaseId
                                 )
 
-                                nurseryToDetailedScanner(newBundle, newOriginBundle )
+                                nurseryToDetailedScanner(newBundle, newOriginBundle)
 
 
 

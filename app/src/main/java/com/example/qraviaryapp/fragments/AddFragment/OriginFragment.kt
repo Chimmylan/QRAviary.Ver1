@@ -154,6 +154,53 @@ class OriginFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (arguments?.getString("BirdFatherId")?.isNotEmpty() == true) {
+            btnFather.text = arguments?.getString("BirdFatherId")
+        }
+        if (arguments?.getString("BirdMotherId")?.isNotEmpty() == true) {
+            btnMother.text = arguments?.getString("BirdMotherId")
+        }
+        if (arguments?.getString("BirdFatherKey")?.isNotEmpty() == true) {
+            birdFatherKey = arguments?.getString("BirdFatherKey")
+        }
+        if (arguments?.getString("BirdMotherKey")?.isNotEmpty() == true) {
+            birdMotherKey = arguments?.getString("BirdMotherKey")
+        }
+        if (arguments?.getString("BirdFatherBirdKey")?.isNotEmpty() == true) {
+            birdBirdsFatherKey = arguments?.getString("BirdFatherBirdKey")
+        }
+        if (arguments?.getString("BirdMotherBirdKey")?.isNotEmpty() == true) {
+            birdBirdsMotherKey = arguments?.getString("BirdMotherBirdKey")
+        }
+        val provenance = arguments?.getString("BirdProvenance")
+
+        when (provenance) {
+            "Bought" -> {
+                if (arguments?.getString("BirdBreederContact")?.isNotEmpty() == true) {
+                    etBreederContact.setText(arguments?.getString("BirdBreederContact"))
+                }
+                if (arguments?.getString("BirdBreederBuyPrice")?.isNotEmpty() == true) {
+                    etBuyPrice.setText(arguments?.getString("BirdBreederBuyPrice"))
+                }
+                if (arguments?.getString("BirdBreederBuyDate")?.isNotEmpty() == true) {
+                    boughtDateBtn.text = arguments?.getString("BirdBreederBuyDate")
+                }
+            }
+            "Other" -> {
+                if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
+                    etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
+                }
+            }
+        }
+
+
+
+        arguments?.clear()
+    }
+
     private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
         return if (layout.visibility == View.VISIBLE) {
             Button.text.toString()
@@ -178,7 +225,6 @@ class OriginFragment : Fragment() {
         val dataBreederOtContact = etOtBreederContact.text.toString()
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
-
 
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
@@ -247,7 +293,7 @@ class OriginFragment : Fragment() {
         bundle.putString("Mother", birdData.mother)
         bundle.putString("BirdFather", birdData.father)//
         bundle.putString("BirdFatherKey", birdData.fatherKey)//
-        bundle.putString("BirdMother",birdData.mother)//
+        bundle.putString("BirdMother", birdData.mother)//
         bundle.putString("BirdMotherKey", birdData.motherKey)//
 
 

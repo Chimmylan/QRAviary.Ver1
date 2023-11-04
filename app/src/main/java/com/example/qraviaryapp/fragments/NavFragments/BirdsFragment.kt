@@ -388,7 +388,7 @@ class BirdsFragment : Fragment() {
         loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-
+                delay(3000)
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)

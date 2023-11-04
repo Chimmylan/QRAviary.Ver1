@@ -222,6 +222,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0){
@@ -268,9 +269,16 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                 qrBundle.putString("BirdDonatedDate",  data?.getStringExtra("BirdDonatedDate"))
                 qrBundle.putString("BirdDonatedContact",  data?.getStringExtra("BirdDonatedContact"))
                 qrBundle.putString("BirdOtherComment",  data?.getStringExtra("BirdOtherComment"))
+                qrBundle.putString("BirdProvenance", data?.getStringExtra("BirdProvenance"))
+                qrBundle.putString("BirdBreederContact", data?.getStringExtra("BirdBreederContact"))
+                qrBundle.putString("BirdBreederBuyPrice", data?.getStringExtra("BirdBreederBuyPrice"))
+                qrBundle.putString("BirdBreederBuyDate", data?.getStringExtra("BirdBreederBuyDate"))
+                qrBundle.putString("BirdOtherOrigin", data?.getStringExtra("BirdOtherOrigin"))
 
                 Log.d(TAG,"qrBundle $qrBundle")
                 basicFragment.arguments = qrBundle
+                originFragment.arguments = qrBundle
+
 
             }
         }

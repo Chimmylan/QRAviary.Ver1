@@ -74,6 +74,8 @@ class AddBirdScanActivity : AppCompatActivity() {
                     i.putExtra("BirdLegband", jsonData.getString("LegBand"))
                     i.putExtra("BirdGender", jsonData.getString("Gender"))
 
+
+
                     if (jsonData.has("Mutation1")) {
                         i.putExtra("BirdMutation1", jsonData.optString("Mutation1", ""))
                     }
@@ -93,23 +95,35 @@ class AddBirdScanActivity : AppCompatActivity() {
                         i.putExtra("BirdMutation6", jsonData.optString("Mutation6", ""))
                     }
 
-                    if (jsonData.has("Mutation1Map")) {
-                        i.putExtra("BirdMutationMap1", jsonData.optString("Mutation1Map", ""))
+                    val mutationMap1 = jsonData.optJSONObject("Mutation1Map")
+                    if (mutationMap1 != null){
+                        val mutation1MapString = mutationMap1.toString()
+                        i.putExtra("BirdMutationMap1", mutation1MapString)
                     }
-                    if (jsonData.has("Mutation2Map")) {
-                        i.putExtra("BirdMutationMap2", jsonData.optString("Mutation2Map", ""))
+                    val mutationMap2 = jsonData.optJSONObject("Mutation2Map")
+                    if (mutationMap2 != null){
+                        val mutation2MapString = mutationMap2.toString()
+                        i.putExtra("BirdMutationMap2", mutation2MapString)
                     }
-                    if (jsonData.has("Mutation3Map")) {
-                        i.putExtra("BirdMutationMap3", jsonData.optString("Mutation3Map", ""))
+                    val mutationMap3 = jsonData.optJSONObject("Mutation3Map")
+                    if (mutationMap3 != null){
+                        val mutation3MapString = mutationMap3.toString()
+                        i.putExtra("BirdMutationMap3", mutation3MapString)
                     }
-                    if (jsonData.has("Mutation4Map")) {
-                        i.putExtra("BirdMutationMap4", jsonData.optString("Mutation4Map", ""))
+                    val mutationMap4 = jsonData.optJSONObject("Mutation4Map")
+                    if (mutationMap4 != null){
+                        val mutation4MapString = mutationMap4.toString()
+                        i.putExtra("BirdMutationMap4", mutation4MapString)
                     }
-                    if (jsonData.has("Mutation5Map")) {
-                        i.putExtra("BirdMutationMap5", jsonData.optString("Mutation5Map", ""))
+                    val mutationMap5 = jsonData.optJSONObject("Mutation5Map")
+                    if (mutationMap5 != null){
+                        val mutation5MapString = mutationMap5.toString()
+                        i.putExtra("BirdMutationMap5", mutation5MapString)
                     }
-                    if (jsonData.has("Mutation6Map")) {
-                        i.putExtra("BirdMutationMap6", jsonData.optString("Mutation6Map", ""))
+                    val mutationMap6 = jsonData.optJSONObject("Mutation6Map")
+                    if (mutationMap6 != null){
+                        val mutation6MapString = mutationMap6.toString()
+                        i.putExtra("BirdMutationMap6", mutation6MapString)
                     }
 
                     i.putExtra("BirdBirthDate", jsonData.getString("BirthDate"))
@@ -147,6 +161,18 @@ class AddBirdScanActivity : AppCompatActivity() {
                     } else if (status == "Other") {
                         i.putExtra("BirdOtherComment", jsonData.getString("OtherComment"))
                     }
+
+                    val provenance = jsonData.getString("Provenance")
+                    if (provenance == "Bought"){
+                        i.putExtra("BirdBreederContact", jsonData.getString("BreederContact"))
+                        i.putExtra("BirdBreederBuyPrice", jsonData.getString("BreederBuyPrice"))
+                        i.putExtra("BirdBreederBuyDate", jsonData.getString("BreederBuyDate"))
+                    }else if (provenance == "Other"){
+                        i.putExtra("BirdOtherOrigin", jsonData.getString("OtherOrigin"))
+                    }
+
+                    i.putExtra("BirdProvenance", jsonData.getString("Provenance"))
+
 
                     activity.setResult(Activity.RESULT_OK, i)
                     activity.finish()

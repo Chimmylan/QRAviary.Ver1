@@ -1,10 +1,13 @@
 package com.example.qraviaryapp.activities.AddActivities
 
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -17,6 +20,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
+import org.json.JSONObject
 
 class AddCageScanActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -58,11 +62,28 @@ class AddCageScanActivity : AppCompatActivity() {
         codeScanner.apply {
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
-            decodeCallback = DecodeCallback {}
+            decodeCallback = DecodeCallback {
+                val intent = Intent()
+
+                val jsonData = JSONObject(it.text)
+                if(jsonData.has("CageType")){
+                    intent.putExtra("CageName", jsonData.getString("CageNumber"))
+                    intent.putExtra("CageKey", jsonData.getString("CageKey"))
+                    activity.setResult(Activity.RESULT_OK, intent)
+
+                    activity.finish()
+                }else{
+                    activity.runOnUiThread{
+                        Toast.makeText(this@AddCageScanActivity, "This QR content is not valid ${it.text}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+
+            }
         }
 
         scannerView.setOnClickListener {

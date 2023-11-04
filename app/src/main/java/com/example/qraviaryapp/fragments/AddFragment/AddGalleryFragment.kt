@@ -306,6 +306,8 @@ class AddGalleryFragment : Fragment() {
             val imgId = imgIdKey.key
             uploadTask.addOnSuccessListener {
 
+
+
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     val imageUrl = uri.toString()
 

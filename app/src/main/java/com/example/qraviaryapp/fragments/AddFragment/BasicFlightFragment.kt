@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -249,9 +250,7 @@ class BasicFlightFragment : Fragment() {
 
 
         cagescan = view.findViewById(R.id.cagescan)
-        cagescan.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-        }
+
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
@@ -298,7 +297,11 @@ class BasicFlightFragment : Fragment() {
             val requestCode = 7 // You can use any integer as the request code
             val intent = Intent(requireContext(), FlightCagesListActivity::class.java)
             startActivityForResult(intent, requestCode)
-
+        }
+        cagescan.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)
         }
 
 
@@ -1200,11 +1203,193 @@ class BasicFlightFragment : Fragment() {
         }
     }
 
+    private var userInputSet: Boolean = false // A flag to check if user input has been set
+
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "ID:::: ${arguments?.getString("BirdIdentifier")}")
 
-        etIdentifier.setText(arguments?.getString("BirdIdentifier"))
+        if (arguments?.getString("BirdIdentifier")?.isNotEmpty() == true) {
+            etIdentifier.setText(arguments?.getString("BirdIdentifier"))
+        }
+        if (arguments?.getString("BirdLegband")?.isNotEmpty() == true) {
+            etLegband.setText(arguments?.getString("BirdLegband"))
+        }
+
+        val sex = arguments?.getString("BirdGender").toString()
+
+        if (sex == "Female") {
+            rbFemale.isChecked = true
+        } else if (sex == "Male") {
+            rbMale.isChecked = true
+        } else if (sex == "Unknown") {
+            rbUnknown.isChecked = true
+        }
+
+        val mutation1 = arguments?.getString("BirdMutation1")
+        val mutation2 = arguments?.getString("BirdMutation2")
+        val mutation3 = arguments?.getString("BirdMutation3")
+        val mutation4 = arguments?.getString("BirdMutation4")
+        val mutation5 = arguments?.getString("BirdMutation5")
+        val mutation6 = arguments?.getString("BirdMutation6")
+        //Checking Mutation
+        if (mutation1?.isNotEmpty() == true) {
+            btnMutation1.text = mutation1
+            btnMutation1.visibility = View.VISIBLE
+            spinnerCount = 0
+        }
+        if (mutation2?.isNotEmpty() == true) {
+            btnMutation2.text = mutation1
+            btnMutation2.visibility = View.VISIBLE
+            spinnerCount = 1
+        }
+        if (mutation3?.isNotEmpty() == true) {
+            btnMutation3.text = mutation1
+            btnMutation3.visibility = View.VISIBLE
+            spinnerCount = 2
+        }
+        if (mutation4?.isNotEmpty() == true) {
+            btnMutation4.text = mutation1
+            btnMutation4.visibility = View.VISIBLE
+            spinnerCount = 3
+        }
+        if (mutation5?.isNotEmpty() == true) {
+            btnMutation5.text = mutation1
+            btnMutation5.visibility = View.VISIBLE
+            spinnerCount = 4
+        }
+        if (mutation6?.isNotEmpty() == true) {
+            btnMutation6.text = mutation1
+            btnMutation6.visibility = View.VISIBLE
+            spinnerCount = 5
+        }
+
+        val birdDateofBirth = arguments?.getString("BirdBirthDate")
+        if (birdDateofBirth?.isNotEmpty() == true && datebirthButton.text == "Pick Date") {
+            datebirthButton.text = birdDateofBirth
+        }
+
+        when (arguments?.getString("BirdStatus")) {
+            "Available" -> {
+                spinnerStatus.setSelection(0)
+                //cage
+            }
+            "For Sale" -> {
+                spinnerStatus.setSelection(1)
+                //cage
+                if (etForSaleReqPrice.text.isEmpty()) {
+                    etForSaleReqPrice.setText(arguments?.getString("BirdForSalePrice"))
+                }
+            }
+            "Sold" -> {
+                spinnerStatus.setSelection(2)
+                if (arguments?.getString("BirdSoldDate")?.isNotEmpty() == true) {
+                    btnSoldSaleDate.text = arguments?.getString("BirdSoldDate")
+                }
+                if (arguments?.getString("BirdSoldPrice")?.isNotEmpty() == true) {
+                    etSoldSalePrice.setText(arguments?.getString("BirdSoldPrice"))
+                }
+                if (arguments?.getString("BirdSoldContact")?.isNotEmpty() == true) {
+                    etSoldBuyer.setText(arguments?.getString("BirdSoldContact"))
+                }
+
+            }
+            "Deceased" -> {
+                spinnerStatus.setSelection(3)
+                if (arguments?.getString("BirdDeceasedDate")?.isNotEmpty() == true) {
+                    btnDeathDate.text = arguments?.getString("BirdDeceasedDate")
+                }
+
+                if (arguments?.getString("BirdDeceasedReason")?.isNotEmpty() == true) {
+                    etDeathReason.setText(arguments?.getString("BirdDeceasedReason"))
+                }
+            }
+            "Exchange" -> {
+                spinnerStatus.setSelection(4)
+                if (arguments?.getString("BirdExchangeDate")?.isNotEmpty() == true) {
+                    btnExDate.text = arguments?.getString("BirdExchangeDate")
+                }
+
+                if (arguments?.getString("BirdExchangeReason")?.isNotEmpty() == true) {
+                    etExReason.setText(arguments?.getString("ExchangeReason"))
+                }
+                if (arguments?.getString("BirdExchangeContact")?.isNotEmpty() == true) {
+                    etExWith.setText(arguments?.getString("BirdExchangeContact"))
+                }
+            }
+            "Lost" -> {
+                spinnerStatus.setSelection(5)
+                if (arguments?.getString("BirdLostDate")?.isNotEmpty() == true) {
+                    btnLostDate.text = arguments?.getString("BirdLostDate")
+                }
+
+                if (arguments?.getString("BirdLostDetails")?.isNotEmpty() == true) {
+                    etLostDetails.setText(arguments?.getString("BirdLostDetails"))
+                }
+            }
+            "Donated" -> {
+                spinnerStatus.setSelection(6)
+                if (arguments?.getString("BirdDonatedDate")?.isNotEmpty() == true) {
+                    btnDonatedDate.text = arguments?.getString("BirdDonatedDate")
+                }
+
+                if (arguments?.getString("BirdDonatedContact")?.isNotEmpty() == true) {
+                    etDonateChooseContract.setText(arguments?.getString("BirdDonatedContact"))
+                }
+            }
+            "Other" -> {
+                spinnerStatus.setSelection(7)
+                if (arguments?.getString("BirdOtherComment")?.isNotEmpty() == true) {
+                    etOtherComm.setText(arguments?.getString("BirdOtherComment"))
+                }
+            }
+        }
+
+        val mutationmap1 = arguments?.getString("BirdMutationMap1")
+        if (!mutationmap1.isNullOrEmpty()) {
+            val map1 = JSONObject(mutationmap1)
+
+            mutation1IncubatingDays = map1.optString("Mutation Name", "")
+            mutation1MaturingDays = map1.optString("Incubating Days", "")
+        }
+        val mutationmap2 = arguments?.getString("BirdMutationMap2")
+        if (!mutationmap2.isNullOrEmpty()) {
+            val map2 = JSONObject(mutationmap2)
+
+            mutation2IncubatingDays = map2.optString("Mutation Name", "")
+            mutation2MaturingDays = map2.optString("Incubating Days", "")
+        }
+        val mutationmap3 = arguments?.getString("BirdMutationMap3")
+        if (!mutationmap3.isNullOrEmpty()) {
+            val map3 = JSONObject(mutationmap3)
+
+            mutation3IncubatingDays = map3.optString("Mutation Name", "")
+            mutation3MaturingDays = map3.optString("Incubating Days", "")
+        }
+        val mutationmap4 = arguments?.getString("BirdMutationMap4")
+        if (!mutationmap4.isNullOrEmpty()) {
+            val map4 = JSONObject(mutationmap4)
+
+            mutation4IncubatingDays = map4.optString("Mutation Name", "")
+            mutation4MaturingDays = map4.optString("Incubating Days", "")
+        }
+        val mutationmap5 = arguments?.getString("BirdMutationMap5")
+        if (!mutationmap5.isNullOrEmpty()) {
+            val map5 = JSONObject(mutationmap5)
+
+            mutation5IncubatingDays = map5.optString("Mutation Name", "")
+            mutation5MaturingDays = map5.optString("Incubating Days", "")
+        }
+        val mutationmap6 = arguments?.getString("BirdMutationMap6")
+        if (!mutationmap6.isNullOrEmpty()) {
+            val map6 = JSONObject(mutationmap6)
+
+            mutation6IncubatingDays = map6.optString("Mutation Name", "")
+            mutation6MaturingDays = map6.optString("Incubating Days", "")
+        }
+
+
+
+        Log.d(TAG, mutation1IncubatingDays.toString())
 
 
     }

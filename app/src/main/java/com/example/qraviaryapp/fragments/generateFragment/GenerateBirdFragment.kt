@@ -216,6 +216,7 @@ class GenerateBirdFragment : Fragment() {
         btnLostDate = view.findViewById(R.id.lostDateBtn)
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
+        boughtDateBtn = view.findViewById(R.id.boughtDate)
         initDatePickers()
         showDatePickerDialog(requireContext(), datebirthButton, datePickerDialogBirth)
         /*showDatePickerDialog(requireContext(), datebandButton, datePickerDialogBanding)*/
@@ -224,6 +225,8 @@ class GenerateBirdFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnExDate, datePickerDialogExDate)
         showDatePickerDialog(requireContext(), btnLostDate, datepickerDialogLostDate)
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
+        showDatePickerDialog(requireContext(), boughtDateBtn, datePickerDialogBought)
+
 
 
         LayoutLegband = view.findViewById(R.id.layoutlegband)
@@ -458,6 +461,12 @@ class GenerateBirdFragment : Fragment() {
                 "Maturing Days" to mutation6MaturingDays,
                 "Incubating Days" to mutation6IncubatingDays
             )
+            val dataSelectedProvenence: RadioButton
+            val dataProvenence: Int = radioGroup.checkedRadioButtonId
+
+
+            dataSelectedProvenence = view?.findViewById(dataProvenence)
+                ?: throw IllegalStateException("RadioButton not found")
 
 
             val birdData = JSONObject()
@@ -505,6 +514,12 @@ class GenerateBirdFragment : Fragment() {
             birdData.put("MotherBirdKey", birdBirdsMotherKey)
             birdData.put("CageName", cageNameValue)
             birdData.put("CageKey", cageKeyValue)
+            birdData.put("Provenance", dataSelectedProvenence.text.toString())
+            birdData.put("BreederContact", etBreederContact.text.toString())
+            birdData.put("BreederBuyPrice", etBuyPrice.text.toString())
+            birdData.put("BreederBuyDate", boughtFormattedDate)
+            birdData.put("OtherOrigin", etOtBreederContact.text.toString())
+
 
             val nonNullMutations = listOf(
                 selectedMutations[0],
@@ -1010,6 +1025,13 @@ class GenerateBirdFragment : Fragment() {
                 donatedFormattedDate = makeDateString(day, month + 1, year)
                 btnDonatedDate.text = donatedFormattedDate
             }
+        val dateSetListenerBought =
+            DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                boughtFormattedDate = makeDateString(day, month + 1, year)
+                boughtDateBtn.text = boughtFormattedDate
+            }
+
+
 
         val cal = Calendar.getInstance()
         val year = cal.get(Calendar.YEAR)
@@ -1032,6 +1054,8 @@ class GenerateBirdFragment : Fragment() {
             DatePickerDialog(requireContext(), style, dateSetListenerLostDate, year, month, day)
         datepickerDialogDonatedDate =
             DatePickerDialog(requireContext(), style, dateSetListenerDonatedDate, year, month, day)
+        datePickerDialogBought =
+            DatePickerDialog(requireContext(), style, dateSetListenerBought, year, month, day)
 
         // You can set the max date for each dialog if needed.
         // For example:
