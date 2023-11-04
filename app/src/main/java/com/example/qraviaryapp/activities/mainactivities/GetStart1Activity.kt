@@ -88,6 +88,7 @@ class GetStart1Activity : AppCompatActivity() {
                             )
 
                             // Set the data in Firebase
+                            db.child(key).removeValue()
                             db.child(key).setValue(mutationData)
                         }
                     }
