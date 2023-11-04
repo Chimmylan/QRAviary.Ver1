@@ -61,7 +61,6 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     val fragmentAdapter = FragmentAdapter(supportFragmentManager)
 
 
-    private var birdIdentifier: String? = null
 
     private lateinit var basicFragment: BasicFlightFragment
     private lateinit var originFragment: OriginFragment
@@ -227,9 +226,50 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0){
             if (resultCode == RESULT_OK){
-                birdIdentifier = data?.getStringExtra("BirdIdentifier").toString()
+                val birdIdentifier = data?.getStringExtra("BirdIdentifier").toString()
                 qrBundle.putString("BirdIdentifier", birdIdentifier)
-                Log.d(TAG,"ID:: $birdIdentifier")
+                qrBundle.putString("BirdLegband", data?.getStringExtra("BirdLegband").toString())
+                qrBundle.putString("BirdGender", data?.getStringExtra("BirdGender"))
+                qrBundle.putString("BirdMutation1", data?.getStringExtra("BirdMutation1"))
+                qrBundle.putString("BirdMutation2", data?.getStringExtra("BirdMutation2"))
+                qrBundle.putString("BirdMutation3", data?.getStringExtra("BirdMutation3"))
+                qrBundle.putString("BirdMutation4", data?.getStringExtra("BirdMutation4"))
+                qrBundle.putString("BirdMutation5", data?.getStringExtra("BirdMutation5"))
+                qrBundle.putString("BirdMutation6", data?.getStringExtra("BirdMutation6"))
+                qrBundle.putString("BirdMutationMap1",  data?.getStringExtra("BirdMutationMap1"))
+                qrBundle.putString("BirdMutationMap2",  data?.getStringExtra("BirdMutationMap2"))
+                qrBundle.putString("BirdMutationMap3",  data?.getStringExtra("BirdMutationMap3"))
+                qrBundle.putString("BirdMutationMap4",  data?.getStringExtra("BirdMutationMap4"))
+                qrBundle.putString("BirdMutationMap5",  data?.getStringExtra("BirdMutationMap5"))
+                qrBundle.putString("BirdMutationMap6",  data?.getStringExtra("BirdMutationMap6"))
+                qrBundle.putString("BirdBirthDate",  data?.getStringExtra("BirdBirthDate"))
+                qrBundle.putString("BirdStatus",  data?.getStringExtra("BirdStatus"))
+                qrBundle.putString("BirdFatherId",  data?.getStringExtra("BirdFatherId"))
+                qrBundle.putString("BirdFatherKey",  data?.getStringExtra("BirdFatherKey"))
+                qrBundle.putString("BirdFatherBirdKey",  data?.getStringExtra("BirdFatherBirdKey"))
+                qrBundle.putString("BirdMotherId",  data?.getStringExtra("BirdMotherId"))
+                qrBundle.putString("BirdMotherKey",  data?.getStringExtra("BirdMotherKey"))
+                qrBundle.putString("BirdMotherBirdKey",  data?.getStringExtra("BirdMotherBirdKey"))
+                qrBundle.putString("BirdCageName",  data?.getStringExtra("BirdMotherBirdKey"))
+                qrBundle.putString("BirdCageKey",  data?.getStringExtra("BirdCageKey"))
+                qrBundle.putString("BirdAvailableCage",  data?.getStringExtra("BirdAvailableCage"))
+                qrBundle.putString("BirdForSaleCage",  data?.getStringExtra("BirdForSaleCage"))
+                qrBundle.putString("BirdForSalePrice",  data?.getStringExtra("BirdForSalePrice"))
+                qrBundle.putString("BirdSoldDate",  data?.getStringExtra("BirdSoldDate"))
+                qrBundle.putString("BirdSoldPrice",  data?.getStringExtra("BirdSoldPrice"))
+                qrBundle.putString("BirdSoldContact",  data?.getStringExtra("BirdSoldContact"))
+                qrBundle.putString("BirdDeceasedDate",  data?.getStringExtra("BirdDeceasedDate"))
+                qrBundle.putString("BirdDeceasedReason",  data?.getStringExtra("BirdDeceasedReason"))
+                qrBundle.putString("BirdExchangeDate",  data?.getStringExtra("BirdExchangeDate"))
+                qrBundle.putString("BirdExchangeReason",  data?.getStringExtra("BirdExchangeReason"))
+                qrBundle.putString("BirdExchangeContact",  data?.getStringExtra("BirdExchangeContact"))
+                qrBundle.putString("BirdLostDate",  data?.getStringExtra("BirdLostDate"))
+                qrBundle.putString("BirdLostDetails",  data?.getStringExtra("BirdLostDetails"))
+                qrBundle.putString("BirdDonatedDate",  data?.getStringExtra("BirdDonatedDate"))
+                qrBundle.putString("BirdDonatedContact",  data?.getStringExtra("BirdDonatedContact"))
+                qrBundle.putString("BirdOtherComment",  data?.getStringExtra("BirdOtherComment"))
+
+                Log.d(TAG,"qrBundle $qrBundle")
                 basicFragment.arguments = qrBundle
 
             }

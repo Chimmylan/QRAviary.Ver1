@@ -61,16 +61,93 @@ class AddBirdScanActivity : AppCompatActivity() {
         codeScanner.apply {
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
             decodeCallback = DecodeCallback {
                 val jsonData = JSONObject(it.text)
-                if (jsonData.has("AddBirdQR")){
-
+                if (jsonData.has("AddBirdQR")) {
+                    val status = jsonData.getString("Status")
                     val i = Intent()
                     i.putExtra("BirdIdentifier", jsonData.getString("Identifier"))
+                    i.putExtra("BirdLegband", jsonData.getString("LegBand"))
+                    i.putExtra("BirdGender", jsonData.getString("Gender"))
+
+                    if (jsonData.has("Mutation1")) {
+                        i.putExtra("BirdMutation1", jsonData.optString("Mutation1", ""))
+                    }
+                    if (jsonData.has("Mutation2")) {
+                        i.putExtra("BirdMutation2", jsonData.optString("Mutation2", ""))
+                    }
+                    if (jsonData.has("Mutation3")) {
+                        i.putExtra("BirdMutation3", jsonData.optString("Mutation3", ""))
+                    }
+                    if (jsonData.has("Mutation4")) {
+                        i.putExtra("BirdMutation4", jsonData.optString("Mutation4", ""))
+                    }
+                    if (jsonData.has("Mutation5")) {
+                        i.putExtra("BirdMutation5", jsonData.optString("Mutation5", ""))
+                    }
+                    if (jsonData.has("Mutation6")) {
+                        i.putExtra("BirdMutation6", jsonData.optString("Mutation6", ""))
+                    }
+
+                    if (jsonData.has("Mutation1Map")) {
+                        i.putExtra("BirdMutationMap1", jsonData.optString("Mutation1Map", ""))
+                    }
+                    if (jsonData.has("Mutation2Map")) {
+                        i.putExtra("BirdMutationMap2", jsonData.optString("Mutation2Map", ""))
+                    }
+                    if (jsonData.has("Mutation3Map")) {
+                        i.putExtra("BirdMutationMap3", jsonData.optString("Mutation3Map", ""))
+                    }
+                    if (jsonData.has("Mutation4Map")) {
+                        i.putExtra("BirdMutationMap4", jsonData.optString("Mutation4Map", ""))
+                    }
+                    if (jsonData.has("Mutation5Map")) {
+                        i.putExtra("BirdMutationMap5", jsonData.optString("Mutation5Map", ""))
+                    }
+                    if (jsonData.has("Mutation6Map")) {
+                        i.putExtra("BirdMutationMap6", jsonData.optString("Mutation6Map", ""))
+                    }
+
+                    i.putExtra("BirdBirthDate", jsonData.getString("BirthDate"))
+                    i.putExtra("BirdStatus", jsonData.getString("Status"))
+                    i.putExtra("BirdFatherId", jsonData.getString("FatherId"))
+                    i.putExtra("BirdFatherKey", jsonData.getString("FatherKey"))
+                    i.putExtra("BirdFatherBirdKey", jsonData.getString("FatherBirdKey"))
+                    i.putExtra("BirdMotherId", jsonData.getString("MotherId"))
+                    i.putExtra("BirdMotherKey", jsonData.getString("MotherKey"))
+                    i.putExtra("BirdMotherBirdKey", jsonData.getString("MotherBirdKey"))
+                    i.putExtra("BirdCageName", jsonData.getString("CageName"))
+                    i.putExtra("BirdCageKey", jsonData.getString("CageKey"))
+                    if (status == "Available") {
+                        i.putExtra("BirdAvailableCage", jsonData.getString("AvailableCage"))
+                    } else if (status == "For Sale") {
+                        i.putExtra("BirdForSaleCage", jsonData.getString("ForSaleCage"))
+                        i.putExtra("BirdForSalePrice", jsonData.getString("ForSalePrice"))
+                    } else if (status == "Sold") {
+                        i.putExtra("BirdSoldDate", jsonData.getString("SoldDate"))
+                        i.putExtra("BirdSoldPrice", jsonData.getString("SoldPrice"))
+                        i.putExtra("BirdSoldContact", jsonData.getString("SoldContact"))
+                    } else if (status == "Deceased") {
+                        i.putExtra("BirdDeceasedDate", jsonData.getString("DeceasedDate"))
+                        i.putExtra("BirdDeceasedReason", jsonData.getString("DeceasedReason"))
+                    } else if (status == "Exchanged") {
+                        i.putExtra("BirdExchangeDate", jsonData.getString("ExchangedDate"))
+                        i.putExtra("BirdExchangeReason", jsonData.getString("ExchangedReason"))
+                        i.putExtra("BirdExchangeContact", jsonData.getString("ExchangedContact"))
+                    } else if (status == "Lost") {
+                        i.putExtra("BirdLostDate", jsonData.getString("LostDate"))
+                        i.putExtra("BirdLostDetails", jsonData.getString("LostDetails"))
+                    } else if (status == "Donated") {
+                        i.putExtra("BirdDonatedDate", jsonData.getString("DonatedDate"))
+                        i.putExtra("BirdDonatedContact", jsonData.getString("DonatedContact"))
+                    } else if (status == "Other") {
+                        i.putExtra("BirdOtherComment", jsonData.getString("OtherComment"))
+                    }
+
                     activity.setResult(Activity.RESULT_OK, i)
                     activity.finish()
                 }
@@ -82,6 +159,7 @@ class AddBirdScanActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onResume() {
         super.onResume()
         codeScanner.startPreview()
@@ -129,6 +207,7 @@ class AddBirdScanActivity : AppCompatActivity() {
             }
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 
