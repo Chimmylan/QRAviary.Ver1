@@ -24,7 +24,7 @@
         <LinearLayout
             android:id="@+id/qrimagelayout"
             android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:elevation="4dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -35,7 +35,8 @@
             android:layout_width="match_parent"
             android:gravity="center|top"
             android:background="@color/white"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/QRimage"
@@ -43,6 +44,55 @@
                 android:layout_height="150dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/qr" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/cageqrdetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Egg Status"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Date"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Incubating Days"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Maturing Days"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
