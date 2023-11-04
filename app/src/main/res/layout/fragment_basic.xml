@@ -6,7 +6,7 @@
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#E9E8E8"
+    android:background="@color/bottom_nav_background"
     tools:context=".fragments.AddFragment.BasicFragment">
 
     <ScrollView
@@ -175,7 +175,7 @@
                         android:text="add +"
                         android:textSize="10sp"
                         android:textColor="@color/black_white"
-                        android:backgroundTint="@color/new_appbar_color"
+                        android:backgroundTint="@color/itemimagebg"
                         android:textAlignment="center"
 
                         app:iconGravity="textEnd" />
@@ -188,7 +188,7 @@
                         android:text="Del -"
                         android:textSize="10sp"
                         android:textColor="@color/black_white"
-                        android:backgroundTint="@color/new_appbar_color"
+                        android:backgroundTint="@color/itemimagebg"
                         android:textAlignment="center"
                         app:iconGravity="textEnd" />
 
@@ -215,7 +215,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"
+                            android:textColor="@color/black_white"
                             />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn2"
@@ -227,7 +227,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"/>
+                            android:textColor="@color/black_white"/>
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn3"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -238,7 +238,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"/>
+                            android:textColor="@color/black_white"/>
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn4"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -249,7 +249,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"/>
+                            android:textColor="@color/black_white"/>
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn5"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -260,7 +260,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"/>
+                            android:textColor="@color/black_white"/>
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn6"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -271,7 +271,7 @@
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
                             android:text="None"
-                            android:textColor="#000000"/>
+                            android:textColor="@color/black_white"/>
 
                     </GridLayout>
                 </HorizontalScrollView>
@@ -315,14 +315,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Pick Date"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/itemimagebg"
                         android:layout_margin="10dp"
                         android:textSize="12sp"
-                        android:textColor="@color/black"
                         android:textAlignment="textStart"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
-                        android:onClick="openDatebirthPicker"/>
+                        android:onClick="openDatebirthPicker"
+                        android:textColor="@color/black_white"/>
                 </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -345,6 +345,7 @@
                         android:id="@+id/spinnerstatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@color/itemimagebg"
                         android:layout_margin="10dp"
                         android:minHeight="48dp" />
         </LinearLayout>
@@ -364,6 +365,7 @@
                         android:id="@+id/availableLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:orientation="vertical"
                         android:weightSum="2">
                         <TextView
@@ -377,6 +379,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+
                             android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -386,10 +389,9 @@
                             app:iconTint="@color/black"
                             android:layout_weight="1"
                             android:hint="Choose Cage"
-                            android:textColor="@color/black"
+                            android:textColor="@color/black_white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:minHeight="48dp" />
 
                             <androidx.cardview.widget.CardView
@@ -403,8 +405,7 @@
                                 android:foreground="?selectableItemBackground"
                                 android:id="@+id/cagescan"
                                 android:layout_margin="10dp"
-                                app:iconSize="30dp"
-                                app:icon="@drawable/scanner">
+                                app:iconSize="30dp">
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"

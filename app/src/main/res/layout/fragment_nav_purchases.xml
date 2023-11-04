@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/toolbarcolor"
                 app:tabIndicatorColor="@color/purpledark"
-                app:tabSelectedTextColor="@color/loginpurple"
+                app:tabSelectedTextColor="@color/purplelight"
                 app:tabTextAppearance="@style/TabLayoutTextStyle"
                 app:tabTextColor="@color/appbar_color"/>
 

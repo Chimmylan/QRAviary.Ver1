@@ -17,12 +17,13 @@
     <color name="bottom_background">#D9DADA</color>
     <color name="new_appbar_color">#D9DADA</color>
     <color name="appbar_color">#D9DADA</color>
-    <color name="toolbarcolor">#BEADFA</color>
-    <color name="totals">#D0BFFF</color>
+    <color name="toolbarcolor">#876EE1</color>
+    <color name="totals">#8A77CC</color>
     <color name="loginpurple">#876EE1</color>
-    <color name="statusbar">#BEADFA</color>
-    <color name="bg">#BEADFA</color>
+    <color name="statusbar">#876EE1</color>
+    <color name="bg">#876EE1</color>
     <color name="bg1">#27005D</color>
+    <color name="titlebg">#BEADFA</color>
     <color name="purplelight">#BEADFA</color>
     <color name="purpledark">#27005D</color>
     <color name="fab">#BEADFA</color>
@@ -30,5 +31,5 @@
     <color name="filter">#DCD9D9</color>
     <color name="colorDarkSemiTransparent">#C6000000</color>
     <color name="green">#186F65</color>
-
+    <color name="itemimagebg">#D2C3EC</color>
 </resources>
