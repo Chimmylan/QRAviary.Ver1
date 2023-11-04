@@ -53,11 +53,17 @@ class BirdListAdapter(
 
         } else {
             Glide.with(context)
-                .load(bird.bitmap)
+                .load(bird.img)
                 .placeholder(R.drawable.noimage)
                 .error(R.drawable.noimage)
                 .into(holder.imageView)
         }
+//        if (bird.bitmap != null) {
+//            holder.imageView.setImageBitmap(bird.bitmap)
+//        } else {
+//            // Set a default image or placeholder if the Bitmap is null
+//            holder.imageView.setImageResource(R.drawable.noimage)
+//        }
 
 //        if (bird.bitmap != null) {
 //            holder.imageView.setImageBitmap(bird.bitmap)

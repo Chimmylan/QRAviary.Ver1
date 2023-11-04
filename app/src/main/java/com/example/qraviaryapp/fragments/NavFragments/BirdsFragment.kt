@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -56,6 +57,7 @@ class BirdsFragment : Fragment() {
     private lateinit var adapter: BirdListAdapter
     private lateinit var fab: FloatingActionButton
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     private var birdCount = 0
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
@@ -74,7 +76,7 @@ class BirdsFragment : Fragment() {
                 ContextCompat.getColor(requireContext(), R.color.totalbirds)
         }
 
-
+        loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
         totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
@@ -85,15 +87,23 @@ class BirdsFragment : Fragment() {
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
+
+
         lifecycleScope.launch {
             try {
+//                loadingProgressBar.visibility = View.VISIBLE
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }
+//            finally {
+//                // Hide the loading ProgressBar when reloading finishes
+//                loadingProgressBar.visibility = View.GONE
+//            }
         }
         fab.setOnClickListener {
             showOptionDialog()
@@ -155,7 +165,7 @@ class BirdsFragment : Fragment() {
             if (data != null) {
 
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
-                val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
+//                val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
                 val birdKey = itemSnapshot.key
                 val LegbandValue = itemSnapshot.child("Legband").value
@@ -246,11 +256,11 @@ class BirdsFragment : Fragment() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
 
-                val image = getUrlImage(imageUrl)
+//                val image = getUrlImage(imageUrl)
 
                 birdCount++
-                data.bitmap = image
-                data.img = imageUrl
+//                data.bitmap = image
+                data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
                 data.flightKey = flightKey
@@ -375,9 +385,9 @@ class BirdsFragment : Fragment() {
     }
 
     private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                delay(4000)
 
                 val data = getDataFromDatabase()
                 dataList.clear()
@@ -386,7 +396,9 @@ class BirdsFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
 }

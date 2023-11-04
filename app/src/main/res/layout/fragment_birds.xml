@@ -13,7 +13,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -37,11 +39,19 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_bird_list"
                     android:layout_width="match_parent"
+                    android:scrollbars="none"
                     android:layout_height="match_parent" />
 
             </LinearLayout>
 
         </LinearLayout>
+</ScrollView>
+        <ProgressBar
+            android:id="@+id/loadingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -55,5 +65,6 @@
             app:tint="@color/white"
             android:onClick="fab"
             tools:ignore="SpeakableTextPresentCheck" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
