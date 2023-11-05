@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import EggData
 import PairData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -74,6 +75,7 @@ class IncubatingFragment : Fragment() {
 
         adapter = EggAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+
 
         loadDataFromDatabase()
 
@@ -196,7 +198,6 @@ class IncubatingFragment : Fragment() {
 
                 if (data != null) {
                     for (eggSnapshot in clutchSnapshot.children) {
-                        val eggData = eggSnapshot.getValue(EggData::class.java)
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
                         eggsCount++
@@ -207,6 +208,7 @@ class IncubatingFragment : Fragment() {
                             data.eggIncubating = eggsCount.toString()
                             data.eggIncubationStartDate = eggDate
                         }
+
                     }
                     // Only add data to the list if it has Incubating eggs
                     if (data.eggIncubating != null) {
@@ -216,7 +218,6 @@ class IncubatingFragment : Fragment() {
             }
 
         }
-
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
