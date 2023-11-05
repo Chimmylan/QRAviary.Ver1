@@ -4,24 +4,20 @@ import BirdData
 import BirdDataListener
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Spinner
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
-import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditBasicFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditGalleryFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditOriginFragment
@@ -29,7 +25,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.launch
 
 class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager

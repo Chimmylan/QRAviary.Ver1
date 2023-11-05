@@ -1,23 +1,17 @@
 package com.example.qraviaryapp.adapter
 
 import BirdData
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 
 class BirdListAdapter(
     private val context: android.content.Context,

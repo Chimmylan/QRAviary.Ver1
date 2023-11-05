@@ -2,8 +2,6 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdBarChart
 import BirdData
-import BirdGenderBarChart
-import BirdStatusBarChart
 import EggData
 import PairBarChart
 import android.annotation.SuppressLint
@@ -20,10 +18,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
@@ -33,13 +28,10 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 

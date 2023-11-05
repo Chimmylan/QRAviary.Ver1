@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -14,7 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
@@ -24,10 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListPreviousAdapter
-import com.example.qraviaryapp.activities.EditActivities.EditBirdActivity
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
-import com.example.qraviaryapp.activities.detailedactivities.SellActivity
-import com.example.qraviaryapp.adapter.PairListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference

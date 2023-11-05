@@ -1,9 +1,9 @@
 package com.example.qraviaryapp.activities.mainactivities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.qraviaryapp.R
 
 class NameActivity : AppCompatActivity() {

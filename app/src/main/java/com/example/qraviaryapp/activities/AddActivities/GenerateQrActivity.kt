@@ -2,21 +2,16 @@ package com.example.qraviaryapp.activities.AddActivities
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
-import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
-import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.example.qraviaryapp.fragments.generateFragment.GenerateBirdFragment
 import com.example.qraviaryapp.fragments.generateFragment.GenerateEggFragment
 import com.google.android.material.button.MaterialButtonToggleGroup

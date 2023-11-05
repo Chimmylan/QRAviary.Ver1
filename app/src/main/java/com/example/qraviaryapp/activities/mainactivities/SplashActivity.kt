@@ -3,15 +3,12 @@ package com.example.qraviaryapp.activities.mainactivities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-
 import com.example.qraviaryapp.R
-import com.facebook.login.Login
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 
 
 class SplashActivity : AppCompatActivity() {

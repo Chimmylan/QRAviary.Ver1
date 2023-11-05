@@ -1,6 +1,5 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
 import PairData
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
-import org.w3c.dom.Text
 
 class PairListAdapter(
     private val context: Context,

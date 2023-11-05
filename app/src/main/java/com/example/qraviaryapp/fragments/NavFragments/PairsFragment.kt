@@ -54,6 +54,7 @@ class PairsFragment : Fragment() {
     private var malegallery: String? = null
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

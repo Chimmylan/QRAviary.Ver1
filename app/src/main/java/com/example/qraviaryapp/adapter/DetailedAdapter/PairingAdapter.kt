@@ -1,9 +1,6 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
-import PairData
-import android.content.ContentValues
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

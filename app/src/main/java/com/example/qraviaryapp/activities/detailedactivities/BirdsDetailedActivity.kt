@@ -2,14 +2,13 @@ package com.example.qraviaryapp.activities.detailedactivities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
@@ -21,7 +20,6 @@ import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdOriginFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdPairingFragment
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

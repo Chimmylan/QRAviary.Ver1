@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PreviousClutchesActivity
 
 class PreviousClutchesListAdapter(

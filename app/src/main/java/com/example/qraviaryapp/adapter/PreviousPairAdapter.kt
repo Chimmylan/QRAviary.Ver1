@@ -1,6 +1,5 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
 import PairData
 import android.content.Context
 import android.content.Intent
@@ -13,9 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PreviousPairActivity
-import org.w3c.dom.Text
 
 class PreviousPairAdapter(
     private val context: Context,

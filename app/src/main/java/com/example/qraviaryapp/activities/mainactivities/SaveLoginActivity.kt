@@ -1,20 +1,18 @@
 package com.example.qraviaryapp.activities.mainactivities
 
 import AccountData
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-
 import com.example.qraviaryapp.adapter.SaveLoginAdapter
 
 class SaveLoginActivity : AppCompatActivity() {

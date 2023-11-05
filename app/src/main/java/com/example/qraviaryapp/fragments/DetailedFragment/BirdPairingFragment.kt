@@ -1,7 +1,6 @@
 package com.example.qraviaryapp.fragments.DetailedFragment
 
 import BirdData
-import PairData
 import android.content.ContentValues
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -15,11 +14,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.PairingAdapter
-import com.example.qraviaryapp.fragments.DetailedFragment.ARG_PARAM1
-import com.example.qraviaryapp.fragments.DetailedFragment.ARG_PARAM2
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await

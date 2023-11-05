@@ -3,13 +3,16 @@ package com.example.qraviaryapp.activities.AddActivities
 import PairData
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.*
+import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -18,15 +21,22 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.*
+import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.PairFemaleBirdListActivity
+import com.example.qraviaryapp.activities.dashboards.PairMaleBirdListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.zxing.BarcodeFormat
@@ -36,7 +46,7 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Calendar
 
 class AddPairActivity : AppCompatActivity() {
 

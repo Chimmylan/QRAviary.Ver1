@@ -1,26 +1,20 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
 import ExpensesData
-import ClickListener
 import android.content.ContentValues
-import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.CategoryAdapter
 import com.example.qraviaryapp.adapter.CategoryFragmentAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference

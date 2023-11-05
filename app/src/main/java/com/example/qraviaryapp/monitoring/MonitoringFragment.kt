@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.mainactivities.SplashActivity
 
 
 /**

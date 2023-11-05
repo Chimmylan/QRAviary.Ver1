@@ -4,13 +4,13 @@ import android.content.Context
 import android.widget.TextView
 import com.example.qraviaryapp.R
 import com.github.mikephil.charting.components.MarkerView
-
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class MyMarker(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
     private val textView: TextView = findViewById(R.id.markerTextView)

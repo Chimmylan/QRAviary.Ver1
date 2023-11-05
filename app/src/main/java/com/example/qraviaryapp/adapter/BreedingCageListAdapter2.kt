@@ -1,22 +1,14 @@
 package com.example.qraviaryapp.adapter
 
 import CageData
-import ClickListener
-import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
-
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
-
-import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 

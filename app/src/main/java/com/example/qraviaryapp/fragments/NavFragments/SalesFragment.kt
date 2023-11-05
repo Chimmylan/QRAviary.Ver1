@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.DetailedAdapter.BirdDescendantsAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth

@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -19,8 +18,8 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -29,7 +28,6 @@ import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.AddFragment.AddGalleryFragment
-import com.example.qraviaryapp.fragments.AddFragment.BasicFlightFragment
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.google.android.material.tabs.TabLayout
@@ -40,7 +38,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File

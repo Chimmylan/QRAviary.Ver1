@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.PairFemaleBirdListActivity
 
 class PairFemaleBirdListAdapter(

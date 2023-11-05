@@ -1,7 +1,7 @@
 package com.example.qraviaryapp.monitoring
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.qraviaryapp.R
 
 class SetTempActivity : AppCompatActivity() {

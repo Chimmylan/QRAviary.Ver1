@@ -1,6 +1,5 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
 import ClickListener
 import MutationData
 import android.app.Activity

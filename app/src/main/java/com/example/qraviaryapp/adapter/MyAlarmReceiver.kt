@@ -1,21 +1,20 @@
 package com.example.qraviaryapp.adapter
+
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import android.os.Build
 import android.os.Bundle
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
-import com.example.qraviaryapp.activities.mainactivities.NavHomeActivity
 
 class MyAlarmReceiver : BroadcastReceiver() {
     private lateinit var pairmale: String
