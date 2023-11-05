@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -27,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
@@ -62,6 +64,7 @@ class BirdsFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -80,6 +83,7 @@ class BirdsFragment : Fragment() {
         totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
+        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
@@ -135,9 +139,17 @@ class BirdsFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
+        refreshApp()
 
 
         return rootView
+    }
+
+    private fun refreshApp(){
+        swipeToRefresh.setOnRefreshListener{
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_LONG).show()
+            swipeToRefresh.isRefreshing = false
+        }
     }
 
     private fun showSnackbar(message: String) {
