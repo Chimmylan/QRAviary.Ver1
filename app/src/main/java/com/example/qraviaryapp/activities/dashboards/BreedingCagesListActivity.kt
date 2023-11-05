@@ -27,6 +27,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -61,6 +62,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var editText: EditText
     private lateinit var fabBtn: FloatingActionButton
     private var storageRef = Firebase.storage.reference
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -85,7 +87,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.cageRecyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -111,8 +113,25 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
+    }
 //    override fun onResume() {
 //        super.onResume()
 //        lifecycleScope.launch {

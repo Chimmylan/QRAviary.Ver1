@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.PairDescendantsAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.PurchasesAdapter
@@ -54,6 +55,7 @@ class DescendantsFragment : Fragment() {
     private var birdCount = 0
     private lateinit var pairId: String
     private lateinit var pairKey: String
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

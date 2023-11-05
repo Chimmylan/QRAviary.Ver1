@@ -204,7 +204,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             Handler().postDelayed({
                                 progressBar.visibility = View.GONE
                             showMessageDialog("Bird Data saved Successfully")
-                        },4000)
+                        },3000)
 
                         }
 //                        progressBar.visibility = View.GONE

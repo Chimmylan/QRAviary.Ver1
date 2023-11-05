@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddPairActivity
 import com.example.qraviaryapp.adapter.PairListAdapter
@@ -51,6 +52,7 @@ class PairsFragment : Fragment() {
     private var femalegallery: String? = null
     private var malegallery: String? = null
     private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +60,7 @@ class PairsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_pairs, container, false)
         fab = view.findViewById(R.id.fab)
         mAuth = FirebaseAuth.getInstance()
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView1 = view.findViewById(R.id.recyclerView1)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -133,9 +136,45 @@ class PairsFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-
+            refreshApp()
 
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    adapter.notifyDataSetChanged()
+                    swipeToRefresh.isRefreshing = false
+                    if (dataList.isEmpty()) {
+                        current.visibility = View.GONE
+                    } else {
+                        current.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+            }
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDatabasePrevious()
+                    dataList1.clear()
+                    dataList1.addAll(data)
+                    adapter1.notifyDataSetChanged()
+                    swipeToRefresh.isRefreshing = false
+                    if (dataList1.isEmpty()) {
+                        previous.visibility = View.GONE
+                    } else {
+                        previous.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+            }
+        }
     }
 
     private fun showSnackbar(message: String) {

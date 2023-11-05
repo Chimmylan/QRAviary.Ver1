@@ -19,6 +19,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingListPreviousAdapter
@@ -50,6 +51,7 @@ class BreedingListActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     private lateinit var current: TextView
     private lateinit var previous: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -67,7 +69,7 @@ class BreedingListActivity : AppCompatActivity() {
                 )
             )
         )
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
         CageQR = intent?.getStringExtra("CageQR").toString()
@@ -129,7 +131,45 @@ class BreedingListActivity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    adapter.notifyDataSetChanged()
+                    swipeToRefresh.isRefreshing = false
+                    if (dataList.isEmpty()) {
+                        current.visibility = View.GONE
+                    } else {
+                        current.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+            }
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromPreviousDatabase()
+                    dataList1.clear()
+                    dataList1.addAll(data)
+                    adapter1.notifyDataSetChanged()
+                    swipeToRefresh.isRefreshing = false
+                    if (dataList1.isEmpty()) {
+                        previous.visibility = View.GONE
+                    } else {
+                        previous.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+            }
+        }
+    }
+
     private suspend fun getDataFromDatabase(): List<PairData> = withContext(Dispatchers.IO) {
 
         val currentUserId = mAuth.currentUser?.uid

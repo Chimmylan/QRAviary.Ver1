@@ -18,6 +18,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
 import com.example.qraviaryapp.activities.AddActivities.AddEggScanActivity
@@ -60,6 +61,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private var eggCount = 0
     private var storageRef = Firebase.storage.reference
     private lateinit var CageQR: String
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -71,7 +73,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         totalegg = findViewById(R.id.tvBirdCount)
         fab = findViewById(R.id.fab)
 
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         dataList = ArrayList()
@@ -119,9 +121,25 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
+    }
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
 

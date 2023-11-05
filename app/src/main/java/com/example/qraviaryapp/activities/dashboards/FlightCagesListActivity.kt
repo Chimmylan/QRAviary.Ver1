@@ -27,6 +27,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CageListAdapter
 import com.example.qraviaryapp.adapter.FlightCageListAdapter
@@ -61,6 +62,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var adapter: FlightCageListAdapter
     private lateinit var fabBtn: FloatingActionButton
     private lateinit var editText: EditText
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var storageRef = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,7 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.cageRecyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -110,8 +112,25 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
+    }
 //    override fun onResume() {
 //        super.onResume()
 //        lifecycleScope.launch {

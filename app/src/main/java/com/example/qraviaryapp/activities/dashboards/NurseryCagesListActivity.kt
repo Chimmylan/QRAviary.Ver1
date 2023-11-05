@@ -27,6 +27,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.NurseryCageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,6 +61,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var fabBtn: FloatingActionButton
     private lateinit var editText: EditText
     private lateinit var cageImg: ImageView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var storageRef = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.cageRecyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -108,6 +110,24 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            }
+        }
+        refreshApp()
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
             }
         }
     }

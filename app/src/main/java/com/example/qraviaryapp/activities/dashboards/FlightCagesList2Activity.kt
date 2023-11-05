@@ -25,6 +25,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FlightCageListAdapter2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,7 +61,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var totalBirds: TextView
     private var cageCount = 0
-
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var storageRef = Firebase.storage.reference
 
 
@@ -96,7 +97,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
         adapter = FlightCageListAdapter2(this, dataList)
         recyclerView.adapter = adapter
         storageRef = FirebaseStorage.getInstance().reference
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
 
         fabBtn = findViewById(R.id.fabCage)
@@ -115,8 +116,25 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
+    }
 //    override fun onResume() {
 //        super.onResume()
 //        lifecycleScope.launch {

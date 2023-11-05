@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.PreviousClutchesListAdapter
@@ -74,6 +75,7 @@ class PreviousClutchesFragment : Fragment() {
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var clutchCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {

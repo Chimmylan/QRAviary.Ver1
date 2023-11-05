@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.PurchasesAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +45,9 @@ class PurchasesFragment : Fragment() {
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var birdCount = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +55,8 @@ class PurchasesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_purchases, container, false)
         totalBirds = view.findViewById(R.id.tvBirdCount)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         flightKey = arguments?.getString("FlightKey")
         mAuth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -98,8 +103,25 @@ class PurchasesFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
-
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
     }
     private fun showSnackbar(message: String) {
         snackbar.setText(message)

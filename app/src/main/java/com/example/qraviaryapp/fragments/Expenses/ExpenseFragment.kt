@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddExpensesActivity
 import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
@@ -45,12 +46,13 @@ class ExpenseFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expense, container, false)
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         fab = view.findViewById(R.id.fab)
@@ -107,6 +109,7 @@ class ExpenseFragment : Fragment() {
 
         return view
     }
+
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()

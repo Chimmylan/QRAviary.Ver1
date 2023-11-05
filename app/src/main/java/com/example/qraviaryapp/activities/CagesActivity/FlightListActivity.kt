@@ -18,6 +18,7 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.FlightListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
@@ -40,6 +41,7 @@ class FlightListActivity : AppCompatActivity() {
     private lateinit var adapter: FlightListAdapter
     private lateinit var CageQR: String
     private lateinit var totalBirds: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var birdCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,7 @@ class FlightListActivity : AppCompatActivity() {
 
         totalBirds = findViewById(R.id.tvBirdCount)
 
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.recyclerView_bird_list)
         val gridLayoutManager = GridLayoutManager(this,1)
         recyclerView.layoutManager = gridLayoutManager
@@ -89,8 +91,25 @@ class FlightListActivity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
+    }
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")

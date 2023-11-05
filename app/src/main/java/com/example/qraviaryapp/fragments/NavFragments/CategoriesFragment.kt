@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CategoryAdapter
 import com.example.qraviaryapp.adapter.CategoryFragmentAdapter
@@ -35,13 +36,13 @@ class CategoriesFragment : Fragment(){
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var adapter: CategoryFragmentAdapter
-
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -61,8 +62,25 @@ class CategoriesFragment : Fragment(){
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+        }
     }
 
     private suspend fun getDataFromDataBase(): List<ExpensesData> =

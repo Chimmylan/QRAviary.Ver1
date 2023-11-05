@@ -80,7 +80,7 @@ class BirdsFragment : Fragment() {
         }
 
         loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
-        totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
+        totalBirds = rootView.findViewById(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
         swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
@@ -145,12 +145,24 @@ class BirdsFragment : Fragment() {
         return rootView
     }
 
-    private fun refreshApp(){
-        swipeToRefresh.setOnRefreshListener{
-            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_LONG).show()
-            swipeToRefresh.isRefreshing = false
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
         }
     }
+
 
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
