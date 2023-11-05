@@ -203,7 +203,6 @@ class IncubatingFragment : Fragment() {
 
                 if (data != null) {
                     for (eggSnapshot in clutchSnapshot.children) {
-                        val eggData = eggSnapshot.getValue(EggData::class.java)
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
                         eggsCount++
