@@ -97,7 +97,7 @@ class ClutchesFragment : Fragment() {
     private var storageRef = Firebase.storage.reference
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     private lateinit var swipeToRefresh: SwipeRefreshLayout
-
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -112,7 +112,7 @@ class ClutchesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_clutches, container, false)
-
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -310,7 +310,12 @@ class ClutchesFragment : Fragment() {
 
 
         }
-//        totalclutch.text = "Total Clutch: $clutchCount"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Clutch"
+        }
         dataList
     }
     private fun generateQRCodeUri(bundleCageData: String): Uri? {

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -49,6 +50,7 @@ class AdultingFragment : Fragment() {
     private lateinit var adapter: NurseryListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -97,7 +99,7 @@ class AdultingFragment : Fragment() {
             sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
 
-
+        totalBirds = rootView.findViewById(R.id.tvBirdCount)
         swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         recyclerView = rootView.findViewById(R.id.RecyclerView)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -307,7 +309,12 @@ class AdultingFragment : Fragment() {
             }
         }
 
-
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
         dataList
 
     }

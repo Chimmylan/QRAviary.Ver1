@@ -151,7 +151,7 @@ class StatisticsFragment : Fragment() {
                             }
                         }
                         val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
-                            NonNullMutations.joinToString(" x ")
+                            NonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
@@ -233,7 +233,7 @@ class StatisticsFragment : Fragment() {
             notSplit = false
             Log.d(ContentValues.TAG, isSplit.toString())
             // Show birds with only one mutation (split)
-            val splitBirdList = birdList.filter { it.mutations?.contains("x") == true }
+            val splitBirdList = birdList.filter { it.mutations?.contains("/") == true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), splitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart), birdList1)
@@ -244,7 +244,7 @@ class StatisticsFragment : Fragment() {
             notSplit = true
 
             // Show birds with combined mutations (not split)
-            val notSplitBirdList = birdList.filter { it.mutations?.contains("x") != true }
+            val notSplitBirdList = birdList.filter { it.mutations?.contains("/") != true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), notSplitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), notSplitBirdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart),birdList1)
@@ -320,7 +320,7 @@ class StatisticsFragment : Fragment() {
                     }
                 }
             } else if (isSplit) {
-                if (!MutationCounts.containsKey(mutationKey1) && mutation1.contains("x")) {
+                if (!MutationCounts.containsKey(mutationKey1) && mutation1.contains("/")) {
                     MutationCounts[mutationKey1] = mutableMapOf(
                         "Incubating" to 0,
                         "Hatched" to 0,
@@ -349,7 +349,7 @@ class StatisticsFragment : Fragment() {
                 }
                 if (mutation1 != mutation2) {
                     val mutationKey2 = mutation2
-                    if (!MutationCounts.containsKey(mutationKey2) && mutation2.contains("x")) {
+                    if (!MutationCounts.containsKey(mutationKey2) && mutation2.contains("/")) {
                         MutationCounts[mutationKey2] = mutableMapOf(
                             "Incubating" to 0,
                             "Hatched" to 0,
@@ -377,7 +377,7 @@ class StatisticsFragment : Fragment() {
                     }
                 }
             } else if (notSplit) {
-                if (!MutationCounts.containsKey(mutationKey1) && !mutation1.contains("x")) {
+                if (!MutationCounts.containsKey(mutationKey1) && !mutation1.contains("/")) {
                     MutationCounts[mutationKey1] = mutableMapOf(
                         "Incubating" to 0,
                         "Hatched" to 0,
@@ -406,7 +406,7 @@ class StatisticsFragment : Fragment() {
                 }
                 if (mutation1 != mutation2) {
                     val mutationKey2 = mutation2
-                    if (!MutationCounts.containsKey(mutationKey2) && !mutation2.contains("x")) {
+                    if (!MutationCounts.containsKey(mutationKey2) && !mutation2.contains("/")) {
                         MutationCounts[mutationKey2] = mutableMapOf(
                             "Incubating" to 0,
                             "Hatched" to 0,

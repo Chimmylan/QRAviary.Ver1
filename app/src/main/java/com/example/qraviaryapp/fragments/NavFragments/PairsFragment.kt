@@ -55,6 +55,9 @@ class PairsFragment : Fragment() {
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    var totalcurrent: Int = 0
+    var totalprevious: Int = 0
+    var total: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -140,7 +143,13 @@ class PairsFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
             refreshApp()
-
+        total = totalcurrent + totalprevious
+        if (total>1){
+            totalBirds.text = total.toString() + " Pairs"
+        }
+        else{
+            totalBirds.text = total.toString() + " Pair"
+        }
         return view
     }
     private fun refreshApp() {
@@ -252,6 +261,7 @@ class PairsFragment : Fragment() {
             }
         }
         dataList.sortBy { it.pairDateBeg }
+        totalcurrent = dataList.count()
         dataList
     }
 
@@ -319,6 +329,7 @@ class PairsFragment : Fragment() {
             }
 
             dataList.sortBy { it.pairDateBeg }
+            totalprevious = dataList.count()
             dataList
         }
 

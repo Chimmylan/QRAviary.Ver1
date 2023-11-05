@@ -266,7 +266,12 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             }
 
         }
-        totalegg.text = "Total Eggs: $eggCount"
+        if(dataList.count()>1){
+            totalegg.text = dataList.count().toString() + " Eggs"
+        }
+        else{
+            totalegg.text = dataList.count().toString() + " Egg"
+        }
         dataList
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

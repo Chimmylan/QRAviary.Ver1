@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -61,6 +62,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var fabBtn: FloatingActionButton
     private var storageRef = Firebase.storage.reference
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -78,6 +80,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Breeding Cages</font>",
@@ -368,6 +371,12 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
 
         }
         dataList.sortBy { it.cage }
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Cages"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Cage"
+        }
         dataList
     }
 

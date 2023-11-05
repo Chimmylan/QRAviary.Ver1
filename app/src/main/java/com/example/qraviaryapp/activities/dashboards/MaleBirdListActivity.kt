@@ -50,7 +50,7 @@ class MaleBirdListActivity : AppCompatActivity(), ClickListener {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Cages</font>",
+            "<font color='$abcolortitle'>Male Birds</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled

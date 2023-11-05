@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -32,12 +33,14 @@ class CategoriesFragment : Fragment(){
     private lateinit var db: DatabaseReference
     private lateinit var adapter: CategoryFragmentAdapter
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        totalBirds =view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -107,6 +110,12 @@ class CategoriesFragment : Fragment(){
                 }
             }
             dataList.sortBy { it.expenses }
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Categories"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Category"
+            }
             dataList
         }
 

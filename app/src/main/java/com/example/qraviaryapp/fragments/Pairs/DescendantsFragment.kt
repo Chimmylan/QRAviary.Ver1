@@ -279,7 +279,12 @@ class DescendantsFragment : Fragment() {
             }
 
         }
-        totalBirds.text = "$birdCount"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
         dataList
     }
 

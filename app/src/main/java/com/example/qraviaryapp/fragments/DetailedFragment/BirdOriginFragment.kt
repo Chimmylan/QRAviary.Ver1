@@ -406,7 +406,7 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val fatherCombinedMutations = if (fatherNonNullMutations.isNotEmpty()) {
-                            fatherNonNullMutations.joinToString(" x ")
+                            fatherNonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
@@ -446,7 +446,7 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val motherCombinedMutations = if (motherNonNullMutations.isNotEmpty()) {
-                            motherNonNullMutations.joinToString(" x ")
+                            motherNonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
@@ -486,7 +486,7 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-                            nonNullMutations.joinToString(" x ")
+                            nonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
@@ -527,7 +527,7 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-                            nonNullMutations.joinToString(" x ")
+                            nonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"

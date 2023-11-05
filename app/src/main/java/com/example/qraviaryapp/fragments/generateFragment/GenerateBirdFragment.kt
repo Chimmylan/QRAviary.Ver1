@@ -546,7 +546,7 @@ class GenerateBirdFragment : Fragment() {
                 }
             }
             val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
-                NonNullMutations.joinToString(" x ")
+                NonNullMutations.joinToString(" / ")
 
             } else {
                 "Mutation: None"
