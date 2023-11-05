@@ -335,7 +335,12 @@ class BirdsFragment : Fragment() {
 
         }
 
-        totalBirds.text = dataList.count().toString() + " Birds"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
 
 
         dataList
@@ -409,7 +414,7 @@ class BirdsFragment : Fragment() {
         loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                delay(3000)
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)

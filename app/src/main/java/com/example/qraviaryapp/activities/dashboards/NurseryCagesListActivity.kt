@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -61,6 +62,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var editText: EditText
     private lateinit var cageImg: ImageView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     private var storageRef = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Nursery Cages</font>",
@@ -366,6 +369,12 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                 dataList.add(data)
             }
 
+        }
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Cages"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Cage"
         }
         dataList.sortBy { it.cage }
         dataList

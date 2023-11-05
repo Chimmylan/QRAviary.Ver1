@@ -166,7 +166,12 @@ class MutationsFragment : Fragment() {
                     dataList.add(data)
                 }
             }
-            totalBirds.text = "Total Mutations: $mutationCount"
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Mutations"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Mutation"
+            }
             dataList.sortBy { it.mutations }
             dataList
         }

@@ -49,6 +49,10 @@ class BreedingListActivity : AppCompatActivity() {
     private lateinit var current: TextView
     private lateinit var previous: TextView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
+    var totalcurrent: Int = 0
+    var totalprevious: Int = 0
+    var total: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -66,6 +70,7 @@ class BreedingListActivity : AppCompatActivity() {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
@@ -127,6 +132,13 @@ class BreedingListActivity : AppCompatActivity() {
             }catch (e:Exception){
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
+        }
+        total = totalcurrent + totalprevious
+        if (total>1){
+            totalBirds.text = total.toString() + " Pairs"
+        }
+        else{
+            totalBirds.text = total.toString() + " Pair"
         }
         refreshApp()
     }
@@ -220,9 +232,11 @@ class BreedingListActivity : AppCompatActivity() {
                 }
 
                 dataList.add(data)
+
             }
         }
         dataList.sortBy { it.pairDateBeg }
+        totalcurrent = dataList.count()
         dataList
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -290,6 +304,7 @@ class BreedingListActivity : AppCompatActivity() {
         }
 
         dataList.sortBy { it.pairDateBeg }
+        totalprevious = dataList.count()
         dataList
     }
 

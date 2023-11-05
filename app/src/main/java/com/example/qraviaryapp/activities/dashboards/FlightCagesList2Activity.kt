@@ -382,7 +382,12 @@ class FlightCagesList2Activity : AppCompatActivity() {
             }
 
         }
-        totalBirds.text = "Total Cages: $cageCount"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Cages"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Cage"
+        }
         dataList.sortBy { it.cage }
         dataList
     }

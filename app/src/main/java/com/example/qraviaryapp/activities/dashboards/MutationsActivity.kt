@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -40,6 +41,7 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var adapter: GenesAdapter
+    private lateinit var totalBirds: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Mutations</font>",
@@ -124,6 +127,12 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                 }
             }
             dataList.sortBy { it.mutations }
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Mutations"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Mutation"
+            }
             dataList
         }
 

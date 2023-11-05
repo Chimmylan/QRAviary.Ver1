@@ -50,7 +50,7 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Cages</font>",
+            "<font color='$abcolortitle'>Female Birds</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)

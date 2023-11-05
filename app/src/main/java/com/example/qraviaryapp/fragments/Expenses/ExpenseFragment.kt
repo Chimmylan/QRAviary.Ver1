@@ -151,7 +151,12 @@ class ExpenseFragment : Fragment() {
                     dataList.add(data)
                 }
             }
-            totalBirds.text = "Total Expenses: $expensesCount"
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Expenses"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Expenses"
+            }
             dataList.sortBy { it.expenses }
             dataList
         }

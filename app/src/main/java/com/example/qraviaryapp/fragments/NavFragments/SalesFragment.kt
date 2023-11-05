@@ -282,7 +282,13 @@ class SalesFragment : Fragment() {
             }
 
         }
-        totalBirds.text = "Total Sales: $birdCount"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds Sale"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird Sale"
+        }
+
         dataList
     }
 

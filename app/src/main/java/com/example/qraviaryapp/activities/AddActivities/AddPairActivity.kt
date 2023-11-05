@@ -270,7 +270,7 @@ class AddPairActivity : AppCompatActivity() {
 
     fun addPair() {
         val cageValue = etCage.text.toString()
-        val nestValue = etNest.text.toString()
+//        val nestValue = etNest.text.toString()
         val commentValue = etComment.text.toString()
 
         val nonNullMutations = listOf(
@@ -288,7 +288,7 @@ class AddPairActivity : AppCompatActivity() {
             }
         }
         val femaleCombinedMutations = if (NonNullMutations.isNotEmpty()) {
-            NonNullMutations.joinToString(" x ")
+            NonNullMutations.joinToString(" / ")
 
         } else {
             "Mutation: None"
@@ -308,14 +308,14 @@ class AddPairActivity : AppCompatActivity() {
             }
         }
         val maleCombinedMutations = if (NonNullMutations1.isNotEmpty()) {
-            NonNullMutations1.joinToString(" x ")
+            NonNullMutations1.joinToString(" / ")
 
         } else {
             "Mutation: None"
         }
         val bird = PairData(
             pairCage = cageValue,
-            nest = nestValue,
+//            nest = nestValue,
             pairComment = commentValue,
             pairDateBeg = beginningFormattedDate,
             pairFemale = btnFemale.text.toString(),

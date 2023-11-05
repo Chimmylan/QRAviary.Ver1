@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -39,11 +40,13 @@ class IncubatingFragment : Fragment() {
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var adapter: EggAdapter
     private lateinit var snackbar: Snackbar
+    private lateinit var totalBirds: TextView
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private var femalegallery: String? = null
     private var malegallery: String? = null
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    var total: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +69,7 @@ class IncubatingFragment : Fragment() {
 //            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 //        })
         mAuth = FirebaseAuth.getInstance()
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -75,8 +79,13 @@ class IncubatingFragment : Fragment() {
         adapter = EggAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
 
+        if(total>1){
+            totalBirds.text = total.toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = total.toString() + " Clutch"
+        }
         loadDataFromDatabase()
-
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -104,26 +113,24 @@ class IncubatingFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
         refreshApp()
-
         return view
     }
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                try {
-
-                    val data = getDataFromDatabase()
-                    dataList.clear()
-                    dataList.addAll(data)
-                    swipeToRefresh.isRefreshing = false
-
-                    adapter.notifyDataSetChanged()
-                } catch (e: Exception) {
-                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-                }
-
-            }
-            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+//            lifecycleScope.launch {
+//                try {
+//                    val data = getDataFromDatabase()
+//                    dataList.clear()
+//                    dataList.addAll(data)
+//                    swipeToRefresh.isRefreshing = false
+//                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+//                    adapter.notifyDataSetChanged()
+//                } catch (e: Exception) {
+//                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+//                }
+//
+//            }
+            swipeToRefresh.isRefreshing = false
         }
     }
     private fun showSnackbar(message: String) {
@@ -138,8 +145,8 @@ class IncubatingFragment : Fragment() {
                 dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                // Handle the error
+            }  catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }
         }
     }
@@ -216,7 +223,7 @@ class IncubatingFragment : Fragment() {
             }
 
         }
-
+        total = dataList.count()
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
