@@ -139,7 +139,7 @@ class BreedingListActivity : AppCompatActivity() {
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
                     swipeToRefresh.isRefreshing = false
-                    Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
+
 
                     if (dataList.isEmpty()) {
                         current.visibility = View.GONE
@@ -166,6 +166,7 @@ class BreedingListActivity : AppCompatActivity() {
                     Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                 }
             }
+            Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
         }
 
     }

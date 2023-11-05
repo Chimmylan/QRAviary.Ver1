@@ -121,6 +121,7 @@ class SalesFragment : Fragment() {
                 }
 
             }
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
     private fun showSnackbar(message: String) {

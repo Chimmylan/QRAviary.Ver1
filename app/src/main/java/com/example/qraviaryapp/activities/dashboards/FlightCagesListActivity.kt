@@ -119,13 +119,14 @@ class FlightCagesListActivity : AppCompatActivity(), ClickListener {
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
-                    Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
+
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
                 }
 
             }
+            Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
 //    override fun onResume() {

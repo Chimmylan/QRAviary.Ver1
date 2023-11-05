@@ -155,9 +155,9 @@ class BirdsFragment : Fragment() {
 
             }
 
-
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
         }
-        Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+
     }
 
 

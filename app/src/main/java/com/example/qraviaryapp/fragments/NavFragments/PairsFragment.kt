@@ -54,13 +54,14 @@ class PairsFragment : Fragment() {
     private var malegallery: String? = null
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
-
+    private lateinit var totalBirds: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_pairs, container, false)
         fab = view.findViewById(R.id.fab)
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -151,7 +152,7 @@ class PairsFragment : Fragment() {
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
                     swipeToRefresh.isRefreshing = false
-                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+
                     if (dataList.isEmpty()) {
                         current.visibility = View.GONE
                     } else {
@@ -177,6 +178,7 @@ class PairsFragment : Fragment() {
                     Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                 }
             }
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
 
