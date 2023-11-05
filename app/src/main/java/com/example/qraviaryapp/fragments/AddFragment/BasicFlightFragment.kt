@@ -1238,27 +1238,27 @@ class BasicFlightFragment : Fragment() {
             spinnerCount = 0
         }
         if (mutation2?.isNotEmpty() == true) {
-            btnMutation2.text = mutation1
+            btnMutation2.text = mutation2
             btnMutation2.visibility = View.VISIBLE
             spinnerCount = 1
         }
         if (mutation3?.isNotEmpty() == true) {
-            btnMutation3.text = mutation1
+            btnMutation3.text = mutation3
             btnMutation3.visibility = View.VISIBLE
             spinnerCount = 2
         }
         if (mutation4?.isNotEmpty() == true) {
-            btnMutation4.text = mutation1
+            btnMutation4.text = mutation4
             btnMutation4.visibility = View.VISIBLE
             spinnerCount = 3
         }
         if (mutation5?.isNotEmpty() == true) {
-            btnMutation5.text = mutation1
+            btnMutation5.text = mutation5
             btnMutation5.visibility = View.VISIBLE
             spinnerCount = 4
         }
         if (mutation6?.isNotEmpty() == true) {
-            btnMutation6.text = mutation1
+            btnMutation6.text = mutation6
             btnMutation6.visibility = View.VISIBLE
             spinnerCount = 5
         }
