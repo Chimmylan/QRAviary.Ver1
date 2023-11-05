@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
@@ -74,6 +75,7 @@ class CategoriesFragment : Fragment(){
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
+                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")

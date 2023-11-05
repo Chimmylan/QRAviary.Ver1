@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -149,6 +150,7 @@ class PairsFragment : Fragment() {
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
                     swipeToRefresh.isRefreshing = false
+                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
                     if (dataList.isEmpty()) {
                         current.visibility = View.GONE
                     } else {

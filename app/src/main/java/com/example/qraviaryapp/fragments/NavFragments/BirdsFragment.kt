@@ -147,9 +147,8 @@ class BirdsFragment : Fragment() {
 
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.Main) {
                 try {
-
                     val data = getDataFromDatabase()
                     dataList.clear()
                     dataList.addAll(data)
@@ -160,7 +159,10 @@ class BirdsFragment : Fragment() {
                 }
 
             }
+
+
         }
+        Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
     }
 
 

@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -102,6 +103,7 @@ class FlightListActivity : AppCompatActivity() {
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
+                    Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")

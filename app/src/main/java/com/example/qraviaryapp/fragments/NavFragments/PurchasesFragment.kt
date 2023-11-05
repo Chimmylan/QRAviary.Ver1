@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -115,6 +116,7 @@ class PurchasesFragment : Fragment() {
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
+                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")

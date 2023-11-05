@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -142,6 +143,8 @@ class BreedingListActivity : AppCompatActivity() {
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
                     swipeToRefresh.isRefreshing = false
+                    Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
+
                     if (dataList.isEmpty()) {
                         current.visibility = View.GONE
                     } else {
@@ -168,6 +171,7 @@ class BreedingListActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private suspend fun getDataFromDatabase(): List<PairData> = withContext(Dispatchers.IO) {
