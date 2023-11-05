@@ -244,8 +244,8 @@ class EditBasicFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
 
 
-        LayoutLegband = view.findViewById(R.id.layoutlegband)
-        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
+//        LayoutLegband = view.findViewById(R.id.layoutlegband)
+//        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
         tvLegband = view.findViewById(R.id.tvLegband)
         tvIdentifier = view.findViewById(R.id.tvidentifier)
         editTextContainer = view.findViewById(R.id.editTextContainer)

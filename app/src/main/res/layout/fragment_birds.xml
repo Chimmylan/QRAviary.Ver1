@@ -4,7 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
     android:background="@color/new_appbar_color"
     tools:context=".fragments.NavFragments.BirdsFragment">
 
@@ -62,7 +61,7 @@
             android:layout_marginBottom="50dp"
             app:backgroundTint="@color/fab"
             app:srcCompat="@drawable/ic_add"
-            app:tint="@color/white"
+            app:tint="@color/black_white"
             android:onClick="fab"
             tools:ignore="SpeakableTextPresentCheck" />
 

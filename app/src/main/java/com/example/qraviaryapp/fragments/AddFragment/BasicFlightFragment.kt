@@ -178,6 +178,7 @@ class BasicFlightFragment : Fragment() {
         btnExDate = view.findViewById(R.id.exDate)
 
         dbase = FirebaseDatabase.getInstance().reference
+        cageReference = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
         initDatePickers()
@@ -217,8 +218,8 @@ class BasicFlightFragment : Fragment() {
 
         /*EditText*/
         etLegband = view.findViewById(R.id.etLegband)
-        LayoutLegband = view.findViewById(R.id.layoutlegband)
-        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
+//        LayoutLegband = view.findViewById(R.id.layoutlegband)
+//        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
         tvLegband = view.findViewById(R.id.tvLegband)
         tvIdentifier = view.findViewById(R.id.tvidentifier)
         etAvailCage = view.findViewById(R.id.etAvailCage)

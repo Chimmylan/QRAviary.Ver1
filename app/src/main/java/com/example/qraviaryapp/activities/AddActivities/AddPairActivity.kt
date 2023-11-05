@@ -46,7 +46,7 @@ class AddPairActivity : AppCompatActivity() {
 
     private lateinit var datePickerDialogBeginning: DatePickerDialog
 
-    private lateinit var etCage: EditText
+    private lateinit var etCage: MaterialButton
     private lateinit var etNest: EditText
     private lateinit var etComment: EditText
 
@@ -94,7 +94,7 @@ class AddPairActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_pair)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.elevation = 0f
+        supportActionBar?.elevation = 4f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
@@ -119,7 +119,7 @@ class AddPairActivity : AppCompatActivity() {
 
         switchMaterial = findViewById(R.id.switchHybridization)
         etCage = findViewById(R.id.etcage)
-        etNest = findViewById(R.id.etnest)
+//        etNest = findViewById(R.id.etnest)
         etComment = findViewById(R.id.etcomment)
         storageRef = FirebaseStorage.getInstance().reference
 

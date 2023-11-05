@@ -158,11 +158,10 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 val originFragment = fragmentAdapter.getItem(1) as OriginFragment
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
 
-                progressBar.visibility = View.VISIBLE
+
 
                 lifecycleScope.launch {
                     try {
-
                         var birdId = ""
                         var newBundle: Bundle = Bundle()
                         var nurseryId = ""
@@ -176,7 +175,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             soldId = receivesoldId
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
-
+                            progressBar.visibility = View.VISIBLE
 
 
                             originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
@@ -202,18 +201,20 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 
                             }
 
-
-
-                        }
-
-
-
-
-
-                        Handler().postDelayed({
-                            progressBar.visibility = View.GONE
+                            Handler().postDelayed({
+                                progressBar.visibility = View.GONE
                             showMessageDialog("Bird Data saved Successfully")
                         },4000)
+
+                        }
+//                        progressBar.visibility = View.GONE
+
+
+
+//                        Handler().postDelayed({
+//                            progressBar.visibility = View.GONE
+//                            showMessageDialog("Bird Data saved Successfully")
+//                        },4000)
                     } catch (e: NullPointerException) {
                         progressBar.visibility = View.GONE
                         // Handle the exception if needed

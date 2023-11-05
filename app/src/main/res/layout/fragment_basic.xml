@@ -6,6 +6,7 @@
     android:fillViewport="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+
     android:background="@color/bottom_nav_background"
     tools:context=".fragments.AddFragment.BasicFragment">
 
@@ -15,19 +16,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white_black"
+            android:padding="10dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_black"
+                android:paddingTop="3dp"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="2"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
                 <TextView
                     android:id="@+id/tvidentifier"
@@ -36,8 +37,7 @@
                     android:text="Identifier (*)"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:paddingLeft="16dp" />
+                    android:layout_weight="1" />
                     <TextView
                         android:id="@+id/tvLegband"
                         android:layout_width="0dp"
@@ -45,81 +45,72 @@
                         android:text="Legband"
                         android:textSize="13sp"
                         android:textStyle="bold"
-                        android:layout_weight="1"
-                        android:paddingLeft="16dp" />
+                        android:layout_weight="1" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutIdentifier"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="50"
-                        app:endIconMode="clear_text"
-                        app:helperTextTextColor="#5A0808"
-                        app:hintTextColor="#000000"
-                        app:startIconTint="#1E1D1D"> <!-- Set visibility to "GONE" when needed -->
+<!--                    <com.google.android.material.textfield.TextInputLayout-->
+<!--                        android:id="@+id/layoutIdentifier"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:paddingLeft="10dp"-->
+<!--                        android:paddingRight="10dp"-->
+<!--                        app:endIconMode="clear_text"-->
+<!--                        app:startIconTint="#1E1D1D"> -->
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etIdentifier"
-                            android:maxLines="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutlegband"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etIdentifier"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="50"
-                        app:endIconMode="clear_text"
-                        app:helperTextTextColor="#5A0808"
-                        app:hintTextColor="#000000"
-                        app:startIconTint="#1E1D1D"> <!-- Set visibility to "GONE" when needed -->
+                        android:maxLines="1"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                    <com.google.android.material.textfield.TextInputLayout-->
+<!--                        android:id="@+id/layoutlegband"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:paddingLeft="10dp"-->
+<!--                        android:paddingRight="10dp"-->
+
+<!--                        app:endIconMode="clear_text"-->
+<!--                      -->
+<!--                        app:startIconTint="#1E1D1D"> &lt;!&ndash; Set visibility to "GONE" when needed &ndash;&gt;-->
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLegband"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:maxLines="1"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="match_parent" />
+<!--                    </com.google.android.material.textfield.TextInputLayout>-->
                 </LinearLayout>
             </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@color/white_black"
             android:orientation="vertical">
                 <TextView
                     android:id="@+id/tvsex"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="3dp"
                     android:text="Sex (*) "
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
+                    android:textStyle="bold" />
 
                 <RadioGroup
                     android:id="@+id/radioGroupGender"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:orientation="horizontal"
                     android:weightSum="3">
 
@@ -149,13 +140,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+
             android:background="@color/white_black"
             android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="3dp"
                     android:weightSum="5">
                 <TextView
                     android:id="@+id/tvmutation"
@@ -164,8 +155,7 @@
                     android:layout_height="match_parent"
                     android:text="Mutation (*) "
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
+                    android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/addBtn"
@@ -210,7 +200,6 @@
                             android:id="@+id/mutationBtn1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -222,7 +211,6 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -233,7 +221,6 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -244,7 +231,6 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -255,7 +241,6 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -266,7 +251,6 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_val"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
                             app:iconTint="@color/black"
@@ -280,7 +264,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@color/white_black"
             android:orientation="vertical">
                 <LinearLayout
@@ -297,8 +280,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date of birth"
                         android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:paddingLeft="16dp" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -316,7 +298,6 @@
                         android:layout_weight="1"
                         android:text="Pick Date"
                         app:iconTint="@color/itemimagebg"
-                        android:layout_margin="10dp"
                         android:textSize="12sp"
                         android:textAlignment="textStart"
                         app:icon="@drawable/drop_down"
@@ -328,31 +309,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@color/white_black"
             android:orientation="vertical">
                 <TextView
                     android:id="@+id/tvstatus"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Status (*) "
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="16dp" />
+                    android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerstatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/itemimagebg"
-                        android:layout_margin="10dp"
                         android:minHeight="48dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@color/white_black"
             android:orientation="vertical">
                 <LinearLayout
@@ -365,17 +342,17 @@
                         android:id="@+id/availableLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+
                         android:orientation="vertical"
                         android:weightSum="2">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Cage (*)"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="3dp"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                             />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -388,6 +365,7 @@
                             app:iconGravity="end"
                             app:iconTint="@color/black"
                             android:layout_weight="1"
+
                             android:hint="Choose Cage"
                             android:textColor="@color/black_white"
                             android:layout_width="match_parent"
@@ -398,13 +376,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:backgroundTint="@color/loginpurple"
+                                android:backgroundTint="@color/itemimagebg"
                                 android:layout_weight="5"
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:foreground="?selectableItemBackground"
                                 android:id="@+id/cagescan"
-                                android:layout_margin="10dp"
+                                android:layout_margin="8dp"
                                 app:iconSize="30dp">
                                 <ImageView
                                     android:layout_width="match_parent"
@@ -425,10 +403,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Cage (*)"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
 
                         <com.google.android.material.button.MaterialButton
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -439,23 +415,19 @@
                             android:hint="Choose Cage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:minHeight="48dp" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Requested Price (*)"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etForSaleReqPrice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:layout_margin="5dp"
                             />
 
                     </LinearLayout>
@@ -476,19 +448,15 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text= "Sold Date"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text= "Sale Price (*) "
-                                android:layout_marginTop="10dp"
                                 android:textSize="13sp"
-                                android:textStyle="bold"
-                                android:paddingLeft="16dp" />
+                                android:textStyle="bold" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -504,7 +472,7 @@
                                 android:layout_weight="0.5"
                                 android:text="Pick Date"
                                 android:textSize="15sp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/black_white"
                                 style="?android:spinnerStyle"
                                 android:onClick="openSoldDatePicker"
                                 />
@@ -528,17 +496,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Add Contact "
-                                android:layout_marginTop="10dp"
                                 android:textSize="13sp"
-                                android:textStyle="bold"
-                                android:paddingLeft="16dp" />
+                                android:textStyle="bold" />
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etSaleContact"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
-                                android:padding="15dp"
-                                android:layout_margin="10dp"
                                 android:textAlignment="textStart"
                                 app:iconGravity="end"
                                 />
@@ -558,10 +522,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Death Date"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/deathDate"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -578,18 +540,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Death Reason"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/deathReason"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:maxLines="1"
-                            android:layout_margin="10dp"
-                            android:padding="10dp" />
+                            android:maxLines="1" />
 
 
 
@@ -608,10 +566,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Exchange Date"
-                            android:layout_marginTop="10dp"
+
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
 
 
                             <com.google.android.material.button.MaterialButton
@@ -619,14 +576,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
-                                android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="textStart"
                                 app:icon="@drawable/drop_down"
                                 app:iconGravity="end"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:hint="Pick date"
-                                android:layout_margin="10dp"
                                 app:iconTint="@color/black"
                                 android:onClick="openExchangeDatePicker"
                                 />
@@ -637,16 +592,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Exchange Reason"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/exReason"
                             android:layout_width="match_parent"
                             android:layout_weight="0.5"
                             android:maxLines="1"
-                            android:layout_margin="10dp"
                             android:layout_height="wrap_content"
 
                             />
@@ -654,10 +606,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Add Exchange Contact"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/exchangeWithBtn"
@@ -666,7 +616,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:maxLines="1"
-                                android:layout_margin="10dp"
                                 android:textAlignment="textStart"
                                 app:iconGravity="end"
                                 />
@@ -684,17 +633,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Lost Date"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/lostDateBtn"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Pick Date"
-                            android:layout_margin="10dp"
+
                             android:textAlignment="textStart"
                             app:icon="@drawable/drop_down"
                             android:onClick="openLostDatePicker"
@@ -705,16 +652,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Lost Details"
-                            android:layout_marginTop="10dp"
+
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etLostDetails"
                             android:layout_width="match_parent"
                             android:maxLines="1"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"/>
+                            android:layout_height="wrap_content" />
 
 
 
@@ -732,19 +677,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Donated Date"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDonatedDate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:onClick="openDonatedDatePicker"
                             android:text="Pick Date"
-                            android:layout_margin="10dp"
                             android:textSize="12sp"
-                            android:textColor="@color/black"
+                            android:textColor="@color/black_white"
                             android:textAlignment="textStart"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="end"
@@ -755,20 +697,16 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text=" Add Donated Contact"
-                            android:layout_marginTop="10dp"
+                            android:text="Donated Contact"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDonateChooseContact"
                             android:layout_toEndOf="@+id/soldBuyer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:maxLines="1"
                             android:textAlignment="textStart"
-                            app:iconGravity="end"
                             />
 
                     </LinearLayout>
@@ -785,15 +723,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Comment"
-                            android:layout_marginTop="10dp"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:paddingLeft="16dp" />
+                            android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etOthersComm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:maxLines="1"
                             android:textAlignment="textStart"
                             app:icon="@drawable/drop_down"

@@ -12,7 +12,7 @@
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/bottom_nav_background"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:elevation="4dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/purplelight"
+            android:background="@color/itemimagebg"
             android:layout_gravity="center|top"
             android:padding="20dp">
         <LinearLayout
@@ -105,15 +105,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="100dp"
-            android:paddingRight="100dp"
+            android:padding="10dp"
             android:gravity="right">
            <com.google.android.material.button.MaterialButton
                android:layout_width="match_parent"
                android:id="@+id/btndownload"
                app:icon="@drawable/download"
                app:iconSize="20dp"
+
                android:text="Download QR Image"
+               android:backgroundTint="@color/itemimagebg"
+               app:iconTint="@color/black_white"
+               android:textColor="@color/black_white"
                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
@@ -121,21 +124,21 @@
         android:id="@+id/egglayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/white_black"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white_black"
+
             android:orientation="vertical"
             android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -164,8 +167,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="horizontal">
 
 
             <TextView
@@ -187,6 +189,7 @@
                 android:id="@+id/etincubationdays"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="number"
                 />
 
         </LinearLayout>
@@ -194,8 +197,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="horizontal">
 
 
             <TextView
@@ -217,20 +219,25 @@
                 android:id="@+id/etmaturingdays"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="number"
                 />
 
         </LinearLayout>
+
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="30dp">
-        <Button
-            android:id="@+id/generate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Generate"/>
+            android:padding="10dp"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/generate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/itemimagebg"
+                android:textColor="@color/black_white"
+                android:text="Generate" />
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>
 </ScrollView>
 </FrameLayout>

@@ -175,6 +175,7 @@ class BasicFragment : Fragment() {
         btnExDate = view.findViewById(R.id.exDate)
 
         dbase = FirebaseDatabase.getInstance().reference
+        cageReference = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
         initDatePickers()
@@ -190,8 +191,8 @@ class BasicFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
 
 
-        LayoutLegband = view.findViewById(R.id.layoutlegband)
-        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
+//        LayoutLegband = view.findViewById(R.id.layoutlegband)
+//        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
         tvLegband = view.findViewById(R.id.tvLegband)
         tvIdentifier = view.findViewById(R.id.tvidentifier)
         editTextContainer = view.findViewById(R.id.editTextContainer)
@@ -249,15 +250,15 @@ class BasicFragment : Fragment() {
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
 
-        if (isCheckBool){ //pag nakacheck dapat mawawala identifier
-            val layoutParams = LayoutLegband.layoutParams as LinearLayout.LayoutParams
-            layoutIdentifier.visibility = GONE
-            tvIdentifier.visibility = GONE
-            layoutParams.weight = 2F
-            layoutIdentifier.layoutParams = layoutParams
-        } else {
-
-        }
+//        if (isCheckBool){ //pag nakacheck dapat mawawala identifier
+//            val layoutParams = LayoutLegband.layoutParams as LinearLayout.LayoutParams
+//            layoutIdentifier.visibility = GONE
+//            tvIdentifier.visibility = GONE
+//            layoutParams.weight = 2F
+//            layoutIdentifier.layoutParams = layoutParams
+//        } else {
+//
+//        }
 
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code

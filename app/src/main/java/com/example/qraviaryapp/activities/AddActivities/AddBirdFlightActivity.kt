@@ -3,20 +3,26 @@ package com.example.qraviaryapp.activities.AddActivities
 import BirdData
 import BirdDataListener
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -32,6 +38,7 @@ import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
 import com.example.qraviaryapp.fragments.NavFragments.GalleryFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -65,7 +72,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var basicFragment: BasicFlightFragment
     private lateinit var originFragment: OriginFragment
     private lateinit var galleryFragment: AddGalleryFragment
-
+    private lateinit var progressBar: ProgressBar
     private var qrBundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +98,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        progressBar = findViewById(R.id.progressBar)
 
         viewPager = findViewById(R.id.viewPager)
         tablayout = findViewById(R.id.tablayout)
@@ -172,6 +179,8 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
+
+                            progressBar.visibility = View.VISIBLE
                             originFragment.addFlightOrigin(birdId, flightId, newBundle, soldId)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, originBundle ->
                                 galleryFragment.FlightuploadImageToStorage(
@@ -193,8 +202,10 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             }
 
 
-                            onBackPressed()
-                            finish()
+                            Handler().postDelayed({
+                                progressBar.visibility = View.GONE
+                                showMessageDialog("Bird Data saved Successfully")
+                            },4000)
 
                         }
 
@@ -283,7 +294,36 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
             }
         }
     }
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
 
+    private fun showNoInternetSnackbar() {
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            "No internet connection",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction("Dismiss") { snackbar.dismiss() }
+        snackbar.show()
+    }
+    private fun showMessageDialog(errorMessage: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(errorMessage)
+            .setPositiveButton("Ok") { dialog, _ ->
+
+                onBackPressed()
+                finish()
+                dialog.dismiss()
+
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
 
     fun flightToDetailedScanner(basicFragmentBundle: Bundle, originFragmentBundle: Bundle) {
 
