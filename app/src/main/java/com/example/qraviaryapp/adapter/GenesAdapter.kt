@@ -30,7 +30,13 @@ class GenesAdapter(
 
         return GeneViewHolder(view, dataList, context as MutationsActivity)
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].mutations?.substring(0, 1)?.toUpperCase() ?: ""
+    }
     override fun onBindViewHolder(holder: GeneViewHolder, position: Int) {
         val mutation = dataList[position]
 

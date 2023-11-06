@@ -23,9 +23,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.GenesAdapter
+import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration1
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -73,11 +77,17 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = findViewById(R.id.recyclerView)
-        val gridLayoutManager = GridLayoutManager(this,1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(this,1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = GenesAdapter(this,dataList,this)
+//        recyclerView.adapter = adapter
+
         dataList = ArrayList()
-        adapter = GenesAdapter(this,dataList,this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = GenesAdapter(this, dataList,this)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecoration1(adapter))
 
         lifecycleScope.launch {
             try {

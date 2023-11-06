@@ -21,10 +21,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -65,11 +67,16 @@ class MutationsFragment : Fragment() {
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
         fab= view.findViewById(R.id.fab)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = HomeGenesAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecoration(adapter))
+
+
+
 
         lifecycleScope.launch {
             try {
