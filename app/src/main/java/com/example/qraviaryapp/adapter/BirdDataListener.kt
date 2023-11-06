@@ -160,6 +160,8 @@ data class PairData(
     var pairFemaleGender: String? = null,
     var pairMaleMutation: String? = null,
     var pairFemaleMutation: String? = null,
+    var pairCageKey: String? = null,
+    var cagePairKey: String? = null,
     var paircagekeyFemale: String? = null,
     var paircagekeyMale: String? = null,
     var paircagebirdMale: String? = null,

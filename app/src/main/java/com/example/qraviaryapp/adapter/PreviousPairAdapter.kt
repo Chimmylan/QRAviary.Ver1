@@ -104,6 +104,8 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
             bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)
+            bundle.putString("CageKey", dataList[adapterPosition].pairCageKey)
+            bundle.putString("CagePairKey", dataList[adapterPosition].cagePairKey)
             val i = Intent(itemView.context, PreviousPairActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

@@ -432,7 +432,9 @@ class AddPairActivity : AppCompatActivity() {
                                 "CageKeyFemale" to CageBirdKeyMother,//CageKeyFemale
                                 "CageKeyMale" to CageBirdKeyFather, //CageKeyMale
                                 "Female Gallery" to femalegallery, //FemaleIMG
-                                "Male Gallery" to malegallery //MaleImg
+                                "Male Gallery" to malegallery, //MaleImg
+                                "Cage Key" to cageKeyValue,
+                                "Pair Cage Key" to cageReference.key.toString()
                             )
 
                             val maleBirdPair: Map<String, Any?> = hashMapOf(
@@ -464,6 +466,7 @@ class AddPairActivity : AppCompatActivity() {
                             bundleData.put("CageKeyMale", CageBirdKeyFather)
                             bundleData.put("CageBirdFemale", cageKeyFlightFemaleValue)
                             bundleData.put("CageBirdMale", cageKeyFlightMaleValue)
+                            bundleData.put("CagePairKey", cageReference.key.toString())
 
                             qrAdd(bundleData, newPairPref)
 

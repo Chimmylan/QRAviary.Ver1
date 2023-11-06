@@ -46,6 +46,8 @@ class PreviousPairActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var pairId: String
     private lateinit var pairKey: String
+    private lateinit var pairCageKey: String
+    private lateinit var cagePairKey: String
     private lateinit var pairMaleKey: String
     private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
@@ -125,6 +127,8 @@ class PreviousPairActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+            pairCageKey = bundle.getString("CageKey").toString()
+            cagePairKey = bundle.getString("CagePairKey").toString()
 
             newBundle.putString("PairId", pairId)
             newBundle.putString("MaleID", pairMale)
@@ -142,6 +146,8 @@ class PreviousPairActivity : AppCompatActivity() {
             newBundle.putString("CageBirdMale", pairCageBirdMale)
             newBundle.putString("CageKeyFemale", pairCageKeyFemale)
             newBundle.putString("CageKeyMale", pairCageKeyMale)
+            newBundle.putString("CageKey", pairCageKey)
+            newBundle.putString("CagePairKey", cagePairKey)
             val clutchesFragment = PreviousClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle

@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import PairData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -97,6 +98,7 @@ class BreedingListActivity : AppCompatActivity() {
         adapter = BreedingListAdapter(this, dataList)
         adapter1 = BreedingListPreviousAdapter(this, dataList1)
         recyclerView.adapter = adapter
+        recyclerView1.adapter = adapter1
 
         current = findViewById(R.id.tvCurrent)
         previous = findViewById(R.id.tvPrevious)
@@ -121,6 +123,7 @@ class BreedingListActivity : AppCompatActivity() {
         lifecycleScope.launch{
             try {
                 val data = getDataFromPreviousDatabase()
+                Log.d(TAG, data.toString())
                 dataList1.clear()
                 dataList1.addAll(data)
                 adapter.notifyDataSetChanged()
@@ -203,35 +206,40 @@ class BreedingListActivity : AppCompatActivity() {
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(PairData::class.java)
             if (data != null) {
-                val key = itemSnapshot.key.toString()
-                val cageName = itemSnapshot.child("Cage").value.toString()
-                val male = itemSnapshot.child("Male").value.toString()
-                val female = itemSnapshot.child("Female").value.toString()
-                val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
-                val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
-                val beginningDate = itemSnapshot.child("Beginning").value.toString()
-                val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
-                val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
-                val separateDate = itemSnapshot.child("Separate Date").value.toString()
+                if (itemSnapshot.child("Separate Date").exists()) {
 
-                data.pairMaleKey = pairMaleKey
-                data.pairFemaleKey = pairFemaleKey
-                data.pairKey = key
-                data.pairFemale = female
-                data.pairMale = male
-                data.pairCage = cageName
-                data.pairMaleMutation = maleMutation
-                data.pairFemaleMutation = femaleMutation
-                data.pairDateBeg = beginningDate
-                data.pairDateSep = separateDate
+                }else{
+                    val key = itemSnapshot.key.toString()
+                    val cageName = itemSnapshot.child("Cage").value.toString()
+                    val male = itemSnapshot.child("Male").value.toString()
+                    val female = itemSnapshot.child("Female").value.toString()
+                    val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
+                    val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
+                    val beginningDate = itemSnapshot.child("Beginning").value.toString()
+                    val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
+                    val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
+                    val separateDate = itemSnapshot.child("Separate Date").value.toString()
 
-                if (Looper.myLooper() != Looper.getMainLooper()) {
-                    Log.d(ContentValues.TAG, "Code is running on a background thread")
-                } else {
-                    Log.d(ContentValues.TAG, "Code is running on the main thread")
+                    data.pairMaleKey = pairMaleKey
+                    data.pairFemaleKey = pairFemaleKey
+                    data.pairKey = key
+                    data.pairFemale = female
+                    data.pairMale = male
+                    data.pairCage = cageName
+                    data.pairMaleMutation = maleMutation
+                    data.pairFemaleMutation = femaleMutation
+                    data.pairDateBeg = beginningDate
+                    data.pairDateSep = separateDate
+
+                    if (Looper.myLooper() != Looper.getMainLooper()) {
+                        Log.d(ContentValues.TAG, "Code is running on a background thread")
+                    } else {
+                        Log.d(ContentValues.TAG, "Code is running on the main thread")
+                    }
+
+                    dataList.add(data)
+
                 }
-
-                dataList.add(data)
 
             }
         }
@@ -250,7 +258,8 @@ class BreedingListActivity : AppCompatActivity() {
     private suspend fun getDataFromPreviousDatabase(): List<PairData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Pairs")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Breeding Cages").child(CageKey).child("Pair Birds")
 
 
         val dataList = ArrayList<PairData>()

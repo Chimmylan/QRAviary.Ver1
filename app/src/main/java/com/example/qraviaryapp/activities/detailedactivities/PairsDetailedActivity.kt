@@ -47,6 +47,8 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var pairId: String
     private lateinit var pairKey: String
+    private lateinit var pairCageKey: String
+    private lateinit var cagePairKey: String
     private lateinit var pairMaleKey: String
     private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
@@ -127,6 +129,9 @@ class PairsDetailedActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+            pairCageKey = bundle.getString("CageKey").toString()
+            cagePairKey = bundle.getString("CagePairKey").toString()
+
 
             newBundle.putString("PairId", pairId)
             newBundle.putString("MaleID", pairMale)
@@ -144,6 +149,9 @@ class PairsDetailedActivity : AppCompatActivity() {
             newBundle.putString("CageBirdMale", pairCageBirdMale)
             newBundle.putString("CageKeyFemale", pairCageKeyFemale)
             newBundle.putString("CageKeyMale", pairCageKeyMale)
+            newBundle.putString("CageKey", pairCageKey)
+            newBundle.putString("CagePairKey", cagePairKey)
+
             val clutchesFragment = ClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
@@ -297,11 +305,20 @@ class PairsDetailedActivity : AppCompatActivity() {
             .child(pairMaleKey).child("Status").setValue("Available")
         val pairFemaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
             .child(pairFemaleKey).child("Status").setValue("Available")
+        val pairFemaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightFemaleKey).child("Status").setValue("Available")
+        val pairMaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightMaleKey).child("Status").setValue("Available")
+        val pairBreedingCageRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).child("Status").setValue("Available")
 
         val milliSecons = System.currentTimeMillis()
         val DateFormat = SimpleDateFormat("MMM dd yyyy", Locale.US)
         val date = Date(milliSecons)
         val formattedDate = DateFormat.format(date)
+
+        val pairBreedingCageRefSeparate = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).child("Separate Date").setValue(formattedDate)
 
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).child("Separate Date").setValue(formattedDate)
