@@ -353,6 +353,8 @@ class BirdsFragment : Fragment() {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
+//        dataList.sortBy { it.year}
+        dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
 
         dataList
     }

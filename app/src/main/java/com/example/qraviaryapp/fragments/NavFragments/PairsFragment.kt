@@ -18,12 +18,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddPairActivity
+import com.example.qraviaryapp.adapter.BirdListAdapter
 import com.example.qraviaryapp.adapter.PairListAdapter
 import com.example.qraviaryapp.adapter.PreviousPairAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationpairprev
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PairsFragment : Fragment() {
 
@@ -72,12 +78,17 @@ class PairsFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
 
-        val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
-        recyclerView1.layoutManager = gridLayoutManager1
+//        val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
+//        recyclerView1.layoutManager = gridLayoutManager1
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
+//        dataList1 = ArrayList()
+//        adapter1 = PreviousPairAdapter(requireContext(), dataList1)
+//        recyclerView1.adapter = adapter1
         dataList1 = ArrayList()
+        recyclerView1.layoutManager = LinearLayoutManager(context)
         adapter1 = PreviousPairAdapter(requireContext(), dataList1)
         recyclerView1.adapter = adapter1
+        recyclerView1.addItemDecoration(StickyHeaderItemDecorationpairprev(adapter1))
         dataList = ArrayList()
         adapter = PairListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
@@ -150,6 +161,7 @@ class PairsFragment : Fragment() {
         else{
             totalBirds.text = total.toString() + " Pair"
         }
+
         return view
     }
     private fun refreshApp() {
@@ -242,6 +254,7 @@ class PairsFragment : Fragment() {
                     data.pairCage = cageName
                     data.pairMaleMutation = maleMutation
                     data.pairFemaleMutation = femaleMutation
+
                     data.pairDateBeg = beginningDate
                     data.pairDateSep = separateDate
                     data.paircagebirdFemale =cageBirdFemale
@@ -264,7 +277,10 @@ class PairsFragment : Fragment() {
         totalcurrent = dataList.count()
         dataList
     }
-
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
+    }
     private suspend fun getDataFromDatabasePrevious(): List<PairData> =
         withContext(Dispatchers.IO) {
 
@@ -308,6 +324,7 @@ class PairsFragment : Fragment() {
                         data.pairMaleMutation = maleMutation
                         data.pairFemaleMutation = femaleMutation
                         data.pairDateBeg = beginningDate
+                        data.pairyearbeg = extractYearFromDateString(beginningDate)
                         data.pairDateSep = separateDate
                         data.paircagebirdFemale =cageBirdFemale
                         data.paircagebirdMale = cageBirdMale

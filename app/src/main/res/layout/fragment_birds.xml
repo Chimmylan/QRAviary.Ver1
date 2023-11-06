@@ -7,7 +7,6 @@
     android:background="@color/new_appbar_color"
     tools:context=".fragments.NavFragments.BirdsFragment">
 
-
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"
@@ -19,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -38,24 +37,16 @@
                     android:textColor="@color/black_white"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_bird_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <!-- Add your content here -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView_bird_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false" />
-
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"/>
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <ProgressBar
         android:id="@+id/loadingProgressBar"
@@ -77,6 +68,4 @@
         app:tint="@color/black_white"
         tools:ignore="SpeakableTextPresentCheck" />
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

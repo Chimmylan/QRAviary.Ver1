@@ -203,3 +203,68 @@ class StickyHeaderItemDecorationbirdlist(private val adapter: BirdListAdapter) :
         }
     }
 }
+class StickyHeaderItemDecorationpairprev(private val adapter: PreviousPairAdapter) : RecyclerView.ItemDecoration() {
+
+    private val headerPaint = Paint()
+    private val textPaint = Paint()
+    private val headerHeight = 50 // Adjust the height as needed
+    private val headerTextSize = 36f // Adjust the text size as needed
+
+    init {
+        headerPaint.setColor(Color.parseColor("#D9DADA"));
+        textPaint.setColor(Color.parseColor("#876EE1"));
+        textPaint.textSize = headerTextSize
+        textPaint.isAntiAlias = true
+    }
+
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        val childCount = parent.childCount
+        val itemCount = state.itemCount
+
+        var previousHeader: String? = null
+
+        for (i in 0 until childCount) {
+            val view = parent.getChildAt(i)
+            val position = parent.getChildAdapterPosition(view)
+
+            if (position != RecyclerView.NO_POSITION) {
+                val currentHeader = adapter.getHeaderForPosition(position)
+
+                if (currentHeader != previousHeader) {
+                    drawHeader(c, view, currentHeader)
+                    previousHeader = currentHeader
+                }
+            }
+        }
+    }
+
+    private fun drawHeader(c: Canvas, view: View, headerText: String) {
+        val left = view.left
+        val top = view.top - headerHeight
+        val right = view.right
+        val bottom = view.top
+        c.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), headerPaint)
+
+        // Calculate the position for centering the text vertically
+        val textY = top + (headerHeight / 2) + (textPaint.textSize / 2)
+
+        // Calculate the position for aligning the text to the left
+        val textX = left.toFloat() + 16 // Adjust the value as needed for left padding
+
+        c.drawText(headerText, textX, textY, textPaint)
+    }
+
+
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val position = parent.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION) return
+
+        val isFirstItem = position == 0 || adapter.getHeaderForPosition(position) != adapter.getHeaderForPosition(position - 1)
+
+        if (isFirstItem) {
+            outRect.set(0, headerHeight, 0, 0)
+        } else {
+            outRect.set(0, 0, 0, 0)
+        }
+    }
+}

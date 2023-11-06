@@ -23,7 +23,13 @@ class PreviousPairAdapter(
 
         return PreviousViewHolder(view, dataList)
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].pairyearbeg?.substring(0, 4) ?: ""
+    }
     override fun onBindViewHolder(holder: PreviousViewHolder, position: Int) {
         val pairs = dataList[position]
         val femaleimg = pairs.pairfemaleimg
@@ -58,7 +64,7 @@ class PreviousPairAdapter(
                 .error(R.drawable.noimage)
                 .into(holder.maleimageview)
         }
-        holder.dateId.text = pairs.pairDateBeg
+        holder.dateId.text = pairs.pairDateBeg + "-" + pairs.pairDateSep
         holder.femaleBird.text = pairs.pairFemale
         holder.femaleMutation.text = pairs.pairFemaleMutation
         holder.maleBird.text = pairs.pairMale

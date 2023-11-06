@@ -172,6 +172,7 @@ data class PairData(
     var eggcagekeyMale: String? = null,
     var eggcagebirdMale: String? = null,
     var eggcagebirdFemale: String? = null,
+    var pairyearbeg: String? = null
 
     )
 
