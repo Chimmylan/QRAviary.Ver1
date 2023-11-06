@@ -200,7 +200,6 @@ class BreedingListActivity : AppCompatActivity() {
         val qrSnapshot = qrRef.get().await()
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
-
         CageQR = qrSnapshot.child("QR").value.toString()
 
         for (itemSnapshot in snapshot.children) {
@@ -210,6 +209,7 @@ class BreedingListActivity : AppCompatActivity() {
 
                 }else{
                     val key = itemSnapshot.key.toString()
+                    val pairsId = itemSnapshot.child("Pair ID").value.toString()
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val male = itemSnapshot.child("Male").value.toString()
                     val female = itemSnapshot.child("Female").value.toString()
@@ -230,6 +230,7 @@ class BreedingListActivity : AppCompatActivity() {
                     data.pairFemaleMutation = femaleMutation
                     data.pairDateBeg = beginningDate
                     data.pairDateSep = separateDate
+                    data.pairId = pairsId
 
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
@@ -269,6 +270,8 @@ class BreedingListActivity : AppCompatActivity() {
             if (data != null) {
                 if (itemSnapshot.child("Separate Date").exists()) {
                     val key = itemSnapshot.key.toString()
+                    val pairsId = itemSnapshot.child("Pair ID").value.toString()
+
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
                     val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
@@ -297,6 +300,8 @@ class BreedingListActivity : AppCompatActivity() {
                     data.paircagebirdMale = cageBirdMale
                     data.paircagekeyFemale = cageKeyFemale
                     data.paircagekeyMale = cageKeyMale
+                    data.pairId = pairsId
+
 
                     if (Looper.myLooper() != Looper.getMainLooper()) {
                         Log.d(ContentValues.TAG, "Code is running on a background thread")
