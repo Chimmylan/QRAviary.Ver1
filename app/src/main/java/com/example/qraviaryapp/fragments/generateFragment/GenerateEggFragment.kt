@@ -1,7 +1,10 @@
 package com.example.qraviaryapp.fragments.generateFragment
 
 import android.Manifest
+import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -10,14 +13,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
@@ -31,7 +27,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +41,17 @@ private const val ARG_PARAM2 = "param2"
  */
 class GenerateEggFragment : Fragment() {
 
+
+
+    private lateinit var hatchedDatePickerDialog: DatePickerDialog
+    private lateinit var incubatingDatePickerDialog: DatePickerDialog
+    private lateinit var btnHatched: MaterialButton
+    private lateinit var btnIncubating: MaterialButton
+
+    private var hatchedFormattedDate: String? = null
+    private var incubatingFormattedDate: String? = null
+
+
     private lateinit var statusSpinner: Spinner
     private lateinit var etIncubatingDays: EditText
     private lateinit var etMaturingDays: EditText
@@ -56,6 +63,12 @@ class GenerateEggFragment : Fragment() {
     private lateinit var dateTv: TextView
     private lateinit var incubatingDaysTv: TextView
     private lateinit var maturingDaysTv: TextView
+    private lateinit var hatchedDateBtn : MaterialButton
+    private lateinit var incubatingDateBtn : MaterialButton
+
+
+    private lateinit var hatchedLinearLayout: LinearLayout
+    private lateinit var incubatingLinearLayout: LinearLayout
 
     private var status: String? = null
     private val eggData = JSONObject()
@@ -92,22 +105,59 @@ class GenerateEggFragment : Fragment() {
         dateTv = view.findViewById(R.id.eggDate)
         incubatingDaysTv = view.findViewById(R.id.eggIncubatingDays)
         maturingDaysTv = view.findViewById(R.id.eggMaturingDays)
+        incubatingLinearLayout = view.findViewById(R.id.incubationDateLayout)
+        hatchedLinearLayout = view.findViewById(R.id.hatchedDateLayout)
+        btnHatched = view.findViewById(R.id.btn_hatchedstartdate)
+        btnIncubating = view.findViewById(R.id.btn_incubatingstartdate)
         OnActiveSpinner()
+        initDatePickers()
+
+
+        showDatePickerDialog(requireContext(), btnHatched, hatchedDatePickerDialog)
+        showDatePickerDialog(requireContext(), btnIncubating, incubatingDatePickerDialog)
+
+
 
         generateBtn.setOnClickListener {
 
+            qrimageLayout.visibility = View.VISIBLE
             var currentDate = LocalDate.now()
             val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
             val formattedDate = currentDate.format(formatter)
+
+            if (btnHatched.text.toString() == "TODAY") {
+                // Set the incubating date to the current date and time
+
+
+                btnHatched.text = formattedDate
+            }
+            if (btnIncubating.text.toString() == "TODAY") {
+                // Set the incubating date to the current date and time
+
+                btnIncubating.text = formattedDate
+            }
             eggData.put("AddEggQR", true)
             eggData.put("EggStatus", status)
-            eggData.put("EggDate", formattedDate)
+
+            if (hatchedLinearLayout.visibility == View.VISIBLE){
+                eggData.put("EggDate", btnHatched.text)
+                dateTv.text = "Date: ${btnHatched.text}"
+
+            }else if(incubatingLinearLayout.visibility == View.VISIBLE){
+                eggData.put("EggDate", btnIncubating.text)
+                dateTv.text = "Date: ${btnIncubating.text}"
+
+            }else{
+                eggData.put("EggDate", currentDate)
+                dateTv.text = "Date: $currentDate"
+            }
+
+
             eggData.put("MaturingDays", etMaturingDays.text.toString())
             eggData.put("IncubatingDays", etIncubatingDays.text.toString())
 
             statusTv.text = "Status: $status"
-            dateTv.text = "Date: $formattedDate"
             maturingDaysTv.text = "Maturing Days: ${etMaturingDays.text}"
             incubatingDaysTv.text = "Incubating Days: ${etIncubatingDays.text}"
 
@@ -231,18 +281,18 @@ class GenerateEggFragment : Fragment() {
 
                 val selectedItem = p0?.getItemAtPosition(p2).toString()
                 status = selectedItem
-//                incubatingLinearLayout.visibility = View.GONE
-//                hatchedLinearLayout.visibility = View.GONE
+                incubatingLinearLayout.visibility = View.GONE
+                hatchedLinearLayout.visibility = View.GONE
 
 
                 when (p0?.getItemAtPosition(p2).toString()) {
                     "Incubating" -> {
 
-                        //incubatingLinearLayout.visibility = View.VISIBLE
+                        incubatingLinearLayout.visibility = View.VISIBLE
                     }
                     "Hatched" -> {
 
-                        //hatchedLinearLayout.visibility = View.VISIBLE
+                        hatchedLinearLayout.visibility = View.VISIBLE
                     }
 
                 }
@@ -258,6 +308,63 @@ class GenerateEggFragment : Fragment() {
         return
 
     }
+
+    private fun initDatePickers() {
+        val dateSetListenerIncubating =
+            DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                incubatingFormattedDate = makeDateString(day, month + 1, year)
+                btnIncubating.text = incubatingFormattedDate
+            }
+        val dateSetListenerHatched =
+            DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                hatchedFormattedDate = makeDateString(day, month + 1, year)
+                btnHatched.text = hatchedFormattedDate
+            }
+
+        val cal = Calendar.getInstance()
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+
+        val style = AlertDialog.THEME_HOLO_LIGHT
+
+        incubatingDatePickerDialog =
+            DatePickerDialog(requireContext(), style, dateSetListenerIncubating, year, month, day)
+        hatchedDatePickerDialog =
+            DatePickerDialog(requireContext(), style, dateSetListenerHatched, year, month, day)
+
+    }
+
+    fun showDatePickerDialog(
+        context: Context, button: Button, datePickerDialog: DatePickerDialog
+    ) {
+        button.setOnClickListener {
+            datePickerDialog.show()
+        }
+    }
+
+    private fun makeDateString(day: Int, month: Int, year: Int): String {
+        return getMonthFormat(month) + " " + day + " " + year
+    }
+
+    private fun getMonthFormat(month: Int): String {
+        return when (month) {
+            1 -> "JAN"
+            2 -> "FEB"
+            3 -> "MAR"
+            4 -> "APR"
+            5 -> "MAY"
+            6 -> "JUN"
+            7 -> "JUL"
+            8 -> "AUG"
+            9 -> "SEP"
+            10 -> "OCT"
+            11 -> "NOV"
+            12 -> "DEC"
+            else -> "JAN" // Default should never happen
+        }
+    }
+
 
     companion object {
         const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // You can choose any integer value

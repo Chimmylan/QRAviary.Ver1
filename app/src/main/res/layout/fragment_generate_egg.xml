@@ -30,6 +30,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/itemimagebg"
             android:layout_gravity="center|top"
+            android:visibility="visible"
             android:padding="20dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,30 +97,32 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
                 </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
 
+        </LinearLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
             android:gravity="right">
-           <com.google.android.material.button.MaterialButton
-               android:layout_width="match_parent"
-               android:id="@+id/btndownload"
-               app:icon="@drawable/download"
-               app:iconSize="20dp"
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:id="@+id/btndownload"
+                app:icon="@drawable/download"
+                app:iconSize="20dp"
 
-               android:text="Download QR Image"
-               android:backgroundTint="@color/itemimagebg"
-               app:iconTint="@color/black_white"
-               android:textColor="@color/black_white"
-               android:layout_height="wrap_content"/>
+                android:text="Download QR Image"
+                android:backgroundTint="@color/itemimagebg"
+                app:iconTint="@color/black_white"
+                android:textColor="@color/black_white"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
-    </LinearLayout>
     <LinearLayout
         android:id="@+id/egglayout"
         android:layout_width="match_parent"
@@ -161,6 +164,87 @@
                     android:minHeight="48dp" />
 
 
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/incubationDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Incubation start date"
+
+                android:textSize="15sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_incubatingstartdate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="48dp"
+                    android:textSize="10sp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:text="TODAY"
+                    android:textColor="@color/black" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/x"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hatchedDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hatched start date"
+
+                android:textSize="15sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_hatchedstartdate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="48dp"
+                    android:textSize="10sp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"
+                    android:text="TODAY"
+                    android:textColor="@color/black" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/x"/>
             </LinearLayout>
         </LinearLayout>
 

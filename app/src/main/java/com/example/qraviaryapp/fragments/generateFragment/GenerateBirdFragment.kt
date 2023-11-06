@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -99,6 +100,7 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var slash3: TextView
     private lateinit var slash4: TextView
     private lateinit var slash5: TextView
+
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
     private lateinit var btnDeathDate: MaterialButton
@@ -210,6 +212,8 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var cagescan: CardView
     private lateinit var cagescan1: CardView
 
+    private lateinit var qrLayout: LinearLayout
+
     var birdData = BirdData()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -234,6 +238,9 @@ class GenerateBirdFragment : Fragment() {
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
         boughtDateBtn = view.findViewById(R.id.boughtDate)
+
+        qrLayout = view.findViewById(R.id.qrlayout)
+
         initDatePickers()
         showDatePickerDialog(requireContext(), datebirthButton, datePickerDialogBirth)
         /*showDatePickerDialog(requireContext(), datebandButton, datePickerDialogBanding)*/
@@ -243,7 +250,6 @@ class GenerateBirdFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnLostDate, datepickerDialogLostDate)
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
         showDatePickerDialog(requireContext(), boughtDateBtn, datePickerDialogBought)
-
 
 
 //        LayoutLegband = view.findViewById(R.id.layoutlegband)
@@ -325,12 +331,12 @@ class GenerateBirdFragment : Fragment() {
 
         tvBirdId = view.findViewById(R.id.BirdId)
         tvBirdLegband = view.findViewById(R.id.BirdLegBand)
-        tvBirdSex  = view.findViewById(R.id.BirdSex)
-        tvBirdMutation  = view.findViewById(R.id.BirdMutation)
-        tvBirdDateOfBirth  = view.findViewById(R.id.BirdDateOfBirth)
+        tvBirdSex = view.findViewById(R.id.BirdSex)
+        tvBirdMutation = view.findViewById(R.id.BirdMutation)
+        tvBirdDateOfBirth = view.findViewById(R.id.BirdDateOfBirth)
         tvBirdStatus = view.findViewById(R.id.BirdStatus)
-        tvBirdCage  = view.findViewById(R.id.BirdCage)
-        tvBirdFather  = view.findViewById(R.id.BirdFather)
+        tvBirdCage = view.findViewById(R.id.BirdCage)
+        tvBirdFather = view.findViewById(R.id.BirdFather)
         tvBirdMother = view.findViewById(R.id.BirdMother)
         tvBirdBuyPrice = view.findViewById(R.id.BirdBuyPrice)
         tvBirdBreederContact = view.findViewById(R.id.BirdBreederContact)
@@ -407,7 +413,8 @@ class GenerateBirdFragment : Fragment() {
             startActivityForResult(i, requestCode)
         }
 
-
+        rbUnknown.isChecked = true
+        radioButtonMe.isChecked = true
 
         AddMutation()
         RemoveLastMutation()
@@ -422,9 +429,13 @@ class GenerateBirdFragment : Fragment() {
 
 
         btnGenerate.setOnClickListener {
+            qrLayout.visibility = View.VISIBLE
             val selectedOption: Int = rgGender.checkedRadioButtonId
-            dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
 
+
+
+
+            dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
             val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
             val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
             val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
@@ -439,7 +450,8 @@ class GenerateBirdFragment : Fragment() {
             val dataLostDate = getTextFromVisibleDatePicker(btnLostDate, lostLayout)
             val dataLostDetails = getTextFromVisibleEditText(etLostDetails, lostLayout)
             val dataDonatedDate = getTextFromVisibleDatePicker(btnDonatedDate, donatedLayout)
-            val dataDonatedContact = getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
+            val dataDonatedContact =
+                getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
             val dataOtherComments = getTextFromVisibleEditText(etOtherComm, otherLayout)
 
             val selectedMutations = mutableListOf<String?>()
@@ -465,7 +477,7 @@ class GenerateBirdFragment : Fragment() {
                 "Maturing Days" to mutation1MaturingDays,
                 "Incubating Days" to mutation1IncubatingDays
             )
-            val mutation2 =  hashMapOf(
+            val mutation2 = hashMapOf(
                 "Mutation Name" to selectedMutations[1],
                 "Maturing Days" to mutation2MaturingDays,
                 "Incubating Days" to mutation2IncubatingDays
@@ -494,7 +506,7 @@ class GenerateBirdFragment : Fragment() {
             val dataProvenence: Int = radioGroup.checkedRadioButtonId
 
 
-            dataSelectedProvenence = view?.findViewById(dataProvenence)
+            dataSelectedProvenence = view.findViewById(dataProvenence)
                 ?: throw IllegalStateException("RadioButton not found")
 
 
@@ -587,12 +599,17 @@ class GenerateBirdFragment : Fragment() {
         }
 
         btndownload.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 // Permission is already granted. You can proceed with saving the image.
                 saveImage()
             } else {
                 // Request the WRITE_EXTERNAL_STORAGE permission.
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     GenerateEggFragment.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
                 )
             }
@@ -603,7 +620,12 @@ class GenerateBirdFragment : Fragment() {
 
         return view
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             GenerateEggFragment.WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -611,11 +633,16 @@ class GenerateBirdFragment : Fragment() {
                     saveImage()
                 } else {
                     // Permission denied, show a message or handle it accordingly.
-                    Toast.makeText(requireContext(), "Permission denied. Image cannot be saved.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Permission denied. Image cannot be saved.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
+
     fun captureLayoutAsBitmap(view: View): Bitmap {
         view.isDrawingCacheEnabled = true
         view.buildDrawingCache()
@@ -671,7 +698,7 @@ class GenerateBirdFragment : Fragment() {
     private var birdBirdsMotherKey: String? = null
 
 
-    private lateinit var cageNameValue: String
+    private var cageNameValue: String? = null
     private var cageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1074,7 +1101,6 @@ class GenerateBirdFragment : Fragment() {
                 boughtFormattedDate = makeDateString(day, month + 1, year)
                 boughtDateBtn.text = boughtFormattedDate
             }
-
 
 
         val cal = Calendar.getInstance()

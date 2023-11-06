@@ -56,23 +56,25 @@ class AddEggActivity : AppCompatActivity() {
 
     private lateinit var hatchedDatePickerDialog: DatePickerDialog
     private lateinit var incubatingDatePickerDialog: DatePickerDialog
-
+    private lateinit var btnHatched: MaterialButton
+    private lateinit var btnIncubating: MaterialButton
     private lateinit var hatchedLinearLayout: LinearLayout
     private lateinit var incubatingLinearLayout: LinearLayout
 
     private lateinit var etIncubatingDate: EditText
     private lateinit var etMaturingDate: EditText
 
-    private lateinit var btnHatched: MaterialButton
-    private lateinit var btnIncubating: MaterialButton
+
 
     private var hatchedFormattedDate: String? = null
     private var incubatingFormattedDate: String? = null
 
+    private var status: String? = null
     private lateinit var spinnerStatus: Spinner
+
     private lateinit var save: Button
     private lateinit var edit: Button
-    private var status: String? = null
+
 
     private var incubatingStartDate: String? = null
     private var maturingStartDate: String? = null
