@@ -24,12 +24,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.activities.AddActivities.AddBirdFlightActivity
 import com.example.qraviaryapp.adapter.BirdListAdapter
+import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -44,6 +48,8 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class BirdsFragment : Fragment() {
 
@@ -79,12 +85,16 @@ class BirdsFragment : Fragment() {
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
         swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
-        dataList = ArrayList()
-        adapter = BirdListAdapter(requireContext(), dataList)
-        recyclerView.adapter = adapter
-
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = BirdListAdapter(requireContext(), dataList)
+//        recyclerView.adapter = adapter
+            dataList = ArrayList()
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            adapter = BirdListAdapter(requireContext(), dataList)
+            recyclerView.adapter = adapter
+            recyclerView.addItemDecoration(StickyHeaderItemDecorationbirdlist(adapter))
         mAuth = FirebaseAuth.getInstance()
 
 
@@ -291,6 +301,7 @@ class BirdsFragment : Fragment() {
                 data.gender = gender
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
+                data.year = extractYearFromDateString(dateOfBirth)
                 data.status = status
                 data.mutation1 = mutation1Value
                 data.mutation2 = mutation2Value
@@ -344,6 +355,10 @@ class BirdsFragment : Fragment() {
 
 
         dataList
+    }
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
     }
     fun getUrlImage(urlString: String): Bitmap? {
         var inputStream: InputStream? = null
