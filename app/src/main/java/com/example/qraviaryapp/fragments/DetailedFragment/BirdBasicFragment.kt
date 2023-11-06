@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.fragments.DetailedFragment
 
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -175,6 +176,19 @@ class BirdBasicFragment : Fragment() {
 
 
         bird_status.text = birdStatus
+        val status = birdStatus
+        bird_status.text = status
+        when (status) {
+            "Available" -> bird_status.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> bird_status.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> bird_status.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> bird_status.setTextColor(Color.BLACK)
+            "Exchanged" -> bird_status.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> bird_status.setTextColor(Color.MAGENTA)
+            "Donated" -> bird_status.setTextColor(Color.YELLOW)
+            "Paired" -> bird_status.setTextColor(Color.parseColor("#FF69B4"))
+            else -> bird_status.setTextColor(Color.GRAY)
+        }
         bird_id.text = birdId
         val genderIcon = when (birdGender) {
             "Male" -> {

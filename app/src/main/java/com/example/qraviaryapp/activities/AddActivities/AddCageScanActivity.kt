@@ -41,7 +41,7 @@ class AddCageScanActivity : AppCompatActivity() {
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Scan Generate Bird QR</font>",
+            "<font color='$abcolortitle'>Scan Cage</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled

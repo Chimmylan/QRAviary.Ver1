@@ -193,7 +193,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:rowCount="3"
                         android:padding="5dp">
                         <com.google.android.material.button.MaterialButton
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -206,16 +205,29 @@
                             android:text="None"
                             android:textColor="@color/black_white"
                             />
+                        <TextView
+                            android:id="@+id/slash1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="/"
+                            android:textSize="25sp" />
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn2"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="None"
+                            android:textColor="@color/black_white"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="textEnd"
-                            app:iconTint="@color/black"
-                            android:text="None"
-                            android:textColor="@color/black_white"/>
+                            app:iconTint="@color/black" />
+                        <TextView
+                            android:id="@+id/slash2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="/"
+                            android:textSize="25sp" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn3"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -226,6 +238,12 @@
                             app:iconTint="@color/black"
                             android:text="None"
                             android:textColor="@color/black_white"/>
+                        <TextView
+                            android:id="@+id/slash3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="/"
+                            android:textSize="25sp" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn4"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -236,6 +254,12 @@
                             app:iconTint="@color/black"
                             android:text="None"
                             android:textColor="@color/black_white"/>
+                        <TextView
+                            android:id="@+id/slash4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="/"
+                            android:textSize="25sp" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn5"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -246,6 +270,12 @@
                             app:iconTint="@color/black"
                             android:text="None"
                             android:textColor="@color/black_white"/>
+                        <TextView
+                            android:id="@+id/slash5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="/"
+                            android:textSize="25sp" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/mutationBtn6"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -405,18 +435,40 @@
                             android:text="Cage (*)"
                             android:textSize="13sp"
                             android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
 
+                            android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:id="@+id/etForSaleCage"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="end"
+                            android:layout_weight="1"
                             app:iconTint="@color/black"
                             android:hint="Choose Cage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="48dp" />
-
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:backgroundTint="@color/itemimagebg"
+                            android:layout_weight="5"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?selectableItemBackground"
+                            android:id="@+id/cagescan1"
+                            android:layout_margin="8dp"
+                            app:iconSize="30dp">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/scanner"/>
+                        </androidx.cardview.widget.CardView>
+                        </LinearLayout>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

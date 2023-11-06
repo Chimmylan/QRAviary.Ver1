@@ -19,10 +19,12 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
+import com.google.android.material.button.MaterialButton
 import org.json.JSONObject
 
 class AddBirdScanActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
+    private lateinit var generate: MaterialButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -46,6 +48,14 @@ class AddBirdScanActivity : AppCompatActivity() {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
+
+        generate = findViewById(R.id.GenerateQR)
+
+        generate.setOnClickListener {
+            startActivity(Intent(this, GenerateQrActivity::class.java))
+        }
+//
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
 
         val activity = this

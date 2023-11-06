@@ -99,7 +99,11 @@ class BasicFlightFragment : Fragment() {
     private lateinit var btnMutation4: MaterialButton
     private lateinit var btnMutation5: MaterialButton
     private lateinit var btnMutation6: MaterialButton
-
+    private lateinit var slash1: TextView
+    private lateinit var slash2: TextView
+    private lateinit var slash3: TextView
+    private lateinit var slash4: TextView
+    private lateinit var slash5: TextView
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
     private lateinit var btnDeathDate: MaterialButton
@@ -167,6 +171,7 @@ class BasicFlightFragment : Fragment() {
     private var mutation6MaturingDays: String? = null
 
     private lateinit var cagescan: CardView
+    private lateinit var cagescan1: CardView
     private var status: String? = null
     private lateinit var cageReference: DatabaseReference
     //endregion
@@ -261,10 +266,20 @@ class BasicFlightFragment : Fragment() {
         btnMutation5 = view.findViewById(R.id.mutationBtn5)
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
-
+        slash1 = view.findViewById(R.id.slash1)
+        slash2 = view.findViewById(R.id.slash2)
+        slash3 = view.findViewById(R.id.slash3)
+        slash4 = view.findViewById(R.id.slash4)
+        slash5 = view.findViewById(R.id.slash5)
 
         cagescan = view.findViewById(R.id.cagescan)
-
+        cagescan.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
+        cagescan1 = view.findViewById(R.id.cagescan1)
+        cagescan1.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
@@ -350,29 +365,39 @@ class BasicFlightFragment : Fragment() {
         btnMutation4.visibility = View.GONE
         btnMutation5.visibility = View.GONE
         btnMutation6.visibility = View.GONE
-
+        slash1.visibility = View.GONE
+        slash2.visibility = View.GONE
+        slash3.visibility = View.GONE
+        slash4.visibility = View.GONE
+        slash5.visibility = View.GONE
         addBtn.setOnClickListener {
 
             when (spinnerCount) {
 
                 0 -> {
+
                     btnMutation2.visibility = View.VISIBLE
+                    slash1.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 1 -> {
                     btnMutation3.visibility = View.VISIBLE
+                    slash2.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 2 -> {
                     btnMutation4.visibility = View.VISIBLE
+                    slash3.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 3 -> {
                     btnMutation5.visibility = View.VISIBLE
+                    slash4.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 4 -> {
                     btnMutation6.visibility = View.VISIBLE
+                    slash5.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 else -> {
@@ -395,12 +420,14 @@ class BasicFlightFragment : Fragment() {
                 1 -> {
                     spinnerCount--
                     btnMutation2.visibility = View.GONE
+                    slash1.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
                 2 -> {
                     spinnerCount--
                     btnMutation3.visibility = View.GONE
+                    slash2.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -408,6 +435,7 @@ class BasicFlightFragment : Fragment() {
 
                     spinnerCount--
                     btnMutation4.visibility = View.GONE
+                    slash3.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -415,6 +443,7 @@ class BasicFlightFragment : Fragment() {
 
                     spinnerCount--
                     btnMutation5.visibility = View.GONE
+                    slash4.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }

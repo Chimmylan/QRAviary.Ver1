@@ -9,6 +9,7 @@ import android.app.PendingIntent
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -185,7 +186,19 @@ class NurseryListAdapter(
 
 
         holder.tvStatus.text = bird.status
-
+        val status = bird.status
+        holder.tvStatus.text = status
+        when (status) {
+            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
+            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
+            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
+            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
+            else -> holder.tvStatus.setTextColor(Color.GRAY)
+        }
 
 
 

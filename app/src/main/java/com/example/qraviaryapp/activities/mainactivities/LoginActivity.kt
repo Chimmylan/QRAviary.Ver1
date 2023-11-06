@@ -526,6 +526,7 @@ class LoginActivity : AppCompatActivity() {
                             )
                         } else {
                             startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                            finish()
                         }
 
                     } else {
@@ -593,10 +594,14 @@ class LoginActivity : AppCompatActivity() {
             .setTitle(title)
             .setPositiveButton(button) { dialog, which ->
                 addAccount(email, password)
-                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                val intent = Intent(this@LoginActivity, NavHomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
             .setNegativeButton(negbutton) { dialog, which ->
-                startActivity(Intent(this@LoginActivity, NavHomeActivity::class.java))
+                val intent = Intent(this@LoginActivity, NavHomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
             .setCancelable(false)
             .create()

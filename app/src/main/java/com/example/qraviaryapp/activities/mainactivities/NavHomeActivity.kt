@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -44,6 +45,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
     private lateinit var menu: Menu
+    private var currentFragment: Fragment? = null
+    private var lastBackPressTime: Long = 0
 
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -261,7 +264,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.title = title
 
-
+        currentFragment = fragment
         return true
     }
     private fun hideMenuItems() {
@@ -334,6 +337,42 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_layout,fragment)
             .commit()
+    }
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        val doublePressInterval = 2000 // 2 seconds
+
+        if (currentTime - lastBackPressTime < doublePressInterval) {
+            super.onBackPressed() // Close the app
+        } else {
+            lastBackPressTime = currentTime
+            val message = when (currentFragment) {
+                is BirdsFragment -> "Bird Page"
+                is PairsFragment -> "Pairs Page"
+                is CagesFragment -> "Cages Page"
+                is StatisticsFragment -> "Statistics Page"
+                is MutationsFragment -> "Mutations Page"
+                is ScanFragment -> "QR Reader Page"
+                is AdultingFragment -> "Adulting Page"
+                is ExpensesFragment -> "Expenses Page"
+                is NavSalesFragment -> "Sales Page"
+                is NavPurchasesFragment -> "Purchases Page"
+                is BalanceFragment -> "Balance Page"
+                is GalleryFragment -> "Gallery Page"
+                is IncubatingFragment -> "Incubating Page"
+                is SettingsFragment -> "Settings Page"
+                is CategoriesFragment -> "Categories Page"
+                else -> "Home Page"
+            }
+
+            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+        }
+        // If you want to navigate back to the default fragment when the back button is pressed on the default fragment,
+        // you can use the following code:
+        if (currentFragment is MonitoringFragment) {
+            // Navigate to the default fragment (e.g., MonitoringFragment)
+            replaceFragment(MonitoringFragment())
+        }
     }
 
 }
