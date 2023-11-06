@@ -308,7 +308,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="Date of birth"
+                        android:text="Date of birth (*)"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -326,14 +326,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Pick Date"
-                        app:iconTint="@color/itemimagebg"
-                        android:textSize="12sp"
+                        android:onClick="openDatebirthPicker"
+                        android:hint="Pick Date"
                         android:textAlignment="textStart"
+                        android:textColor="@color/black_white"
+                        android:textSize="12sp"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
-                        android:onClick="openDatebirthPicker"
-                        android:textColor="@color/black_white"/>
+                        app:iconTint="@color/itemimagebg" />
                 </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -395,7 +395,7 @@
                             app:iconGravity="end"
                             app:iconTint="@color/black"
                             android:layout_weight="1"
-
+                            android:textAlignment="textStart"
                             android:hint="Choose Cage"
                             android:textColor="@color/black_white"
                             android:layout_width="match_parent"
@@ -472,7 +472,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Requested Price (*)"
+                            android:text="Requested Price"
                             android:textSize="13sp"
                             android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputEditText
@@ -499,7 +499,7 @@
                             android:layout_width="match_parent"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text= "Sold Date"
+                            android:text= "Sold Date (*)"
                             android:textSize="13sp"
                             android:textStyle="bold" />
                             <TextView

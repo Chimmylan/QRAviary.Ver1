@@ -126,7 +126,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Bought Date"
+                            android:text="Bought Date (*)"
                             android:textSize="13sp"
                             android:textStyle="bold" />
                         <com.google.android.material.button.MaterialButton
@@ -144,7 +144,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Buy Price "
+                        android:text="Buy Price (*)"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                     <com.google.android.material.textfield.TextInputEditText

@@ -21,6 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -46,7 +47,9 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddPairActivity : AppCompatActivity() {
 
@@ -208,24 +211,45 @@ class AddPairActivity : AppCompatActivity() {
             val i = Intent(this, BreedingCagesListActivity::class.java)
             startActivityForResult(i, requestCode)
         }
-
+//        if (btnBeginningDate.text.isNullOrEmpty()) {
+//            // If it's empty or null, set the current date in MMM d yyyy format
+//            val cal = Calendar.getInstance()
+//            val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+//            val currentFormattedDate = dateFormat.format(cal.time)
+//            btnBeginningDate.text = currentFormattedDate
+//        }
     }
     var validMale = false
     var validFemale = false
-
+    var validCage = false
+    var validDate = false
     fun Checking() {
 
 
         if (btnMale.text.isNullOrEmpty()) {
             btnMale.error = "Please select a bird..."
 
+
         } else {
             validMale = true
         }
         if (btnFemale.text.isNullOrEmpty()) {
             btnFemale.error = "Please select a bird..."
+
         } else {
             validFemale = true
+        }
+        if (etCage.text.isNullOrEmpty()) {
+            etCage.error = "Please select a cage..."
+
+        } else {
+            validCage = true
+        }
+        if (btnBeginningDate.text.isNullOrEmpty()) {
+            btnBeginningDate.error = "Please select a date..."
+
+        } else {
+            validDate = true
         }
 
 

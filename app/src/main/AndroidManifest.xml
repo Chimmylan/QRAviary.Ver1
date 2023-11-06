@@ -36,42 +36,53 @@
         android:roundIcon="@mipmap/ic_qraviaryicon"
         android:supportsRtl="true"
         android:theme="@style/Theme.QRAviaryApp"
-
         tools:targetApi="31">
+        <activity
+            android:name=".activities.detailedactivities.ExpensesFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.PurchaseFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.SaleFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.PairFilteringActivity"
+            android:exported="false" />
+
         <activity
             android:name=".activities.AddActivities.AddCageScanActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddBirdScanActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddEggScanActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.MoveEggScannerActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.MoveNurseryScannerActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.QRCodeActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.GenerateQrActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainactivities.ManageUserActivity"
             android:exported="false"
-            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.QRAviaryApp.NoActionBarAndStatusBar" />
         <activity
             android:name=".activities.mainactivities.SaveLoginActivity"
             android:exported="false"
@@ -90,16 +101,16 @@
         <activity
             android:name=".monitoring.IncubatorActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".monitoring.SetTempActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notif"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <!--
  Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more.
@@ -107,72 +118,72 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/purple_700"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.EditActivities.EditBirdActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.PreviousClutchesActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.PreviousPairActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.MoveEggActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CagesActivity.MoveNurseryActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CagesActivity.BreedingListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CagesActivity.NurseryListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CagesActivity.FlightListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.FlightCagesList2Activity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.NurseryCagesList2Activity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.BreedingCagesList2Activity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditActivities.EditEggActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.PairFemaleBirdListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.PairMaleBirdListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.SellActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.BirdFilterActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainactivities.NavHomeActivity"
             android:exported="false"
@@ -181,35 +192,35 @@
         <activity
             android:name=".activities.AddActivities.ChooseCategoryActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddExpensesActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.HomeMutationActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.ClutchesDetailedActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.NurseryCagesListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.FlightCagesListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.MaleBirdListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.FemaleBirdListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.BirdsDetailedActivity"
             android:exported="false"
@@ -218,108 +229,107 @@
         <activity
             android:name=".activities.detailedactivities.IncubatingDetailedActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.StatisticsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.BalanceActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.ExpensesActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.MaturingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.IncubatingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.MutationsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.BreedingCagesListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.PairListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.dashboards.BirdListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.detailedactivities.PairsDetailedActivity"
             android:exported="false"
             android:label="@string/title_activity_addbird"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddMaturingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddIncubatingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddPurchaseActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddSaleActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddEggActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddCageActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddPairActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_addbird"
-            android:parentActivityName=".activities.dashboards.PairListActivity" />
+            android:parentActivityName=".activities.dashboards.PairListActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddBirdActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_addbird" />
+            android:label="@string/title_activity_addbird"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddActivities.AddBirdFlightActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_addbird" />
+            android:label="@string/title_activity_addbird"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainactivities.NameActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainactivities.GetStartActivity"
             android:exported="false"
@@ -345,8 +355,8 @@
         <activity
             android:name=".activities.mainactivities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.mainactivities.HomeActivity" />
+            android:parentActivityName=".activities.mainactivities.HomeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainactivities.SplashActivity"
             android:exported="true"

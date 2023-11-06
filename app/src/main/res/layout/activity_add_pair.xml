@@ -90,7 +90,7 @@
                     android:layout_weight="1"
 
                     android:onClick="openDatebandPicker"
-                    android:text="Pick Date"
+                    android:hint="Pick Date"
                     android:textAlignment="textStart"
                     android:textColor="@color/black_white"
                     android:textSize="12sp"
@@ -131,7 +131,7 @@
                         android:id="@+id/etcage"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
-                        android:text="Pick Cage"
+                        android:hint="Pick Cage"
                         android:textAlignment="textStart"
                         android:textColor="@color/black_white"
                         android:textSize="12sp"

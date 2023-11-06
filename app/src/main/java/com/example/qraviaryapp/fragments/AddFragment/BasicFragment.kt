@@ -664,20 +664,22 @@ class BasicFragment : Fragment() {
         var validMutation = false
         /*var validDateOfBanding = false*/
         var validDateOfBirth = false
-
+        var validCage = false
         //Validation
         if (TextUtils.isEmpty(dataIdentifier)) {
-            etIdentifier.error = "Identifier cannot be Empty..."
+            etIdentifier.error = "Identifier cannot be empty"
         } else {
             validIdentifier = true
         }
 
         if (birdData.mutation1 == "None") {
-            btnMutation1.error = "Mutation must not be empty..."
+            btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
         }
-
+        if(TextUtils.isEmpty(etAvailCage.text)){
+            etAvailCage.error = "Cage must not be empty..."
+        }
 //        if (TextUtils.isEmpty(dataDateOfBanding)) {
 //            datebandButton.error = "Date of banding must not be empty..."
 //        } else {
@@ -686,7 +688,6 @@ class BasicFragment : Fragment() {
         var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
-            Toast.makeText(requireContext(), "Date of birth must not be empty...", Toast.LENGTH_SHORT).show()
         } else {
             val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
             val birthDate = dateFormat.parse(dataDateOfBirth)

@@ -20,7 +20,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+
 import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.ExpensesFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.PairFilteringActivity
+
+import com.example.qraviaryapp.activities.detailedactivities.PurchaseFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.SaleFilterActivity
+
 import com.example.qraviaryapp.adapter.MyFirebaseMessagingService
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
 import com.example.qraviaryapp.fragments.NavFragments.*
@@ -286,8 +293,35 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.ic_filter -> {
-                val intent = Intent(this, BirdFilterActivity::class.java)
-                startActivity(intent)
+                // Determine the current fragment
+                when (currentFragment) {
+                    is BirdsFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, BirdFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is PairsFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, PairFilteringActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is NavSalesFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, SaleFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is NavPurchasesFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, PurchaseFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+
+                    // Add more cases for other fragments as needed
+                    else -> {
+                        val intent = Intent(this, ExpensesFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
