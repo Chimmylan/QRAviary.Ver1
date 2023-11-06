@@ -210,8 +210,23 @@ class AddPairActivity : AppCompatActivity() {
         }
 
     }
+    var validMale = false
+    var validFemale = false
 
     fun Checking() {
+
+
+        if (btnMale.text.isNullOrEmpty()) {
+            btnMale.error = "Please select a bird..."
+
+        } else {
+            validMale = true
+        }
+        if (btnFemale.text.isNullOrEmpty()) {
+            btnFemale.error = "Please select a bird..."
+        } else {
+            validFemale = true
+        }
 
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -329,6 +344,7 @@ class AddPairActivity : AppCompatActivity() {
         var counter = 0
         val pairCountRef = db.child("Users").child("ID: $userId").child("Pairs")
 
+
         pairCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -370,19 +386,7 @@ class AddPairActivity : AppCompatActivity() {
 
                 val newPairPref = userBird.push() //pairkey
 
-                var validMale = false
-                var validFemale = false
 
-                if (btnMale.text.isEmpty()) {
-                    btnMale.error = "Please select a bird..."
-                } else {
-                    validMale = true
-                }
-                if (btnFemale.text.isEmpty()) {
-                    btnFemale.error = "Please select a bird..."
-                } else {
-                    validFemale = true
-                }
 
 
                 userBird.addListenerForSingleValueEvent(object : ValueEventListener {
