@@ -78,9 +78,10 @@ class PairsFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
 
+
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 //        val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
 //        recyclerView1.layoutManager = gridLayoutManager1
-        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 //        dataList1 = ArrayList()
 //        adapter1 = PreviousPairAdapter(requireContext(), dataList1)
 //        recyclerView1.adapter = adapter1
