@@ -121,7 +121,7 @@
                 </LinearLayout>
                     <LinearLayout
                         android:id="@+id/pairqrdetail"
-                        android:visibility="gone"
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
@@ -131,6 +131,16 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="Pair Id: "
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/pairdate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Date"
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"

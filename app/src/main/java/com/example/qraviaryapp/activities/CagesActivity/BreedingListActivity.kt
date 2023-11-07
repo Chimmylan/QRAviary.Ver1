@@ -328,6 +328,8 @@ class BreedingListActivity : AppCompatActivity() {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
                 i.putExtra("CageQR", CageQR)
+                i.putExtra("CageBreeding", CageName)
+
                 startActivity(i)
                 true
             }

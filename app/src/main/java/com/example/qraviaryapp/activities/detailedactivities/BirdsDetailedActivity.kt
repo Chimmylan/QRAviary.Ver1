@@ -282,8 +282,9 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 i.putExtra("Mutation4", BirdMutation4)
                 i.putExtra("Mutation5", BirdMutation5)
                 i.putExtra("Mutation6", BirdMutation6)
-                i.putExtra("AvailCage", BirdAvailCage)
-                i.putExtra("ForSaleCage", BirdForsaleCage)
+                i.putExtra("BirdAvailCage", BirdAvailCage)
+                i.putExtra("BirdForSaleCage", BirdForsaleCage)
+                i.putExtra("BirdStatus",BirdStatus)
                 i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true

@@ -110,7 +110,7 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
             bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)//
             bundle.putString("CageKey", dataList[adapterPosition].pairCageKey)
             bundle.putString("CagePairKey", dataList[adapterPosition].cagePairKey)
-
+            bundle.putString("PairCage", dataList[adapterPosition].pairCage)
             val i = Intent(itemView.context, PairsDetailedActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

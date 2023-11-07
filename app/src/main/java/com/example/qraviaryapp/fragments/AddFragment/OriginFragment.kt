@@ -237,7 +237,6 @@ class OriginFragment : Fragment() {
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
-
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
         val birdLegband = newBundle.getString("BirdLegband")

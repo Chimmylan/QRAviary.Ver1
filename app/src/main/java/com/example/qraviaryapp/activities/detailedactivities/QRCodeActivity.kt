@@ -30,10 +30,18 @@ class QRCodeActivity : AppCompatActivity() {
     private lateinit var qrimageLayout: LinearLayout
     private val REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 1 // You can use any integer value you prefer
     private lateinit var birdqrdetail: LinearLayout
-    private lateinit var birdid: TextView
-    private lateinit var birdlegband: TextView
-    private lateinit var birdmutation: TextView
-    private lateinit var birdcage: TextView
+    private lateinit var cageqrdetail: LinearLayout
+    private lateinit var pairqrdetail: LinearLayout
+    private lateinit var clutchqrdetail: LinearLayout
+    private lateinit var bird_id: TextView
+    private lateinit var bird_legband: TextView
+    private lateinit var bird_mutation: TextView
+    private lateinit var bird_cage: TextView
+    private lateinit var cage: TextView
+    private lateinit var pair_id: TextView
+    private lateinit var pair_cage: TextView
+    private lateinit var pair_mutation: TextView
+    private lateinit var pair_date: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -51,6 +59,15 @@ class QRCodeActivity : AppCompatActivity() {
             )
         )
         qrimageLayout = findViewById(R.id.qrimagelayout)
+        bird_id = findViewById(R.id.birdid)
+        bird_legband = findViewById(R.id.birdlegband)
+        bird_mutation = findViewById(R.id.birdmutation)
+        bird_cage = findViewById(R.id.birdcage)
+        cage = findViewById(R.id.cage)
+        pair_id= findViewById(R.id.pairid)
+        pair_cage = findViewById(R.id.paircage)
+        pair_date = findViewById(R.id.pairdate)
+        pair_mutation = findViewById(R.id.pairmutation)
         val abcolortitle = resources.getColor(R.color.appbar)
 
         supportActionBar?.title = HtmlCompat.fromHtml(
@@ -60,7 +77,12 @@ class QRCodeActivity : AppCompatActivity() {
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
         birdqrdetail = findViewById(R.id.birdqrdetail)
+        cageqrdetail = findViewById(R.id.cageqrdetail)
+        pairqrdetail = findViewById(R.id.pairqrdetail)
+        clutchqrdetail = findViewById(R.id.clutchqrdetail)
+
         qrcode = findViewById(R.id.qrcode)
+
         val qr = intent?.getStringExtra("CageQR")
         val birdid = intent?.getStringExtra("BirdId")
         val birdlegband = intent?.getStringExtra("Legband")
@@ -70,12 +92,99 @@ class QRCodeActivity : AppCompatActivity() {
         val mutation4 = intent?.getStringExtra("Mutation4")
         val mutation5 = intent?.getStringExtra("Mutation5")
         val mutation6 = intent?.getStringExtra("Mutation6")
-        val availcage = intent?.getStringExtra("AvailCage")
-        val forsalecage = intent?.getStringExtra("ForSaleCage")
+        val birdavailcage = intent?.getStringExtra("BirdAvailCage")
+        val birdforsalecage = intent?.getStringExtra("BirdForSaleCage")
+        val birdstatus = intent?.getStringExtra("BirdStatus")
+        val nurserycage = intent?.getStringExtra("CageNursery")
+        val breedingcage = intent?.getStringExtra("CageBreeding")
+        val flightcage = intent?.getStringExtra("CageFlight")
+        val pairid = intent?.getStringExtra("PairId")
+        val paircage = intent?.getStringExtra("Cage")
+        val pairmutation = intent?.getStringExtra("Mutation")
+        val pairdate  = intent?.getStringExtra("Date")
+        val begdate = intent?.getStringExtra("BegDate")
+
+        if (!pairid.isNullOrEmpty()){
+            pairqrdetail.visibility = View.VISIBLE
+
+            if (pairid == "0"){
+                pair_id.visibility = View.GONE
+                pair_date.text ="Date: " + pairdate
+                pair_mutation.text = "Mutations: " +pairmutation
+                pair_cage.visibility = View.GONE
+            }
+            else{
+                pair_id.text = "Pair Id: " + pairid
+                pair_date.text ="Beginning: " + begdate
+                pair_mutation.text = "Mutations: " +pairmutation
+                pair_cage.text = "Cage: B"+ paircage
+
+            }
+
+        }
+
+        if (!nurserycage.isNullOrEmpty()){
+            cageqrdetail.visibility = View.VISIBLE
+            cage.text = "N" + nurserycage
+        }
+        if (!breedingcage.isNullOrEmpty()){
+            cageqrdetail.visibility = View.VISIBLE
+            cage.text = "B" + breedingcage
+        }
+        if (!flightcage.isNullOrEmpty()){
+            cageqrdetail.visibility = View.VISIBLE
+            cage.text = "F" + flightcage
+        }
+
 
         if (!birdid.isNullOrEmpty()){
-            birdqrdetail.visibility = View.GONE
+            birdqrdetail.visibility = View.VISIBLE
+            bird_id.text = "Id: "+ birdid
 
+            if (!birdlegband.isNullOrEmpty()){
+                bird_legband.text = "Legband: "+ birdlegband
+            }
+            else{
+                bird_legband.visibility = View.GONE
+            }
+            val nonNullMutations = listOf(
+                mutation1,
+                mutation2,
+                mutation3,
+                mutation4,
+                mutation5,
+                mutation6
+            ).filter { !it.isNullOrBlank() }
+            val NonNullMutations = mutableListOf<String>()
+            for (mutation in nonNullMutations) {
+                if (mutation != "null") {
+                    NonNullMutations.add(mutation.toString())
+                }
+            }
+            val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
+                NonNullMutations.joinToString(" / ")
+
+            } else {
+                "Mutation: None"
+            }
+            bird_mutation.text = "Mutation: "+ CombinedMutations
+
+            if (birdstatus == "Available" || birdstatus == "For Sale") {
+                val cageInfo = when {
+                    birdstatus == "Available" -> birdavailcage
+                    birdstatus == "For Sale" -> birdforsalecage
+                    else -> ""
+                }
+
+                if (cageInfo.isNullOrEmpty()) {
+                    bird_cage.visibility = View.GONE
+                } else {
+                    bird_cage.visibility = View.VISIBLE
+                    bird_cage.text = "Cage: $cageInfo"
+                }
+            } else {
+                bird_cage.visibility = View.GONE
+            }
 
 
         }

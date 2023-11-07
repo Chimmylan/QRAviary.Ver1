@@ -326,6 +326,7 @@ class NurseryListActivity : AppCompatActivity() {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
                 i.putExtra("CageQR", CageQR)
+                i.putExtra("CageNursery", CageName)
                 startActivity(i)
                 true
             }
