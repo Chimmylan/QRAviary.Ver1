@@ -200,7 +200,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         alertDialog.setOnShowListener {
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             addButton.setOnClickListener {
-                progressbar.visibility = View.VISIBLE
+//                progressbar.visibility = View.VISIBLE
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
@@ -242,7 +242,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         } catch (e: Exception) {
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
-
+                     
                     }
                     progressbar.visibility = View.VISIBLE
                     Handler(Looper.getMainLooper()).postDelayed({
