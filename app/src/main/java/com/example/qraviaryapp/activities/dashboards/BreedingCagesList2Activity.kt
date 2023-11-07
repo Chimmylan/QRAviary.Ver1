@@ -185,6 +185,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
             btnclose.visibility = View.GONE
             editText.visibility = View.GONE
             btncustom.visibility = View.VISIBLE
+            editText.text = null
         }
 
         builder.setTitle("Add Cage")
@@ -199,6 +200,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         alertDialog.setOnShowListener {
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             addButton.setOnClickListener {
+                progressbar.visibility = View.VISIBLE
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
@@ -233,7 +235,9 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         } catch (e: Exception) {
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
+
                     }
+
                 }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -288,7 +292,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                             Handler(Looper.getMainLooper()).postDelayed({
                                 alertDialog.dismiss()
                                 progressbar.visibility = View.GONE
-                            }, 2000)
+                            }, 1500)
 
                         }
 
@@ -297,12 +301,15 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         }
                     })
                 }
+
+
             }
             val closeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             closeButton.setOnClickListener {
                 alertDialog.dismiss()
             }
         }
+
         alertDialog.show()
 
     }
