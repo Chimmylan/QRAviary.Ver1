@@ -209,7 +209,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         "Cage" to newCageNumber.toInt()
                     )
                     pushKey.updateChildren(data)
-                    alertDialog.dismiss()
+
                     val bundleData = JSONObject()
 
                     bundleData.put("CageType", "Breeding")
@@ -237,7 +237,11 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                         }
 
                     }
-
+                    progressbar.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        alertDialog.dismiss()
+                        progressbar.visibility = View.GONE
+                    }, 1500)
                 }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
