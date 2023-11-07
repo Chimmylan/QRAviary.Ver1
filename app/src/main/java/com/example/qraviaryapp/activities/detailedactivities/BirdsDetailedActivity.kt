@@ -274,6 +274,16 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("BirdId", BirdId)
+                i.putExtra("Legband", BirdLegband)
+                i.putExtra("Mutation1", BirdMutation1)
+                i.putExtra("Mutation2", BirdMutation2)
+                i.putExtra("Mutation3", BirdMutation3)
+                i.putExtra("Mutation4", BirdMutation4)
+                i.putExtra("Mutation5", BirdMutation5)
+                i.putExtra("Mutation6", BirdMutation6)
+                i.putExtra("AvailCage", BirdAvailCage)
+                i.putExtra("ForSaleCage", BirdForsaleCage)
                 i.putExtra("CageQR", CageQR)
                 startActivity(i)
                 true
