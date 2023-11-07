@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -161,6 +163,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
+        val progressbar = dialogLayout.findViewById<ProgressBar>(R.id.progressBar)
         editText = dialogLayout.findViewById<EditText>(R.id.etAddCage)
         val btncustom = dialogLayout.findViewById<Button>(R.id.custom)
         val btnclose = dialogLayout.findViewById<Button>(R.id.close)
@@ -198,6 +201,13 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
+                    val cageNumberExists = dataList.any { it.cage == newCageNumber }
+
+                    if (cageNumberExists) {
+                        // Set an error on the EditText and return
+                        editText.error = "Cage number already exists"
+                        return@setOnClickListener
+                    }
                     // User entered a custom cage name, use it
                     val data: Map<String, Any?> = hashMapOf(
                         "Cage" to newCageNumber.toInt()
@@ -215,7 +225,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
                     qrAdd(bundleData, pushKey)
 
 
-                    alertDialog.dismiss()
+
 
                     val newCage = CageData()
                     newCage.cage = newCageNumber
@@ -232,6 +242,11 @@ class FlightCagesList2Activity : AppCompatActivity() {
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
                     }
+                    progressbar.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        alertDialog.dismiss()
+                        progressbar.visibility = View.GONE
+                    }, 1500)
                 }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -284,7 +299,11 @@ class FlightCagesList2Activity : AppCompatActivity() {
                                     Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                                 }
                             }
-                            alertDialog.dismiss()
+                            progressbar.visibility = View.VISIBLE
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                alertDialog.dismiss()
+                                progressbar.visibility = View.GONE
+                            }, 1500)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -388,7 +407,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
         else{
             totalBirds.text = dataList.count().toString() + " Cage"
         }
-        dataList.sortBy { it.cage }
+        dataList.sortBy { it.cage?.toIntOrNull() }
         dataList
     }
 

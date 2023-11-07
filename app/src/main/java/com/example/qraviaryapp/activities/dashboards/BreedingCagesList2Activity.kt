@@ -204,6 +204,13 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
+                    val cageNumberExists = dataList.any { it.cage == newCageNumber }
+
+                    if (cageNumberExists) {
+                        // Set an error on the EditText and return
+                        editText.error = "Cage number already exists"
+                        return@setOnClickListener
+                    }
                     // User entered a custom cage name, use it
                     val data: Map<String, Any?> = hashMapOf(
                         "Cage" to newCageNumber.toInt()
@@ -412,7 +419,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         else{
             totalBirds.text = dataList.count().toString() + " Cage"
         }
-        dataList.sortBy { it.cage }
+        dataList.sortBy { it.cage?.toIntOrNull() }
         dataList
     }
 
