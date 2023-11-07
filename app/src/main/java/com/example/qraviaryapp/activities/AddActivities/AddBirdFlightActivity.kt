@@ -164,6 +164,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                         var soldId = ""
                         var cagebirdkey = ""
                         var cagekeyvalue = ""
+                        var successBasic = false
                         basicFragment.birdDataGetters { receivedBirdId, receivedFlightId, receivedNewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue ->
                             birdId = receivedBirdId
                             flightId = receivedFlightId
@@ -172,33 +173,37 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
+                            successBasic = true
 
+
+
+
+
+
+                        }
+                        originFragment.addFlightOrigin(birdId, flightId, newBundle, soldId, successBasic)
+                        { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, originBundle ->
+                            galleryFragment.FlightuploadImageToStorage(
+                                birdId,
+                                flightId,
+                                newBundle,
+                                callBackMotherKey,
+                                callBackFatherKey,
+                                descendantfatherkey,
+                                descendantmotherkey,
+                                cagebirdkey,
+                                cagekeyvalue,
+                                soldId,
+                                purchaseId
+                            )
                             progressBar.visibility = View.VISIBLE
-                            originFragment.addFlightOrigin(birdId, flightId, newBundle, soldId)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, originBundle ->
-                                galleryFragment.FlightuploadImageToStorage(
-                                    birdId,
-                                    flightId,
-                                    newBundle,
-                                    callBackMotherKey,
-                                    callBackFatherKey,
-                                    descendantfatherkey,
-                                    descendantmotherkey,
-                                    cagebirdkey,
-                                    cagekeyvalue,
-                                    soldId,
-                                    purchaseId
-                                )
-
-                                flightToDetailedScanner(newBundle,originBundle)
-
-                            }
-
+                            flightToDetailedScanner(newBundle,originBundle)
 
                             Handler().postDelayed({
                                 progressBar.visibility = View.GONE
                                 showMessageDialog("Bird Data saved Successfully")
                             },4000)
+
 
                         }
 

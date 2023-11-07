@@ -721,7 +721,8 @@ class BasicFragment : Fragment() {
 
             if (TextUtils.isEmpty(btnSoldSaleDate.text)) {
                 btnSoldSaleDate.error = "Select a date..."
-            } else if (TextUtils.isEmpty(etSoldSalePrice.text)) {
+            }
+            if (TextUtils.isEmpty(etSoldSalePrice.text)) {
                 etSoldSalePrice.error = "Set a Price..."
             } else {
                 validSold = true

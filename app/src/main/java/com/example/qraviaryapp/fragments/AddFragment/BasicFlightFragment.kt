@@ -104,6 +104,7 @@ class BasicFlightFragment : Fragment() {
     private lateinit var slash3: TextView
     private lateinit var slash4: TextView
     private lateinit var slash5: TextView
+
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
     private lateinit var btnDeathDate: MaterialButton
@@ -711,7 +712,19 @@ class BasicFlightFragment : Fragment() {
             }
         }
 
+//soldlayout
+        var validSold = false
+        if (soldLayout.visibility == View.VISIBLE) {
 
+            if (TextUtils.isEmpty(btnSoldSaleDate.text)) {
+                btnSoldSaleDate.error = "Select a date..."
+            }
+            if (TextUtils.isEmpty(etSoldSalePrice.text)) {
+                etSoldSalePrice.error = "Set a Price..."
+            } else {
+                validSold = true
+            }
+        }
 
 
         if (validDateOfBirth && validMutation && validIdentifier) {
@@ -893,64 +906,69 @@ class BasicFlightFragment : Fragment() {
                 newNurseryPref.updateChildren(data)
 
             } else if (soldLayout.visibility == View.VISIBLE) {
-                soldId = SoldBirdRef.key
-                val date = inputDateFormat.parse(dataSoldSaleDate)
-                val formattedDate = outputDateFormat.format(date)
+                if (validSold) {
+                    soldId = SoldBirdRef.key
+                    val date = inputDateFormat.parse(dataSoldSaleDate)
+                    val formattedDate = outputDateFormat.format(date)
 
-                val monthYearParts = formattedDate.split(" - ")
-                val day = monthYearParts[0]
-                val month = monthYearParts[1]
-                val year = monthYearParts[2]
-                val data: Map<String, Any?> = hashMapOf(
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                    /*"Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Sold Date" to birdData.soldDate,
-                    "Sale Price" to birdData.soldPrice,
-                    "Sale Contact" to birdData.saleContact,
-                    "Flight Key" to FlightId,
-                    "Bird Key" to birdId,
-                    "Sold Id" to soldId,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                val solddata: Map<String, Any?> = hashMapOf(
-                    "Bird Id" to birdId
-                )
-                SoldBirdRef.updateChildren(data)
-                newBirdPref.updateChildren(data)
-                newNurseryPref.updateChildren(data)
-                SoldBirdRef.updateChildren(solddata)
-            } else if (deceasedLayout.visibility == View.VISIBLE) {
-                val data: Map<String, Any?> = hashMapOf(
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                    /*    "Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Death Date" to birdData.deathDate,
-                    "Death Reason" to birdData.deathReason,
-                    "Flight Key" to FlightId,
-                    "Bird Key" to birdId
-                )
-                newBirdPref.updateChildren(data)
-                newNurseryPref.updateChildren(data)
+                    val monthYearParts = formattedDate.split(" - ")
+                    val day = monthYearParts[0]
+                    val month = monthYearParts[1]
+                    val year = monthYearParts[2]
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*"Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Sold Date" to birdData.soldDate,
+                        "Sale Price" to birdData.soldPrice,
+                        "Sale Contact" to birdData.saleContact,
+                        "Flight Key" to FlightId,
+                        "Bird Key" to birdId,
+                        "Sold Id" to soldId,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    val solddata: Map<String, Any?> = hashMapOf(
+                        "Bird Id" to birdId
+                    )
+                    SoldBirdRef.updateChildren(data)
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
+                    SoldBirdRef.updateChildren(solddata)
+                } else if (deceasedLayout.visibility == View.VISIBLE) {
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*    "Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Death Date" to birdData.deathDate,
+                        "Death Reason" to birdData.deathReason,
+                        "Flight Key" to FlightId,
+                        "Bird Key" to birdId
+                    )
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
+
+                } else {
+                    return
+                }
 
             } else if (exchangeLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
