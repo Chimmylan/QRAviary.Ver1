@@ -677,9 +677,7 @@ class BasicFragment : Fragment() {
         } else {
             validMutation = true
         }
-        if(TextUtils.isEmpty(etAvailCage.text)){
-            etAvailCage.error = "Cage must not be empty..."
-        }
+
 //        if (TextUtils.isEmpty(dataDateOfBanding)) {
 //            datebandButton.error = "Date of banding must not be empty..."
 //        } else {
@@ -820,7 +818,9 @@ class BasicFragment : Fragment() {
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
-
+                if(TextUtils.isEmpty(etAvailCage.text)){
+                    etAvailCage.error = "Cage must not be empty..."
+                }
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Legband" to birdData.legband,

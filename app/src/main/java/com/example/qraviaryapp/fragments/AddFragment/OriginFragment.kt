@@ -9,6 +9,7 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -345,6 +346,13 @@ class OriginFragment : Fragment() {
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
+            if(TextUtils.isEmpty(boughtDateBtn.text)){
+                boughtDateBtn.error = "Pick Bought Date"
+            }
+            if(TextUtils.isEmpty(etBuyPrice.text)){
+                etBuyPrice.error = "Enter Price"
+            }
+
             purchaseId = purchasesRef.key
             val date = inputDateFormat.parse(dataBoughtDate)
             val formattedDate = outputDateFormat.format(date)
