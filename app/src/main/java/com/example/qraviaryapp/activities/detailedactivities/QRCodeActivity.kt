@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -28,7 +29,11 @@ class QRCodeActivity : AppCompatActivity() {
     private lateinit var qrcode: ImageView
     private lateinit var qrimageLayout: LinearLayout
     private val REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 1 // You can use any integer value you prefer
-
+    private lateinit var birdqrdetail: LinearLayout
+    private lateinit var birdid: TextView
+    private lateinit var birdlegband: TextView
+    private lateinit var birdmutation: TextView
+    private lateinit var birdcage: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -54,9 +59,26 @@ class QRCodeActivity : AppCompatActivity() {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+        birdqrdetail = findViewById(R.id.birdqrdetail)
         qrcode = findViewById(R.id.qrcode)
         val qr = intent?.getStringExtra("CageQR")
+        val birdid = intent?.getStringExtra("BirdId")
+        val birdlegband = intent?.getStringExtra("Legband")
+        val mutation1 = intent?.getStringExtra("Mutation1")
+        val mutation2 = intent?.getStringExtra("Mutation2")
+        val mutation3 = intent?.getStringExtra("Mutation3")
+        val mutation4 = intent?.getStringExtra("Mutation4")
+        val mutation5 = intent?.getStringExtra("Mutation5")
+        val mutation6 = intent?.getStringExtra("Mutation6")
+        val availcage = intent?.getStringExtra("AvailCage")
+        val forsalecage = intent?.getStringExtra("ForSaleCage")
 
+        if (!birdid.isNullOrEmpty()){
+            birdqrdetail.visibility = View.GONE
+
+
+
+        }
         val qrCodeUrl = qr
 
         Glide.with(this)

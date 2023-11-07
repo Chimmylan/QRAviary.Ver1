@@ -79,6 +79,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/birdid"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -88,6 +89,7 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
                     <TextView
+                        android:id="@+id/birdlegband"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -97,6 +99,7 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
                     <TextView
+                        android:id="@+id/birdmutation"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -106,6 +109,7 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
                     <TextView
+                        android:id="@+id/birdcage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
