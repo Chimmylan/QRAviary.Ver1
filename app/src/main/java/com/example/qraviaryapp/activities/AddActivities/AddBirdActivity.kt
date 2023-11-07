@@ -165,6 +165,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                         var soldId = ""
                         var cagebirdkey = ""
                         var cagekeyvalue = ""
+                        var successBasic = false
                         basicFragment.birdDataGetters { receivedbirdId, NurseryId, receivednewBundle, receivesoldId, receivecagebirdkey, receivecagekeyvalue ->
                             birdId = receivedbirdId
                             nurseryId = NurseryId
@@ -173,38 +174,37 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
                             progressBar.visibility = View.VISIBLE
+                            successBasic = true
 
+                        }
 
-                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId)
-                            { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, newOriginBundle ->
-                                galleryFragment.uploadImageToStorage(
-                                    birdId,
-                                    nurseryId,
-                                    newBundle,
-                                    callBackMotherKey,
-                                    callBackFatherKey,
-                                    descendantfatherkey,
-                                    descendantmotherkey,
-                                    cagebirdkey,
-                                    cagekeyvalue,
-                                    soldId,
-                                    purchaseId
-                                )
+                        originFragment.addOirigin(birdId, nurseryId, newBundle, soldId, successBasic)
+                        { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, newOriginBundle ->
+                            galleryFragment.uploadImageToStorage(
+                                birdId,
+                                nurseryId,
+                                newBundle,
+                                callBackMotherKey,
+                                callBackFatherKey,
+                                descendantfatherkey,
+                                descendantmotherkey,
+                                cagebirdkey,
+                                cagekeyvalue,
+                                soldId,
+                                purchaseId
+                            )
 
-                                nurseryToDetailedScanner(newBundle, newOriginBundle)
-
-
-
-
-                            }
+                            nurseryToDetailedScanner(newBundle, newOriginBundle)
 
                             Handler().postDelayed({
                                 progressBar.visibility = View.GONE
-                            showMessageDialog("Bird Data saved Successfully")
-                        },3000)
+                                showMessageDialog("Bird Data saved Successfully")
+                            },3000)
+//                        progressBar.visibility = View.GONE
+
+
 
                         }
-//                        progressBar.visibility = View.GONE
 
 
 
