@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp">
+
     <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="15dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:paddingRight="15dp"
-        android:orientation="vertical">
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <Button
             android:id="@+id/custom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Custom"
-            android:background="@android:color/transparent"
+            android:backgroundTint = "@color/itemimagebg"
             android:textColor="@android:color/black"
             android:layout_marginEnd="8dp" />
         <Button
@@ -48,4 +49,11 @@
         android:hint="Enter Number"
         android:layout_marginBottom="16dp" />
     </LinearLayout>
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>
