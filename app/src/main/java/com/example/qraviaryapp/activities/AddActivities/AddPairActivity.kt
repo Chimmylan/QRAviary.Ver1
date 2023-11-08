@@ -79,6 +79,8 @@ class AddPairActivity : AppCompatActivity() {
     private var femaleMutation4: String? = null
     private var femaleMutation5: String? = null
     private var femaleMutation6: String? = null
+    private var femaleStatus: String? = null
+    private var maleStatus: String? = null
 
     private var beginningFormattedDate: String? = null
     private var btnMaleIdValue: String? = null
@@ -167,15 +169,21 @@ class AddPairActivity : AppCompatActivity() {
                     i.putExtra("FemaleMutation4", femaleMutation4)
                     i.putExtra("FemaleMutation5", femaleMutation5)
                     i.putExtra("FemaleMutation6", femaleMutation6)
+                    i.putExtra("FemaleStatus", femaleStatus)
                 } else {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
             } else {
                 i.putExtra("Hybridization", hybridizationCheck)
+                i.putExtra("FemaleStatus", femaleStatus)
+
                 Log.d(ContentValues.TAG, "Hybridization is On")
             }
 
             startActivityForResult(i, requestCode)
+//            if (maleStatus == "Paired") {
+//                showPairedAlertDialog("Male")
+//            }
         }
         btnFemale.setOnClickListener {
             val requestCode = 2
@@ -190,16 +198,22 @@ class AddPairActivity : AppCompatActivity() {
                     i.putExtra("MaleMutation4", maleMutation4)
                     i.putExtra("MaleMutation5", maleMutation5)
                     i.putExtra("MaleMutation6", maleMutation6)
+                    i.putExtra("MaleStatus", maleStatus)
 
                 } else {
                     Log.d(ContentValues.TAG, "Empty Mutation")
                 }
             } else {
                 i.putExtra("Hybridization", hybridizationCheck)
+                i.putExtra("MaleStatus", maleStatus)
 
                 Log.d(ContentValues.TAG, "Hybridization is On")
             }
             startActivityForResult(i, requestCode)
+
+//            if (femaleStatus == "Paired") {
+//                showPairedAlertDialog("Female")
+//            }
         }
 
 
@@ -217,6 +231,16 @@ class AddPairActivity : AppCompatActivity() {
 //            val currentFormattedDate = dateFormat.format(cal.time)
 //            btnBeginningDate.text = currentFormattedDate
 //        }
+    }
+    private fun showPairedAlertDialog(gender: String) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Information")
+        alertDialogBuilder.setMessage("The selected $gender is currently paired.")
+        alertDialogBuilder.setPositiveButton("OK") { _, _ ->
+            // Handle the "OK" button click if needed
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
     var validMale = false
     var validFemale = false

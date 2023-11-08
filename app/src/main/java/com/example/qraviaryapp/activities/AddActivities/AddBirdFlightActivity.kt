@@ -378,7 +378,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         val userBird = dbase.child("Users").child("ID: $userId")
             .child("Birds").child(birdKey.toString())
         val NurseryBird = dbase.child("Users").child("ID: $userId")
-            .child("Nursery Birds").child(nurseryKey.toString())
+            .child("Flight Birds").child(flightKey.toString())
 
 
         val jsonData = JSONObject()

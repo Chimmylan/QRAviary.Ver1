@@ -166,6 +166,8 @@ class PairMaleBirdViewHolder(
             val cagekey = dataList[adapterPosition].cagekeymalevalue
             val cagebirdkey = dataList[adapterPosition].cagebirdmalekey
             val image = dataList[adapterPosition].img
+            val status = dataList[adapterPosition].status
+
             val intent = Intent()
             intent.putExtra("MaleGallery", image)
             intent.putExtra("MaleBirdId", maleBird)
@@ -179,6 +181,7 @@ class PairMaleBirdViewHolder(
             intent.putExtra("MaleMutation6", mutation6)
             intent.putExtra("CageKeyMale",cagekey)
             intent.putExtra("CageBirdKeyMale",cagebirdkey)
+            intent.putExtra("FemaleStatus",status)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()
