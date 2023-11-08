@@ -187,9 +187,18 @@ class ClutchesFragment : Fragment() {
             .child(pairKey).child("Clutches")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
+        var parentPair = false
+        var fosterPair = false
         for (clutchSnapshot in snapshot.children) {
 
-            if (clutchSnapshot.key != "QR"){
+            if (clutchSnapshot.child("Parent").exists()){
+                parentPair = true
+            }
+            if (clutchSnapshot.child("Foster Pair").exists()){
+                fosterPair = true
+            }
+
+            if (clutchSnapshot.key != "QR" && clutchSnapshot.key != "Parent"){
                 val data = clutchSnapshot.getValue(EggData::class.java)!!
                 key = clutchSnapshot.key.toString()
                 var incubatingCount = 0
@@ -312,7 +321,8 @@ class ClutchesFragment : Fragment() {
 
                         }
 
-
+                        data.fosterPair = fosterPair
+                        data.parentPair = parentPair
                         data.pairFlightMaleKey = pairFlightMaleKey
                         data.pairFlightFemaleKey = pairFlightFemaleKey
                         data.pairBirdFemaleKey = pairFemaleKey

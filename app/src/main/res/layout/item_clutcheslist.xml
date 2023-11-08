@@ -156,6 +156,7 @@
                 android:layout_width="match_parent"
                 android:textSize="10sp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:backgroundTint="@color/itemimagebg"
                 android:text="Foster Pair"/>
 
@@ -163,6 +164,7 @@
                 android:id="@+id/parents"
                 android:layout_width="match_parent"
                 android:textSize="10sp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/itemimagebg"
                 android:text="Parents"/>

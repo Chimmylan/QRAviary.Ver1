@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
+import com.google.android.material.button.MaterialButton
 
 class ClutchesListAdapter(
     private val context: android.content.Context,
@@ -39,7 +40,16 @@ class ClutchesListAdapter(
         val laidDate = clutch.eggLaidStartDate
         val moveCount = clutch.eggMoved
 
+
         holder.tvTotal.text = eggCount
+
+        if (clutch.fosterPair == true){
+            holder.btnFoster.visibility = View.VISIBLE
+        }
+        if (clutch.parentPair == true){
+            holder.btnParent.visibility = View.VISIBLE
+        }
+
 
         // Set visibility and text for Incubating
         if (incubatingCount != null && incubatingCount.toInt() > 0) {
@@ -133,6 +143,8 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
     val tvDeadBeforeMoving: TextView = itemView.findViewById(R.id.tvDeadBeforeRinging)
     val tvMoved: TextView = itemView.findViewById(R.id.tvMove)
     val tvDate: TextView = itemView.findViewById(R.id.tvDate)
+    val btnParent: MaterialButton = itemView.findViewById(R.id.parents)
+    val btnFoster: MaterialButton = itemView.findViewById(R.id.fosterpair)
 
     init {
         itemView.setOnClickListener {

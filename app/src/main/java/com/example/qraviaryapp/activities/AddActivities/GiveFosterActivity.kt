@@ -66,6 +66,8 @@ class GiveFosterActivity : AppCompatActivity(), ClickListener {
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var current: TextView
     private lateinit var CageKey: String
+    private lateinit var PairKey: String
+    private lateinit var ClutchKey: String
     private lateinit var CageName: String
     private lateinit var CageQR: String
 
@@ -106,6 +108,8 @@ class GiveFosterActivity : AppCompatActivity(), ClickListener {
         current = findViewById(R.id.tvCurrent)
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
+        PairKey = intent?.getStringExtra("PairKey").toString()
+        ClutchKey = intent?.getStringExtra("ClutchKey").toString()
         CageQR = intent?.getStringExtra("CageQR").toString()
         mAuth = FirebaseAuth.getInstance()
         lifecycleScope.launch{
@@ -128,8 +132,8 @@ class GiveFosterActivity : AppCompatActivity(), ClickListener {
 
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
-            .child("ID: ${currentUserId.toString()}").child("Cages")
-            .child("Breeding Cages").child(CageKey).child("Pair Birds")
+            .child("ID: ${currentUserId.toString()}").child("Pairs")
+
 
         val dataList = ArrayList<PairData>()
         val snapshot = db.get().await()
@@ -137,42 +141,47 @@ class GiveFosterActivity : AppCompatActivity(), ClickListener {
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(PairData::class.java)
             if (data != null) {
-                if (itemSnapshot.child("Separate Date").exists()) {
+                if (itemSnapshot.key != PairKey){
+                    if (itemSnapshot.child("Separate Date").exists()) {
 
-                }else{
-                    val key = itemSnapshot.key.toString()
-                    val pairsId = itemSnapshot.child("Pair ID").value.toString()
-                    val cageName = itemSnapshot.child("Cage").value.toString()
-                    val male = itemSnapshot.child("Male").value.toString()
-                    val female = itemSnapshot.child("Female").value.toString()
-                    val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
-                    val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
-                    val beginningDate = itemSnapshot.child("Beginning").value.toString()
-                    val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
-                    val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
-                    val separateDate = itemSnapshot.child("Separate Date").value.toString()
+                    }else{
+                        val key = itemSnapshot.key.toString()
+                        val pairsId = itemSnapshot.child("Pair ID").value.toString()
+                        val cageName = itemSnapshot.child("Cage").value.toString()
+                        val male = itemSnapshot.child("Male").value.toString()
+                        val female = itemSnapshot.child("Female").value.toString()
+                        val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
+                        val femaleMutation = itemSnapshot.child("Female Mutation").value.toString()
+                        val beginningDate = itemSnapshot.child("Beginning").value.toString()
+                        val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
+                        val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
+                        val separateDate = itemSnapshot.child("Separate Date").value.toString()
 
-                    data.pairMaleKey = pairMaleKey
-                    data.pairFemaleKey = pairFemaleKey
-                    data.pairKey = key
-                    data.pairFemale = female
-                    data.pairMale = male
-                    data.pairCage = cageName
-                    data.pairMaleMutation = maleMutation
-                    data.pairFemaleMutation = femaleMutation
-                    data.pairDateBeg = beginningDate
-                    data.pairDateSep = separateDate
-                    data.pairId = pairsId
+                        data.pairClutchKey = ClutchKey
+                        data.parentPairKey = PairKey
+                        data.pairMaleKey = pairMaleKey
+                        data.pairFemaleKey = pairFemaleKey
+                        data.pairKey = key
+                        data.pairFemale = female
+                        data.pairMale = male
+                        data.pairCage = cageName
+                        data.pairMaleMutation = maleMutation
+                        data.pairFemaleMutation = femaleMutation
+                        data.pairDateBeg = beginningDate
+                        data.pairDateSep = separateDate
+                        data.pairId = pairsId
 
-                    if (Looper.myLooper() != Looper.getMainLooper()) {
-                        Log.d(ContentValues.TAG, "Code is running on a background thread")
-                    } else {
-                        Log.d(ContentValues.TAG, "Code is running on the main thread")
+                        if (Looper.myLooper() != Looper.getMainLooper()) {
+                            Log.d(ContentValues.TAG, "Code is running on a background thread")
+                        } else {
+                            Log.d(ContentValues.TAG, "Code is running on the main thread")
+                        }
+
+                        dataList.add(data)
+
                     }
-
-                    dataList.add(data)
-
                 }
+
 
             }
         }

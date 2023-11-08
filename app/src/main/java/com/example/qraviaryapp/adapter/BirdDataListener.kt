@@ -144,6 +144,8 @@ data class PairData(
     var pairfemaleimg: String? = null,
     var pairmaleimg: String? = null,
     var pairKey: String? = null,
+    var parentPairKey: String? = null,
+    var pairClutchKey: String? = null,
     var pairId: String? = null,
     var nest: String? = null,
     var pairCage: String? = null,
@@ -231,4 +233,6 @@ data class EggData(
     var motherkey: String? = null,
     var motherbirdkey: String? = null,
     var status1: String? = null,
+    var fosterPair: Boolean? = null,
+    var parentPair: Boolean? = null
 )
