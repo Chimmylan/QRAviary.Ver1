@@ -151,6 +151,21 @@
                 android:textColor="@color/black_white"
                 android:text="Date"
                 android:padding="10dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fosterpair"
+                android:layout_width="match_parent"
+                android:textSize="10sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/itemimagebg"
+                android:text="Foster Pair"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/parents"
+                android:layout_width="match_parent"
+                android:textSize="10sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/itemimagebg"
+                android:text="Parents"/>
         </LinearLayout>
 
     </LinearLayout>

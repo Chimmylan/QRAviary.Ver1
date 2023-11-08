@@ -88,6 +88,7 @@ class ClutchesFragment : Fragment() {
     private lateinit var pairCageKeyFemale: String
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
+    private lateinit var paircagekey: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
@@ -125,6 +126,7 @@ class ClutchesFragment : Fragment() {
 
         fab = view.findViewById(R.id.fab)
 //        pairKey = arguments?.getString("BirdKey").toString()
+        paircagekey = arguments?.getString("CageKey").toString()
         pairId = arguments?.getString("PairId").toString()
         pairMale = arguments?.getString("MaleID").toString()
         pairFemale = arguments?.getString("FemaleID").toString()
@@ -210,6 +212,7 @@ class ClutchesFragment : Fragment() {
 
                         clutchCount = snapshot.childrenCount.toInt()
                         data.clutchCount = clutchCount.toString()
+                        data.paircagekey = paircagekey
                         if (eggStatus == "Incubating") {
 
                             incubatingCount++

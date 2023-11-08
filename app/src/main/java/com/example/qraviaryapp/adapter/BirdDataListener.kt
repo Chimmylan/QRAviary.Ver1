@@ -193,6 +193,7 @@ data class EggData(
     var individualEggKey: String? = null,
     var eggCount: String? = null,
     var clutchCount: String? = null,
+    var paircagekey: String? = null,
     var eggIncubating: String? = null,
     var eggLaid: String? = null,
     var eggHatched: String? = null,

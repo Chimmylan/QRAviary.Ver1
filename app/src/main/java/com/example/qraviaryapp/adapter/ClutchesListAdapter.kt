@@ -137,7 +137,7 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-
+            bundle.putString("CageKey", dataList[adapterPosition].paircagekey)
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
             bundle.putString("EggKey", dataList[adapterPosition].eggKey)
             bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)

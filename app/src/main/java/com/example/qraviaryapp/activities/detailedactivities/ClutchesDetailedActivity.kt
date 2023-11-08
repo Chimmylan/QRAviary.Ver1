@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
 import com.example.qraviaryapp.activities.AddActivities.AddEggScanActivity
+import com.example.qraviaryapp.activities.AddActivities.GiveFosterActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -44,7 +45,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var fab: FloatingActionButton
-
+    private lateinit var paircagekey: String
     private lateinit var eggKey: String
     private lateinit var pairKey: String
     private lateinit var pairFlightMaleKey: String
@@ -94,6 +95,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         }
 
         if (bundle != null) {
+            paircagekey = bundle.getString("CageKey").toString()
             eggKey = bundle.getString("EggKey").toString()
             pairKey = bundle.getString("PairKey").toString()
             pairFlightMaleKey = bundle.getString("PairFlightMaleKey").toString()
@@ -223,6 +225,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                         data.eggLaidStartDate = dateValue
                     }
                     eggCount = snapshot.childrenCount.toInt()
+                    data.paircagekey = paircagekey
                     data.eggCount = eggCount.toString()
                     data.pairKey = pairKey
                     data.eggKey = eggKey
@@ -286,6 +289,13 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
                 i.putExtra("CageQR", CageQR)
+                startActivity(i)
+                true
+            }
+            R.id.give -> {
+                val i = Intent(this, GiveFosterActivity::class.java)
+                i.putExtra("CageKey", paircagekey)
+                Log.d(TAG, "Cage key pair" + paircagekey)
                 startActivity(i)
                 true
             }
