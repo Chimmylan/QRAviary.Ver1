@@ -64,6 +64,6 @@
         android:layout_marginBottom="50dp"
         app:backgroundTint="@color/fab"
         app:srcCompat="@drawable/ic_add"
-        android:onClick="fab"
+        android:onClick="fab1"
         tools:ignore="SpeakableTextPresentCheck" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

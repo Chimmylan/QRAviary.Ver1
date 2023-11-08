@@ -186,7 +186,8 @@ class AddEggActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
-
+        val scan= menu.findItem(R.id.menu_qr)
+        scan.isVisible = false
         val saveMenuItem = menu.findItem(R.id.action_save)
 
         // Check if night mode is enabled

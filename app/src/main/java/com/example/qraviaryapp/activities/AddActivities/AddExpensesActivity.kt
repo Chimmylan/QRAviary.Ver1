@@ -137,7 +137,8 @@ class AddExpensesActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
 
         val saveMenuItem = menu.findItem(R.id.action_save)
-
+        val scan= menu.findItem(R.id.menu_qr)
+        scan.isVisible = false
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode

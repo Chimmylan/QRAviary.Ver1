@@ -53,7 +53,7 @@ class FlightListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flight_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.elevation = 0f
+        supportActionBar?.elevation = 4f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(

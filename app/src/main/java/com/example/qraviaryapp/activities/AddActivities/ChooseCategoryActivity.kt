@@ -16,6 +16,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,8 +26,10 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CategoryAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -40,7 +45,9 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var adapter: CategoryAdapter
-
+    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -65,7 +72,9 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
+        totalBirds = findViewById(R.id.tvBirdCount)
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = findViewById(R.id.recyclerView)
@@ -85,10 +94,28 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-
+        refreshApp()
 
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+    }
     fun fab(view: View) {
         showAddCategoryDialog()
     }
@@ -119,6 +146,12 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
                     dataList.add(data)
                 }
             }
+            if (dataList.count() > 1) {
+                totalBirds.text = dataList.count().toString() + " Categories"
+            } else {
+                totalBirds.text = dataList.count().toString() + " Category"
+            }
+
             dataList.sortBy { it.expenses }
             dataList
         }
@@ -172,7 +205,31 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
 
         alertDialog.show()
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     private fun getSortedGenesWithHeaders(sortedGenes: Array<String>): List<Pair<String, String>> {
         val genesWithHeaders = mutableListOf<Pair<String, String>>()
