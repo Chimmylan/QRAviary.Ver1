@@ -28,8 +28,7 @@ import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.BreedingLis
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -337,7 +336,7 @@ class BreedingListActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_delete -> {
-
+                deleteCage()
                 true
             }
             android.R.id.home -> {
@@ -393,4 +392,60 @@ class BreedingListActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun deleteCage() {
+        val currentUserId = mAuth.currentUser?.uid
+        val breedingCageReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Breeding Cages").child(CageKey)
+        val breedingBirdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Pairs")
+        val birdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Birds")
+
+        breedingBirdsReference.addListenerForSingleValueEvent (object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children){
+                    if (birds.child("Cage Key").value == CageKey){
+                        val cageKeyReference = birds.child("Cage Key").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        birdsReference.addListenerForSingleValueEvent (object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children){
+                    if (birds.child("Cage Key").value == CageKey){
+                        val cageKeyReference = birds.child("Cage Key").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        breedingCageReference.removeValue()
+
+        Log.d(TAG, "DELETE $CageKey")
+        onBackPressed()
+
+
+    }
+
 }

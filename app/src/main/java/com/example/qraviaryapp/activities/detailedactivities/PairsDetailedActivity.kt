@@ -291,9 +291,20 @@ class PairsDetailedActivity : AppCompatActivity() {
     }
     fun delete() {
         val currentUserId = mAuth.currentUser?.uid
+        val pairMaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairMaleKey).child("Status").setValue("Available")
+        val pairFemaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairFemaleKey).child("Status").setValue("Available")
+        val pairFemaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightFemaleKey).child("Status").setValue("Available")
+        val pairMaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightMaleKey).child("Status").setValue("Available")
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).removeValue()
-        }
+        val pairBreedingCageRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).removeValue()
+
+    }
     private fun showSeparateConfirmation() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Separate")
@@ -334,6 +345,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         val pairId = 0 // Set your desired integer value here
         val pairID = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).child("Pair ID").setValue(pairId)
+
 
 
     }

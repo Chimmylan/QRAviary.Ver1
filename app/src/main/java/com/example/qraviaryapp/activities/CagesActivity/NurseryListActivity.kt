@@ -27,8 +27,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -74,10 +73,10 @@ class NurseryListActivity : AppCompatActivity() {
 
 
         recyclerView = findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(this,1)
+        val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = NurseryListAdapter(this,dataList, maturingDays)
+        adapter = NurseryListAdapter(this, dataList, maturingDays)
         recyclerView.adapter = adapter
 
         CageName = intent?.getStringExtra("CageName").toString()
@@ -103,6 +102,7 @@ class NurseryListActivity : AppCompatActivity() {
         }
         refreshApp()
     }
+
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
             lifecycleScope.launch {
@@ -122,12 +122,13 @@ class NurseryListActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
+
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Nursery Cages").child(CageKey).child("Birds")
-        val qrRef= FirebaseDatabase.getInstance().getReference("Users")
+        val qrRef = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Nursery Cages").child(CageKey)
         val dataList = ArrayList<BirdData>()
@@ -291,10 +292,9 @@ class NurseryListActivity : AppCompatActivity() {
 
         }
 
-        if(dataList.count()>1){
+        if (dataList.count() > 1) {
             totalBirds.text = dataList.count().toString() + " Birds"
-        }
-        else{
+        } else {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
@@ -327,7 +327,9 @@ class NurseryListActivity : AppCompatActivity() {
 
                 loadingProgressBar.visibility = View.GONE
             }
-        }}
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cageoption, menu)
 
@@ -335,6 +337,7 @@ class NurseryListActivity : AppCompatActivity() {
 
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_qr -> {
@@ -345,7 +348,7 @@ class NurseryListActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_delete -> {
-
+                deleteCage()
                 true
             }
             android.R.id.home -> {
@@ -354,5 +357,60 @@ class NurseryListActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun deleteCage() {
+        val currentUserId = mAuth.currentUser?.uid
+        val nurseryCageReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Nursery Cages").child(CageKey)
+        val nurseryBirdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Nursery Birds")
+        val birdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Birds")
+
+        nurseryBirdsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children) {
+                    if (birds.child("CageKey").value == CageKey) {
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        birdsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children) {
+                    if (birds.child("CageKey").value == CageKey) {
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        nurseryCageReference.removeValue()
+
+        Log.d(TAG, "DELETE $CageKey")
+        onBackPressed()
+
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import BirdData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -25,8 +26,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.FlightListAdapter
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -67,10 +67,10 @@ class FlightListActivity : AppCompatActivity() {
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(this,1)
+        val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = FlightListAdapter(this,dataList)
+        adapter = FlightListAdapter(this, dataList)
         recyclerView.adapter = adapter
 
         CageName = intent?.getStringExtra("CageName").toString()
@@ -95,6 +95,7 @@ class FlightListActivity : AppCompatActivity() {
         }
         refreshApp()
     }
+
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
             lifecycleScope.launch {
@@ -120,7 +121,7 @@ class FlightListActivity : AppCompatActivity() {
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Flight Cages").child(CageKey).child("Birds")
-        val qrRef= FirebaseDatabase.getInstance().getReference("Users")
+        val qrRef = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Flight Cages").child(CageKey)
         val dataList = ArrayList<BirdData>()
@@ -281,10 +282,9 @@ class FlightListActivity : AppCompatActivity() {
 
         }
 
-        if(dataList.count()>1){
+        if (dataList.count() > 1) {
             totalBirds.text = dataList.count().toString() + " Birds"
-        }
-        else{
+        } else {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
@@ -292,6 +292,7 @@ class FlightListActivity : AppCompatActivity() {
         dataList
 
     }
+
     override fun onResume() {
         super.onResume()
 
@@ -316,7 +317,9 @@ class FlightListActivity : AppCompatActivity() {
 
                 loadingProgressBar.visibility = View.GONE
             }
-        }}
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cageoption, menu)
 
@@ -336,7 +339,10 @@ class FlightListActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_delete -> {
-
+                //birds
+                //flightbirds
+                //cageflightbirds
+                deleteCage()
                 true
             }
             android.R.id.home -> {
@@ -345,5 +351,60 @@ class FlightListActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun deleteCage() {
+        val currentUserId = mAuth.currentUser?.uid
+        val flightCageReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Flight Cages").child(CageKey)
+        val flightBirdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Flight Birds")
+        val birdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Birds")
+
+        flightBirdsReference.addListenerForSingleValueEvent (object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children){
+                    if (birds.child("CageKey").value == CageKey){
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        birdsReference.addListenerForSingleValueEvent (object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children){
+                    if (birds.child("CageKey").value == CageKey){
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        flightCageReference.removeValue()
+
+        Log.d(TAG, "DELETE $CageKey")
+        onBackPressed()
+
+
     }
 }
