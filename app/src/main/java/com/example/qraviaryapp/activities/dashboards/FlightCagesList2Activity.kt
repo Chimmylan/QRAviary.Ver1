@@ -73,7 +73,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
         setContentView(R.layout.activity_cages_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.elevation = 0f
+        supportActionBar?.elevation = 4f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(

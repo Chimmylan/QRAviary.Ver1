@@ -341,7 +341,7 @@ class OriginFragment : Fragment() {
             .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-
+        val purchasekey = purchasesRef.key
         var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
 
@@ -398,6 +398,7 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
                         "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
@@ -453,6 +454,7 @@ class OriginFragment : Fragment() {
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
                         "Buy Price" to birdData.buyPrice,
+                        "Purchase Id" to purchasekey,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
                         "Breeder" to birdBreeder,
@@ -505,6 +507,7 @@ class OriginFragment : Fragment() {
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
                         "Buy Price" to birdData.buyPrice,
+                        "Purchase Id" to purchasekey,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
                         "Breeder" to birdBreeder,
@@ -549,6 +552,7 @@ class OriginFragment : Fragment() {
                         "Exchange Reason" to birdExchangeReason,
                         "Exchange With" to birdExchangeWith,
                         "Exchange Date" to birdExchangeDate,
+                        "Purchase Id" to purchasekey,
                         "Lost Details" to birdLostDetails,
                         "Avail Cage" to birdAvailCage,
                         "For Sale Cage" to birdForsaleCage,
@@ -610,7 +614,8 @@ class OriginFragment : Fragment() {
 
                     "Breeder Contact" to birdData.breederContact,
                     "Buy Price" to birdData.buyPrice,
-                    "Bought Date" to birdData.boughtDate
+                    "Bought Date" to birdData.boughtDate,
+                    "Purchase Id" to purchasekey
                 )
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
@@ -1095,7 +1100,7 @@ class OriginFragment : Fragment() {
         val purchaseRef = purchasesRef.child("Parents")
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
-
+        val purchasekey = purchasesRef.key
         var validBought = false
         if (boughtLayout.visibility == View.VISIBLE) {
 
@@ -1142,6 +1147,7 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
                         "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
@@ -1194,6 +1200,7 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
                         "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
@@ -1248,6 +1255,7 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
                         "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
@@ -1300,6 +1308,7 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
                         "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
@@ -1358,7 +1367,8 @@ class OriginFragment : Fragment() {
 
                     "Breeder Contact" to birdData.breederContact,
                     "Buy Price" to birdData.buyPrice,
-                    "Bought Date" to birdData.boughtDate
+                    "Bought Date" to birdData.boughtDate,
+                    "Purchase Id" to purchasekey,
                 )
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)

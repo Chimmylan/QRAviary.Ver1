@@ -1114,32 +1114,48 @@ class BasicFragment : Fragment() {
                 when (p0?.getItemAtPosition(p2).toString()) {
                     "Available" -> {
 
+                        cageKeyValue = null
                         availableLayout.visibility = View.VISIBLE
+                        etAvailCage.text = ""
 
                     }
                     "For Sale" -> {
+                        cageKeyValue = null
                         forSaleLayout.visibility = View.VISIBLE
-
+                        etForSaleCage.text = ""
                     }
                     "Sold" -> {
+                        cageKeyValue = null
                         soldLayout.visibility = View.VISIBLE
                     }
                     "Deceased" -> {
+                        cageKeyValue = null
+
                         deceasedLayout.visibility = View.VISIBLE
                     }
                     "Exchanged" -> {
+                        cageKeyValue = null
+
                         exchangeLayout.visibility = View.VISIBLE
                     }
                     "Lost" -> {
+                        cageKeyValue = null
+
                         lostLayout.visibility = View.VISIBLE
                     }
                     "Donated" -> {
+                        cageKeyValue = null
+
                         donatedLayout.visibility = View.VISIBLE
                     }
                     "Other" -> {
+                        cageKeyValue = null
+
                         otherLayout.visibility = View.VISIBLE
                     }
                     else -> {
+                        cageKeyValue = null
+
                         editTextContainer.visibility = View.GONE
                     }
                 }

@@ -1112,12 +1112,13 @@ class BasicFlightFragment : Fragment() {
 
                         cageKeyValue = null
                         availableLayout.visibility = View.VISIBLE
+                        etAvailCage.text = ""
 
                     }
                     "For Sale" -> {
                         cageKeyValue = null
                         forSaleLayout.visibility = View.VISIBLE
-
+                        etForSaleCage.text = ""
                     }
                     "Sold" -> {
                         cageKeyValue = null
