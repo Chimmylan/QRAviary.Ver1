@@ -26,8 +26,7 @@ import com.example.qraviaryapp.activities.AddActivities.GiveFosterActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +62,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private var storageRef = Firebase.storage.reference
     private lateinit var CageQR: String
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var currenUserId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -77,7 +77,9 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
+        currenUserId = mAuth.currentUser?.uid.toString()
         dataList = ArrayList()
+
         adapter = EggClutchesListAdapter(this, dataList)
         recyclerView = findViewById(R.id.recyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
@@ -108,7 +110,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
-            Log.d(TAG," wew $bundle")
+            Log.d(TAG, " wew $bundle")
 
 
         }
@@ -125,6 +127,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         }
         refreshApp()
     }
+
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
             lifecycleScope.launch {
@@ -144,14 +147,14 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
+
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
 
-        val currenUserId = mAuth.currentUser?.uid
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
-        val qrRef =  FirebaseDatabase.getInstance().reference.child("Users")
+        val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
         val dataList = ArrayList<EggData>()
@@ -159,7 +162,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         val qrSnapshot = qrRef.get().await()
         CageQR = qrSnapshot.child("QR").value.toString()
         for (eggSnapshot in snapshot.children) {
-            if(eggSnapshot.key != "QR" && eggSnapshot.key != "Parent" && eggSnapshot.key != "Foster Pair"){
+            if (eggSnapshot.key != "QR" && eggSnapshot.key != "Parent" && eggSnapshot.key != "Foster Pair") {
                 val data = eggSnapshot.getValue(EggData::class.java)
                 if (data != null) {
                     val individualEggKey = eggSnapshot.key.toString()
@@ -210,10 +213,14 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
                     val FatherValue = eggSnapshot.child("Parents").child("Father").value.toString()
                     val MotherValue = eggSnapshot.child("Parents").child("Mother").value.toString()
-                    val fatherKeyValue = eggSnapshot.child("Parents").child("FatherKey").value.toString()
-                    val motherKeyValue = eggSnapshot.child("Parents").child("MotherKey").value.toString()
-                    val fatherBirdKeyValue = eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
-                    val motherBirdKeyValue = eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
+                    val fatherKeyValue =
+                        eggSnapshot.child("Parents").child("FatherKey").value.toString()
+                    val motherKeyValue =
+                        eggSnapshot.child("Parents").child("MotherKey").value.toString()
+                    val fatherBirdKeyValue =
+                        eggSnapshot.child("Parents").child("BirdFatherKey").value.toString()
+                    val motherBirdKeyValue =
+                        eggSnapshot.child("Parents").child("BirdMotherKey").value.toString()
 
 
                     if (statusValue == "Incubating") {
@@ -259,7 +266,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                     data.mutation5 = mutation5Value
                     data.father = FatherValue
                     data.fatherkey = fatherKeyValue
-                    data.mother= MotherValue
+                    data.mother = MotherValue
                     data.fatherbirdkey = fatherBirdKeyValue
                     data.motherbirdkey = motherBirdKeyValue
                     data.motherkey = motherKeyValue
@@ -269,14 +276,14 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             }
 
         }
-        if(dataList.count()>1){
+        if (dataList.count() > 1) {
             totalegg.text = dataList.count().toString() + " Eggs"
-        }
-        else{
+        } else {
             totalegg.text = dataList.count().toString() + " Egg"
         }
         dataList
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.qr_option, menu)
 
@@ -284,6 +291,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_qr -> {
@@ -309,7 +317,31 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_delete -> {
+                val dbase = FirebaseDatabase.getInstance().reference
+                val deleteClutchRef = dbase.child("Users").child("ID: $currenUserId").child("Pairs")
+                deleteClutchRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        Log.d(TAG, "Reference Path: ${deleteClutchRef.toString()}")
 
+                        for (pairs in snapshot.children) {
+                            Log.d(TAG, pairs.key.toString())
+                            val clutch = pairs.child("Clutches")
+                            for (clutches in clutch.children) {
+                                if (clutches.key.toString() == eggKey) {
+                                    Log.d(TAG, eggKey)
+                                    clutches.ref.removeValue()
+                                }
+                            }
+                        }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+
+                })
                 true
             }
 
