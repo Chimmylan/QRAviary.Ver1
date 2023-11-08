@@ -53,20 +53,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="15"
-                app:endIconMode="clear_text"
-                app:helperTextTextColor="#5A0808"
-                app:hintTextColor="#000000"
-                app:startIconTint="#1E1D1D">
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etamount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:inputType="text"
+                    android:inputType="number"
                     tools:ignore="SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="openDatebandPicker"
-                android:text="Pick Date"
+                android:hint="Pick Date"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 tools:ignore="OnClick" />

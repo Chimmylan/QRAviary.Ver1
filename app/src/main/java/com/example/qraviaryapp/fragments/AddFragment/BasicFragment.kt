@@ -677,8 +677,9 @@ class BasicFragment : Fragment() {
             etIdentifier.error = "Identifier cannot be empty"
         } else {
             validIdentifier = true
-        }
 
+        }
+        
         if (birdData.mutation1 == "None") {
             btnMutation1.error = "Mutation must not be empty"
         } else {

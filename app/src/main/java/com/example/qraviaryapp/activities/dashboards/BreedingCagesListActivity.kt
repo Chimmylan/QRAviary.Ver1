@@ -238,9 +238,13 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
         builder.setView(dialogLayout)
 
         val alertDialog = builder.create()
+
         alertDialog.setOnShowListener {
+
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
             addButton.setOnClickListener {
+                addButton.isEnabled = false
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
@@ -284,6 +288,7 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                     }
                     progressbar.visibility = View.VISIBLE
                     Handler(Looper.getMainLooper()).postDelayed({
+                        addButton.isEnabled = true
                         alertDialog.dismiss()
                         progressbar.visibility = View.GONE
                     }, 1500)
@@ -336,6 +341,7 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                             }
                             progressbar.visibility = View.VISIBLE
                             Handler(Looper.getMainLooper()).postDelayed({
+                                addButton.isEnabled = true
                                 alertDialog.dismiss()
                                 progressbar.visibility = View.GONE
                             }, 1500)
@@ -352,6 +358,7 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                 alertDialog.dismiss()
             }
         }
+        alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.show()
 
     }
