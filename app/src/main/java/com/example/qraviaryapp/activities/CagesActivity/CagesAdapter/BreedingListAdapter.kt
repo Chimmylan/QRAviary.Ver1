@@ -106,6 +106,7 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
             bundle.putString("SeparateDate", dataList[adapterPosition].pairDateSep)// /toodo
             bundle.putString("MaleGender", dataList[adapterPosition].pairMaleMutation)//
             bundle.putString("FemaleGender", dataList[adapterPosition].pairFemaleMutation)//
+            bundle.putString("CagePairKey", dataList[adapterPosition].cagePairKey)
             bundle.putString("CageKeyFemale", dataList[adapterPosition].paircagekeyFemale)//
             bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)//
             bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)//

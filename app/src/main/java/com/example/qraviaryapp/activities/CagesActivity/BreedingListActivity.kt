@@ -210,7 +210,7 @@ class BreedingListActivity : AppCompatActivity() {
                 if (itemSnapshot.child("Separate Date").exists()) {
 
                 }else{
-                    val key = itemSnapshot.key.toString()
+                    val key = itemSnapshot.child("Pair Key").value.toString()
                     val pairsId = itemSnapshot.child("Pair ID").value.toString()
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val male = itemSnapshot.child("Male").value.toString()

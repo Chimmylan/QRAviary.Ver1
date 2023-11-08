@@ -112,7 +112,7 @@ class CageFosterViewHolder(
 //                    val clutchData: HashMap<String, Any?> = hashMapOf(
 //                        key.toString() to data
 //                    )
-
+                            pairRef.child("Foster Pair").child("FosterPairKey").setValue(dataList[adapterPosition].pairKey.toString())
                             destinationPairRef.child(key.toString()).setValue(data)
                             destinationPairRef.child(key.toString()).child("Parent").child(parentKey.toString()).setValue(parentDataBody)
                             destinationPairRef.child(key.toString()).child("Parent").child("ParentKey").setValue(parentKey.toString())

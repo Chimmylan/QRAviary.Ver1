@@ -89,6 +89,7 @@ class ClutchesFragment : Fragment() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var paircagekey: String
+    private lateinit var cagePairKey: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
@@ -139,6 +140,8 @@ class ClutchesFragment : Fragment() {
         pairFemaleKey = arguments?.getString("PairFemaleKey").toString()
         pairMaleKey = arguments?.getString("PairMaleKey").toString()
         pairKey =arguments?.getString("PairKey").toString()
+        cagePairKey =arguments?.getString("CagePairKey").toString()
+
         pairCageBirdFemale = arguments?.getString("CageBirdFemale").toString()
         pairCageBirdMale = arguments?.getString("CageBirdFemale").toString()
         pairCageKeyFemale = arguments?.getString("CageKeyFemale").toString()
@@ -187,19 +190,15 @@ class ClutchesFragment : Fragment() {
             .child(pairKey).child("Clutches")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
-        var parentPair = false
-        var fosterPair = false
+
         for (clutchSnapshot in snapshot.children) {
+            val data = clutchSnapshot.getValue(EggData::class.java)!!
 
-            if (clutchSnapshot.child("Parent").exists()){
-                parentPair = true
-            }
-            if (clutchSnapshot.child("Foster Pair").exists()){
-                fosterPair = true
-            }
+            var parentPair = false
+            var fosterPair = false
 
-            if (clutchSnapshot.key != "QR" && clutchSnapshot.key != "Parent"){
-                val data = clutchSnapshot.getValue(EggData::class.java)!!
+            if (clutchSnapshot.key != "QR" || clutchSnapshot.key != "Parent" || clutchSnapshot.key != "Foster Pair"){
+
                 key = clutchSnapshot.key.toString()
                 var incubatingCount = 0
                 var laidCount = 0
@@ -321,8 +320,7 @@ class ClutchesFragment : Fragment() {
 
                         }
 
-                        data.fosterPair = fosterPair
-                        data.parentPair = parentPair
+
                         data.pairFlightMaleKey = pairFlightMaleKey
                         data.pairFlightFemaleKey = pairFlightFemaleKey
                         data.pairBirdFemaleKey = pairFemaleKey
@@ -336,14 +334,23 @@ class ClutchesFragment : Fragment() {
                     }
                 }
 
-                if (data != null) {
-                    dataList.add(data)
-                }
+
+
+            }
+            if (clutchSnapshot.child("Parent").exists()){
+                parentPair = true
+            }
+            if (clutchSnapshot.child("Foster Pair").exists()){
+                fosterPair = true
             }
 
+            data.parentPair = parentPair
+            data.fosterPair = fosterPair
 
 
+            dataList.add(data)
         }
+
         if(dataList.count()>1){
             totalBirds.text = dataList.count().toString() + " Clutches"
         }
@@ -405,6 +412,9 @@ class ClutchesFragment : Fragment() {
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches")
+        val cageRef = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: $currentUserId").child("Cages").child("Breeding Cages").child(paircagekey).child("Pair Birds")
+            .child(cagePairKey).child("Clutches")
 
         checkBox.isChecked = true
 
@@ -420,6 +430,7 @@ class ClutchesFragment : Fragment() {
 
 
         val newClutchRef = db.push()
+        val newBreedingClutchRef = cageRef.push()
 
         numberPicker.minValue = 0
         numberPicker.maxValue = 10
@@ -446,6 +457,7 @@ class ClutchesFragment : Fragment() {
             var laidCount = 0
             val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
+
             val formattedDate = currentDate.format(formatter)
             addButton.setOnClickListener {
                 val newEggs = EggData()
@@ -462,6 +474,7 @@ class ClutchesFragment : Fragment() {
                     for (i in 0 until eggValue) {
                         val clutchesRandomID = kotlin.random.Random.nextInt()
                         val clutches = newClutchRef.push()
+                        val newClutches = newBreedingClutchRef.push()
                         clutchkey = clutches.key.toString()
                         eggCount++
                         incubatingCount++
@@ -487,6 +500,7 @@ class ClutchesFragment : Fragment() {
                         newEggs.eggIncubationStartDate = formattedDate
                         newEggs.estimatedHatchedDate = hatchingDateTime.format(formatter1)
                         clutches.updateChildren(data)
+                        newClutches.updateChildren(data)
                         Log.d(ContentValues.TAG, "Alarm ID: $clutchesRandomID")
                         setAlarmForEgg(requireContext(), hatchingDateTime.format(formatter1), clutchesRandomID)
                     }
@@ -505,6 +519,7 @@ class ClutchesFragment : Fragment() {
                     defaultStatus = "Laid"
                     for (i in 0 until eggValue) {
                         val clutches = newClutchRef.push()
+                        val newClutches = newBreedingClutchRef.push()
                         eggCount++
                         laidCount++
                         val data: Map<String, Any?> = hashMapOf(
@@ -524,6 +539,7 @@ class ClutchesFragment : Fragment() {
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggLaid = laidCount.toString()
                         newEggs.eggLaidStartDate = formattedDate
+                        newClutches.updateChildren(data)
 
                         clutches.updateChildren(data)
 

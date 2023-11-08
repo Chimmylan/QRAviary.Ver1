@@ -20,7 +20,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlin.math.log
 
 class ClutchesListAdapter(
     private val context: android.content.Context,
@@ -53,91 +52,6 @@ class ClutchesListAdapter(
 
 
         holder.tvTotal.text = eggCount
-
-        if (clutch.fosterPair == true){
-            holder.btnFoster.visibility = View.VISIBLE
-        }
-        if (clutch.parentPair == true){
-            holder.btnParent.visibility = View.VISIBLE
-        }
-
-        holder.btnFoster.setOnClickListener {
-
-        }
-
-        holder.btnParent.setOnClickListener {
-            val currentUserId = mAuth.currentUser?.uid
-            val db = dbase.child("Users")
-                .child("ID: ${currentUserId}").child("Pairs")
-                .child(clutch.pairKey.toString()).child("Clutches").child(clutch.eggKey.toString()).child("Parent")
-
-            db.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val parentKey = snapshot.child("ParentKey").value.toString()
-                    if (parentKey.isNotEmpty()){
-                        val i = Intent(context, PairsDetailedActivity::class.java)
-
-                        val femalegallery = snapshot.child(parentKey).child("Female Gallery").value.toString()
-                        val malegallery = snapshot.child(parentKey).child("Male Gallery").value.toString()
-                        val key = parentKey
-                        val pairsId = snapshot.child(parentKey).child("Pair ID").value.toString()
-                        val cageName = snapshot.child(parentKey).child("Cage").value.toString()
-                        val cageKeyFemale = snapshot.child(parentKey).child("CageKeyFemale").value.toString()
-                        val cageKeyMale = snapshot.child(parentKey).child("CageKeyMale").value.toString()
-                        val cageBirdFemale = snapshot.child(parentKey).child("CageKeyFlightFemaleValue").value.toString()
-                        val cageBirdMale = snapshot.child(parentKey).child("CageKeyFlightMaleValue").value.toString()
-                        val male = snapshot.child(parentKey).child("Male").value.toString()
-                        val female = snapshot.child(parentKey).child("Female").value.toString()
-                        val maleMutation = snapshot.child(parentKey).child("Male Mutation").value.toString()
-                        val femaleMutation = snapshot.child(parentKey).child("Female Mutation").value.toString()
-                        val beginningDate = snapshot.child(parentKey).child("Beginning").value.toString()
-                        val pairMaleKey = snapshot.child(parentKey).child("Male Bird Key").value.toString()
-                        val pairFemaleKey = snapshot.child(parentKey).child("Female Bird Key").value.toString()
-                        val separateDate = snapshot.child(parentKey).child("Separate Date").value.toString()
-                        val pairMaleFlightKey = snapshot.child(parentKey).child("Male Flight Key").value.toString()
-                        val pairFemaleFlightKey = snapshot.child(parentKey).child("Female Flight Key").value.toString()
-                        val pairCageKey = snapshot.child(parentKey).child("Cage Key").value.toString()
-                        val cagePairKey = snapshot.child(parentKey).child("Pair Cage Key").value.toString()
-
-
-                        val bundle = Bundle()
-                        bundle.putString("PairFemaleImg", femalegallery)//
-                        bundle.putString("PairMaleImg", malegallery)//
-                        bundle.putString("PairId", pairsId)//
-                        bundle.putString("PairMaleKey", pairMaleKey)//
-                        bundle.putString("PairFemaleKey", pairFemaleKey)//
-                        bundle.putString("PairFlightMaleKey", pairMaleFlightKey)//
-                        bundle.putString("PairFlightFemaleKey", pairFemaleFlightKey)//
-                        bundle.putString("PairKey", key)//
-                        bundle.putString("MaleID", male)//
-                        bundle.putString("FemaleID", female)//
-                        bundle.putString("BeginningDate", beginningDate)//
-                        bundle.putString("SeparateDate", separateDate)// /toodo
-                        bundle.putString("MaleGender", maleMutation)//
-                        bundle.putString("FemaleGender", femaleMutation)//
-                        bundle.putString("CageKeyFemale", cageKeyFemale)//
-                        bundle.putString("CageKeyMale", cageKeyMale)//
-                        bundle.putString("CageBirdFemale", cageBirdFemale)//
-                        bundle.putString("CageBirdMale", cageBirdMale)//
-                        bundle.putString("CageKey", pairCageKey)
-                        bundle.putString("CagePairKey", cagePairKey)
-                        bundle.putString("PairCage", cageName)
-
-                        Log.d(TAG, bundle.toString())
-                        i.putExtras(bundle)
-
-
-                        context.startActivity(i)
-                    }
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
-        }
 
 
         // Set visibility and text for Incubating
@@ -196,19 +110,33 @@ class ClutchesListAdapter(
         }
         if (deadBeforeMovingToNurseryCount != null && deadBeforeMovingToNurseryCount.toInt() > 0) {
             holder.tvDeadBeforeMoving.visibility = View.VISIBLE
-            holder.tvDeadBeforeMoving.text = "$deadBeforeMovingToNurseryCount Dead Before Moving to Nursery"
+            holder.tvDeadBeforeMoving.text =
+                "$deadBeforeMovingToNurseryCount Dead Before Moving to Nursery"
             // You might want to set the date for hatched eggs here if applicable.
         } else {
             holder.tvDeadBeforeMoving.visibility = View.GONE
         }
         Log.d(ContentValues.TAG, moveCount.toString())
-        if ( moveCount != null && moveCount.toInt() > 0) {
+        if (moveCount != null && moveCount.toInt() > 0) {
             holder.tvMoved.visibility = View.VISIBLE
             holder.tvMoved.text = "$moveCount Moved Egg"
             // You might want to set the date for hatched eggs here if applicable.
         } else {
             holder.tvMoved.visibility = View.GONE
         }
+
+        if (clutch.fosterPair != true) {
+            holder.btnFoster.visibility = View.GONE
+        } else {
+            holder.btnFoster.visibility = View.VISIBLE
+
+        }
+        if (clutch.parentPair != true) {
+            holder.btnParent.visibility = View.GONE
+        } else {
+            holder.btnParent.visibility = View.VISIBLE
+        }
+
     }
 
 
@@ -220,6 +148,10 @@ class ClutchesListAdapter(
 
 class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggData>) :
     RecyclerView.ViewHolder(itemView) {
+
+
+    private var dbase = FirebaseDatabase.getInstance().reference
+    private var mAuth = FirebaseAuth.getInstance()
 
     val tvTotal: TextView = itemView.findViewById(R.id.tvTotal)
     val tvIncubating: TextView = itemView.findViewById(R.id.tvIncubating)
@@ -235,7 +167,220 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
     val btnParent: MaterialButton = itemView.findViewById(R.id.parents)
     val btnFoster: MaterialButton = itemView.findViewById(R.id.fosterpair)
 
+
     init {
+
+
+        btnFoster.setOnClickListener {
+            Log.d(TAG, "FOSTER")
+
+            val currentUserId = mAuth.currentUser?.uid
+            val db = dbase.child("Users")
+                .child("ID: ${currentUserId}").child("Pairs")
+                .child(dataList[adapterPosition].pairKey.toString()).child("Clutches")
+                .child(dataList[adapterPosition].eggKey.toString()).child("Foster Pair")
+
+            db.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(itemSnapshot: DataSnapshot) {
+                    val fosterKey = itemSnapshot.child("FosterPairKey").value.toString()
+                    if (fosterKey.isNotEmpty()) {
+
+                        val fosterPair = dbase.child("Users")
+                            .child("ID: $currentUserId").child("Pairs").child(fosterKey)
+
+                        fosterPair.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val i = Intent(itemView.context, PairsDetailedActivity::class.java)
+                                Log.d(TAG, "FOSTER1")
+                                val femalegallery =
+                                    snapshot.child("Female Gallery").value.toString()
+                                val malegallery =
+                                    snapshot.child("Male Gallery").value.toString()
+                                val key = fosterKey
+                                val pairsId = snapshot.child("Pair ID").value.toString()
+                                val cageName = snapshot.child("Cage").value.toString()
+                                val cageKeyFemale =
+                                    snapshot.child("CageKeyFemale").value.toString()
+                                val cageKeyMale =
+                                    snapshot.child("CageKeyMale").value.toString()
+                                val cageBirdFemale = snapshot.child(fosterKey)
+                                    .child("CageKeyFlightFemaleValue").value.toString()
+                                val cageBirdMale = snapshot
+                                    .child("CageKeyFlightMaleValue").value.toString()
+                                val male = snapshot.child("Male").value.toString()
+                                val female =
+                                    snapshot.child("Female").value.toString()
+                                val maleMutation =
+                                    snapshot
+                                        .child("Male Mutation").value.toString()
+                                val femaleMutation =
+                                    snapshot
+                                        .child("Female Mutation").value.toString()
+                                val beginningDate =
+                                    snapshot.child("Beginning").value.toString()
+                                val pairMaleKey =
+                                    snapshot
+                                        .child("Male Bird Key").value.toString()
+                                val pairFemaleKey =
+                                    snapshot
+                                        .child("Female Bird Key").value.toString()
+                                val separateDate =
+                                    snapshot
+                                        .child("Separate Date").value.toString()
+                                val pairMaleFlightKey =
+                                    snapshot
+                                        .child("Male Flight Key").value.toString()
+                                val pairFemaleFlightKey =
+                                    snapshot
+                                        .child("Female Flight Key").value.toString()
+                                val pairCageKey =
+                                    snapshot.child("Cage Key").value.toString()
+                                val cagePairKey =
+                                    snapshot
+                                        .child("Pair Cage Key").value.toString()
+
+
+                                val bundle = Bundle()
+                                bundle.putString("PairFemaleImg", femalegallery)//
+                                bundle.putString("PairMaleImg", malegallery)//
+                                bundle.putString("PairId", pairsId)//
+                                bundle.putString("PairMaleKey", pairMaleKey)//
+                                bundle.putString("PairFemaleKey", pairFemaleKey)//
+                                bundle.putString("PairFlightMaleKey", pairMaleFlightKey)//
+                                bundle.putString("PairFlightFemaleKey", pairFemaleFlightKey)//
+                                bundle.putString("PairKey", key)//
+                                bundle.putString("MaleID", male)//
+                                bundle.putString("FemaleID", female)//
+                                bundle.putString("BeginningDate", beginningDate)//
+                                bundle.putString("SeparateDate", separateDate)// /toodo
+                                bundle.putString("MaleGender", maleMutation)//
+                                bundle.putString("FemaleGender", femaleMutation)//
+                                bundle.putString("CageKeyFemale", cageKeyFemale)//
+                                bundle.putString("CageKeyMale", cageKeyMale)//
+                                bundle.putString("CageBirdFemale", cageBirdFemale)//
+                                bundle.putString("CageBirdMale", cageBirdMale)//
+                                bundle.putString("CageKey", pairCageKey)
+                                bundle.putString("CagePairKey", cagePairKey)
+                                bundle.putString("PairCage", cageName)
+
+                                Log.d(TAG, bundle.toString())
+                                i.putExtras(bundle)
+
+
+                                itemView.context.startActivity(i)
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
+
+        btnParent.setOnClickListener {
+            val currentUserId = mAuth.currentUser?.uid
+            val db = dbase.child("Users")
+                .child("ID: ${currentUserId}").child("Pairs")
+                .child(dataList[adapterPosition].pairKey.toString()).child("Clutches")
+                .child(dataList[adapterPosition].eggKey.toString()).child("Parent")
+
+            db.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val parentKey = snapshot.child("ParentKey").value.toString()
+                    if (parentKey.isNotEmpty()) {
+                        val i = Intent(itemView.context, PairsDetailedActivity::class.java)
+
+                        val femalegallery =
+                            snapshot.child(parentKey).child("Female Gallery").value.toString()
+                        val malegallery =
+                            snapshot.child(parentKey).child("Male Gallery").value.toString()
+                        val key = parentKey
+                        val pairsId = snapshot.child(parentKey).child("Pair ID").value.toString()
+                        val cageName = snapshot.child(parentKey).child("Cage").value.toString()
+                        val cageKeyFemale =
+                            snapshot.child(parentKey).child("CageKeyFemale").value.toString()
+                        val cageKeyMale =
+                            snapshot.child(parentKey).child("CageKeyMale").value.toString()
+                        val cageBirdFemale = snapshot.child(parentKey)
+                            .child("CageKeyFlightFemaleValue").value.toString()
+                        val cageBirdMale = snapshot.child(parentKey)
+                            .child("CageKeyFlightMaleValue").value.toString()
+                        val male = snapshot.child(parentKey).child("Male").value.toString()
+                        val female = snapshot.child(parentKey).child("Female").value.toString()
+                        val maleMutation =
+                            snapshot.child(parentKey).child("Male Mutation").value.toString()
+                        val femaleMutation =
+                            snapshot.child(parentKey).child("Female Mutation").value.toString()
+                        val beginningDate =
+                            snapshot.child(parentKey).child("Beginning").value.toString()
+                        val pairMaleKey =
+                            snapshot.child(parentKey).child("Male Bird Key").value.toString()
+                        val pairFemaleKey =
+                            snapshot.child(parentKey).child("Female Bird Key").value.toString()
+                        val separateDate =
+                            snapshot.child(parentKey).child("Separate Date").value.toString()
+                        val pairMaleFlightKey =
+                            snapshot.child(parentKey).child("Male Flight Key").value.toString()
+                        val pairFemaleFlightKey =
+                            snapshot.child(parentKey).child("Female Flight Key").value.toString()
+                        val pairCageKey =
+                            snapshot.child(parentKey).child("Cage Key").value.toString()
+                        val cagePairKey =
+                            snapshot.child(parentKey).child("Pair Cage Key").value.toString()
+
+
+                        val bundle = Bundle()
+                        bundle.putString("PairFemaleImg", femalegallery)//
+                        bundle.putString("PairMaleImg", malegallery)//
+                        bundle.putString("PairId", pairsId)//
+                        bundle.putString("PairMaleKey", pairMaleKey)//
+                        bundle.putString("PairFemaleKey", pairFemaleKey)//
+                        bundle.putString("PairFlightMaleKey", pairMaleFlightKey)//
+                        bundle.putString("PairFlightFemaleKey", pairFemaleFlightKey)//
+                        bundle.putString("PairKey", key)//
+                        bundle.putString("MaleID", male)//
+                        bundle.putString("FemaleID", female)//
+                        bundle.putString("BeginningDate", beginningDate)//
+                        bundle.putString("SeparateDate", separateDate)// /toodo
+                        bundle.putString("MaleGender", maleMutation)//
+                        bundle.putString("FemaleGender", femaleMutation)//
+                        bundle.putString("CageKeyFemale", cageKeyFemale)//
+                        bundle.putString("CageKeyMale", cageKeyMale)//
+                        bundle.putString("CageBirdFemale", cageBirdFemale)//
+                        bundle.putString("CageBirdMale", cageBirdMale)//
+                        bundle.putString("CageKey", pairCageKey)
+                        bundle.putString("CagePairKey", cagePairKey)
+                        bundle.putString("PairCage", cageName)
+
+                        Log.d(TAG, bundle.toString())
+                        i.putExtras(bundle)
+
+
+                        itemView.context.startActivity(i)
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
+
+
         itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("CageKey", dataList[adapterPosition].paircagekey)

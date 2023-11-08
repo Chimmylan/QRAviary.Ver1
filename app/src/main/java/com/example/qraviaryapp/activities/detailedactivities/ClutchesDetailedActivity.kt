@@ -159,7 +159,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         val qrSnapshot = qrRef.get().await()
         CageQR = qrSnapshot.child("QR").value.toString()
         for (eggSnapshot in snapshot.children) {
-            if(eggSnapshot.key != "QR" && eggSnapshot.key != "Parent"){
+            if(eggSnapshot.key != "QR" && eggSnapshot.key != "Parent" && eggSnapshot.key != "Foster Pair"){
                 val data = eggSnapshot.getValue(EggData::class.java)
                 if (data != null) {
                     val individualEggKey = eggSnapshot.key.toString()
