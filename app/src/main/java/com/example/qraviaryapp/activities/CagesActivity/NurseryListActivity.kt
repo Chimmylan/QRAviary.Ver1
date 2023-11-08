@@ -12,6 +12,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -43,6 +45,7 @@ class NurseryListActivity : AppCompatActivity() {
     private lateinit var adapter: NurseryListAdapter
     private lateinit var CageQR: String
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     private var birdCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ class NurseryListActivity : AppCompatActivity() {
         val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
-
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
 
 
         recyclerView = findViewById(R.id.recyclerView_bird_list)
@@ -299,21 +302,32 @@ class NurseryListActivity : AppCompatActivity() {
         dataList
 
     }
+
     override fun onResume() {
         super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-
-
-    }
+        }}
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cageoption, menu)
 

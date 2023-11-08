@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,7 @@ class BreedingListActivity : AppCompatActivity() {
     private lateinit var previous: TextView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     var totalcurrent: Int = 0
     var totalprevious: Int = 0
     var total: Int = 0
@@ -71,6 +73,7 @@ class BreedingListActivity : AppCompatActivity() {
                 )
             )
         )
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         totalBirds = findViewById(R.id.tvBirdCount)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         CageName = intent?.getStringExtra("CageName").toString()
@@ -342,6 +345,52 @@ class BreedingListActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+                adapter.notifyDataSetChanged()
+                if (!dataList.isEmpty()) {
+                    current.visibility = View.VISIBLE
+                } else {
+                    current.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            }
+            finally {
+                loadingProgressBar.visibility = View.GONE
+            }
+        }
+        lifecycleScope.launch {
+            try {
+                val data = getDataFromPreviousDatabase()
+                dataList1.clear()
+                dataList1.addAll(data)
+                adapter1.notifyDataSetChanged()
+                if (!dataList1.isEmpty()) {
+                    previous.visibility = View.VISIBLE
+                } else {
+                    previous.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            }
+            finally {
+                loadingProgressBar.visibility = View.GONE
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -51,6 +52,7 @@ class AdultingFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -98,7 +100,7 @@ class AdultingFragment : Fragment() {
         val maturingValue =
             sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
-
+        loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
         totalBirds = rootView.findViewById(R.id.tvBirdCount)
         swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         recyclerView = rootView.findViewById(R.id.RecyclerView)
@@ -318,6 +320,31 @@ class AdultingFragment : Fragment() {
         dataList
 
     }
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     /* private fun showSnackbar(message: String) {
          snackbar.setText(message)
          snackbar.show()

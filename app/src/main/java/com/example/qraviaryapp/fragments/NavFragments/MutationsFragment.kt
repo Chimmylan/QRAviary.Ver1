@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -51,6 +52,7 @@ class MutationsFragment : Fragment() {
     private lateinit var totalBirds: TextView
     private var mutationCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +63,7 @@ class MutationsFragment : Fragment() {
             requireActivity().window.statusBarColor =
                 ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
@@ -245,7 +248,31 @@ class MutationsFragment : Fragment() {
         alertDialog.show()
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed

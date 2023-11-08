@@ -112,6 +112,7 @@ class ClutchesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_clutches, container, false)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
@@ -155,7 +156,27 @@ class ClutchesFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
     }
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
@@ -318,6 +339,7 @@ class ClutchesFragment : Fragment() {
         }
         dataList
     }
+
     private fun generateQRCodeUri(bundleCageData: String): Uri? {
         val multiFormatWriter = MultiFormatWriter()
         val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)

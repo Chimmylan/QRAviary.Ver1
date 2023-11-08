@@ -60,13 +60,13 @@ class BirdsFragment : Fragment() {
     private lateinit var adapter: BirdListAdapter
     private lateinit var fab: FloatingActionButton
     private lateinit var totalBirds: TextView
-    private lateinit var loadingProgressBar: ProgressBar
+
     private var birdCount = 0
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private lateinit var swipeToRefresh: SwipeRefreshLayout
-
+    private lateinit var loadingProgressBar: ProgressBar
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,12 +79,12 @@ class BirdsFragment : Fragment() {
             activity?.window?.statusBarColor =
                 ContextCompat.getColor(requireContext(), R.color.totalbirds)
         }
-
+        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
         totalBirds = rootView.findViewById(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
-        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
+
 //        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
 //        recyclerView.layoutManager = gridLayoutManager
 //        dataList = ArrayList()

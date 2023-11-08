@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bottom_nav_background"
     tools:context=".activities.AddActivities.AddEggActivity">
 
 
@@ -11,21 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/white_black"
         android:weightSum="5"
+        android:padding="10dp"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white_black"
+
+
             android:orientation="vertical"
             android:weightSum="2">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -43,7 +46,6 @@
                     android:id="@+id/spinnerstatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
                     android:minHeight="48dp" />
 
 
@@ -54,9 +56,9 @@
             android:id="@+id/incubationDateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+
             android:orientation="vertical"
-            android:visibility="gone">
+            >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,19 +76,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:minHeight="48dp"
-                    android:textSize="10sp"
+                    android:textAlignment="textStart"
+                    android:textSize="12sp"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     app:icon="@drawable/drop_down"
                     app:iconGravity="end"
-                    app:iconTint="@color/black"
+                    app:iconTint="@color/black_white"
                     android:text="TODAY"
-                    android:textColor="@color/black" />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
+                    android:textColor="@color/black_white"/>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -135,7 +133,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
             android:orientation="horizontal">
 
 
@@ -151,7 +148,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/etincubationdays"
@@ -163,7 +159,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
             android:orientation="horizontal">
 
 
@@ -179,7 +174,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
             android:orientation="horizontal"
             >
             <EditText
@@ -193,7 +187,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
+
             android:orientation="vertical">
 
             <Button
@@ -201,14 +195,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="EDIT"
-                android:backgroundTint="@color/zxing_transparent"
+
+                android:backgroundTint="@color/itemimagebg"
                 android:textColor="@color/black_white"/>
             <Button
                 android:id="@+id/save"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="SAVE"
-                android:backgroundTint="@color/zxing_transparent"
+                android:backgroundTint="@color/itemimagebg"
                 android:textColor="@color/black_white"/>
         </LinearLayout>
 

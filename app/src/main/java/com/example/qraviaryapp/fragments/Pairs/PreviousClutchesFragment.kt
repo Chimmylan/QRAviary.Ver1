@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -86,7 +87,7 @@ class PreviousClutchesFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         adapter = PreviousClutchesListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
 
         pairKey = arguments?.getString("BirdKey").toString()
         pairId = arguments?.getString("PairId").toString()
@@ -118,7 +119,27 @@ class PreviousClutchesFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
     }
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 

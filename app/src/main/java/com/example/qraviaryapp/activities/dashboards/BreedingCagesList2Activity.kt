@@ -64,7 +64,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var storageRef = Firebase.storage.reference
     private lateinit var progressBar: ProgressBar
-
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -87,7 +87,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
             "<font color='$abcolortitle'>Breeding Cages</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        progressBar = findViewById(R.id.progressBar)
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
         totalBirds = findViewById(R.id.tvBirdCount)
@@ -423,7 +423,31 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         dataList
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 

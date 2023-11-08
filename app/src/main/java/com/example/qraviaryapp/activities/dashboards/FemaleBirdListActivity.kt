@@ -10,12 +10,17 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FemaleBirdListAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -33,7 +38,9 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
     private lateinit var adapter: FemaleBirdListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var dataList: ArrayList<BirdData>
-
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -54,7 +61,7 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        totalBirds = findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         recyclerView = findViewById(R.id.recyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
@@ -62,7 +69,8 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
         dataList = ArrayList()
         adapter = FemaleBirdListAdapter(this,dataList, this)
         recyclerView.adapter = adapter
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
@@ -72,6 +80,27 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
+        }
+
+        refreshApp()
+
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -210,10 +239,35 @@ class FemaleBirdListActivity : AppCompatActivity(), ClickListener {
                 }
             }
         }
-
+        totalBirds.text = dataList.count().toString() + " Female Birds"
+        dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
         dataList
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     override fun onClick(nameValue: String) {
         TODO("Not yet implemented")
     }

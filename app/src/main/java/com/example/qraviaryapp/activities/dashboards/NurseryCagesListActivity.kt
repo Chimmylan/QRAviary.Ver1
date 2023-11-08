@@ -65,6 +65,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var cageImg: ImageView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     private var storageRef = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +83,7 @@ class NurseryCagesListActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
@@ -399,7 +401,31 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
         dataList.sortBy { it.cage?.toIntOrNull() }
         dataList
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

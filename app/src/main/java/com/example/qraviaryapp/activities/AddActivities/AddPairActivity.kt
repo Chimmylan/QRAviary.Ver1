@@ -53,7 +53,6 @@ import java.util.Locale
 
 class AddPairActivity : AppCompatActivity() {
 
-
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
 

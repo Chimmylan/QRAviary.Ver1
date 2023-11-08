@@ -10,6 +10,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +43,7 @@ class FlightListActivity : AppCompatActivity() {
     private lateinit var CageQR: String
     private lateinit var totalBirds: TextView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
     private var birdCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +64,7 @@ class FlightListActivity : AppCompatActivity() {
         )
 
         totalBirds = findViewById(R.id.tvBirdCount)
-
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.recyclerView_bird_list)
         val gridLayoutManager = GridLayoutManager(this,1)
@@ -111,6 +114,7 @@ class FlightListActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
         }
     }
+
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")
@@ -288,6 +292,31 @@ class FlightListActivity : AppCompatActivity() {
         dataList
 
     }
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cageoption, menu)
 

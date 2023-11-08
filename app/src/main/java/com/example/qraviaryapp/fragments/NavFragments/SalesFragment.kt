@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -48,6 +49,7 @@ class SalesFragment : Fragment() {
     private lateinit var totalBirds: TextView
     private var birdCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +66,7 @@ class SalesFragment : Fragment() {
         dataList = ArrayList()
         adapter = SoldAdapter(requireContext(),dataList)
         recyclerView.adapter = adapter
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         Log.d(ContentValues.TAG, "FLIGHT KEY! THIS SHEYT ${flightKey.toString()}")
         lifecycleScope.launch {
             try {
@@ -291,6 +294,30 @@ class SalesFragment : Fragment() {
 
         dataList
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
 }

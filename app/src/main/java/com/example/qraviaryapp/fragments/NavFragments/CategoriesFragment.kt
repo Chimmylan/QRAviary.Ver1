@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -34,12 +35,14 @@ class CategoriesFragment : Fragment(){
     private lateinit var adapter: CategoryFragmentAdapter
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         totalBirds =view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -119,7 +122,31 @@ class CategoriesFragment : Fragment(){
             dataList
         }
 
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     // Add the other onClick functions as needed
 
 }

@@ -63,7 +63,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
     private var cageCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var storageRef = Firebase.storage.reference
-
+    private lateinit var loadingProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +82,7 @@ class FlightCagesList2Activity : AppCompatActivity() {
                 )
             )
         )
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
@@ -411,7 +412,31 @@ class FlightCagesList2Activity : AppCompatActivity() {
         dataList
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 

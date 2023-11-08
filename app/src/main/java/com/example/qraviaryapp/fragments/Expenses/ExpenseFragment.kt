@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +45,7 @@ class ExpenseFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+    private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +53,7 @@ class ExpenseFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expense, container, false)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         fab = view.findViewById(R.id.fab)
@@ -166,19 +169,27 @@ class ExpenseFragment : Fragment() {
 
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
+
     }
+
     private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDataBase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
+
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed
 }
