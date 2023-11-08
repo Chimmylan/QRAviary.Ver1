@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|left"
             android:text="Current"
+            android:background="@color/itemimagebg"
             android:visibility="gone"
             android:layout_margin="10dp"
             android:textSize="16sp" />
@@ -71,6 +72,7 @@
                 android:gravity="center|left"
                 android:text="Previous"
                 android:visibility="gone"
+                android:background="@color/itemimagebg"
                 android:layout_margin="10dp"
                 android:textSize="16sp" />
 

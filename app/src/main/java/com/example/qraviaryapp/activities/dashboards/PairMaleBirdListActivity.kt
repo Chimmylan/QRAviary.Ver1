@@ -154,8 +154,10 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(BirdData::class.java)
             val gallery = itemSnapshot.child("Gallery")
-            if (data != null) {
-                if (itemSnapshot.child("Status").value != "Paired") {
+            val status = itemSnapshot.child("Status").value?.toString()
+
+            if (data != null && !listOf("Sold", "Deceased", "Lost", "Other", "Donated").contains(status)) {
+
                     val male = itemSnapshot.child("Gender").value.toString()
 
                     val mutation1 = itemSnapshot.child("Mutation1")
@@ -580,7 +582,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
                             Log.d(ContentValues.TAG, "Hybridization is on")
                         }
                     }
-                }
+
 
 
             }

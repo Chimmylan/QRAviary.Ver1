@@ -153,8 +153,9 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(BirdData::class.java)
             val gallery = itemSnapshot.child("Gallery")
-            if (data != null) {
-                if (itemSnapshot.child("Status").value != "Paired") {
+            val status = itemSnapshot.child("Status").value?.toString()
+
+            if (data != null && !listOf("Sold", "Deceased", "Lost", "Other", "Donated").contains(status)) {
                     val female = itemSnapshot.child("Gender").value.toString()
                     val mutation1 = itemSnapshot.child("Mutation1")
                     val mutation2 = itemSnapshot.child("Mutation2")
@@ -583,7 +584,7 @@ class PairFemaleBirdListActivity : AppCompatActivity(), ClickListener {
                             dataList.add(data)
                         }
                     }
-                }
+
 
             }
         }

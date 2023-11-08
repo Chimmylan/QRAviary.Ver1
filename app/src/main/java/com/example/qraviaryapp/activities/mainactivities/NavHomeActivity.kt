@@ -6,17 +6,23 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
@@ -39,6 +45,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -54,8 +61,9 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var menu: Menu
     private var currentFragment: Fragment? = null
     private var lastBackPressTime: Long = 0
-
-
+    private lateinit var navigationView: NavigationView
+    lateinit var incubating: TextView
+    lateinit var adulting: TextView
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +75,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         binding = ActivityNavHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         mAuth = FirebaseAuth.getInstance()
         val MyFirebaseMessagingService = MyFirebaseMessagingService()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
@@ -75,7 +84,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setSupportActionBar(toolbar)
         toolbar = binding.toolbar
         drawerLayout = binding.drawerLayout
-        val navigationView = binding.navView
+        navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
             .apply {
@@ -105,9 +114,23 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             Log.d(TAG, "My token: $token")
 //            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
         })
-        
+
+        incubating = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_incubating)) as TextView
+        adulting = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_aldulting)) as TextView
+
+        initializeCountDrawer()
 
         checkElapsedTime()
+    }
+    private fun initializeCountDrawer() {
+        incubating.gravity = Gravity.CENTER_VERTICAL
+        incubating.setTypeface(null, Typeface.BOLD)
+        incubating.setTextColor(resources.getColor(R.color.purpledark))
+        incubating.text = "99+"
+        adulting.gravity = Gravity.CENTER_VERTICAL
+       adulting.setTypeface(null, Typeface.BOLD)
+        adulting.setTextColor(resources.getColor(R.color.purpledark))
+        adulting.text = "7"
     }
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
@@ -122,7 +145,9 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 //            finish()
 //        }
     }
-
+//    private fun initializeCountDrawer() {
+//        // TODO: Implement the count initialization logic
+//    }
     override fun onPause() {
         Log.d(ContentValues.TAG, "onPause")
         super.onPause()
