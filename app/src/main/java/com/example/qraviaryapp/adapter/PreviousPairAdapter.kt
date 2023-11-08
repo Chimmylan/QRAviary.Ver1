@@ -90,7 +90,8 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-
+            bundle.putString("PairId", dataList[adapterPosition].pairId)
+            bundle.putString("PairCage", dataList[adapterPosition].pairCage)
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)

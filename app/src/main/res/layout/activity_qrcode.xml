@@ -87,7 +87,7 @@
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="15sp"  />
                     <TextView
                         android:id="@+id/birdlegband"
                         android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="15sp"  />
                     <TextView
                         android:id="@+id/birdmutation"
                         android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="15sp"  />
                     <TextView
                         android:id="@+id/birdcage"
                         android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="15sp"  />
                 </LinearLayout>
                     <LinearLayout
                         android:id="@+id/pairqrdetail"
@@ -134,7 +134,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp" />
                         <TextView
                             android:id="@+id/pairdate"
                             android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp" />
                         <TextView
                             android:id="@+id/pairmutation"
                             android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp" />
                         <TextView
                             android:id="@+id/paircage"
                             android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp"  />
 
                     </LinearLayout>
                     <LinearLayout
@@ -182,7 +182,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp"  />
                         <TextView
                             android:id="@+id/pairclutchno"
                             android:layout_width="match_parent"
@@ -192,7 +192,7 @@
                             android:layout_weight="1"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="20sp" />
+                            android:textSize="15sp"  />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

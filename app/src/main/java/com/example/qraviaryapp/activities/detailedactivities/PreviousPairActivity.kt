@@ -1,9 +1,12 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import EggData
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -44,6 +47,7 @@ class PreviousPairActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
+    private lateinit var CageQR: String
     private lateinit var pairId: String
     private lateinit var pairKey: String
     private lateinit var pairCageKey: String
@@ -59,6 +63,9 @@ class PreviousPairActivity : AppCompatActivity() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
+    private lateinit var pairCage: String
+    private lateinit var beginningDate: String
+    private lateinit var separateDate: String
     //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -114,8 +121,8 @@ class PreviousPairActivity : AppCompatActivity() {
             pairId = bundle.getString("PairId").toString()
             pairMale = bundle.getString("MaleID").toString()
             pairFemale = bundle.getString("FemaleID").toString()
-            val beginningDate = bundle.getString("BeginningDate")
-            val separateDate = bundle.getString("SeparateDate")
+            beginningDate = bundle.getString("BeginningDate").toString()
+            separateDate = bundle.getString("SeparateDate").toString()
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
             pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
@@ -129,7 +136,8 @@ class PreviousPairActivity : AppCompatActivity() {
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
             pairCageKey = bundle.getString("CageKey").toString()
             cagePairKey = bundle.getString("CagePairKey").toString()
-
+            pairCage = bundle.getString("PairCage").toString()
+            newBundle.putString("PairCage", pairCage)
             newBundle.putString("PairId", pairId)
             newBundle.putString("MaleID", pairMale)
             newBundle.putString("FemaleID", pairFemale)
@@ -173,6 +181,7 @@ class PreviousPairActivity : AppCompatActivity() {
                 .child(pairKey)
             db.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    CageQR = snapshot.child("QR").value.toString()
                     if (snapshot.child("Separate Date").exists()){
                         tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
                     }else
@@ -189,7 +198,8 @@ class PreviousPairActivity : AppCompatActivity() {
 
 
 
-
+            var date = tvDate.text
+            Log.d(TAG, "date prev" + tvDate.text)
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
             btnFemale.text = pairFemale.toString()
             btnMale.text = pairMale.toString()
@@ -223,7 +233,16 @@ class PreviousPairActivity : AppCompatActivity() {
 
                 true
             }
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
+                i.putExtra("PairId", pairId)
+                i.putExtra("Mutation", tvMutations.text)
+                i.putExtra("Cage", pairCage)
+                i.putExtra("Date", beginningDate + " x " + separateDate)
+                startActivity(i)
+                true
+            }
             R.id.menu_seperate ->{
                 showSeparateConfirmation()
                 true
