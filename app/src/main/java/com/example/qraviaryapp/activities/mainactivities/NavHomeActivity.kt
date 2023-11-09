@@ -65,6 +65,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     lateinit var incubating: TextView
     lateinit var adulting: TextView
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var incubatingBadge: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +100,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         }
 
+
+
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -123,14 +126,15 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         checkElapsedTime()
     }
     private fun initializeCountDrawer() {
+        val totalEggCount = sharedPreferences.getInt("totalEggCount", 0)
         incubating.gravity = Gravity.CENTER_VERTICAL
         incubating.setTypeface(null, Typeface.BOLD)
         incubating.setTextColor(resources.getColor(R.color.purpledark))
-        incubating.text = "99+"
+        incubating.text = totalEggCount.toString()
         adulting.gravity = Gravity.CENTER_VERTICAL
        adulting.setTypeface(null, Typeface.BOLD)
         adulting.setTextColor(resources.getColor(R.color.purpledark))
-        adulting.text = "7"
+        adulting.text = ""
     }
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
