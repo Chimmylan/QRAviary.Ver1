@@ -463,7 +463,7 @@ class AddPairActivity : AppCompatActivity() {
                         if (validMale && validFemale) {
 
                             val data: Map<String, Any?> = hashMapOf(
-                                "Pair Key" to newPairPref,
+                                "Pair Key" to newPairPref.key.toString(),
                                 "Pair ID" to newPairNumber,// idnumberPairID
                                 "Male" to bird.pairMale,//MaleId
                                 "Male Mutation" to bird.pairMaleGender,//MaleGender

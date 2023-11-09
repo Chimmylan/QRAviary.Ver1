@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -63,6 +65,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var CageQR: String
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var currenUserId: String
+    private lateinit var loadingProgressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -79,7 +83,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference
         currenUserId = mAuth.currentUser?.uid.toString()
         dataList = ArrayList()
-
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         adapter = EggClutchesListAdapter(this, dataList)
         recyclerView = findViewById(R.id.recyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
@@ -342,6 +346,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
 
                 })
+                onBackPressed()
                 true
             }
 
@@ -374,16 +379,28 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
-            } catch (e: java.lang.Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
 
 }

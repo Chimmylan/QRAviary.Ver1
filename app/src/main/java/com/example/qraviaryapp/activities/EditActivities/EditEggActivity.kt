@@ -69,6 +69,7 @@ class EditEggActivity : AppCompatActivity() {
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     private val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
     private var incubatingDays: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -364,7 +365,10 @@ class EditEggActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_remove -> {
+                val dbase = FirebaseDatabase.getInstance().reference
+                val eggref = dbase.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString()).child(individualEggKey.toString()).removeValue()
 
+                onBackPressed()
                 true
             }
             android.R.id.home -> {
