@@ -195,7 +195,8 @@ class IncubatingFragment : Fragment() {
 
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
-                
+                val data = EggData()  // Create a new EggData object for each clutch
+
                 val key = clutchSnapshot.key.toString()
                 var eggsCount = 0
 
@@ -203,9 +204,10 @@ class IncubatingFragment : Fragment() {
                     for (eggSnapshot in clutchSnapshot.children) {
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
-                        eggsCount++
+
 
                         if (eggStatus == "Incubating") {
+                            eggsCount++
                             data.eggKey = key
                             data.eggCount = eggsCount.toString()
                             data.eggIncubating = eggsCount.toString()

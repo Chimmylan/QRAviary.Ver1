@@ -611,9 +611,22 @@ class BasicFlightFragment : Fragment() {
             btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
         )
 
+        val uniqueValues = HashSet<String>()
+
         for (i in spinners.indices) {
             if (spinners[i].visibility == View.VISIBLE) {
-                selectedMutations.add(spinners[i].text.toString())
+                val spinnerText = spinners[i].text.toString()
+
+                if (spinnerText !in uniqueValues) {
+                    selectedMutations.add(spinnerText)
+                    uniqueValues.add(spinnerText)
+                } else {
+                    spinners[i].error = "Error: Duplicate value in spinners"
+                    // Spinner has a duplicate value, show an error message
+                    // You might want to replace this with your own error handling logic
+                    Toast.makeText(context, "Error: Duplicate value in spinners", Toast.LENGTH_SHORT).show()
+                    return  // You can return or break out of the loop, depending on your requirements
+                }
             } else {
                 selectedMutations.add(null)
             }
@@ -663,7 +676,7 @@ class BasicFlightFragment : Fragment() {
         var validMutation = false
         /* var validDateOfBanding = false*/
         var validDateOfBirth = false
-
+        var validforsale = false
         //Validation
         if (TextUtils.isEmpty(dataIdentifier)) {
             etIdentifier.error = "Identifier cannot be Empty..."
@@ -671,8 +684,8 @@ class BasicFlightFragment : Fragment() {
             validIdentifier = true
         }
 
-        if (birdData.mutation1 == "None") {
-            btnMutation1.error = "Mutation must not be empty..."
+        if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4== "None" || birdData.mutation5== "None" || birdData.mutation6 == "None" ){
+            btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
         }
@@ -684,27 +697,24 @@ class BasicFlightFragment : Fragment() {
           }*/
 
         // Assuming dataDateOfBirth is a valid date string in the format "MM dd yyyy" (e.g., "09 29 1990")
+        var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
-            Toast.makeText(
-                requireContext(),
-                "Date of birth must not be empty...",
-                Toast.LENGTH_SHORT
-            ).show()
         } else {
             val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
             val birthDate = dateFormat.parse(dataDateOfBirth)
             val currentDate = Calendar.getInstance().time
 
             val ageInMillis = currentDate.time - birthDate.time
-            val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+            ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
 
             if (ageInDays < 50) {
                 // Age is less than 50 days, show an error message
-                datebirthButton.error = "Age must be more than 50 days"
+                datebirthButton.error = "Age must be greater than 50 days"
                 Toast.makeText(
                     requireContext(),
-                    "Age must be more than 50 days",
+                    "Age must be greater than 50 days",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -712,7 +722,7 @@ class BasicFlightFragment : Fragment() {
             }
         }
 
-//soldlayout
+        //soldlayout
         var validSold = false
         if (soldLayout.visibility == View.VISIBLE) {
 
@@ -721,11 +731,20 @@ class BasicFlightFragment : Fragment() {
             }
             if (TextUtils.isEmpty(etSoldSalePrice.text)) {
                 etSoldSalePrice.error = "Set a Price..."
+            } else if (!TextUtils.isDigitsOnly(etSoldSalePrice.text)) {
+                etSoldSalePrice.error = "Enter a valid price..."
             } else {
                 validSold = true
             }
         }
-
+        if (forSaleLayout.visibility == View.VISIBLE) {
+            if (!TextUtils.isDigitsOnly(etForSaleReqPrice.text)) {
+                etForSaleReqPrice.error = "Enter a valid price..."
+            }
+            else {
+                validforsale = true
+            }
+        }
 
         if (validDateOfBirth && validMutation && validIdentifier) {
             validInputs = true
@@ -877,34 +896,38 @@ class BasicFlightFragment : Fragment() {
 
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
-                val data: Map<String, Any?> = hashMapOf(
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                    /*"Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Cage" to birdData.forSaleCage,
-                    "Requested Price" to birdData.reqPrice,
-                    "Flight Key" to FlightId,
-                    "Bird Key" to birdId,
-                    "CageKey" to cageKeyValue,
-                    "Cage Bird Key" to cageBirdKey
+                if(validforsale){
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*"Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Cage" to birdData.forSaleCage,
+                        "Requested Price" to birdData.reqPrice,
+                        "Flight Key" to FlightId,
+                        "Bird Key" to birdId,
+                        "CageKey" to cageKeyValue,
+                        "Cage Bird Key" to cageBirdKey
 
 
-                )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(data)
+                    )
+                    if (!cageKeyValue.isNullOrEmpty()) {
+                        cageReference.updateChildren(data)
+                    }
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
                 }
-                newBirdPref.updateChildren(data)
-                newNurseryPref.updateChildren(data)
-
+                else{
+                    return
+                }
             } else if (soldLayout.visibility == View.VISIBLE) {
                 if (validSold) {
                     soldId = SoldBirdRef.key
