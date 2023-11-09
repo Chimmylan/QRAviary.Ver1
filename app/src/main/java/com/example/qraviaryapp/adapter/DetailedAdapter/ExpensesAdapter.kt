@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
+import java.text.NumberFormat
+import java.util.Locale
 
 
 class ExpensesAdapter(
@@ -35,8 +37,9 @@ class ExpensesAdapter(
     override fun onBindViewHolder(holder: ExpensesViewHolder, position: Int) {
         val expenses = dataList[position]
         val expensesPrice = expenses.price
+        val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
         holder.geneTextView.text = expenses.expenses
-        holder.PriceName.text = "₱" + expensesPrice
+        holder.PriceName.text = currencyFormat.format(expensesPrice)
         holder.comment.text = expenses.expensesComment
         holder.date.text = expenses.expensesDate
     }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
+import java.text.NumberFormat
+import java.util.Locale
 
 class SoldAdapter(
     private val context: android.content.Context,
@@ -22,7 +24,13 @@ class SoldAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].monthyr?.substring(0, 8) ?: ""
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoldViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
@@ -83,7 +91,8 @@ class SoldAdapter(
         holder.tvMutation.text = combinedMutations
 
         val status = bird.soldPrice?.toDouble()
-        holder.tvStatus.text = "₱" + String.format("%.2f", status)
+        val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
+        holder.tvStatus.text = currencyFormat.format(status)
         holder.tvCage.visibility = View.GONE
         val genderIcon = when (bird.gender) {
             "Male" -> {

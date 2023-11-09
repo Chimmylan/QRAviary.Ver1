@@ -115,19 +115,19 @@ class IncubatingFragment : Fragment() {
     }
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
-                try {
-                    val data = getDataFromDatabase()
-                    dataList.clear()
-                    dataList.addAll(data)
-                    swipeToRefresh.isRefreshing = false
-                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
-                    adapter.notifyDataSetChanged()
-                } catch (e: Exception) {
-                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-                }
-
-            }
+//            lifecycleScope.launch {
+//                try {
+//                    val data = getDataFromDatabase()
+//                    dataList.clear()
+//                    dataList.addAll(data)
+//                    swipeToRefresh.isRefreshing = false
+//                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+//                    adapter.notifyDataSetChanged()
+//                } catch (e: Exception) {
+//                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+//                }
+//
+//            }
             swipeToRefresh.isRefreshing = false
         }
     }
@@ -153,7 +153,7 @@ class IncubatingFragment : Fragment() {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
-        var totalEggsCount = 0
+
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
 
@@ -194,10 +194,8 @@ class IncubatingFragment : Fragment() {
             data?.eggcagekeyFemale = cageKeyFemale
 
             val clutches = itemsnapshot.child("Clutches")
-
             for (clutchSnapshot in clutches.children) {
-                val eggsInClutch = clutchSnapshot.childrenCount.toInt()
-                totalEggsCount += eggsInClutch
+                
                 val key = clutchSnapshot.key.toString()
                 var eggsCount = 0
 
@@ -220,19 +218,34 @@ class IncubatingFragment : Fragment() {
                     }
                 }
             }
-
         }
+
+
+        var totalEggCount = 0
+
+        for (dataItem in dataList) {
+            totalEggCount += dataItem.eggCount?.toIntOrNull() ?: 0
+        }
+
+        // Store the total egg count in SharedPreferences
+        val sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("totalEggCount", totalEggCount)
+        editor.apply()
+        total = dataList.count()
         if(total>1){
             totalBirds.text = total.toString() + " Clutches"
         }
         else{
             totalBirds.text = total.toString() + " Clutch"
         }
-        total = dataList.count()
-        saveTotalEggCount(totalEggsCount)
+
+
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
+
+
     override fun onResume() {
         super.onResume()
 
@@ -240,12 +253,7 @@ class IncubatingFragment : Fragment() {
         reloadDataFromDatabase()
 
     }
-    private fun saveTotalEggCount(count: Int) {
-        val sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putInt("totalEggCount", count)
-        editor.apply()
-    }
+
     private fun reloadDataFromDatabase() {
         loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {

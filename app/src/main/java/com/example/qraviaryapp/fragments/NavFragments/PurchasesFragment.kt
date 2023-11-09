@@ -16,10 +16,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.PurchasesAdapter
+import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationpurchase
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationsold
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -28,6 +32,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass.
@@ -64,11 +70,16 @@ class PurchasesFragment : Fragment() {
         flightKey = arguments?.getString("FlightKey")
         mAuth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.RecyclerView)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = PurchasesAdapter(requireContext(),dataList)
+//        recyclerView.adapter = adapter
         dataList = ArrayList()
-        adapter = PurchasesAdapter(requireContext(),dataList)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = PurchasesAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationpurchase(adapter))
         Log.d(ContentValues.TAG, "FLIGHT KEY! THIS SHEYT ${flightKey.toString()}")
         lifecycleScope.launch {
             try {
@@ -273,7 +284,10 @@ class PurchasesFragment : Fragment() {
                 data.donatedContact = donatedContact
                 data.otherComments = otherComments
                 data.buyPrice = buyPrice
+                data.monthyr= extractYearFromDateString(boughtDate)
+                data.sort= extractYearFromDate(boughtDate)
                 data.boughtDate = boughtDate
+
                 data.breederContact = boughtBreeder
                 data.father = father
                 data.mother = mother
@@ -293,7 +307,17 @@ class PurchasesFragment : Fragment() {
         else{
             totalBirds.text = dataList.count().toString() + " Bird Purchase"
         }
+
+        dataList.sortByDescending { it.sort}
         dataList
+    }
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(it) } ?: ""
+    }
+    private fun extractYearFromDate(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("MM d yyyy", Locale.getDefault()).format(it) } ?: ""
     }
     override fun onResume() {
         super.onResume()

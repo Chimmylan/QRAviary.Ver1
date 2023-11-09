@@ -46,6 +46,8 @@ data class BirdData(
     var forSaleCage: String? = null,
     var reqPrice: String? = null,
     var soldDate: String? = null,
+    var monthyr: String? = null,
+    var sort: String? = null,
     var soldPrice: String? = null,
     var saleContact: String? = null,
     var deathDate: String? = null,
