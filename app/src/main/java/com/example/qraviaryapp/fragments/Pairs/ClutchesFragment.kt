@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.NumberPicker
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -100,6 +101,7 @@ class ClutchesFragment : Fragment() {
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -123,7 +125,7 @@ class ClutchesFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         adapter = ClutchesListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 
         fab = view.findViewById(R.id.fab)
 //        pairKey = arguments?.getString("BirdKey").toString()
@@ -627,19 +629,31 @@ class ClutchesFragment : Fragment() {
 //
 //        WorkManager.getInstance(context).enqueue(workRequest)
 //    }
-    override fun onResume() {
-        super.onResume()
+override fun onResume() {
+    super.onResume()
+
+    // Call a function to reload data from the database and update the RecyclerView
+    reloadDataFromDatabase()
+
+}
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
-            } catch (e: java.lang.Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -82,39 +82,9 @@ class SoldAdapter(
 
         holder.tvMutation.text = combinedMutations
 
-
-        holder.tvStatus.text = bird.status
-        val status = bird.status
-        holder.tvStatus.text = status
-        when (status) {
-            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
-            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
-            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
-            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
-            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
-            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
-            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
-            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
-            else -> holder.tvStatus.setTextColor(Color.GRAY)
-        }
-
-        if (bird.status == "Available" || bird.status == "For Sale") {
-            val cageInfo = when {
-                bird.status == "Available" -> bird.availCage
-                bird.status == "For Sale" -> bird.forSaleCage
-                else -> ""
-            }
-
-            if (cageInfo.isNullOrBlank() ) {
-                holder.tvCage.visibility = View.GONE
-            } else {
-                holder.tvCage.visibility = View.VISIBLE
-                holder.tvCage.text = "Cage: $cageInfo"
-            }
-        } else {
-            holder.tvCage.visibility = View.GONE
-        }
-
+        val status = bird.soldPrice?.toDouble()
+        holder.tvStatus.text = "₱" + String.format("%.2f", status)
+        holder.tvCage.visibility = View.GONE
         val genderIcon = when (bird.gender) {
             "Male" -> {
                 R.drawable.baseline_male_24
@@ -130,7 +100,7 @@ class SoldAdapter(
         }
 
         holder.imageGender.setImageResource(genderIcon)
-        holder.tvGender.text = bird.gender
+        holder.tvGender.text = bird.soldDate
 
         if (bird.legband.isNullOrEmpty()) {
             holder.tvLegband.visibility = View.GONE
