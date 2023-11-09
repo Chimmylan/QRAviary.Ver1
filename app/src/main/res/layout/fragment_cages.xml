@@ -18,16 +18,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBreeding"
             android:layout_width="match_parent"
-            app:cornerRadius="8dp"
+
             android:layout_weight="1"
             android:layout_height="0dp"
             android:backgroundTint="@color/white_black"
             android:text="Breeding Cages"
             android:textAlignment="textStart"
-            android:textColor="@color/black"
+            android:textColor="@color/black_white"
             app:icon="@drawable/cage"
             app:iconSize="60dp"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/black_white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNursery"
@@ -38,11 +38,11 @@
             android:backgroundTint="@color/white_black"
             android:text="Nursery Cages"
             android:textAlignment="textStart"
-            android:textColor="@color/black"
-            app:cornerRadius="8dp"
+            android:textColor="@color/black_white"
+
             app:icon="@drawable/cage"
             app:iconSize="60dp"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/black_white"  />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFlight"
@@ -51,12 +51,11 @@
             android:layout_height="0dp"
             android:backgroundTint="@color/white_black"
             android:text="Flight Cages"
-            app:cornerRadius="8dp"
             android:textAlignment="textStart"
-            android:textColor="@color/black"
+            android:textColor="@color/black_white"
             app:icon="@drawable/cage"
             app:iconSize="60dp"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/black_white" />
    </LinearLayout>
     </LinearLayout>
 

@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
+                app:tint="@color/black_white"
                 android:src="@drawable/cagess"
                 android:contentDescription="Bird Image"
                 android:scaleType="fitCenter"/>
@@ -40,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:background="@color/white_black"
+
                     android:textColor="@color/black_white"
                     android:layout_gravity="center"
                     android:textSize="15sp"/>

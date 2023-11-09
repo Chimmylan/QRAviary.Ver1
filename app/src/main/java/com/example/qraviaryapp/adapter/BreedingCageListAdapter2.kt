@@ -1,22 +1,14 @@
 package com.example.qraviaryapp.adapter
 
 import CageData
-import ClickListener
-import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.BreedingListActivity
-
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
-
-import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -96,10 +88,12 @@ class CageViewHolder2(itemView: View, private val dataList: MutableList<CageData
                 dataList[adapterPosition].cage // Retrieve the cage name from the data list
             val cageKey =
                 dataList[adapterPosition].cageId
+            val cageQR = dataList[adapterPosition].cageQR
 
             val intent = Intent(itemView.context, BreedingListActivity::class.java)
             intent.putExtra("CageName", cageName)
             intent.putExtra("CageKey", cageKey)
+            intent.putExtra("CageQR", cageQR)
             itemView.context.startActivity(intent)
         }
 

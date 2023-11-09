@@ -2,11 +2,9 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 
 import BirdData
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.media.Image
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 
 class FlightListAdapter(
     private val context: android.content.Context,
@@ -79,7 +76,7 @@ class FlightListAdapter(
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-            "Mutation: " + nonNullMutations.joinToString(" x ")
+            "Mutation: " + nonNullMutations.joinToString(" / ")
         } else {
             "Mutation: None"
         }
@@ -88,7 +85,19 @@ class FlightListAdapter(
 
 
         holder.tvStatus.text = bird.status
-
+        val status = bird.status
+        holder.tvStatus.text = status
+        when (status) {
+            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
+            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
+            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
+            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
+            else -> holder.tvStatus.setTextColor(Color.GRAY)
+        }
 
 
         val genderIcon = when (bird.gender) {

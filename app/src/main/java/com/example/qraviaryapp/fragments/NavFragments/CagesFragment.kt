@@ -3,17 +3,15 @@ package com.example.qraviaryapp.fragments.NavFragments
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.BreedingCagesList2Activity
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.FlightCagesList2Activity
-import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesList2Activity
-import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +37,7 @@ class CagesFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

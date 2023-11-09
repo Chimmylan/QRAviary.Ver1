@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppTheme"
-    android:background="?android:attr/windowBackground"
-    tools:context=".activities.mainactivities.SplashActivity">
 
+    android:background="@drawable/splashlogo"
+    tools:context=".activities.mainactivities.SplashActivity">
+    <!--android:theme="@style/AppTheme"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

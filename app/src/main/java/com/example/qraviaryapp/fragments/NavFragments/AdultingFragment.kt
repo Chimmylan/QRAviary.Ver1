@@ -5,18 +5,20 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -48,7 +50,9 @@ class AdultingFragment : Fragment() {
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var adapter: NurseryListAdapter
     private lateinit var recyclerView: RecyclerView
-
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -96,9 +100,9 @@ class AdultingFragment : Fragment() {
         val maturingValue =
             sharedPrefs?.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
-
-
-
+        loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
+        totalBirds = rootView.findViewById(R.id.tvBirdCount)
+        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         recyclerView = rootView.findViewById(R.id.RecyclerView)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -117,10 +121,28 @@ class AdultingFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-
+        refreshApp()
         return rootView
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+    }
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")
@@ -177,6 +199,8 @@ class AdultingFragment : Fragment() {
                     } else {
                         ""
                     }
+                    val maturingDays = itemsnapshot.child("Maturing Days").value.toString()
+
                     val dateOfBandingValue = itemsnapshot.child("Date of Banding").value
                     val dateOfBirthValue = itemsnapshot.child("Date of Birth").value
                     val statusValue = itemsnapshot.child("Status").value
@@ -231,7 +255,7 @@ class AdultingFragment : Fragment() {
                     val boughtBreeder = breederContactValue.toString() ?: ""
                     val mother = MotherValue.toString() ?: ""
                     val father = FatherValue.toString() ?: ""
-
+                    data.maturingDays = maturingDays
                     data.adultingKey = adultingKey
                     data.cageKey = CageKey
                     data.img = mainPic
@@ -287,10 +311,40 @@ class AdultingFragment : Fragment() {
             }
         }
 
-
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
         dataList
 
     }
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     /* private fun showSnackbar(message: String) {
          snackbar.setText(message)
          snackbar.show()

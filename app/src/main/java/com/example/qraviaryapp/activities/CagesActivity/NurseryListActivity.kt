@@ -2,28 +2,33 @@ package com.example.qraviaryapp.activities.CagesActivity
 
 import BirdData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
+import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
-
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -37,9 +42,11 @@ class NurseryListActivity : AppCompatActivity() {
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<BirdData>
     private lateinit var adapter: NurseryListAdapter
-
+    private lateinit var CageQR: String
     private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     private var birdCount = 0
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -48,7 +55,7 @@ class NurseryListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_nursery_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.elevation = 0f
+        supportActionBar?.elevation = 4f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
@@ -58,18 +65,18 @@ class NurseryListActivity : AppCompatActivity() {
             )
         )
         totalBirds = findViewById(R.id.tvBirdCount)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
-
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
 
 
         recyclerView = findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(this,1)
+        val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = NurseryListAdapter(this,dataList, maturingDays)
+        adapter = NurseryListAdapter(this, dataList, maturingDays)
         recyclerView.adapter = adapter
 
         CageName = intent?.getStringExtra("CageName").toString()
@@ -93,6 +100,27 @@ class NurseryListActivity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
+    }
+
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
@@ -100,9 +128,13 @@ class NurseryListActivity : AppCompatActivity() {
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Nursery Cages").child(CageKey).child("Birds")
+        val qrRef = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Nursery Cages").child(CageKey)
         val dataList = ArrayList<BirdData>()
         val snapshot = db.get().await()
-
+        val qrSnapshot = qrRef.get().await()
+        CageQR = qrSnapshot.child("QR").value.toString()
         for (itemSnapshot in snapshot.children) {
 
             val data = itemSnapshot.getValue(BirdData::class.java)
@@ -147,6 +179,7 @@ class NurseryListActivity : AppCompatActivity() {
                 } else {
                     ""
                 }
+                val maturingDays = itemSnapshot.child("Maturing Days").value.toString()
                 val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
                 val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
@@ -202,7 +235,8 @@ class NurseryListActivity : AppCompatActivity() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
                 birdCount = snapshot.childrenCount.toInt()
-
+                Log.d(TAG, maturingDays)
+                data.maturingDays = maturingDays
                 data.adultingKey = adultingKey
                 data.cageKey = CageKey
                 data.img = mainPic
@@ -258,35 +292,125 @@ class NurseryListActivity : AppCompatActivity() {
 
         }
 
-        totalBirds.text = "Total Birds: $birdCount"
+        if (dataList.count() > 1) {
+            totalBirds.text = dataList.count().toString() + " Birds"
+        } else {
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
 
 
         dataList
 
     }
+
     override fun onResume() {
         super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
         }
-
-
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.cageoption, menu)
+
+
+
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
+                i.putExtra("CageNursery", CageName)
+                startActivity(i)
+                true
+            }
+            R.id.menu_delete -> {
+                deleteCage()
+                true
+            }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun deleteCage() {
+        val currentUserId = mAuth.currentUser?.uid
+        val nurseryCageReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Cages")
+            .child("Nursery Cages").child(CageKey)
+        val nurseryBirdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Nursery Birds")
+        val birdsReference = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}").child("Birds")
+
+        nurseryBirdsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children) {
+                    if (birds.child("CageKey").value == CageKey) {
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        birdsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children) {
+                    if (birds.child("CageKey").value == CageKey) {
+                        val cageKeyReference = birds.child("CageKey").ref
+                        val cageValue = birds.child("Cage").ref
+                        cageValue.setValue(null)
+
+                        cageKeyReference.setValue(null)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        nurseryCageReference.removeValue()
+
+        Log.d(TAG, "DELETE $CageKey")
+        onBackPressed()
+
+
     }
 }

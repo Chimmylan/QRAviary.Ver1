@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_scan"
+        android:title="QR Code"
+        app:showAsAction="always"
+        android:icon="@drawable/scanner"/>
+    <item
+        android:id="@+id/give"
+        android:title="Give to Foster pair"
+        android:icon="@drawable/scanner"/>
+    <item
+        android:id="@+id/menu_qr"
+        android:title="QR Code"/>
+    <item
+        android:id="@+id/menu_delete"
+        android:title="Delete"/>
+</menu>

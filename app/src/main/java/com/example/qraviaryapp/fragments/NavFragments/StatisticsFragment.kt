@@ -2,8 +2,6 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdBarChart
 import BirdData
-import BirdGenderBarChart
-import BirdStatusBarChart
 import EggData
 import PairBarChart
 import android.annotation.SuppressLint
@@ -20,10 +18,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
@@ -33,13 +28,10 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
@@ -159,7 +151,7 @@ class StatisticsFragment : Fragment() {
                             }
                         }
                         val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
-                            NonNullMutations.joinToString(" x ")
+                            NonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
@@ -193,17 +185,18 @@ class StatisticsFragment : Fragment() {
                     val malebird = maleBird.toString()
                     for (clutchSnapshot in clutchesSnapshot.children) {
                         for (eggSnapshot in clutchSnapshot.children) {
-                            val clutchData = eggSnapshot.getValue(EggData::class.java)
-                            if (clutchData != null) {
-                                val status = eggSnapshot.child("Status").value
+                            val eggKey = eggSnapshot.key
+                            if (eggKey != "QR"){
+                                val clutchData = eggSnapshot.getValue(EggData::class.java)
+                                if (clutchData != null) {
+                                    val status = eggSnapshot.child("Status").value
 
-                                val eggstatus = status.toString()
+                                    val eggstatus = status.toString()
 
+                                    val pairBarChart = PairBarChart(malebird, femalebird, eggstatus)
 
-
-                                val pairBarChart = PairBarChart(malebird, femalebird, eggstatus)
-
-                                birdList1.add(pairBarChart)
+                                    birdList1.add(pairBarChart)
+                                }
                             }
                         }
                     }
@@ -240,7 +233,7 @@ class StatisticsFragment : Fragment() {
             notSplit = false
             Log.d(ContentValues.TAG, isSplit.toString())
             // Show birds with only one mutation (split)
-            val splitBirdList = birdList.filter { it.mutations?.contains("x") != true }
+            val splitBirdList = birdList.filter { it.mutations?.contains("/") == true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), splitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), birdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart), birdList1)
@@ -251,7 +244,7 @@ class StatisticsFragment : Fragment() {
             notSplit = true
 
             // Show birds with combined mutations (not split)
-            val notSplitBirdList = birdList.filter { it.mutations?.contains("x") == true }
+            val notSplitBirdList = birdList.filter { it.mutations?.contains("/") != true }
             setupBarChart(requireView().findViewById(R.id.birdsChart), notSplitBirdList)
             setupStatusBarChart(requireView().findViewById(R.id.birdstatusChart), notSplitBirdList)
             setupPairBarChart(requireView().findViewById(R.id.eggbarChart),birdList1)
@@ -327,7 +320,7 @@ class StatisticsFragment : Fragment() {
                     }
                 }
             } else if (isSplit) {
-                if (!MutationCounts.containsKey(mutationKey1) && mutation1.contains("x")) {
+                if (!MutationCounts.containsKey(mutationKey1) && mutation1.contains("/")) {
                     MutationCounts[mutationKey1] = mutableMapOf(
                         "Incubating" to 0,
                         "Hatched" to 0,
@@ -356,7 +349,7 @@ class StatisticsFragment : Fragment() {
                 }
                 if (mutation1 != mutation2) {
                     val mutationKey2 = mutation2
-                    if (!MutationCounts.containsKey(mutationKey2) && mutation2.contains("x")) {
+                    if (!MutationCounts.containsKey(mutationKey2) && mutation2.contains("/")) {
                         MutationCounts[mutationKey2] = mutableMapOf(
                             "Incubating" to 0,
                             "Hatched" to 0,
@@ -384,7 +377,7 @@ class StatisticsFragment : Fragment() {
                     }
                 }
             } else if (notSplit) {
-                if (!MutationCounts.containsKey(mutationKey1) && !mutation1.contains("x")) {
+                if (!MutationCounts.containsKey(mutationKey1) && !mutation1.contains("/")) {
                     MutationCounts[mutationKey1] = mutableMapOf(
                         "Incubating" to 0,
                         "Hatched" to 0,
@@ -413,7 +406,7 @@ class StatisticsFragment : Fragment() {
                 }
                 if (mutation1 != mutation2) {
                     val mutationKey2 = mutation2
-                    if (!MutationCounts.containsKey(mutationKey2) && !mutation2.contains("x")) {
+                    if (!MutationCounts.containsKey(mutationKey2) && !mutation2.contains("/")) {
                         MutationCounts[mutationKey2] = mutableMapOf(
                             "Incubating" to 0,
                             "Hatched" to 0,

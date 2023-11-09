@@ -1,12 +1,16 @@
 package com.example.qraviaryapp.fragments.Pairs
 
 import EggData
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,24 +19,37 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
+import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -71,10 +88,18 @@ class ClutchesFragment : Fragment() {
     private lateinit var pairCageKeyFemale: String
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
+    private lateinit var paircagekey: String
+    private lateinit var cagePairKey: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
     private var clutchCount = 0
-
+    private lateinit var clutchkey: String
+    private var key: String = ""
+    private lateinit var hatchingDateTime: LocalDateTime
+    private var storageRef = Firebase.storage.reference
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -89,7 +114,8 @@ class ClutchesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_clutches, container, false)
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -101,6 +127,7 @@ class ClutchesFragment : Fragment() {
 
         fab = view.findViewById(R.id.fab)
 //        pairKey = arguments?.getString("BirdKey").toString()
+        paircagekey = arguments?.getString("CageKey").toString()
         pairId = arguments?.getString("PairId").toString()
         pairMale = arguments?.getString("MaleID").toString()
         pairFemale = arguments?.getString("FemaleID").toString()
@@ -113,6 +140,8 @@ class ClutchesFragment : Fragment() {
         pairFemaleKey = arguments?.getString("PairFemaleKey").toString()
         pairMaleKey = arguments?.getString("PairMaleKey").toString()
         pairKey =arguments?.getString("PairKey").toString()
+        cagePairKey =arguments?.getString("CagePairKey").toString()
+
         pairCageBirdFemale = arguments?.getString("CageBirdFemale").toString()
         pairCageBirdMale = arguments?.getString("CageBirdFemale").toString()
         pairCageKeyFemale = arguments?.getString("CageKeyFemale").toString()
@@ -132,7 +161,27 @@ class ClutchesFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
     }
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 
@@ -141,138 +190,217 @@ class ClutchesFragment : Fragment() {
             .child(pairKey).child("Clutches")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
+
         for (clutchSnapshot in snapshot.children) {
-            val data = clutchSnapshot.getValue(EggData::class.java)
-            val key = clutchSnapshot.key.toString()
-            var incubatingCount = 0
-            var laidCount = 0
-            var hatchedCount = 0
-            var notFertilizedCount = 0
-            var brokenCount = 0
-            var abandonCount = 0
-            var deadInShellCount = 0
-            var deadBeforeMovingToNurseryCount = 0
-            var eggsCount = 0
+            val data = clutchSnapshot.getValue(EggData::class.java)!!
 
-            if (data != null) {
-                for (eggSnapshot in clutchSnapshot.children) {
-                    val eggData = eggSnapshot.getValue(EggData::class.java)
+            var parentPair = false
+            var fosterPair = false
 
-                    val eggStatus = eggSnapshot.child("Status").value.toString()
-                    val eggDate = eggSnapshot.child("Date").value.toString()
-                    eggsCount++
+            if (clutchSnapshot.key != "QR" || clutchSnapshot.key != "Parent" || clutchSnapshot.key != "Foster Pair"){
 
-                    clutchCount = snapshot.childrenCount.toInt()
-                    data.clutchCount = clutchCount.toString()
-                    if (eggStatus == "Incubating") {
+                key = clutchSnapshot.key.toString()
+                var incubatingCount = 0
+                var laidCount = 0
+                var hatchedCount = 0
+                var notFertilizedCount = 0
+                var brokenCount = 0
+                var abandonCount = 0
+                var deadInShellCount = 0
+                var deadBeforeMovingToNurseryCount = 0
+                var moveCount = 0
+                var eggsCount = 0
 
-                        incubatingCount++
-                        Log.d(ContentValues.TAG, incubatingCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggIncubating = incubatingCount.toString()
-                        data.eggIncubationStartDate = eggDate
+                if (key != "QR"){
+                    for (eggSnapshot in clutchSnapshot.children) {
+
+                        val eggStatus = eggSnapshot.child("Status").value.toString()
+                        val eggDate = eggSnapshot.child("Date").value.toString()
+                        eggsCount++
+
+                        clutchCount = snapshot.childrenCount.toInt()
+                        data.clutchCount = clutchCount.toString()
+                        data.paircagekey = paircagekey
+                        if (eggStatus == "Incubating") {
+
+                            incubatingCount++
+                            Log.d(ContentValues.TAG, incubatingCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggIncubating = incubatingCount.toString()
+                            data.eggIncubationStartDate = eggDate
+                        }
+                        if (eggStatus == "Laid") {
+
+                            laidCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggLaid = laidCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Hatched") {
+
+                            hatchedCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggHatched = hatchedCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Not Fertilized") {
+
+                            notFertilizedCount++
+                            Log.d(ContentValues.TAG, notFertilizedCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggNotFertilized = notFertilizedCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Broken") {
+
+                            brokenCount++
+                            Log.d(ContentValues.TAG, brokenCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggBroken = brokenCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Abandon") {
+
+                            abandonCount++
+                            Log.d(ContentValues.TAG, abandonCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggAbandon = abandonCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Dead in Shell") {
+
+                            deadInShellCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggDeadInShell = deadInShellCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Dead Before Moving To Nursery") {
+
+                            deadBeforeMovingToNurseryCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Moved") {
+
+                            moveCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggMoved = moveCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+
+
+                        data.pairFlightMaleKey = pairFlightMaleKey
+                        data.pairFlightFemaleKey = pairFlightFemaleKey
+                        data.pairBirdFemaleKey = pairFemaleKey
+                        data.pairBirdMaleKey = pairMaleKey
+                        data.pairFemaleId = pairFemale
+                        data.pairMaleId = pairMale
+                        data.eggcagebirdMale = pairCageBirdMale
+                        data.eggcagebirdFemale = pairCageBirdFemale
+                        data.eggcagekeyMale = pairCageKeyMale
+                        data.eggcagekeyFemale = pairCageKeyFemale
                     }
-                    if (eggStatus == "Laid") {
-
-                        laidCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggLaid = laidCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Hatched") {
-
-                        hatchedCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggHatched = hatchedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Not Fertilized") {
-
-                        notFertilizedCount++
-                        Log.d(ContentValues.TAG, notFertilizedCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggNotFertilized = notFertilizedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Broken") {
-
-                        brokenCount++
-                        Log.d(ContentValues.TAG, brokenCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggBroken = brokenCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Abandon") {
-
-                        abandonCount++
-                        Log.d(ContentValues.TAG, abandonCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggAbandon = abandonCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead in Shell") {
-
-                        deadInShellCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadInShell = deadInShellCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead Before Moving To Nursery") {
-
-                        deadBeforeMovingToNurseryCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-
-
-                    data.pairFlightMaleKey = pairFlightMaleKey
-                    data.pairFlightFemaleKey = pairFlightFemaleKey
-                    data.pairBirdFemaleKey = pairFemaleKey
-                    data.pairBirdMaleKey = pairMaleKey
-                    data.pairFemaleId = pairFemale
-                    data.pairMaleId = pairMale
-                    data.eggcagebirdMale = pairCageBirdMale
-                    data.eggcagebirdFemale = pairCageBirdFemale
-                    data.eggcagekeyMale = pairCageKeyMale
-                    data.eggcagekeyFemale = pairCageKeyFemale
                 }
+
+
+
+            }
+            if (clutchSnapshot.child("Parent").exists()){
+                parentPair = true
+            }
+            if (clutchSnapshot.child("Foster Pair").exists()){
+                fosterPair = true
             }
 
-            if (data != null) {
-                dataList.add(data)
-            }
+            data.parentPair = parentPair
+            data.fosterPair = fosterPair
 
+
+            dataList.add(data)
         }
-//        totalclutch.text = "Total Clutch: $clutchCount"
+
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Clutch"
+        }
         dataList
+    }
+
+    private fun generateQRCodeUri(bundleCageData: String): Uri? {
+        val multiFormatWriter = MultiFormatWriter()
+        val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+        // Create a file to store the QR code image
+        val storageDir =  requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+        try {
+            val stream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+
+        // Convert the file URI to a string and return
+        return Uri.fromFile(imageFile)
+    }
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
     }
     private fun showEggDialog() {
         val builder = AlertDialog.Builder(requireContext())
@@ -284,6 +412,9 @@ class ClutchesFragment : Fragment() {
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches")
+        val cageRef = FirebaseDatabase.getInstance().reference.child("Users")
+            .child("ID: $currentUserId").child("Cages").child("Breeding Cages").child(paircagekey).child("Pair Birds")
+            .child(cagePairKey).child("Clutches")
 
         checkBox.isChecked = true
 
@@ -299,6 +430,7 @@ class ClutchesFragment : Fragment() {
 
 
         val newClutchRef = db.push()
+        val newBreedingClutchRef = cageRef.push()
 
         numberPicker.minValue = 0
         numberPicker.maxValue = 10
@@ -324,38 +456,57 @@ class ClutchesFragment : Fragment() {
             var incubatingCount = 0
             var laidCount = 0
             val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
+
+
             val formattedDate = currentDate.format(formatter)
             addButton.setOnClickListener {
                 val newEggs = EggData()
                 eggValue = numberPicker.value
                 if (checkBox.isChecked) {
 
-
                     Toast.makeText(
                         requireContext(),
                         "Checked $eggValue",
                         Toast.LENGTH_SHORT
                     ).show()
-
+                    val currentDateTime = LocalDateTime.now()
+                    hatchingDateTime = currentDateTime.plusDays(incubatingDays.toLong())
                     for (i in 0 until eggValue) {
+                        val clutchesRandomID = kotlin.random.Random.nextInt()
                         val clutches = newClutchRef.push()
+                        val newClutches = newBreedingClutchRef.push()
+                        clutchkey = clutches.key.toString()
                         eggCount++
                         incubatingCount++
                         val data: Map<String, Any?> = hashMapOf(
                             "Status" to defaultStatus,
                             "Date" to formattedDate,
                             "Incubating Days" to incubatingDays,
-                            "Maturing Days" to maturingDays
+                            "Maturing Days" to maturingDays,
+                            "Estimated Hatching Date" to hatchingDateTime.format(formatter1),
+                            "Alarm ID" to clutchesRandomID
                         )
+
+                        val bundleData = JSONObject()
+                        bundleData.put("IncubatingStartDate",incubatingDays)
+                        bundleData.put("MaturingStartDate",  maturingDays)
+                        bundleData.put("EggKey", key)
+                        bundleData.put("IndividualEggKey", clutches.key)
+                        bundleData.put("PairKey", pairKey)
+                        qrAdd(bundleData, clutches)
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggIncubating = incubatingCount.toString()
                         newEggs.eggIncubationStartDate = formattedDate
-
+                        newEggs.estimatedHatchedDate = hatchingDateTime.format(formatter1)
                         clutches.updateChildren(data)
-
+                        newClutches.updateChildren(data)
+                        Log.d(ContentValues.TAG, "Alarm ID: $clutchesRandomID")
+                        setAlarmForEgg(requireContext(), hatchingDateTime.format(formatter1), clutchesRandomID)
                     }
                     dataList.add(newEggs)
+
+
 
 
                 } else if (!checkBox.isChecked) {
@@ -368,6 +519,7 @@ class ClutchesFragment : Fragment() {
                     defaultStatus = "Laid"
                     for (i in 0 until eggValue) {
                         val clutches = newClutchRef.push()
+                        val newClutches = newBreedingClutchRef.push()
                         eggCount++
                         laidCount++
                         val data: Map<String, Any?> = hashMapOf(
@@ -376,10 +528,18 @@ class ClutchesFragment : Fragment() {
                             "Incubating Days" to incubatingDays,
                             "Maturing Days" to maturingDays
                         )
+                        val bundleData = JSONObject()
+                        bundleData.put("IncubatingStartDate",incubatingDays)
+                        bundleData.put("MaturingStartDate",  maturingDays)
+                        bundleData.put("EggKey", key)
+                        bundleData.put("IndividualEggKey", clutches.key)
+                        bundleData.put("PairKey", pairKey)
+                        qrAdd(bundleData, clutches)
 
                         newEggs.eggCount = eggCount.toString()
                         newEggs.eggLaid = laidCount.toString()
                         newEggs.eggLaidStartDate = formattedDate
+                        newClutches.updateChildren(data)
 
                         clutches.updateChildren(data)
 
@@ -397,7 +557,22 @@ class ClutchesFragment : Fragment() {
                         Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                     }
                 }
-
+                val bundleData = JSONObject()
+                bundleData.put("ClutchQR",true)
+                bundleData.put("PairKey",pairKey)
+                bundleData.put("ClutchKey",  newClutchRef.key)
+                bundleData.put("EggKey", newClutchRef.key)
+                bundleData.put("PairFlightMaleKey", pairFlightMaleKey)
+                bundleData.put("PairFlightFemaleKey", pairFlightFemaleKey)
+                bundleData.put("PairMaleKey", pairMaleKey)
+                bundleData.put("PairFemaleKey", pairFemaleKey)
+                bundleData.put("PairMaleID", pairMale)
+                bundleData.put("PairFemaleID", pairFemale)
+                bundleData.put("CageKeyFemale", pairCageKeyFemale)
+                bundleData.put("CageKeyMale", pairCageKeyMale)
+                bundleData.put("CageBirdFemale",pairCageBirdFemale)
+                bundleData.put("CageBirdMale",pairCageBirdMale)
+                qrAdd(bundleData, newClutchRef)
                 alertDialog.dismiss()
             }
 
@@ -406,6 +581,52 @@ class ClutchesFragment : Fragment() {
         alertDialog.show()
 
     }
+
+    fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, MyAlarmReceiver::class.java)
+        intent.putExtra("egg_index", eggIndex) // Pass the index of the egg
+        intent.putExtra("pairmale", pairMale)
+        intent.putExtra("pairfemale", pairFemale)
+        intent.putExtra("clutchkey", clutchkey)
+        intent.putExtra("pairkey", pairKey)
+        intent.putExtra("Eggkey", key)
+        intent.putExtra("pairflightfemalekey", pairFlightFemaleKey)
+        intent.putExtra("pairflightmalekey", pairFlightMaleKey)
+        intent.putExtra("pairmalekey", pairMaleKey)
+        intent.putExtra("pairfemalekey", pairFemaleKey)
+        intent.putExtra("cagekeyfemale", pairCageKeyFemale)
+        intent.putExtra("cagekeymale", pairCageKeyMale)
+        intent.putExtra("cagebirdfemale", pairCageBirdFemale)
+        intent.putExtra("cagebirdmale", pairCageBirdMale)
+        intent.putExtra("estimatedHatchDate", hatchingDateTime.format(formatter1))
+        val pendingIntent = PendingIntent.getBroadcast(context, eggIndex, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
+    }
+
+//    fun setWorkForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+//        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+//        val epochMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+//
+//        val inputData = Data.Builder()
+//            .putInt("egg_index", eggIndex)
+//            .build()
+//
+//        val workRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
+//            .setInitialDelay(epochMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+//            .setInputData(inputData)
+//            .build()
+//
+//        WorkManager.getInstance(context).enqueue(workRequest)
+//    }
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {

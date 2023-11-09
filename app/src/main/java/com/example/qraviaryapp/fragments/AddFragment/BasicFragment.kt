@@ -15,12 +15,23 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.BreedingCagesListActivity
+import com.example.qraviaryapp.activities.AddActivities.AddCageScanActivity
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
@@ -29,8 +40,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
@@ -54,7 +67,8 @@ class BasicFragment : Fragment() {
 
     /*DatePicker*/
     private lateinit var datePickerDialogBirth: DatePickerDialog
-  /*  private lateinit var datePickerDialogBanding: DatePickerDialog*/
+
+    /*  private lateinit var datePickerDialogBanding: DatePickerDialog*/
     private lateinit var datePickerDialogSoldDate: DatePickerDialog
     private lateinit var datePickerDialogDeathDate: DatePickerDialog
     private lateinit var datePickerDialogExDate: DatePickerDialog
@@ -80,6 +94,11 @@ class BasicFragment : Fragment() {
     private lateinit var btnMutation4: MaterialButton
     private lateinit var btnMutation5: MaterialButton
     private lateinit var btnMutation6: MaterialButton
+    private lateinit var slash1: TextView
+    private lateinit var slash2: TextView
+    private lateinit var slash3: TextView
+    private lateinit var slash4: TextView
+    private lateinit var slash5: TextView
 
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
@@ -112,6 +131,7 @@ class BasicFragment : Fragment() {
     private lateinit var tvLegband: TextView
     private lateinit var tvIdentifier: TextView
     private lateinit var etLegband: EditText
+
     /*Layouts*/
     private lateinit var editTextContainer: LinearLayout
     private lateinit var availableLayout: LinearLayout
@@ -146,9 +166,11 @@ class BasicFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
 
-
+    private lateinit var cagescan: CardView
+    private lateinit var cagescan1: CardView
     private var status: String? = null
     private lateinit var cageReference: DatabaseReference
+
     //endregion
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -163,15 +185,21 @@ class BasicFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_basic, container, false)
 
 
-       /* datebandButton = view.findViewById(R.id.btndateband)*/
+        /* datebandButton = view.findViewById(R.id.btndateband)*/
         datebirthButton = view.findViewById(R.id.btndatebirth)
         btnSoldSaleDate = view.findViewById(R.id.soldSaleDate)
         btnDonatedDate = view.findViewById(R.id.btnDonatedDate)
         btnLostDate = view.findViewById(R.id.lostDateBtn)
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
+        slash1 = view.findViewById(R.id.slash1)
+        slash2 = view.findViewById(R.id.slash2)
+        slash3 = view.findViewById(R.id.slash3)
+        slash4 = view.findViewById(R.id.slash4)
+        slash5 = view.findViewById(R.id.slash5)
 
         dbase = FirebaseDatabase.getInstance().reference
+        cageReference = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
         initDatePickers()
@@ -187,8 +215,8 @@ class BasicFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnDonatedDate, datepickerDialogDonatedDate)
 
 
-        LayoutLegband = view.findViewById(R.id.layoutlegband)
-        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
+//        LayoutLegband = view.findViewById(R.id.layoutlegband)
+//        layoutIdentifier = view.findViewById(R.id.layoutIdentifier)
         tvLegband = view.findViewById(R.id.tvLegband)
         tvIdentifier = view.findViewById(R.id.tvidentifier)
         editTextContainer = view.findViewById(R.id.editTextContainer)
@@ -238,19 +266,26 @@ class BasicFragment : Fragment() {
         btnMutation5 = view.findViewById(R.id.mutationBtn5)
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
-
+        cagescan1 = view.findViewById(R.id.cagescan1)
+        cagescan1.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
+        cagescan = view.findViewById(R.id.cagescan)
+        cagescan.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
 
-        if (isCheckBool){ //pag nakacheck dapat mawawala identifier
-            val layoutParams = LayoutLegband.layoutParams as LinearLayout.LayoutParams
-            layoutIdentifier.visibility = GONE
-            tvIdentifier.visibility = GONE
-            layoutParams.weight = 2F
-            layoutIdentifier.layoutParams = layoutParams
-        } else {
-
-        }
+//        if (isCheckBool){ //pag nakacheck dapat mawawala identifier
+//            val layoutParams = LayoutLegband.layoutParams as LinearLayout.LayoutParams
+//            layoutIdentifier.visibility = GONE
+//            tvIdentifier.visibility = GONE
+//            layoutParams.weight = 2F
+//            layoutIdentifier.layoutParams = layoutParams
+//        } else {
+//
+//        }
 
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
@@ -333,29 +368,39 @@ class BasicFragment : Fragment() {
         btnMutation4.visibility = View.GONE
         btnMutation5.visibility = View.GONE
         btnMutation6.visibility = View.GONE
-
+        slash1.visibility = View.GONE
+        slash2.visibility = View.GONE
+        slash3.visibility = View.GONE
+        slash4.visibility = View.GONE
+        slash5.visibility = View.GONE
         addBtn.setOnClickListener {
 
             when (spinnerCount) {
 
                 0 -> {
+
                     btnMutation2.visibility = View.VISIBLE
+                    slash1.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 1 -> {
                     btnMutation3.visibility = View.VISIBLE
+                    slash2.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 2 -> {
                     btnMutation4.visibility = View.VISIBLE
+                    slash3.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 3 -> {
                     btnMutation5.visibility = View.VISIBLE
+                    slash4.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 4 -> {
                     btnMutation6.visibility = View.VISIBLE
+                    slash5.visibility = View.VISIBLE
                     spinnerCount++
                 }
                 else -> {
@@ -378,12 +423,14 @@ class BasicFragment : Fragment() {
                 1 -> {
                     spinnerCount--
                     btnMutation2.visibility = View.GONE
+                    slash1.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
                 2 -> {
                     spinnerCount--
                     btnMutation3.visibility = View.GONE
+                    slash2.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -391,6 +438,7 @@ class BasicFragment : Fragment() {
 
                     spinnerCount--
                     btnMutation4.visibility = View.GONE
+                    slash3.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -398,6 +446,7 @@ class BasicFragment : Fragment() {
 
                     spinnerCount--
                     btnMutation5.visibility = View.GONE
+                    slash4.visibility = View.GONE
                     Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -419,13 +468,18 @@ class BasicFragment : Fragment() {
             ""
         }
     }
-    private fun getTextFromVisibleMaterialButton(materialbtn: MaterialButton, layout: View): String {
+
+    private fun getTextFromVisibleMaterialButton(
+        materialbtn: MaterialButton,
+        layout: View
+    ): String {
         return if (layout.visibility == View.VISIBLE) {
             materialbtn.text.toString()
         } else {
             ""
         }
     }
+
     private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
         return if (layout.visibility == View.VISIBLE) {
             Button.text.toString()
@@ -523,7 +577,7 @@ class BasicFragment : Fragment() {
         }
     }
 
-    fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String,cagekeyvalue: String) -> Unit) {
+    fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String, cagekeyvalue: String) -> Unit) {
 
         /*val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
@@ -533,6 +587,9 @@ class BasicFragment : Fragment() {
         val dataIdentifier = etIdentifier.text.toString()
         val dataLegband = etLegband.text.toString()
         val stat = status
+
+        val maturingDays = sharedPreferences.getString("maturingValue", "50")
+
 
         /*Uses a function for comparison of visibility layouts*/
         val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
@@ -578,7 +635,7 @@ class BasicFragment : Fragment() {
         birdData = BirdData(
             legband = dataLegband,
             identifier = dataIdentifier,
-           /* dateOfBanding = dataDateOfBanding,*/
+            /* dateOfBanding = dataDateOfBanding,*/
             dateOfBirth = dataDateOfBirth,
             mutation1 = selectedMutations[0],
             mutation2 = selectedMutations[1],
@@ -614,16 +671,17 @@ class BasicFragment : Fragment() {
         var validMutation = false
         /*var validDateOfBanding = false*/
         var validDateOfBirth = false
-
+        var validCage = false
         //Validation
         if (TextUtils.isEmpty(dataIdentifier)) {
-            etIdentifier.error = "Identifier cannot be Empty..."
+            etIdentifier.error = "Identifier cannot be empty"
         } else {
             validIdentifier = true
-        }
 
+        }
+        
         if (birdData.mutation1 == "None") {
-            btnMutation1.error = "Mutation must not be empty..."
+            btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
         }
@@ -636,7 +694,6 @@ class BasicFragment : Fragment() {
         var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
-            Toast.makeText(requireContext(), "Date of birth must not be empty...", Toast.LENGTH_SHORT).show()
         } else {
             val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
             val birthDate = dateFormat.parse(dataDateOfBirth)
@@ -649,11 +706,30 @@ class BasicFragment : Fragment() {
             if (ageInDays > 50) {
                 // Age is less than 50 days, show an error message
                 datebirthButton.error = "Age must be less than 50 days"
-                Toast.makeText(requireContext(), "Age must be less than 50 days", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Age must be less than 50 days",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 validDateOfBirth = true
             }
         }
+
+        //soldlayout
+        var validSold = false
+        if (soldLayout.visibility == View.VISIBLE) {
+
+            if (TextUtils.isEmpty(btnSoldSaleDate.text)) {
+                btnSoldSaleDate.error = "Select a date..."
+            }
+            if (TextUtils.isEmpty(etSoldSalePrice.text)) {
+                etSoldSalePrice.error = "Set a Price..."
+            } else {
+                validSold = true
+            }
+        }
+
 
         if (validDateOfBirth && validMutation && validIdentifier) {
             validInputs = true
@@ -672,7 +748,7 @@ class BasicFragment : Fragment() {
 
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
-        val SoldRef =  dbase.child("Users").child("ID: $userId").child("Sold Items")
+        val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
         val SoldBirdRef = SoldRef.push()
         var soldId: String? = null
 
@@ -692,7 +768,7 @@ class BasicFragment : Fragment() {
             "Maturing Days" to mutation1MaturingDays,
             "Incubating Days" to mutation1IncubatingDays
         )
-        val mutation2 =  hashMapOf(
+        val mutation2 = hashMapOf(
             "Mutation Name" to birdData.mutation2,
             "Maturing Days" to mutation2MaturingDays,
             "Incubating Days" to mutation2IncubatingDays
@@ -717,50 +793,60 @@ class BasicFragment : Fragment() {
             "Maturing Days" to mutation6MaturingDays,
             "Incubating Days" to mutation6IncubatingDays
         )
-        newBundle.putString("BirdIdentifier", birdData.identifier)
-        newBundle.putString("BirdLegband", birdData.legband)
-        newBundle.putString("BirdImage", birdData.img)
-        newBundle.putString("BirdGender", birdData.gender)
-        newBundle.putString("BirdStatus", birdData.status)
-        newBundle.putString("BirdDateBirth", birdData.dateOfBirth)
-        newBundle.putString("BirdSalePrice", birdData.soldPrice)
-        newBundle.putString("BirdBuyer", birdData.saleContact)
-        newBundle.putString("BirdDeathReason", birdData.deathReason)
-        newBundle.putString("BirdExchangeReason", birdData.exReason)
-        newBundle.putString("BirdExchangeWith", birdData.exContact)
-        newBundle.putString("BirdLostDetails", birdData.lostDetails)
-        newBundle.putString("BirdAvailCage", birdData.availCage)
-        newBundle.putString("BirdForsaleCage", birdData.forSaleCage)
-        newBundle.putString("BirdRequestedPrice", birdData.reqPrice)
-        newBundle.putString("BirdComment", birdData.otherComments)
-        newBundle.putString("BirdBuyPrice", birdData.buyPrice)
-        newBundle.putString("BirdBoughtOn", birdData.boughtDate)
-        newBundle.putString("BirdBoughtBreeder", birdData.breederContact)
-        newBundle.putString("BirdBreeder", birdData.otOtherContact)
-        newBundle.putString("BirdDeceaseDate", birdData.deathDate)
-        newBundle.putString("BirdSoldDate", birdData.soldDate)
-        newBundle.putString("BirdLostDate", birdData.lostDate)
-        newBundle.putString("BirdExchangeDate", birdData.exDate)
-        newBundle.putString("BirdDonatedDate", birdData.donatedDate)
-        newBundle.putString("BirdDonatedContact", birdData.donatedContact)
-        newBundle.putSerializable("BirdMutation1", mutation1)
-        newBundle.putSerializable("BirdMutation2", mutation2)
-        newBundle.putSerializable("BirdMutation3", mutation3)
-        newBundle.putSerializable("BirdMutation4", mutation4)
-        newBundle.putSerializable("BirdMutation5", mutation5)
-        newBundle.putSerializable("BirdMutation6", mutation6)
-        newBundle.putString("BirdFather", birdData.father)
-        newBundle.putString("BirdFatherKey", birdData.fatherKey)
-        newBundle.putString("BirdMother",birdData.mother)
-        newBundle.putString("BirdMotherKey", birdData.motherKey)
-        newBundle.putString("CageKeyValue", cageKeyValue)
+        newBundle.putString("BirdIdentifier", birdData.identifier)//
+        newBundle.putString("BirdLegband", birdData.legband)//
+        newBundle.putString("BirdImage", birdData.img)//
+        newBundle.putString("BirdKey", newBirdPref.key)//
+        newBundle.putString("NurseryKey", newNurseryPref.key)
+        newBundle.putString("BirdGender", birdData.gender)//
+        newBundle.putString("BirdStatus", birdData.status)//
+        newBundle.putString("BirdDateBirth", birdData.dateOfBirth)//
+        newBundle.putString("BirdSalePrice", birdData.soldPrice)//
+        newBundle.putString("BirdBuyer", birdData.saleContact)//
+        newBundle.putString("BirdDeathReason", birdData.deathReason)//
+        newBundle.putString("BirdExchangeReason", birdData.exReason)//
+        newBundle.putString("BirdExchangeWith", birdData.exContact)//
+        newBundle.putString("BirdLostDetails", birdData.lostDetails)//
+        newBundle.putString("BirdAvailCage", birdData.availCage)//
+        newBundle.putString("BirdForsaleCage", birdData.forSaleCage)//
+        newBundle.putString("BirdRequestedPrice", birdData.reqPrice)//
+        newBundle.putString("BirdComment", birdData.otherComments)//
+        newBundle.putString("BirdBuyPrice", birdData.buyPrice)//
+        newBundle.putString("BirdBoughtOn", birdData.boughtDate)//
+        newBundle.putString("BirdBoughtBreeder", birdData.breederContact)//
+        newBundle.putString("BirdBreeder", birdData.otOtherContact)//
+        newBundle.putString("BirdDeceaseDate", birdData.deathDate)//
+        newBundle.putString("BirdSoldDate", birdData.soldDate)//
+        newBundle.putString("BirdLostDate", birdData.lostDate)//
+        newBundle.putString("BirdExchangeDate", birdData.exDate)//
+        newBundle.putString("BirdDonatedDate", birdData.donatedDate)//
+        newBundle.putString("BirdDonatedContact", birdData.donatedContact)//
+        newBundle.putSerializable("BirdMutation1", mutation1)//
+        newBundle.putSerializable("BirdMutation2", mutation2)//
+        newBundle.putSerializable("BirdMutation3", mutation3)//
+        newBundle.putSerializable("BirdMutation4", mutation4)//
+        newBundle.putSerializable("BirdMutation5", mutation5)//
+        newBundle.putSerializable("BirdMutation6", mutation6)//
+        newBundle.putString("BirdMutation1Name", birdData.mutation1)//
+        newBundle.putString("BirdMutation2Name", birdData.mutation2)//
+        newBundle.putString("BirdMutation3Name", birdData.mutation3)//
+        newBundle.putString("BirdMutation4Name", birdData.mutation4)//
+        newBundle.putString("BirdMutation5Name", birdData.mutation5)//
+        newBundle.putString("BirdMutation6Name", birdData.mutation6)//
+        newBundle.putString("BirdFather", birdData.father)//
+        newBundle.putString("BirdFatherKey", birdData.fatherKey)//
+        newBundle.putString("BirdMother", birdData.mother)//
+        newBundle.putString("BirdMotherKey", birdData.motherKey)//
+        newBundle.putString("CageKeyValue", cageKeyValue)//
         newBundle.putString("CageBirdKeyValue", cageBirdKey)
-
+        newBundle.putBoolean("fromNurseryListAdapter", true)//
 
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
-
+                if (TextUtils.isEmpty(etAvailCage.text)) {
+                    etAvailCage.error = "Cage must not be empty..."
+                }
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Legband" to birdData.legband,
@@ -772,15 +858,18 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                 /*   "Date of Banding" to birdData.dateOfBanding,*/
+                    "Maturing Days" to maturingDays,
+                    /*   "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Cage" to birdData.availCage,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageReference.key,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
                     "Age" to ageInDays
                 )
-                if (!cageKeyValue.isNullOrEmpty()){
+                if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(data)
                 }
                 newBirdPref.updateChildren(data)
@@ -797,62 +886,72 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                  /*  "Date of Banding" to birdData.dateOfBanding,*/
+                    /*  "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Cage" to birdData.forSaleCage,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageReference.key,
                     "Requested Price" to birdData.reqPrice,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
                     "Age" to ageInDays
 
                 )
-                if (!cageKeyValue.isNullOrEmpty()){
+                if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(data)
                 }
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (soldLayout.visibility == View.VISIBLE) {
-                soldId = SoldBirdRef.key
-                val date = inputDateFormat.parse(dataSoldSaleDate)
-                val formattedDate = outputDateFormat.format(date)
 
-                val monthYearParts = formattedDate.split(" - ")
-                val day = monthYearParts[0]
-                val month = monthYearParts[1]
-                val year = monthYearParts[2]
-                val data: Map<String, Any?> = hashMapOf(
 
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                   /* "Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Sold Date" to birdData.soldDate,
-                    "Sale Price" to birdData.soldPrice,
-                    "Sale Contact" to birdData.saleContact,
-                    "Nursery Key" to flightKey,
-                    "Sold Id" to soldId,
-                    "Bird Key" to birdId,
-                    "Age" to ageInDays,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
+                if (validSold) {
 
-                )
-                val solddata: Map<String, Any?> = hashMapOf(
-                    "Bird Id" to birdId
-                )
-                SoldBirdRef.updateChildren(data)
-                newBirdPref.updateChildren(data)
-                newNurseryPref.updateChildren(data)
-                SoldBirdRef.updateChildren(solddata)
+                    soldId = SoldBirdRef.key
+                    val date = inputDateFormat.parse(dataSoldSaleDate)
+                    val formattedDate = outputDateFormat.format(date)
+
+                    val monthYearParts = formattedDate.split(" - ")
+                    val day = monthYearParts[0]
+                    val month = monthYearParts[1]
+                    val year = monthYearParts[2]
+                    val data: Map<String, Any?> = hashMapOf(
+
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /* "Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Sold Date" to birdData.soldDate,
+                        "Sale Price" to birdData.soldPrice,
+                        "Sale Contact" to birdData.saleContact,
+                        "Nursery Key" to flightKey,
+                        "Sold Id" to soldId,
+                        "Bird Key" to birdId,
+                        "Age" to ageInDays,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+
+                    )
+                    val solddata: Map<String, Any?> = hashMapOf(
+                        "Bird Id" to birdId
+                    )
+                    SoldBirdRef.updateChildren(data)
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
+                    SoldBirdRef.updateChildren(solddata)
+                } else {
+                    return
+                }
+
             } else if (deceasedLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -864,7 +963,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                   /* "Date of Banding" to birdData.dateOfBanding,*/
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Death Date" to birdData.deathDate,
@@ -888,7 +987,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                  /*  "Date of Banding" to birdData.dateOfBanding,*/
+                    /*  "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Exchange Date" to birdData.exDate,
@@ -913,7 +1012,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                 /*   "Date of Banding" to birdData.dateOfBanding,*/
+                    /*   "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Lost Date" to birdData.lostDate,
@@ -935,7 +1034,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                   /* "Date of Banding" to birdData.dateOfBanding,*/
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Donated Date" to birdData.donatedDate,
@@ -957,7 +1056,7 @@ class BasicFragment : Fragment() {
                     "Mutation4" to mutation4,
                     "Mutation5" to mutation5,
                     "Mutation6" to mutation6,
-                   /* "Date of Banding" to birdData.dateOfBanding,*/
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
                     "Date of Birth" to birdData.dateOfBirth,
                     "Status" to birdData.status,
                     "Comments" to birdData.otherComments,
@@ -970,7 +1069,14 @@ class BasicFragment : Fragment() {
             }
             if (birdId != null) {
                 if (flightKey != null) {
-                    callback(birdId, flightKey, newBundle, soldId.toString(), cageBirdKey, cageKeyValue.toString())
+                    callback(
+                        birdId,
+                        flightKey,
+                        newBundle,
+                        soldId.toString(),
+                        cageBirdKey,
+                        cageKeyValue.toString()
+                    )
                 }
             }
             args.putString("birdId", birdId)
@@ -1009,32 +1115,48 @@ class BasicFragment : Fragment() {
                 when (p0?.getItemAtPosition(p2).toString()) {
                     "Available" -> {
 
+                        cageKeyValue = null
                         availableLayout.visibility = View.VISIBLE
+                        etAvailCage.text = ""
 
                     }
                     "For Sale" -> {
+                        cageKeyValue = null
                         forSaleLayout.visibility = View.VISIBLE
-
+                        etForSaleCage.text = ""
                     }
                     "Sold" -> {
+                        cageKeyValue = null
                         soldLayout.visibility = View.VISIBLE
                     }
                     "Deceased" -> {
+                        cageKeyValue = null
+
                         deceasedLayout.visibility = View.VISIBLE
                     }
                     "Exchanged" -> {
+                        cageKeyValue = null
+
                         exchangeLayout.visibility = View.VISIBLE
                     }
                     "Lost" -> {
+                        cageKeyValue = null
+
                         lostLayout.visibility = View.VISIBLE
                     }
                     "Donated" -> {
+                        cageKeyValue = null
+
                         donatedLayout.visibility = View.VISIBLE
                     }
                     "Other" -> {
+                        cageKeyValue = null
+
                         otherLayout.visibility = View.VISIBLE
                     }
                     else -> {
+                        cageKeyValue = null
+
                         editTextContainer.visibility = View.GONE
                     }
                 }
@@ -1099,8 +1221,8 @@ class BasicFragment : Fragment() {
 
         datePickerDialogBirth =
             DatePickerDialog(requireContext(), style, dateSetListenerBirth, year, month, day)
-       /* datePickerDialogBanding =
-            DatePickerDialog(requireContext(), style, dateSetListenerBanding, year, month, day)*/
+        /* datePickerDialogBanding =
+             DatePickerDialog(requireContext(), style, dateSetListenerBanding, year, month, day)*/
         datePickerDialogSoldDate =
             DatePickerDialog(requireContext(), style, dateSetListenerSoldDate, year, month, day)
         datePickerDialogDeathDate =
@@ -1146,6 +1268,195 @@ class BasicFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (arguments?.getString("BirdIdentifier")?.isNotEmpty() == true) {
+            etIdentifier.setText(arguments?.getString("BirdIdentifier"))
+        }
+        if (arguments?.getString("BirdLegband")?.isNotEmpty() == true) {
+            etLegband.setText(arguments?.getString("BirdLegband"))
+        }
+
+        val sex = arguments?.getString("BirdGender").toString()
+
+        if (sex == "Female") {
+            rbFemale.isChecked = true
+        } else if (sex == "Male") {
+            rbMale.isChecked = true
+        } else if (sex == "Unknown") {
+            rbUnknown.isChecked = true
+        }
+
+        val mutation1 = arguments?.getString("BirdMutation1")
+        val mutation2 = arguments?.getString("BirdMutation2")
+        val mutation3 = arguments?.getString("BirdMutation3")
+        val mutation4 = arguments?.getString("BirdMutation4")
+        val mutation5 = arguments?.getString("BirdMutation5")
+        val mutation6 = arguments?.getString("BirdMutation6")
+        //Checking Mutation
+        if (mutation1?.isNotEmpty() == true) {
+            btnMutation1.text = mutation1
+            btnMutation1.visibility = View.VISIBLE
+            spinnerCount = 0
+        }
+        if (mutation2?.isNotEmpty() == true) {
+            btnMutation2.text = mutation2
+            btnMutation2.visibility = View.VISIBLE
+            spinnerCount = 1
+        }
+        if (mutation3?.isNotEmpty() == true) {
+            btnMutation3.text = mutation3
+            btnMutation3.visibility = View.VISIBLE
+            spinnerCount = 2
+        }
+        if (mutation4?.isNotEmpty() == true) {
+            btnMutation4.text = mutation4
+            btnMutation4.visibility = View.VISIBLE
+            spinnerCount = 3
+        }
+        if (mutation5?.isNotEmpty() == true) {
+            btnMutation5.text = mutation5
+            btnMutation5.visibility = View.VISIBLE
+            spinnerCount = 4
+        }
+        if (mutation6?.isNotEmpty() == true) {
+            btnMutation6.text = mutation6
+            btnMutation6.visibility = View.VISIBLE
+            spinnerCount = 5
+        }
+
+        val birdDateofBirth = arguments?.getString("BirdBirthDate")
+        if (birdDateofBirth?.isNotEmpty() == true && datebirthButton.text == "Pick Date") {
+            datebirthButton.text = birdDateofBirth
+        }
+
+        when (arguments?.getString("BirdStatus")) {
+            "Available" -> {
+                spinnerStatus.setSelection(0)
+                //cage
+            }
+            "For Sale" -> {
+                spinnerStatus.setSelection(1)
+                //cage
+                if (etForSaleReqPrice.text.isEmpty()) {
+                    etForSaleReqPrice.setText(arguments?.getString("BirdForSalePrice"))
+                }
+            }
+            "Sold" -> {
+                spinnerStatus.setSelection(2)
+                if (arguments?.getString("BirdSoldDate")?.isNotEmpty() == true) {
+                    btnSoldSaleDate.text = arguments?.getString("BirdSoldDate")
+                }
+                if (arguments?.getString("BirdSoldPrice")?.isNotEmpty() == true) {
+                    etSoldSalePrice.setText(arguments?.getString("BirdSoldPrice"))
+                }
+                if (arguments?.getString("BirdSoldContact")?.isNotEmpty() == true) {
+                    etSoldBuyer.setText(arguments?.getString("BirdSoldContact"))
+                }
+
+            }
+            "Deceased" -> {
+                spinnerStatus.setSelection(3)
+                if (arguments?.getString("BirdDeceasedDate")?.isNotEmpty() == true) {
+                    btnDeathDate.text = arguments?.getString("BirdDeceasedDate")
+                }
+
+                if (arguments?.getString("BirdDeceasedReason")?.isNotEmpty() == true) {
+                    etDeathReason.setText(arguments?.getString("BirdDeceasedReason"))
+                }
+            }
+            "Exchange" -> {
+                spinnerStatus.setSelection(4)
+                if (arguments?.getString("BirdExchangeDate")?.isNotEmpty() == true) {
+                    btnExDate.text = arguments?.getString("BirdExchangeDate")
+                }
+
+                if (arguments?.getString("BirdExchangeReason")?.isNotEmpty() == true) {
+                    etExReason.setText(arguments?.getString("ExchangeReason"))
+                }
+                if (arguments?.getString("BirdExchangeContact")?.isNotEmpty() == true) {
+                    etExWith.setText(arguments?.getString("BirdExchangeContact"))
+                }
+            }
+            "Lost" -> {
+                spinnerStatus.setSelection(5)
+                if (arguments?.getString("BirdLostDate")?.isNotEmpty() == true) {
+                    btnLostDate.text = arguments?.getString("BirdLostDate")
+                }
+
+                if (arguments?.getString("BirdLostDetails")?.isNotEmpty() == true) {
+                    etLostDetails.setText(arguments?.getString("BirdLostDetails"))
+                }
+            }
+            "Donated" -> {
+                spinnerStatus.setSelection(6)
+                if (arguments?.getString("BirdDonatedDate")?.isNotEmpty() == true) {
+                    btnDonatedDate.text = arguments?.getString("BirdDonatedDate")
+                }
+
+                if (arguments?.getString("BirdDonatedContact")?.isNotEmpty() == true) {
+                    etDonateChooseContract.setText(arguments?.getString("BirdDonatedContact"))
+                }
+            }
+            "Other" -> {
+                spinnerStatus.setSelection(7)
+                if (arguments?.getString("BirdOtherComment")?.isNotEmpty() == true) {
+                    etOtherComm.setText(arguments?.getString("BirdOtherComment"))
+                }
+            }
+        }
+
+        val mutationmap1 = arguments?.getString("BirdMutationMap1")
+        if (!mutationmap1.isNullOrEmpty()) {
+            val map1 = JSONObject(mutationmap1)
+
+            mutation1IncubatingDays = map1.optString("Mutation Name", "")
+            mutation1MaturingDays = map1.optString("Incubating Days", "")
+        }
+        val mutationmap2 = arguments?.getString("BirdMutationMap2")
+        if (!mutationmap2.isNullOrEmpty()) {
+            val map2 = JSONObject(mutationmap2)
+
+            mutation2IncubatingDays = map2.optString("Mutation Name", "")
+            mutation2MaturingDays = map2.optString("Incubating Days", "")
+        }
+        val mutationmap3 = arguments?.getString("BirdMutationMap3")
+        if (!mutationmap3.isNullOrEmpty()) {
+            val map3 = JSONObject(mutationmap3)
+
+            mutation3IncubatingDays = map3.optString("Mutation Name", "")
+            mutation3MaturingDays = map3.optString("Incubating Days", "")
+        }
+        val mutationmap4 = arguments?.getString("BirdMutationMap4")
+        if (!mutationmap4.isNullOrEmpty()) {
+            val map4 = JSONObject(mutationmap4)
+
+            mutation4IncubatingDays = map4.optString("Mutation Name", "")
+            mutation4MaturingDays = map4.optString("Incubating Days", "")
+        }
+        val mutationmap5 = arguments?.getString("BirdMutationMap5")
+        if (!mutationmap5.isNullOrEmpty()) {
+            val map5 = JSONObject(mutationmap5)
+
+            mutation5IncubatingDays = map5.optString("Mutation Name", "")
+            mutation5MaturingDays = map5.optString("Incubating Days", "")
+        }
+        val mutationmap6 = arguments?.getString("BirdMutationMap6")
+        if (!mutationmap6.isNullOrEmpty()) {
+            val map6 = JSONObject(mutationmap6)
+
+            mutation6IncubatingDays = map6.optString("Mutation Name", "")
+            mutation6MaturingDays = map6.optString("Incubating Days", "")
+        }
+
+
+
+        Log.d(TAG, mutation1IncubatingDays.toString())
+
+
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -1165,4 +1476,6 @@ class BasicFragment : Fragment() {
                 }
             }
     }
+
+
 }

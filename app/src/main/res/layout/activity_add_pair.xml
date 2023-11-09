@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/bottom_nav_background"
     android:orientation="vertical"
     tools:context=".activities.AddActivities.AddPairActivity">
 
@@ -15,13 +16,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/white_black"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:orientation="vertical">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchHybridization"
@@ -34,7 +36,6 @@
                     android:id="@+id/tvfather"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
                     android:text="Male (*)"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -43,18 +44,19 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:id="@+id/btnMale"
                     app:icon="@drawable/drop_down"
+                    android:hint="Pick Male Bird"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black_white"
+                    android:textSize="12sp"
                     app:iconGravity="end"
                     app:iconTint="@color/black"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:minHeight="48dp" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tvmother"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
                     android:text="Female (*) "
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -63,33 +65,39 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:id="@+id/btnFemale"
                     app:icon="@drawable/drop_down"
+                    android:hint="Pick Female Bird"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black_white"
+                    android:textSize="12sp"
                     app:iconGravity="end"
                     app:iconTint="@color/black"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:minHeight="48dp" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tvdatebanding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
                     android:text="Beginning (*)"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btndateband"
-                    style="?android:spinnerStyle"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
                     android:layout_weight="1"
+
                     android:onClick="openDatebandPicker"
-                    android:text="Pick Date"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:hint="Pick Date"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black_white"
+                    android:textSize="12sp"
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -103,80 +111,35 @@
 
                         <TextView
                             android:id="@+id/tvcage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
                             android:text="Cage (*)"
                             android:textSize="13sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-                        <TextView
-                            android:id="@+id/tvNest"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:text="Nest (*)"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+
 
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:layout_height="wrap_content">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutcage"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="15"
-                        app:endIconMode="clear_text"
-                        app:helperTextTextColor="#5A0808"
-                        app:hintTextColor="#000000"
-                        app:startIconTint="#1E1D1D">
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:id="@+id/etcage"
+                        app:icon="@drawable/drop_down"
+                        app:iconGravity="end"
+                        android:hint="Pick Cage"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black_white"
+                        android:textSize="12sp"
+                        app:iconTint="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etcage"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:editable="false"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutnest"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="15"
-                        app:endIconMode="clear_text"
-                        app:helperTextTextColor="#5A0808"
-                        app:hintTextColor="#000000"
-                        app:startIconTint="#1E1D1D">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etnest"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -184,7 +147,6 @@
                     android:id="@+id/tvcomment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
                     android:text="Comment"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -193,8 +155,6 @@
                     android:id="@+id/layoutcomment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     app:counterEnabled="true"
                     app:counterMaxLength="50"
                     app:endIconMode="clear_text"

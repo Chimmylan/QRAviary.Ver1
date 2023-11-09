@@ -5,6 +5,7 @@ import ClickListener
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.PairMaleBirdListActivity
 
 class PairMaleBirdListAdapter
@@ -96,7 +96,7 @@ class PairMaleBirdListAdapter
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-            "Mutation: " + nonNullMutations.joinToString(" x ")
+            "Mutation: " + nonNullMutations.joinToString(" / ")
         } else {
             "Mutation: None"
         }
@@ -104,6 +104,19 @@ class PairMaleBirdListAdapter
         holder.tvMutation.text = combinedMutations
 
         holder.tvStatus.text = bird.status
+        val status = bird.status
+        holder.tvStatus.text = status
+        when (status) {
+            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
+            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
+            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
+            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
+            else -> holder.tvStatus.setTextColor(Color.GRAY)
+        }
         val genderIcon = if(bird.gender == "Male"){
             R.drawable.baseline_male_24
         } else if (bird.gender == "Female") {
@@ -153,6 +166,8 @@ class PairMaleBirdViewHolder(
             val cagekey = dataList[adapterPosition].cagekeymalevalue
             val cagebirdkey = dataList[adapterPosition].cagebirdmalekey
             val image = dataList[adapterPosition].img
+            val status = dataList[adapterPosition].status
+
             val intent = Intent()
             intent.putExtra("MaleGallery", image)
             intent.putExtra("MaleBirdId", maleBird)
@@ -166,6 +181,7 @@ class PairMaleBirdViewHolder(
             intent.putExtra("MaleMutation6", mutation6)
             intent.putExtra("CageKeyMale",cagekey)
             intent.putExtra("CageBirdKeyMale",cagebirdkey)
+            intent.putExtra("FemaleStatus",status)
             activity.setResult(Activity.RESULT_OK, intent)
 
             activity.finish()

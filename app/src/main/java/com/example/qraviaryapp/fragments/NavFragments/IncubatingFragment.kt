@@ -11,16 +11,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.EggAdapter
 import com.google.android.material.snackbar.Snackbar
-
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -29,18 +31,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+
 class IncubatingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var token: FirebaseApp
     private lateinit var db: DatabaseReference
     private lateinit var dataList: ArrayList<EggData>
     private lateinit var adapter: EggAdapter
     private lateinit var snackbar: Snackbar
+    private lateinit var totalBirds: TextView
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private var femalegallery: String? = null
     private var malegallery: String? = null
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
+    var total: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +56,24 @@ class IncubatingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_incubating, container, false)
 
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//            // Log and toast
+//            val msg = getString(R.string.default_web_client_id, token)
+//            Log.d(TAG, msg)
+//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+//        })
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
+        totalBirds = view.findViewById(R.id.tvBirdCount)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -57,8 +82,13 @@ class IncubatingFragment : Fragment() {
         adapter = EggAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
 
+        if(total>1){
+            totalBirds.text = total.toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = total.toString() + " Clutch"
+        }
         loadDataFromDatabase()
-
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -85,9 +115,26 @@ class IncubatingFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-
-
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+//            lifecycleScope.launch {
+//                try {
+//                    val data = getDataFromDatabase()
+//                    dataList.clear()
+//                    dataList.addAll(data)
+//                    swipeToRefresh.isRefreshing = false
+//                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+//                    adapter.notifyDataSetChanged()
+//                } catch (e: Exception) {
+//                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+//                }
+//
+//            }
+            swipeToRefresh.isRefreshing = false
+        }
     }
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
@@ -101,8 +148,8 @@ class IncubatingFragment : Fragment() {
                 dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                // Handle the error
+            }  catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }
         }
     }
@@ -159,7 +206,6 @@ class IncubatingFragment : Fragment() {
 
                 if (data != null) {
                     for (eggSnapshot in clutchSnapshot.children) {
-                        val eggData = eggSnapshot.getValue(EggData::class.java)
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
                         eggsCount++
@@ -179,11 +225,35 @@ class IncubatingFragment : Fragment() {
             }
 
         }
-
+        total = dataList.count()
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     // Add any other methods you need
 

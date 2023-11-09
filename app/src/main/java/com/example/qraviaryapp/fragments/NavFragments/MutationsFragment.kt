@@ -10,23 +10,24 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -50,6 +51,8 @@ class MutationsFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var mutationCount = 0
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,16 +63,23 @@ class MutationsFragment : Fragment() {
             requireActivity().window.statusBarColor =
                 ContextCompat.getColor(requireContext(), R.color.bottom_nav_background)
         }
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
         fab= view.findViewById(R.id.fab)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = HomeGenesAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecoration(adapter))
+
+
+
 
         lifecycleScope.launch {
             try {
@@ -113,8 +123,27 @@ class MutationsFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
-
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
     }
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
@@ -147,7 +176,12 @@ class MutationsFragment : Fragment() {
                     dataList.add(data)
                 }
             }
-            totalBirds.text = "Total Mutations: $mutationCount"
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Mutations"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Mutation"
+            }
             dataList.sortBy { it.mutations }
             dataList
         }
@@ -214,7 +248,31 @@ class MutationsFragment : Fragment() {
         alertDialog.show()
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed

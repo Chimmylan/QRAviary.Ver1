@@ -11,7 +11,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private lateinit var sharedPreferencess: SharedPreferences
     private var DARK_MODE: Int = 1
-
+    private lateinit var darkModeString: String
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
@@ -20,12 +20,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         super.onAttach(context)
         sharedPreferencess = PreferenceManager.getDefaultSharedPreferences(context)
         sharedPreferencess.registerOnSharedPreferenceChangeListener(this)
+        darkModeString = getString(R.string.dark_mode)
+        sharedPreferencess = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val darkModeString = getString(R.string.dark_mode)
-        sharedPreferencess = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-
         val editor: SharedPreferences.Editor = sharedPreferencess.edit()
 
         if (key == darkModeString) {

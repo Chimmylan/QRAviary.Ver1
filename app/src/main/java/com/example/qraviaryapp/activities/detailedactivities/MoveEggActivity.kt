@@ -1,11 +1,13 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import BirdData
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,21 +17,23 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
-import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
+import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
-import kotlin.math.log
 
 class MoveEggActivity : AppCompatActivity() {
     private lateinit var choosecage: MaterialButton
@@ -91,6 +95,10 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var pairCageKeyFemale: String
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
+    private lateinit var hatchingDateTime: LocalDateTime
+
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,7 +135,7 @@ class MoveEggActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         currentUserId = mAuth.currentUser?.uid
-        choosecage = findViewById(R.id.btnnurserycage)
+        //choosecage = findViewById(R.id.btnnurserycage)
 
         etIdentifier = findViewById(R.id.etIdentifier)
         addBtn = findViewById(R.id.addBtn)
@@ -155,6 +163,8 @@ class MoveEggActivity : AppCompatActivity() {
         pairCageBirdMale= intent.getStringExtra("CageBirdMale").toString()
         pairCageKeyMale= intent.getStringExtra("CageKeyMale").toString()
         pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
+        cageNameValue = intent.getStringExtra("CageName").toString()
+        cageKeyValue = intent.getStringExtra("CageKey").toString()
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
@@ -194,13 +204,13 @@ class MoveEggActivity : AppCompatActivity() {
 
         }
 
-        choosecage.setOnClickListener {
-            val requestCode = 7
-            val intent = Intent(this, NurseryCagesListActivity::class.java)
-            startActivityForResult(intent, requestCode)
-
-
-        }
+//        choosecage.setOnClickListener {
+//            val requestCode = 7
+//            val intent = Intent(this, NurseryCagesListActivity::class.java)
+//            startActivityForResult(intent, requestCode)
+//
+//
+//        }
         AddMutation()
         RemoveLastMutation()
     }
@@ -367,15 +377,15 @@ class MoveEggActivity : AppCompatActivity() {
             }
         }
 
-        if (requestCode == 7) {
-            if (resultCode == RESULT_OK) {
-                cageNameValue = data?.getStringExtra("CageName").toString()
-                cageKeyValue = data?.getStringExtra("CageKey").toString()
-                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
-                Log.d(ContentValues.TAG, "cage Key : $cageKeyValue")
-                choosecage.setText(cageNameValue)
-            }
-        }
+//        if (requestCode == 7) {
+//            if (resultCode == RESULT_OK) {
+//                cageNameValue = data?.getStringExtra("CageName").toString()
+//                cageKeyValue = data?.getStringExtra("CageKey").toString()
+//                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
+//                Log.d(ContentValues.TAG, "cage Key : $cageKeyValue")
+//                choosecage.setText(cageNameValue)
+//            }
+//        }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
@@ -498,12 +508,18 @@ class MoveEggActivity : AppCompatActivity() {
             "MotherKey" to pairFlightFemaleKey
         )
 
+        val currentDateTime = LocalDateTime.now()
+        hatchingDateTime = currentDateTime.plusDays(maturingStartDate.toLong())
+        val eggRandomID = kotlin.random.Random.nextInt()
+
+
         val data: Map<String, Any?> = hashMapOf(
             "Bird Key" to birdKey,
             "Parents" to parent,
             "Date of Birth" to eggDate,
             "Nursery Key" to nurseryKey,
             "Status" to "Available",
+            "Alarm ID" to eggRandomID,
             "Identifier" to etIdentifier.text.toString(),
             "Mutation1" to mutation1,
             "Mutation2" to mutation2,
@@ -511,7 +527,12 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation4" to mutation4,
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
+            "Estimated Maturing Time" to hatchingDateTime.format(formatter1),
+            "Maturing Days" to maturingStartDate,
             "Gender" to dataSelectedGen.text.toString(),
+            "CageKey" to cageKeyValue,
+            "Cage Bird Key" to nurseryCageRef.key,
+            "Avail Cage" to cageNameValue,
             "Cage" to cageNameValue,
             "Legband" to "",
         )
@@ -521,6 +542,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Date of Birth" to eggDate,
             "Nursery Key" to nurseryKey,
             "Status1" to "Available",
+            "Alarm ID" to eggRandomID,
             "Identifier" to etIdentifier.text.toString(),
             "Mutation1" to mutation1,
             "Mutation2" to mutation2,
@@ -528,7 +550,13 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation4" to mutation4,
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
+            "Maturing Days" to maturingStartDate,
+
             "Gender" to dataSelectedGen.text.toString(),
+            "CageKey" to cageKeyValue,
+            "Cage Bird Key" to nurseryCageRef.key,
+
+            "Avail Cage" to cageNameValue,
             "Cage" to cageNameValue,
             "Legband" to "",
         )
@@ -553,10 +581,31 @@ class MoveEggActivity : AppCompatActivity() {
         eggRef.updateChildren(data1)
         Log.d(ContentValues.TAG, data.toString())
 
-
+        setAlarmForEgg(this, hatchingDateTime.format(formatter1),eggRandomID)
 
         onBackPressed()
         finish()
+
+    }
+
+    fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, MyAlarmReceiver::class.java)
+        intent.putExtra("egg_index", eggIndex) // Pass the index of the egg
+
+        intent.putExtra("pairkey", pairKey)
+
+
+        intent.putExtra("estimatedHatchDate", hatchingDateTime.format(formatter1))
+        val pendingIntent = PendingIntent.getBroadcast(context, eggIndex, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val hatchDateTime = LocalDateTime.parse(estimatedHatchDate, formatter1)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = hatchDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
 
     }
 

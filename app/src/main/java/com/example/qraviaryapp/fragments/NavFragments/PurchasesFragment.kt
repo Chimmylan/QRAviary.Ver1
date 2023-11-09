@@ -10,11 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.DetailedAdapter.PurchasesAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -44,14 +47,20 @@ class PurchasesFragment : Fragment() {
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var birdCount = 0
+    private lateinit var loadingProgressBar: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_purchases, container, false)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         totalBirds = view.findViewById(R.id.tvBirdCount)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         flightKey = arguments?.getString("FlightKey")
         mAuth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -98,8 +107,27 @@ class PurchasesFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
-
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
+
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
     }
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
@@ -259,9 +287,38 @@ class PurchasesFragment : Fragment() {
             }
 
         }
-        totalBirds.text = "Total Purchases: $birdCount"
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Birds Purchase"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Bird Purchase"
+        }
         dataList
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
 }

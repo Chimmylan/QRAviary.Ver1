@@ -1,33 +1,24 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import EggData
-import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.CheckBox
-import android.widget.NumberPicker
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
 import com.example.qraviaryapp.fragments.Pairs.DescendantsFragment
 import com.example.qraviaryapp.fragments.Pairs.PreviousClutchesFragment
 import com.google.android.material.button.MaterialButton
@@ -38,15 +29,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.Locale
 
 class PreviousPairActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
@@ -62,8 +47,11 @@ class PreviousPairActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
+    private lateinit var CageQR: String
     private lateinit var pairId: String
     private lateinit var pairKey: String
+    private lateinit var pairCageKey: String
+    private lateinit var cagePairKey: String
     private lateinit var pairMaleKey: String
     private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
@@ -75,6 +63,9 @@ class PreviousPairActivity : AppCompatActivity() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
+    private lateinit var pairCage: String
+    private lateinit var beginningDate: String
+    private lateinit var separateDate: String
     //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -130,8 +121,8 @@ class PreviousPairActivity : AppCompatActivity() {
             pairId = bundle.getString("PairId").toString()
             pairMale = bundle.getString("MaleID").toString()
             pairFemale = bundle.getString("FemaleID").toString()
-            val beginningDate = bundle.getString("BeginningDate")
-            val separateDate = bundle.getString("SeparateDate")
+            beginningDate = bundle.getString("BeginningDate").toString()
+            separateDate = bundle.getString("SeparateDate").toString()
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
             pairFlightFemaleKey = bundle.getString("PairFlightFemaleKey").toString()
@@ -143,7 +134,10 @@ class PreviousPairActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
-
+            pairCageKey = bundle.getString("CageKey").toString()
+            cagePairKey = bundle.getString("CagePairKey").toString()
+            pairCage = bundle.getString("PairCage").toString()
+            newBundle.putString("PairCage", pairCage)
             newBundle.putString("PairId", pairId)
             newBundle.putString("MaleID", pairMale)
             newBundle.putString("FemaleID", pairFemale)
@@ -160,6 +154,8 @@ class PreviousPairActivity : AppCompatActivity() {
             newBundle.putString("CageBirdMale", pairCageBirdMale)
             newBundle.putString("CageKeyFemale", pairCageKeyFemale)
             newBundle.putString("CageKeyMale", pairCageKeyMale)
+            newBundle.putString("CageKey", pairCageKey)
+            newBundle.putString("CagePairKey", cagePairKey)
             val clutchesFragment = PreviousClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
@@ -185,6 +181,7 @@ class PreviousPairActivity : AppCompatActivity() {
                 .child(pairKey)
             db.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    CageQR = snapshot.child("QR").value.toString()
                     if (snapshot.child("Separate Date").exists()){
                         tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
                     }else
@@ -201,7 +198,8 @@ class PreviousPairActivity : AppCompatActivity() {
 
 
 
-
+            var date = tvDate.text
+            Log.d(TAG, "date prev" + tvDate.text)
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
             btnFemale.text = pairFemale.toString()
             btnMale.text = pairMale.toString()
@@ -235,7 +233,16 @@ class PreviousPairActivity : AppCompatActivity() {
 
                 true
             }
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
+                i.putExtra("PairId", pairId)
+                i.putExtra("Mutation", tvMutations.text)
+                i.putExtra("Cage", pairCage)
+                i.putExtra("Date", beginningDate + " x " + separateDate)
+                startActivity(i)
+                true
+            }
             R.id.menu_seperate ->{
                 showSeparateConfirmation()
                 true

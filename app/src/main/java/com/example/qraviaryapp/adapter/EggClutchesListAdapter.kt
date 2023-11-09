@@ -7,7 +7,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +18,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.MoveEggActivity
+import com.example.qraviaryapp.activities.detailedactivities.MoveEggScannerActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -31,7 +28,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import java.util.logging.Handler
 
 class EggClutchesListAdapter(
     private val context: Context,
@@ -55,7 +51,7 @@ class EggClutchesListAdapter(
 
         holder.tvStatus.text = eggs.eggStatus
         holder.tvDate.text = eggs.eggDate
-        val maturingDay: Int? = eggs.eggMaturingStartDate?.toInt()
+        //val maturingDay: Int? = eggs.eggMaturingStartDate?.toInt()
         val incubatingDays = eggs.eggIncubationStartDate
 
         val incubatedays: Int? = incubatingDays?.toInt()
@@ -115,8 +111,9 @@ class EggClutchesListAdapter(
                     animator.duration = 1000
                     animator.start()
                     if (progressPercentage in 1..99) {
-                        holder.eggImg.setImageResource(R.drawable.hatchcolor)
+                        holder.eggImg.setImageResource(R.drawable.eggcolor)
                     }
+
 
                     val remainingDays = incubatedays - ageInDays
 
@@ -173,7 +170,7 @@ class EggClutchesListAdapter(
         }
 
         holder.movebtn.setOnClickListener{
-            val intent = Intent(context, MoveEggActivity::class.java)
+            val intent = Intent(context, MoveEggScannerActivity::class.java)
             intent.putExtra("IncubatingStartDate", eggs.eggIncubationStartDate)
             intent.putExtra("MaturingStartDate", eggs.eggMaturingStartDate)
             intent.putExtra("EggKey", eggs.eggKey)
