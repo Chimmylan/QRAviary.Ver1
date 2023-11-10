@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import EggData
 import PairData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -13,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -82,12 +82,7 @@ class IncubatingFragment : Fragment() {
         adapter = EggAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
 
-        if(total>1){
-            totalBirds.text = total.toString() + " Clutches"
-        }
-        else{
-            totalBirds.text = total.toString() + " Clutch"
-        }
+
         loadDataFromDatabase()
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
@@ -197,9 +192,10 @@ class IncubatingFragment : Fragment() {
             data?.eggcagebirdMale = cageBirdMale
             data?.eggcagekeyMale = cageKeyMale
             data?.eggcagekeyFemale = cageKeyFemale
-
+            var clutchCount = 0
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
+                val data = EggData()  // Create a new EggData object for each clutch
 
                 val key = clutchSnapshot.key.toString()
                 var eggsCount = 0
@@ -208,9 +204,10 @@ class IncubatingFragment : Fragment() {
                     for (eggSnapshot in clutchSnapshot.children) {
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
-                        eggsCount++
+
 
                         if (eggStatus == "Incubating") {
+                            eggsCount++
                             data.eggKey = key
                             data.eggCount = eggsCount.toString()
                             data.eggIncubating = eggsCount.toString()
@@ -223,12 +220,35 @@ class IncubatingFragment : Fragment() {
                     }
                 }
             }
-
         }
+
+
+
+        var totalEggCount = 0
+
+        for (dataItem in dataList) {
+            totalEggCount += dataItem.eggCount?.toIntOrNull() ?: 0
+        }
+
+        // Store the total egg count in SharedPreferences
+        val sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("totalEggCount", totalEggCount)
+        editor.apply()
         total = dataList.count()
+        if(total>1){
+            totalBirds.text = total.toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = total.toString() + " Clutch"
+        }
+
+
         dataList.sortBy { it.eggIncubationStartDate }
         dataList
     }
+
+
     override fun onResume() {
         super.onResume()
 

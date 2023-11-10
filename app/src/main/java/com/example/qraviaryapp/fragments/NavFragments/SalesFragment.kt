@@ -16,10 +16,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.adapter.BirdListAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationsold
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -28,6 +32,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass.
@@ -61,11 +67,17 @@ class SalesFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         recyclerView = view.findViewById(R.id.RecyclerView)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = SoldAdapter(requireContext(),dataList)
+//        recyclerView.adapter = adapter
+
         dataList = ArrayList()
-        adapter = SoldAdapter(requireContext(),dataList)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = SoldAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationsold(adapter))
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         Log.d(ContentValues.TAG, "FLIGHT KEY! THIS SHEYT ${flightKey.toString()}")
         lifecycleScope.launch {
@@ -258,6 +270,7 @@ class SalesFragment : Fragment() {
                 data.forSaleCage = forSaleCage
                 data.reqPrice = forSaleRequestedPrice
                 data.soldDate = soldDate
+                data.monthyr = extractYearFromDateString(soldDate)
                 data.soldPrice = soldPrice
                 data.saleContact = soldContact
                 data.deathDate = deathDate
@@ -291,8 +304,12 @@ class SalesFragment : Fragment() {
         else{
             totalBirds.text = dataList.count().toString() + " Bird Sale"
         }
-
+        dataList.sortByDescending { it.soldDate}
         dataList
+    }
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(it) } ?: ""
     }
     override fun onResume() {
         super.onResume()

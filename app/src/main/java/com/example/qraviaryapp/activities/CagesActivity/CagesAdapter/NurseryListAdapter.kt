@@ -155,12 +155,18 @@ class NurseryListAdapter(
             holder.layoutmovebtn.visibility = View.GONE
             holder.tvprogressbar.visibility = View.VISIBLE
 
-            val progressPercentage = (ageInDays.toFloat() / bird.maturingDays?.toFloat()!! * 100).toInt()
+            val progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
 
 
             holder.tvpercentage.text = "$progressPercentage%"
 
+            val remainingDays = bird.maturingDays?.toInt()!! - ageInDays
 
+
+            if (remainingDays > 0) {
+                val daysText = if (remainingDays.toInt() == 1) "day" else "days"
+                holder.tvTime.text = "$remainingDays $daysText left"
+            }
             val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
             animator.duration = 1000
             animator.start()
@@ -271,6 +277,8 @@ class NurseryListAdapter(
 
 class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
+    val tvTime: TextView = itemView.findViewById(R.id.tvdaysLeft)
+
     var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)

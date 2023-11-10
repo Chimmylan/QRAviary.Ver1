@@ -150,7 +150,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                 true
             }
             R.id.action_save -> {
-
+                item.isEnabled = false
                 val basicFragment = fragmentAdapter.getItem(0) as BasicFragment
                 val originFragment = fragmentAdapter.getItem(1) as OriginFragment
                 val galleryFragment = fragmentAdapter.getItem(2) as AddGalleryFragment
@@ -197,6 +197,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                             nurseryToDetailedScanner(newBundle, newOriginBundle)
 
                             Handler().postDelayed({
+                                item.isEnabled = true
                                 progressBar.visibility = View.GONE
                                 showMessageDialog("Bird Data saved Successfully")
                             },3000)
@@ -213,6 +214,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
 //                            showMessageDialog("Bird Data saved Successfully")
 //                        },4000)
                     } catch (e: NullPointerException) {
+                        item.isEnabled = true
                         progressBar.visibility = View.GONE
                         // Handle the exception if needed
                         Toast.makeText(

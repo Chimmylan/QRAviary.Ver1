@@ -357,7 +357,9 @@ class OriginFragment : Fragment() {
             }
             if (TextUtils.isEmpty(etBuyPrice.text)) {
                 etBuyPrice.error = "Enter Price"
-            } else {
+            } else if(!TextUtils.isDigitsOnly(etBuyPrice.text)){
+                etBuyPrice.error = "Enter a valid price..."
+            }else {
                 validBought = true
             }
 
@@ -1111,7 +1113,10 @@ class OriginFragment : Fragment() {
             }
             if (TextUtils.isEmpty(etBuyPrice.text)) {
                 etBuyPrice.error = "Enter Price"
-            } else {
+            }
+            else if(!TextUtils.isDigitsOnly(etBuyPrice.text)){
+                etBuyPrice.error = "Enter a valid price..."
+            }else {
                 validBought = true
             }
 

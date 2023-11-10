@@ -620,14 +620,26 @@ class BasicFragment : Fragment() {
             btnMutation6
         )
 
+        val uniqueValues = HashSet<String>()
+
         for (i in spinners.indices) {
             if (spinners[i].visibility == View.VISIBLE) {
-                selectedMutations.add(spinners[i].text.toString())
+                val spinnerText = spinners[i].text.toString()
+
+                if (spinnerText !in uniqueValues) {
+                    selectedMutations.add(spinnerText)
+                    uniqueValues.add(spinnerText)
+                } else {
+                    spinners[i].error = "Error: Duplicate value in spinners"
+                    // Spinner has a duplicate value, show an error message
+                    // You might want to replace this with your own error handling logic
+                    Toast.makeText(context, "Error: Duplicate value in spinners", Toast.LENGTH_SHORT).show()
+                    return  // You can return or break out of the loop, depending on your requirements
+                }
             } else {
                 selectedMutations.add(null)
             }
         }
-
         val selectedOption: Int = rgGender.checkedRadioButtonId
 
         dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
@@ -672,6 +684,7 @@ class BasicFragment : Fragment() {
         /*var validDateOfBanding = false*/
         var validDateOfBirth = false
         var validCage = false
+        var validforsale = false
         //Validation
         if (TextUtils.isEmpty(dataIdentifier)) {
             etIdentifier.error = "Identifier cannot be empty"
@@ -680,7 +693,7 @@ class BasicFragment : Fragment() {
 
         }
         
-        if (birdData.mutation1 == "None") {
+        if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4== "None" || birdData.mutation5== "None" || birdData.mutation6 == "None" ){
             btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
@@ -725,8 +738,18 @@ class BasicFragment : Fragment() {
             }
             if (TextUtils.isEmpty(etSoldSalePrice.text)) {
                 etSoldSalePrice.error = "Set a Price..."
+            } else if (!TextUtils.isDigitsOnly(etSoldSalePrice.text)) {
+                etSoldSalePrice.error = "Enter a valid price..."
             } else {
                 validSold = true
+            }
+        }
+        if (forSaleLayout.visibility == View.VISIBLE) {
+            if (!TextUtils.isDigitsOnly(etForSaleReqPrice.text)) {
+                etForSaleReqPrice.error = "Enter a valid price..."
+            }
+            else {
+                validforsale = true
             }
         }
 
@@ -844,9 +867,9 @@ class BasicFragment : Fragment() {
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
-                if (TextUtils.isEmpty(etAvailCage.text)) {
-                    etAvailCage.error = "Cage must not be empty..."
-                }
+//                if (TextUtils.isEmpty(etAvailCage.text)) {
+//                    etAvailCage.error = "Cage must not be empty..."
+//                }
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Legband" to birdData.legband,
@@ -876,33 +899,38 @@ class BasicFragment : Fragment() {
                 newNurseryPref.updateChildren(data)
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
-                val data: Map<String, Any?> = hashMapOf(
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                    /*  "Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Cage" to birdData.forSaleCage,
-                    "CageKey" to cageKeyValue,
-                    "Cage Bird Key" to cageReference.key,
-                    "Requested Price" to birdData.reqPrice,
-                    "Nursery Key" to flightKey,
-                    "Bird Key" to birdId,
-                    "Age" to ageInDays
+                if (validforsale) {
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*  "Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Cage" to birdData.forSaleCage,
+                        "CageKey" to cageKeyValue,
+                        "Cage Bird Key" to cageReference.key,
+                        "Requested Price" to birdData.reqPrice,
+                        "Nursery Key" to flightKey,
+                        "Bird Key" to birdId,
+                        "Age" to ageInDays
 
-                )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(data)
+                    )
+                    if (!cageKeyValue.isNullOrEmpty()) {
+                        cageReference.updateChildren(data)
+                    }
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
                 }
-                newBirdPref.updateChildren(data)
-                newNurseryPref.updateChildren(data)
+                else{
+                    return
+                }
             } else if (soldLayout.visibility == View.VISIBLE) {
 
 
@@ -1084,7 +1112,7 @@ class BasicFragment : Fragment() {
             args.putString("nurseryId", flightKey)
             Log.d(TAG, birdData.toString())
         } else {
-            Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Empty Inputs/Invalid Inputs", Toast.LENGTH_SHORT).show()
         }
 
         Log.d(ContentValues.TAG, "sold id $soldId")

@@ -14,6 +14,7 @@ import com.example.qraviaryapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -229,7 +230,7 @@ class BirdBasicFragment : Fragment() {
 
         bird_dateBirth.text = "Date of Birth: " + birdDateBirth
 
-
+        val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
         val dateFormatter = SimpleDateFormat("MMM d yyyy", Locale.US)
         val birthDate = dateFormatter.parse(birdDateBirth)
 
@@ -261,13 +262,15 @@ class BirdBasicFragment : Fragment() {
         if (birdRequestedPrice.isNullOrEmpty() || birdRequestedPrice == "null") {
             bird_requestedprice.visibility = View.GONE
         } else {
-            bird_requestedprice.text = "Requested Price: " + birdRequestedPrice
+            val price = birdRequestedPrice?.toDouble()
+            bird_requestedprice.text = "Requested Price: " + currencyFormat.format(price)
         }
 
         if (birdBuyPrice.isNullOrEmpty() || birdBuyPrice == "null") {
             bird_buyprice.visibility = View.GONE
         } else {
-            bird_buyprice.text = "Buy Price: " + birdBuyPrice
+            val price = birdBuyPrice?.toDouble()
+            bird_buyprice.text = "Buy Price: " + currencyFormat.format(price)
         }
 
         if (birdBoughtOn.isNullOrEmpty() || birdBoughtOn == "null") {
@@ -290,7 +293,8 @@ class BirdBasicFragment : Fragment() {
         if (birdsalePrice.isNullOrEmpty() || birdsalePrice == "null") {
             bird_salePrice.visibility = View.GONE
         } else {
-            bird_salePrice.text = "Sale Price: " + birdsalePrice
+            val price = birdsalePrice?.toDouble()
+            bird_salePrice.text = "Sale Price: " + currencyFormat.format(price)
         }
         if (birdBuyer.isNullOrEmpty() || birdBuyer == "null") {
             bird_buyer.visibility = View.GONE
