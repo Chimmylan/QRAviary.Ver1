@@ -359,6 +359,7 @@ class BirdsFragment : Fragment() {
 //        dataList.sortBy { it.year}
         dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
 
+
         dataList
     }
     private fun extractYearFromDateString(dateString: String): String {

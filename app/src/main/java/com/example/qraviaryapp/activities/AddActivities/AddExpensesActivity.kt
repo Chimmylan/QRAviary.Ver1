@@ -23,7 +23,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class AddExpensesActivity : AppCompatActivity() {
@@ -80,22 +83,26 @@ class AddExpensesActivity : AppCompatActivity() {
         val amountText = etAmount.text.toString()
         val commentValue = etComment.text.toString()
         val categoryValue = btnCategory.text.toString()
-        val dateValue = btnBeginningDate.text.toString()
-
+        var dateValue = btnBeginningDate.text.toString()
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
         if (amountText.isEmpty()) {
             etAmount.error = "Please input Amount"
-
+            return
         }
 
         if (categoryValue.isEmpty()) {
             btnCategory.error = "Please select a Category..."
-
+            return
         }
 
         if (dateValue.isEmpty()) {
-            btnBeginningDate.error = "Pick Date"
+            val currentDate = Calendar.getInstance().time
+            dateValue = inputDateFormat.format(currentDate)
+            btnBeginningDate.text = dateValue
 
         }
+
 
         val amountValue: Double
         try {
@@ -109,10 +116,9 @@ class AddExpensesActivity : AppCompatActivity() {
         val userBird = db.child("Users").child("ID: $userId").child("Expenses")
         val newExpenses = userBird.push()
 
-        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
 
-        val date = inputDateFormat.parse(beginningFormattedDate)
+
+        val date = inputDateFormat.parse(dateValue)
         val formattedDate = outputDateFormat.format(date)
 
         val monthYearParts = formattedDate.split(" - ")
@@ -122,7 +128,7 @@ class AddExpensesActivity : AppCompatActivity() {
 
         val data: Map<String, Any?> = hashMapOf(
             "Amount" to amountValue,
-            "Beginning" to beginningFormattedDate,
+            "Beginning" to dateValue,
             "Comment" to commentValue,
             "Category" to categoryValue,
             "Date" to month.toFloat(),

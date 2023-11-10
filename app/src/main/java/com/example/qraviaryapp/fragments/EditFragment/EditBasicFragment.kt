@@ -719,6 +719,10 @@ class EditBasicFragment : Fragment() {
                 selectedMutations.add(null)
             }
         }
+        if (birdForsaleCage != "null" || !birdForsaleCage.isNullOrEmpty()){
+            etForSaleCage.setText(birdForsaleCage)
+        }
+
 
 
         val selectedOption: Int = rgGender.checkedRadioButtonId

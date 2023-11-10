@@ -2,6 +2,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import ExpensesData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.os.Looper
 import android.text.TextUtils
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -38,7 +40,7 @@ class CategoriesFragment : Fragment(){
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var adapter: CategoryFragmentAdapter
-
+    private lateinit var options: ImageView
     private lateinit var totalBirds: TextView
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var fab: FloatingActionButton
@@ -59,6 +61,7 @@ class CategoriesFragment : Fragment(){
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
         adapter = CategoryFragmentAdapter(requireContext(), dataList)
+
         recyclerView.adapter = adapter
 
         lifecycleScope.launch {
@@ -142,6 +145,7 @@ class CategoriesFragment : Fragment(){
         val newDb = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Category")
         val newMutationRef = newDb.push()
+        val categorykey = newMutationRef.key
 
         val mutationName = dialogView.findViewById<EditText>(R.id.mutationName)
 
@@ -153,30 +157,52 @@ class CategoriesFragment : Fragment(){
         }
 
         btnSave.setOnClickListener {
-
             val newCategoryValue = mutationName.text.toString()
+
             if (TextUtils.isEmpty(newCategoryValue)) {
                 mutationName.error = "Enter Category Name"
-            } else {
+                return@setOnClickListener
+            }
 
+            // Check if the category already exists in dataList
+            val categoryExists = dataList.any { it.expenses.equals(newCategoryValue, ignoreCase = true) }
+
+
+            if (categoryExists) {
+                // Display an error message or handle the case where the category already exists
+                mutationName.error = "Category Already Exist"
+                return@setOnClickListener
+            } else {
                 val data: Map<String, Any?> = hashMapOf(
-                    "Category" to newCategoryValue
+                    "Category" to newCategoryValue.capitalize()
                 )
                 newMutationRef.updateChildren(data)
+                Log.d(TAG,categorykey.toString())
                 val newCategory = ExpensesData()
-                newCategory.expenses = newCategoryValue
+                newCategory.expenses = newCategoryValue.capitalize()
+                newCategory.categorykey = categorykey
+
                 dataList.add(newCategory)
+
                 adapter.notifyItemInserted(dataList.size - 1)
                 dataList.sortBy { it.expenses }
                 adapter.notifyDataSetChanged()
-
-                alertDialog.dismiss()
             }
-
-
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    adapter.notifyDataSetChanged()
+                } catch (e: java.lang.Exception) {
+                    Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+            }
+            alertDialog.dismiss()
         }
 
         alertDialog.show()
+
     }
     override fun onResume() {
         super.onResume()

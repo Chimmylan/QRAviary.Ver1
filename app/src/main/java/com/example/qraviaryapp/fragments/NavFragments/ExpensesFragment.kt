@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -34,6 +35,7 @@ class ExpensesFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+    private lateinit var options: ImageView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

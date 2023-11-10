@@ -2,6 +2,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import MutationData
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
@@ -202,23 +203,35 @@ class MutationsFragment : Fragment() {
 
         // Find your custom EditText fields in the custom layout
         val mutationNameEditText = dialogView.findViewById<EditText>(R.id.mutationName)
-        val incubationEditText = dialogView.findViewById<EditText>(R.id.incubation)
+        val incu0bationEditText = dialogView.findViewById<EditText>(R.id.incubation)
         val maturedEditText = dialogView.findViewById<EditText>(R.id.matured)
 
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
-
+        val sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        val incubatingValue = sharedPreferences.getString("incubatingValue", "21")
+        val maturingValue = sharedPreferences.getString("maturingValue", "50")
+        editor.apply()
         btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
 
         btnSave.setOnClickListener {
             val mutationNameValue = mutationNameEditText.text.toString()
-            val incubationValue = incubationEditText.text.toString()
-            val maturedValue = maturedEditText.text.toString()
+
 
             if (TextUtils.isEmpty(mutationNameValue)) {
                 mutationNameEditText.error = "Enter a name"
+                return@setOnClickListener
+            }
+            val categoryExists = dataList.any { it.mutations.equals(mutationNameValue, ignoreCase = true) }
+
+
+            if (categoryExists) {
+                // Display an error message or handle the case where the category already exists
+                mutationNameEditText.error = "Mutation Already Exist"
+                return@setOnClickListener
             } else {
                 // Handle saving the data as you did before
                 val currentUserId = mAuth.currentUser?.uid
@@ -227,14 +240,14 @@ class MutationsFragment : Fragment() {
                 val newMutationRef = newDb.push()
 
                 val data: Map<String, Any?> = hashMapOf(
-                    "Mutation" to mutationNameValue,
-                    "Incubating Days" to incubationValue,
-                    "Maturing Days" to maturedValue
+                    "Mutation" to mutationNameValue.capitalize(),
+                    "Incubating Days" to incubatingValue?.toInt(),
+                    "Maturing Days" to maturingValue?.toInt()
                 )
 
                 newMutationRef.updateChildren(data)
                 val newMutation = MutationData()
-                newMutation.mutations = mutationNameValue
+                newMutation.mutations = mutationNameValue.capitalize()
 
                 dataList.add(newMutation)
                 adapter.notifyItemInserted(dataList.size - 1)

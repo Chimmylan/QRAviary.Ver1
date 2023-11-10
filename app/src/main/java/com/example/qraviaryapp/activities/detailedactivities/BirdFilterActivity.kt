@@ -88,9 +88,9 @@ class BirdFilterActivity : AppCompatActivity() {
         btnMutation6 = findViewById(R.id.btnmutation6)
 
         etIdentifier = findViewById(R.id.etIdentifier)
-
-        btnFlightCage = findViewById(R.id.btnflightcage)
-        btnNurseryCge = findViewById(R.id.btnnurserycage)
+//
+//        btnFlightCage = findViewById(R.id.btnflightcage)
+//        btnNurseryCge = findViewById(R.id.btnnurserycage)
 
         cbMale = findViewById(R.id.cbMale)
         cbFemale = findViewById(R.id.cbFemale)
@@ -112,12 +112,12 @@ class BirdFilterActivity : AppCompatActivity() {
         cbAvail.isChecked = true
         cbPaired.isChecked = true
         cbForSale.isChecked = true
-        cbSold.isChecked = true
-        cbDeceased.isChecked = true
-        cbExchange.isChecked = true
-        cbLost.isChecked = true
-        cbDonated.isChecked = true
-        cbOther.isChecked = true
+        cbSold.isChecked = false
+        cbDeceased.isChecked = false
+        cbExchange.isChecked = false
+        cbLost.isChecked = false
+        cbDonated.isChecked = false
+        cbOther.isChecked = false
 
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code

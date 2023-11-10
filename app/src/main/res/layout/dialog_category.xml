@@ -12,7 +12,7 @@
         android:id="@+id/mutationName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textCapSentences|textCapWords"
+        android:inputType="text"
         android:layout_marginBottom="10dp" />
 
     <LinearLayout

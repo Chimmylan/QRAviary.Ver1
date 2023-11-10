@@ -139,7 +139,8 @@ data class ExpensesData(
     var expensesCount: String? = null,
     var expensesComment: String? = null,
     var expensesDate: String? = null,
-
+    var categorykey: String? = null,
+    var monthyr: String?=null
     )
 
 data class PairData(
