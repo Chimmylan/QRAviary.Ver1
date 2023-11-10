@@ -2,32 +2,36 @@ package com.example.qraviaryapp.fragments.EditFragment
 
 import BirdData
 import BirdDataListener
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.AddActivities.AddCageScanActivity
+import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
+import com.example.qraviaryapp.activities.dashboards.MutationsActivity
+import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -132,6 +136,11 @@ class EditBasicFragment : Fragment() {
     private lateinit var btnMutation4: MaterialButton
     private lateinit var btnMutation5: MaterialButton
     private lateinit var btnMutation6: MaterialButton
+    private lateinit var slash1: TextView
+    private lateinit var slash2: TextView
+    private lateinit var slash3: TextView
+    private lateinit var slash4: TextView
+    private lateinit var slash5: TextView
 
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
@@ -198,7 +207,8 @@ class EditBasicFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
 
-
+    private lateinit var cagescan: CardView
+    private lateinit var cagescan1: CardView
     private var status: String? = null
     private lateinit var cageReference: DatabaseReference
     //endregion
@@ -295,6 +305,11 @@ class EditBasicFragment : Fragment() {
         btnMutation5 = view.findViewById(R.id.mutationBtn5)
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
+        slash1 = view.findViewById(R.id.slash1)
+        slash2 = view.findViewById(R.id.slash2)
+        slash3 = view.findViewById(R.id.slash3)
+        slash4 = view.findViewById(R.id.slash4)
+        slash5 = view.findViewById(R.id.slash5)
 
 
         birdKey = arguments?.getString("BirdKey")
@@ -333,9 +348,75 @@ class EditBasicFragment : Fragment() {
         motherKey = arguments?.getString("BirdMotherKey")
 
 
+        Log.d(ContentValues.TAG, birdKey.toString())
 
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
+        cagescan = view.findViewById(R.id.cagescan)
+        cagescan.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
+        cagescan1 = view.findViewById(R.id.cagescan1)
+        cagescan1.setOnClickListener {
+            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+        }
+        btnMutation1.setOnClickListener {
+            val requestCode = 1 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation2.setOnClickListener {
+            val requestCode = 2 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation3.setOnClickListener {
+            val requestCode = 3 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation4.setOnClickListener {
+            val requestCode = 4 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation5.setOnClickListener {
+            val requestCode = 5 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+        btnMutation6.setOnClickListener {
+            val requestCode = 6 // You can use any integer as the request code
+            val intent = Intent(requireContext(), MutationsActivity::class.java)
+            startActivityForResult(intent, requestCode)
+
+        }
+
+        etAvailCage.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), FlightCagesListActivity::class.java)
+            startActivityForResult(intent, requestCode)
+        }
+        etForSaleCage.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), FlightCagesListActivity::class.java)
+            startActivityForResult(intent, requestCode)
+        }
+        cagescan.setOnClickListener {
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)
+        }
+
+
+        AddMutation()
+        RemoveLastMutation()
+        OnActiveSpinner()
 
         etIdentifier.setText(birdId)
 
@@ -344,13 +425,13 @@ class EditBasicFragment : Fragment() {
         }
 
         if (birdGender == "Female"){
-            rbFemale.isChecked
+            rbFemale.isChecked = true
         }
         else if (birdGender == "Male"){
-            rbMale.isChecked
+            rbMale.isChecked = true
         }
         else{
-            rbUnknown.isChecked
+            rbUnknown.isChecked = true
         }
 
         datebirthButton.setText(birdDateBirth)
@@ -363,6 +444,819 @@ class EditBasicFragment : Fragment() {
         return view
 
     }
+
+    private fun getTextFromVisibleEditText(editText: EditText, layout: View): String {
+        return if (layout.visibility == View.VISIBLE) {
+            editText.text.toString()
+        } else {
+            ""
+        }
+    }
+
+    private fun getTextFromVisibleMaterialButton(
+        materialbtn: MaterialButton, layout: View
+    ): String {
+        return if (layout.visibility == View.VISIBLE) {
+            materialbtn.text.toString()
+        } else {
+            ""
+        }
+    }
+
+    private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
+        return if (layout.visibility == View.VISIBLE) {
+            Button.text.toString()
+        } else {
+            ""
+        }
+    }
+
+    private lateinit var cageNameValue: String
+    private var cageKeyValue: String? = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                val btnMutation1Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation1MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation1IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+
+                btnMutation1.text = btnMutation1Value
+
+
+            }
+        }
+        if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation2Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation2MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation2IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation2.text = btnMutation2Value
+            }
+        }
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation3Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation3MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation3IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation3.text = btnMutation3Value
+            }
+        }
+        if (requestCode == 4) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation4Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation4MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation4IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation4.text = btnMutation4Value
+            }
+        }
+        if (requestCode == 5) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation5Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation5MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation5IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation5.text = btnMutation5Value
+            }
+        }
+        if (requestCode == 6) {
+            if (resultCode == Activity.RESULT_OK) {
+                val btnMutation6Value: String =
+                    data?.getStringExtra("selectedMutationId").toString()
+                mutation6MaturingDays =
+                    data?.getStringExtra("selectedMutationMaturingDays").toString()
+                mutation6IncubatingDays =
+                    data?.getStringExtra("selectedMutationIncubatingDays").toString()
+                btnMutation6.text = btnMutation6Value
+            }
+        }
+        if (requestCode == 7) {
+            if (resultCode == Activity.RESULT_OK) {
+                cageNameValue = data?.getStringExtra("CageName").toString()
+                cageKeyValue = data?.getStringExtra("CageKey").toString()
+                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
+                Log.d(ContentValues.TAG, "cage Key : $cageKeyValue")
+                if (availableLayout.visibility == View.VISIBLE) {
+                    etAvailCage.setText(cageNameValue)
+                } else if (forSaleLayout.visibility == View.VISIBLE) {
+                    etForSaleCage.setText(cageNameValue)
+                }
+            }
+        }
+    }
+
+
+    private var spinnerCount = 0
+
+
+    fun AddMutation() {
+
+        btnMutation2.visibility = View.GONE
+        btnMutation3.visibility = View.GONE
+        btnMutation4.visibility = View.GONE
+        btnMutation5.visibility = View.GONE
+        btnMutation6.visibility = View.GONE
+        slash1.visibility = View.GONE
+        slash2.visibility = View.GONE
+        slash3.visibility = View.GONE
+        slash4.visibility = View.GONE
+        slash5.visibility = View.GONE
+        addBtn.setOnClickListener {
+
+            when (spinnerCount) {
+
+                0 -> {
+
+                    btnMutation2.visibility = View.VISIBLE
+                    slash1.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                1 -> {
+                    btnMutation3.visibility = View.VISIBLE
+                    slash2.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                2 -> {
+                    btnMutation4.visibility = View.VISIBLE
+                    slash3.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                3 -> {
+                    btnMutation5.visibility = View.VISIBLE
+                    slash4.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                4 -> {
+                    btnMutation6.visibility = View.VISIBLE
+                    slash5.visibility = View.VISIBLE
+                    spinnerCount++
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "added $spinnerCount", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        }
+    }
+
+    fun RemoveLastMutation() {
+        removeBtn.setOnClickListener {
+
+            when (spinnerCount) {
+                0 -> {
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                1 -> {
+                    spinnerCount--
+                    btnMutation2.visibility = View.GONE
+                    slash1.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                2 -> {
+                    spinnerCount--
+                    btnMutation3.visibility = View.GONE
+                    slash2.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                3 -> {
+
+                    spinnerCount--
+                    btnMutation4.visibility = View.GONE
+                    slash3.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                4 -> {
+
+                    spinnerCount--
+                    btnMutation5.visibility = View.GONE
+                    slash4.visibility = View.GONE
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                else -> {
+                    spinnerCount--
+                    btnMutation6.visibility = View.GONE
+
+                    Toast.makeText(requireContext(), spinnerCount.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    fun birdDataGetters(callback: (birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, cagebirdkey: String, cagekeyvalue: String) -> Unit) {
+
+        /* val dataDateOfBanding = bandFormattedDate*/
+        val dataDateOfBirth = birthFormattedDate
+        /*==++==*/
+        val dataLegband = etLegband.text.toString()
+        val dataSelectedGen: RadioButton
+        /*==++==*/
+        val dataIdentifier = etIdentifier.text.toString()
+
+        val stat = status
+
+        /*Uses a function for comparison of visibility layouts*/
+        val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
+        val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
+        val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
+        val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
+        val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)
+        val dataSoldSaleDate = getTextFromVisibleDatePicker(btnSoldSaleDate, soldLayout)
+        val dataDeathDate = getTextFromVisibleDatePicker(btnDeathDate, deceasedLayout)
+        val dataDeathReason = getTextFromVisibleEditText(etDeathReason, deceasedLayout)
+        val dataExDate = getTextFromVisibleDatePicker(btnExDate, exchangeLayout)
+        val dataExReason = getTextFromVisibleEditText(etExReason, exchangeLayout)
+        val dataExContact = getTextFromVisibleEditText(etExWith, exchangeLayout)
+        val dataLostDate = getTextFromVisibleDatePicker(btnLostDate, lostLayout)
+        val dataLostDetails = getTextFromVisibleEditText(etLostDetails, lostLayout)
+        val dataDonatedDate = getTextFromVisibleDatePicker(btnDonatedDate, donatedLayout)
+        val dataDonatedContact = getTextFromVisibleEditText(etDonateChooseContract, donatedLayout)
+        val dataOtherComments = getTextFromVisibleEditText(etOtherComm, otherLayout)
+        /**/
+        /*==++==*/
+        val selectedMutations = mutableListOf<String?>()
+        val spinners = arrayOf(
+            btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
+        )
+
+        for (i in spinners.indices) {
+            if (spinners[i].visibility == View.VISIBLE) {
+                selectedMutations.add(spinners[i].text.toString())
+            } else {
+                selectedMutations.add(null)
+            }
+        }
+
+
+        val selectedOption: Int = rgGender.checkedRadioButtonId
+
+        dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
+
+        birdData = BirdData(
+            legband = dataLegband,
+            identifier = dataIdentifier,
+            /*  dateOfBanding = dataDateOfBanding,*/
+            dateOfBirth = dataDateOfBirth,
+            mutation1 = selectedMutations[0],
+            mutation2 = selectedMutations[1],
+            mutation3 = selectedMutations[2],
+            mutation4 = selectedMutations[3],
+            mutation5 = selectedMutations[4],
+            mutation6 = selectedMutations[5],
+            gender = dataSelectedGen.text.toString(),
+            status = stat,
+            availCage = dataAvailCage,
+            forSaleCage = dataSaleCage,
+            reqPrice = dataReqPrice,
+            soldDate = dataSoldSaleDate,
+            soldPrice = dataSoldSalePrice,
+            saleContact = dataSoldContact,
+            deathDate = dataDeathDate,
+            deathReason = dataDeathReason,
+            exDate = dataExDate,
+            exContact = dataExContact,
+            exReason = dataExReason,
+            lostDate = dataLostDate,
+            lostDetails = dataLostDetails,
+            donatedDate = dataDonatedDate,
+            donatedContact = dataDonatedContact,
+            otherComments = dataOtherComments
+        )
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
+
+        var validInputs = false
+        var validIdentifier = false
+        var validMutation = false
+        /* var validDateOfBanding = false*/
+        var validDateOfBirth = false
+
+        //Validation
+        if (TextUtils.isEmpty(dataIdentifier)) {
+            etIdentifier.error = "Identifier cannot be Empty..."
+        } else {
+            validIdentifier = true
+        }
+
+        if (birdData.mutation1 == "None") {
+            btnMutation1.error = "Mutation must not be empty..."
+        } else {
+            validMutation = true
+        }
+
+        /*  if (TextUtils.isEmpty(dataDateOfBanding)) {
+              datebandButton.error = "Date of banding must not be empty..."
+          } else {
+              validDateOfBanding = true
+          }*/
+
+        // Assuming dataDateOfBirth is a valid date string in the format "MM dd yyyy" (e.g., "09 29 1990")
+        if (TextUtils.isEmpty(dataDateOfBirth)) {
+            datebirthButton.error = "Date of birth must not be empty..."
+            Toast.makeText(
+                requireContext(),
+                "Date of birth must not be empty...",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+            val birthDate = dateFormat.parse(dataDateOfBirth)
+            val currentDate = Calendar.getInstance().time
+
+            val ageInMillis = currentDate.time - birthDate.time
+            val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+
+            if (ageInDays < 50) {
+                // Age is less than 50 days, show an error message
+                datebirthButton.error = "Age must be more than 50 days"
+                Toast.makeText(
+                    requireContext(),
+                    "Age must be more than 50 days",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                validDateOfBirth = true
+            }
+        }
+
+//soldlayout
+        var validSold = false
+        if (soldLayout.visibility == View.VISIBLE) {
+
+            if (TextUtils.isEmpty(btnSoldSaleDate.text)) {
+                btnSoldSaleDate.error = "Select a date..."
+            }
+            if (TextUtils.isEmpty(etSoldSalePrice.text)) {
+                etSoldSalePrice.error = "Set a Price..."
+            } else {
+                validSold = true
+            }
+        }
+
+
+        if (validDateOfBirth && validMutation && validIdentifier) {
+            validInputs = true
+        }
+        //
+
+
+        val userId = mAuth.currentUser?.uid.toString()
+        var cageBirdKey = ""
+        if (!cageKeyValue.isNullOrEmpty()) {
+            cageReference = cageKeyValue?.let {
+                dbase.child("Users").child("ID: $userId").child("Cages")
+                    .child("Flight Cages").child(it).child("Birds").push()
+            }!!
+
+            cageBirdKey = cageReference.key.toString()
+        }
+
+        val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
+        val NurseryBird = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+
+        val newBirdPref = userBird.child(birdKey.toString())
+        val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
+        val SoldBirdRef = SoldRef.push()
+        var soldId: String? = null
+
+        val parentRef = newBirdPref.child("Parents")
+        val newNurseryPref = NurseryBird.child(birdKey.toString())
+
+        val birdId = newBirdPref.key
+        val FlightId = newNurseryPref.key
+        val args = Bundle()
+
+        val originFragment = OriginFragment()
+        originFragment.arguments = args
+        val mutation1 = hashMapOf(
+            "Mutation Name" to birdData.mutation1,
+            "Maturing Days" to mutation1MaturingDays,
+            "Incubating Days" to mutation1IncubatingDays
+        )
+        val mutation2 = hashMapOf(
+            "Mutation Name" to birdData.mutation2,
+            "Maturing Days" to mutation2MaturingDays,
+            "Incubating Days" to mutation2IncubatingDays
+        )
+        val mutation3 = hashMapOf(
+            "Mutation Name" to birdData.mutation3,
+            "Maturing Days" to mutation3MaturingDays,
+            "Incubating Days" to mutation3IncubatingDays
+        )
+        val mutation4 = hashMapOf(
+            "Mutation Name" to birdData.mutation4,
+            "Maturing Days" to mutation4MaturingDays,
+            "Incubating Days" to mutation4IncubatingDays
+        )
+        val mutation5 = hashMapOf(
+            "Mutation Name" to birdData.mutation5,
+            "Maturing Days" to mutation5MaturingDays,
+            "Incubating Days" to mutation5IncubatingDays
+        )
+        val mutation6 = hashMapOf(
+            "Mutation Name" to birdData.mutation6,
+            "Maturing Days" to mutation6MaturingDays,
+            "Incubating Days" to mutation6IncubatingDays
+        )
+        val newBundle = Bundle()
+
+        newBundle.putString("BirdIdentifier", birdData.identifier)//
+        newBundle.putString("BirdLegband", birdData.legband)//
+        newBundle.putString("BirdImage", birdData.img)//
+        newBundle.putString("BirdKey", newBirdPref.key)//
+        newBundle.putString("FlightKey", newNurseryPref.key)
+        newBundle.putString("BirdGender", birdData.gender)//
+        newBundle.putString("BirdStatus", birdData.status)//
+        newBundle.putString("BirdDateBirth", birdData.dateOfBirth)//
+        newBundle.putString("BirdSalePrice", birdData.soldPrice)//
+        newBundle.putString("BirdBuyer", birdData.saleContact)//
+        newBundle.putString("BirdDeathReason", birdData.deathReason)//
+        newBundle.putString("BirdExchangeReason", birdData.exReason)//
+        newBundle.putString("BirdExchangeWith", birdData.exContact)//
+        newBundle.putString("BirdLostDetails", birdData.lostDetails)//
+        newBundle.putString("BirdAvailCage", birdData.availCage)//
+        newBundle.putString("BirdForsaleCage", birdData.forSaleCage)//
+        newBundle.putString("BirdRequestedPrice", birdData.reqPrice)//
+        newBundle.putString("BirdComment", birdData.otherComments)//
+        newBundle.putString("BirdBuyPrice", birdData.buyPrice)//
+        newBundle.putString("BirdBoughtOn", birdData.boughtDate)//
+        newBundle.putString("BirdBoughtBreeder", birdData.breederContact)//
+        newBundle.putString("BirdBreeder", birdData.otOtherContact)//
+        newBundle.putString("BirdDeceaseDate", birdData.deathDate)//
+        newBundle.putString("BirdSoldDate", birdData.soldDate)//
+        newBundle.putString("BirdLostDate", birdData.lostDate)//
+        newBundle.putString("BirdExchangeDate", birdData.exDate)//
+        newBundle.putString("BirdDonatedDate", birdData.donatedDate)//
+        newBundle.putString("BirdDonatedContact", birdData.donatedContact)//
+        newBundle.putSerializable("BirdMutation1", mutation1)//
+        newBundle.putSerializable("BirdMutation2", mutation2)//
+        newBundle.putSerializable("BirdMutation3", mutation3)//
+        newBundle.putSerializable("BirdMutation4", mutation4)//
+        newBundle.putSerializable("BirdMutation5", mutation5)//
+        newBundle.putSerializable("BirdMutation6", mutation6)//
+        newBundle.putString("BirdMutation1Name", birdData.mutation1)//
+        newBundle.putString("BirdMutation2Name", birdData.mutation2)//
+        newBundle.putString("BirdMutation3Name", birdData.mutation3)//
+        newBundle.putString("BirdMutation4Name", birdData.mutation4)//
+        newBundle.putString("BirdMutation5Name", birdData.mutation5)//
+        newBundle.putString("BirdMutation6Name", birdData.mutation6)//
+        newBundle.putString("BirdFather", birdData.father)//
+        newBundle.putString("BirdFatherKey", birdData.fatherKey)//
+        newBundle.putString("BirdMother", birdData.mother)//
+        newBundle.putString("BirdMotherKey", birdData.motherKey)//
+        newBundle.putString("CageKeyValue", cageKeyValue)//
+        newBundle.putString("CageBirdKeyValue", cageBirdKey)
+        newBundle.putBoolean("fromFlightAdapterList", true)//
+
+        Log.d(ContentValues.TAG, userId)
+
+
+
+
+        if (validInputs) {
+            if (availableLayout.visibility == View.VISIBLE) {
+
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Cage" to birdData.availCage,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageBirdKey
+                )
+
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(data)
+                }
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+
+            } else if (forSaleLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /*"Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Cage" to birdData.forSaleCage,
+                    "Requested Price" to birdData.reqPrice,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId,
+                    "CageKey" to cageKeyValue,
+                    "Cage Bird Key" to cageBirdKey
+
+
+                )
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(data)
+                }
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+            } else if (soldLayout.visibility == View.VISIBLE) {
+                if (validSold) {
+                    soldId = SoldBirdRef.key
+                    val date = inputDateFormat.parse(dataSoldSaleDate)
+                    val formattedDate = outputDateFormat.format(date)
+
+                    val monthYearParts = formattedDate.split(" - ")
+                    val day = monthYearParts[0]
+                    val month = monthYearParts[1]
+                    val year = monthYearParts[2]
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*"Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Sold Date" to birdData.soldDate,
+                        "Sale Price" to birdData.soldPrice,
+                        "Sale Contact" to birdData.saleContact,
+                        "Flight Key" to FlightId,
+                        "Bird Key" to birdId,
+                        "Sold Id" to soldId,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    val solddata: Map<String, Any?> = hashMapOf(
+                        "Bird Id" to birdId
+                    )
+                    SoldBirdRef.updateChildren(data)
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
+                    SoldBirdRef.updateChildren(solddata)
+                } else if (deceasedLayout.visibility == View.VISIBLE) {
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /*    "Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Death Date" to birdData.deathDate,
+                        "Death Reason" to birdData.deathReason,
+                        "Flight Key" to FlightId,
+                        "Bird Key" to birdId
+                    )
+                    newBirdPref.updateChildren(data)
+                    newNurseryPref.updateChildren(data)
+
+                } else {
+                    return
+                }
+
+            } else if (exchangeLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /* "Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Exchange Date" to birdData.exDate,
+                    "Exchange Reason" to birdData.exReason,
+                    "Exchange Contact" to birdData.exContact,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId
+                )
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+            } else if (lostLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /*"Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Lost Date" to birdData.lostDate,
+                    "Lost Details" to birdData.lostDetails,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId
+                )
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+            } else if (donatedLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /*"Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Donated Date" to birdData.donatedDate,
+                    "Donated Contact" to birdData.donatedContact,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId
+                )
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+            } else if (otherLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /*  "Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Comments" to birdData.otherComments,
+                    "Flight Key" to FlightId,
+                    "Bird Key" to birdId
+                )
+                newBirdPref.updateChildren(data)
+                newNurseryPref.updateChildren(data)
+
+            }
+
+
+
+            if (birdId != null) {
+                if (FlightId != null) {
+                    callback(
+                        birdId,
+                        FlightId,
+                        newBundle,
+                        soldId.toString(),
+                        cageBirdKey,
+                        cageKeyValue.toString()
+                    )
+                    Log.d(ContentValues.TAG, "cagekeyflight $cageKeyValue")
+                }
+            }
+            Log.d(ContentValues.TAG, birdData.toString())
+        } else {
+            Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
+        }
+
+        args.putString("birdId", birdId)
+        args.putString("nurseryId", FlightId)
+        args.putString("SoldId", soldId)
+    }
+
+    fun OnActiveSpinner() {
+        val spinnerItems = resources.getStringArray(R.array.Status)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerStatus.adapter = adapter
+
+        spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+
+                val selectedItem = p0?.getItemAtPosition(p2).toString()
+                status = selectedItem
+                availableLayout.visibility = View.GONE
+                forSaleLayout.visibility = View.GONE
+                soldLayout.visibility = View.GONE
+                deceasedLayout.visibility = View.GONE
+                exchangeLayout.visibility = View.GONE
+                lostLayout.visibility = View.GONE
+                donatedLayout.visibility = View.GONE
+                otherLayout.visibility = View.GONE
+
+                when (p0?.getItemAtPosition(p2).toString()) {
+                    "Available" -> {
+
+                        cageKeyValue = null
+                        availableLayout.visibility = View.VISIBLE
+                        etAvailCage.text = ""
+
+                    }
+                    "For Sale" -> {
+                        cageKeyValue = null
+                        forSaleLayout.visibility = View.VISIBLE
+                        etForSaleCage.text = ""
+                    }
+                    "Sold" -> {
+                        cageKeyValue = null
+                        soldLayout.visibility = View.VISIBLE
+                    }
+                    "Deceased" -> {
+                        cageKeyValue = null
+
+                        deceasedLayout.visibility = View.VISIBLE
+                    }
+                    "Exchanged" -> {
+                        cageKeyValue = null
+
+                        exchangeLayout.visibility = View.VISIBLE
+                    }
+                    "Lost" -> {
+                        cageKeyValue = null
+
+                        lostLayout.visibility = View.VISIBLE
+                    }
+                    "Donated" -> {
+                        cageKeyValue = null
+
+                        donatedLayout.visibility = View.VISIBLE
+                    }
+                    "Other" -> {
+                        cageKeyValue = null
+
+                        otherLayout.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        cageKeyValue = null
+
+                        editTextContainer.visibility = View.GONE
+                    }
+                }
+
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+        return
+
+    }
+
     private fun initDatePickers() {
         val dateSetListenerBirth =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->

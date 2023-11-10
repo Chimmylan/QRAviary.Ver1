@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import EggData
 import PairData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -13,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -192,7 +192,7 @@ class IncubatingFragment : Fragment() {
             data?.eggcagebirdMale = cageBirdMale
             data?.eggcagekeyMale = cageKeyMale
             data?.eggcagekeyFemale = cageKeyFemale
-
+            var clutchCount = 0
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
                 val data = EggData()  // Create a new EggData object for each clutch
@@ -221,6 +221,7 @@ class IncubatingFragment : Fragment() {
                 }
             }
         }
+
 
 
         var totalEggCount = 0
