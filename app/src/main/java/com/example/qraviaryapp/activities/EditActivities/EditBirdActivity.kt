@@ -2,9 +2,11 @@ package com.example.qraviaryapp.activities.EditActivities
 
 import BirdData
 import BirdDataListener
+import android.content.ContentValues.TAG
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -150,7 +152,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
-        cageKeyValue = bundle?.getString("CageKeyValue").toString()
+        cageKeyValue = bundle?.getString("CageKey").toString()
 
         newBundle.putString("NurseryKey", nureseryKey)
         newBundle.putString("CageKey", cageKeyValue)
@@ -197,7 +199,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
 
-
+        Log.d(TAG, BirdAvailCage + " " + BirdForsaleCage)
 
 
 

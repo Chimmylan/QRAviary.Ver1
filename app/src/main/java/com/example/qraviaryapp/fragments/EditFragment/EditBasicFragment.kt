@@ -317,6 +317,7 @@ class EditBasicFragment : Fragment() {
         birdLegband = arguments?.getString("BirdLegband")
         birdStatus = arguments?.getString("BirdStatus")
         birdId = arguments?.getString("BirdId")
+        cageKeyValue = arguments?.getString("CageKey")
         birdDonatedContact = arguments?.getString("BirdDonatedContact")
         birdsalePrice = arguments?.getString("BirdSalePrice")
         birdDateBirth = arguments?.getString("BirdDateBirth")
@@ -348,7 +349,7 @@ class EditBasicFragment : Fragment() {
         motherKey = arguments?.getString("BirdMotherKey")
 
 
-        Log.d(ContentValues.TAG, birdKey.toString())
+        Log.d(ContentValues.TAG, cageKeyValue.toString())
 
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
@@ -414,9 +415,7 @@ class EditBasicFragment : Fragment() {
         }
 
 
-        AddMutation()
-        RemoveLastMutation()
-        OnActiveSpinner()
+
 
         etIdentifier.setText(birdId)
 
@@ -436,10 +435,22 @@ class EditBasicFragment : Fragment() {
 
         datebirthButton.setText(birdDateBirth)
 
-        if (birdAvailCage != "null" || !birdAvailCage.isNullOrEmpty()){
-            etAvailCage.setText(birdAvailCage)
-        }
 
+
+
+        AddMutation()
+        RemoveLastMutation()
+        OnActiveSpinner()
+
+        if (etAvailCage.text.isEmpty() && !birdAvailCage.isNullOrEmpty()){
+            etAvailCage.text = birdAvailCage
+            //cageKeyValue = //
+        }
+        if (etForSaleCage.text.isEmpty() && !birdForsaleCage.isNullOrEmpty()){
+            spinnerStatus.setSelection(1)
+            etForSaleCage.text = birdForsaleCage
+            //cageKeyValue = //
+        }
 
         return view
 
@@ -1185,7 +1196,7 @@ class EditBasicFragment : Fragment() {
         spinnerStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 
-                val selectedItem = p0?.getItemAtPosition(p2).toString()
+                var selectedItem = p0?.getItemAtPosition(p2).toString()
                 status = selectedItem
                 availableLayout.visibility = View.GONE
                 forSaleLayout.visibility = View.GONE
@@ -1201,13 +1212,11 @@ class EditBasicFragment : Fragment() {
 
                         cageKeyValue = null
                         availableLayout.visibility = View.VISIBLE
-                        etAvailCage.text = ""
 
                     }
                     "For Sale" -> {
                         cageKeyValue = null
                         forSaleLayout.visibility = View.VISIBLE
-                        etForSaleCage.text = ""
                     }
                     "Sold" -> {
                         cageKeyValue = null

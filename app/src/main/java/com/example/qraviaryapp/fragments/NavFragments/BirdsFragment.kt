@@ -238,6 +238,7 @@ class BirdsFragment : Fragment() {
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Cage").value
                 val forSaleCageValue = itemSnapshot.child("Cage").value
+                val cageKey = itemSnapshot.child("CageKey").value
                 val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
                 val soldDateValue = itemSnapshot.child("Sold Date").value
                 val soldPriceValue = itemSnapshot.child("Sale Price").value
@@ -292,6 +293,7 @@ class BirdsFragment : Fragment() {
 
                 birdCount++
 //                data.bitmap = image
+                data.cageKey = cageKey.toString()
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
