@@ -25,6 +25,7 @@
             android:padding="15dp"
             android:weightSum="2">
             <RadioGroup
+                android:id="@+id/rgGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

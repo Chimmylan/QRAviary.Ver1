@@ -1,22 +1,25 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.google.android.material.button.MaterialButton
 
 class BirdFilterActivity : AppCompatActivity() {
@@ -39,6 +42,10 @@ class BirdFilterActivity : AppCompatActivity() {
     private lateinit var btnNurseryCge: MaterialButton
     private lateinit var btnFlightCage: MaterialButton
 
+    private lateinit var rbGroup: RadioGroup
+    private lateinit var oldest: RadioButton
+    private lateinit var youngest: RadioButton
+    private lateinit var id: RadioButton
     private lateinit var cbMale: CheckBox
     private lateinit var cbFemale: CheckBox
     private lateinit var cbUnknown: CheckBox
@@ -54,7 +61,8 @@ class BirdFilterActivity : AppCompatActivity() {
 
     private lateinit var addBtn: Button
     private lateinit var removeBtn: Button
-
+    private lateinit var categoryCheckboxes: List<CheckBox>
+    private lateinit var genderCheckboxes: List<CheckBox>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -92,6 +100,12 @@ class BirdFilterActivity : AppCompatActivity() {
 //        btnFlightCage = findViewById(R.id.btnflightcage)
 //        btnNurseryCge = findViewById(R.id.btnnurserycage)
 
+
+        rbGroup = findViewById(R.id.rgGroup)
+        youngest = findViewById(R.id.youngest)
+        oldest = findViewById(R.id.oldest)
+        id = findViewById(R.id.identifier)
+
         cbMale = findViewById(R.id.cbMale)
         cbFemale = findViewById(R.id.cbFemale)
         cbUnknown = findViewById(R.id.cbUnknown)
@@ -106,6 +120,8 @@ class BirdFilterActivity : AppCompatActivity() {
         cbDonated = findViewById(R.id.cbDonated)
         cbOther = findViewById(R.id.cbOther)
 
+
+        youngest.isChecked = true
         cbMale.isChecked = true
         cbFemale.isChecked = true
         cbUnknown.isChecked = true
@@ -119,10 +135,26 @@ class BirdFilterActivity : AppCompatActivity() {
         cbDonated.isChecked = false
         cbOther.isChecked = false
 
+        genderCheckboxes = listOf(
+            cbMale,
+            cbFemale,
+            cbUnknown,
+        )
+
+        categoryCheckboxes = listOf(
+            cbAvail,
+            cbPaired,
+            cbForSale,
+            cbSold,
+            cbDeceased,
+            cbExchange,
+            cbLost,
+            cbDonated,
+            cbOther
+        )
 
 
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -133,8 +165,50 @@ class BirdFilterActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.ic_done -> {
+                var selectedStatus: Set<String>? = null
+                var selectedGender: Set<String>? = null
+                var selectedSort: String? = null
+
+                val i = Intent()
                 // Handle the click event for your menu item here
                 // You can add your logic here.
+                categoryCheckboxes.forEach { checkBox ->
+                    selectedStatus =
+                        categoryCheckboxes.filter { it.isChecked }.map { it.text.toString() }
+                            .toSet()
+                }
+                genderCheckboxes.forEach { checkBox ->
+                    selectedGender =
+                        genderCheckboxes.filter { it.isChecked }.map { it.text.toString() }
+                            .toSet()
+                }
+                val selectedStatusList = selectedStatus?.toList()
+                val selectedGenderList = selectedGender?.toList()
+
+                Log.d(TAG, selectedStatusList.toString())
+
+                if (youngest.isChecked){
+                    selectedSort = "Youngest"
+                }else if (oldest.isChecked){
+                    selectedSort = "Oldest"
+                }else if (id.isChecked){
+                    selectedSort = "Id"
+
+                }
+
+                i.putStringArrayListExtra("selectedStatusList",
+                    selectedStatusList?.let { ArrayList(it) })
+                i.putStringArrayListExtra("selectedGenderList",
+                    selectedGenderList?.let { ArrayList(it) })
+                i.putExtra("selectedSort", selectedSort)
+
+
+                setResult(Activity.RESULT_OK, i)
+                finish()
+
+
+
+
 
                 return true
             }

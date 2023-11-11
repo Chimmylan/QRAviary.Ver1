@@ -1,9 +1,11 @@
 package com.example.qraviaryapp.adapter
 
 import BirdData
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,7 @@ class BirdListAdapter(
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<MyViewHolder>() {
+    private var originalList = dataList
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -32,12 +35,15 @@ class BirdListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
+
         return MyViewHolder(view, dataList)
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
+
+
 
 
 
@@ -158,6 +164,45 @@ class BirdListAdapter(
         }
     }
 
+    fun filterData(selectedAttributes: Map<String, Set<String>>) {
+
+        val filteredList = originalList.filter { item ->
+            selectedAttributes.all { (attribute, selectedValues) ->
+                when (attribute) {
+                    "status" -> item.status in selectedValues
+                    "gender" -> item.gender in selectedValues
+
+                    // Add more cases for other attributes
+                    else -> true // Default to true if the attribute is not recognized
+                }
+            }
+        }
+        val age = true
+        if (age){
+            filteredList.sortedByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+        }
+        setData(filteredList.toMutableList())
+    }
+
+
+    private fun setData(newData: MutableList<BirdData>){
+        dataList.clear()
+        dataList = newData
+        notifyDataSetChanged()
+    }
+
+    fun filterAge(age: String){
+        val string = "id"
+        if (age == "Youngest"){
+            dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+        }else if (age == "Oldest"){
+            dataList.sortBy { it.dateOfBirth }
+        }else{
+            dataList.sortBy { it.identifier }
+        }
+
+        notifyDataSetChanged()
+    }
 
 }
 

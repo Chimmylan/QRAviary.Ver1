@@ -172,10 +172,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
 
+    private lateinit var fragment: Fragment
+
     @SuppressLint("SuspiciousIndentation")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-        val fragment: Fragment
         val title: String
         val isMonitoringFragment: Boolean
 
@@ -329,8 +330,9 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 when (currentFragment) {
                     is BirdsFragment -> {
                         // Handle the ic_filter action for the BirdsFragment
+                        val requestCode = 0
                         val intent = Intent(this, BirdFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
                     is PairsFragment -> {
                         // Handle the ic_filter action for the BirdsFragment
@@ -357,6 +359,28 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0){
+            if (resultCode == RESULT_OK){
+                val selectedStatus = data?.getStringArrayListExtra("selectedStatusList")
+                val selectedGender = data?.getStringArrayListExtra("selectedGenderList")
+                val selectedSort = data?.getStringExtra("selectedSort")
+                val bundle = Bundle()
+
+                bundle.putStringArrayList("selectedStatusList", selectedStatus)
+                bundle.putStringArrayList("selectedGenderList", selectedGender)
+                bundle.putString("selectedSort", selectedSort)
+
+
+                fragment.arguments = bundle
+
+
+
+            }
         }
     }
 

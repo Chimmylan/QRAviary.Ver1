@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import BirdData
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -98,12 +99,14 @@ class BirdsFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
 
 
+
         lifecycleScope.launch {
             try {
 //                loadingProgressBar.visibility = View.VISIBLE
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
 
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
@@ -360,6 +363,8 @@ class BirdsFragment : Fragment() {
 //        dataList.sortBy { it.year}
         dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
 
+        dataList.sortedBy { it.dateOfBirth }
+
 
         dataList
     }
@@ -428,7 +433,29 @@ class BirdsFragment : Fragment() {
         super.onResume()
 
         // Call a function to reload data from the database and update the RecyclerView
+        val selectedStatusList = arguments?.getStringArrayList("selectedStatusList")
+        val selectedGenderList = arguments?.getStringArrayList("selectedGenderList")
+        val selectedSortBy = arguments?.getString("selectedSort")
+        Log.d(TAG, selectedStatusList.toString())
+        val receivedStatusSet = selectedStatusList?.toSet() ?: emptySet()
+        val receivedGenderSet = selectedGenderList?.toSet() ?: emptySet()
+
         reloadDataFromDatabase()
+
+        var filteredData: Map<String, Set<String>> = mapOf(
+            "status" to receivedStatusSet,
+            "gender" to receivedGenderSet
+        )
+
+        Log.d(TAG,filteredData.toString())
+
+        if (receivedStatusSet.isNotEmpty() && receivedGenderSet.isNotEmpty()){
+            adapter.filterData(filteredData)
+            if (selectedSortBy != null) {
+                adapter.filterAge(selectedSortBy)
+            }
+        }
+
 
     }
 
