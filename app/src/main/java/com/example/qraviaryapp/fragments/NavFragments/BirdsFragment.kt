@@ -350,6 +350,7 @@ class BirdsFragment : Fragment() {
         }
 
         if(dataList.count()>1){
+
             totalBirds.text = dataList.count().toString() + " Birds"
         }
         else{
