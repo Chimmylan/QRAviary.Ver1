@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -171,7 +172,7 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
         val newMutationRef = newDb.push()
 
         val mutationName = dialogView.findViewById<EditText>(R.id.mutationName)
-
+//        mutationName.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
 
@@ -180,31 +181,47 @@ class ChooseCategoryActivity : AppCompatActivity(), ClickListener {
         }
 
         btnSave.setOnClickListener {
-
             val newCategoryValue = mutationName.text.toString()
+
             if (TextUtils.isEmpty(newCategoryValue)) {
                 mutationName.error = "Enter Category Name"
-            } else {
+                return@setOnClickListener
+            }
 
+            // Check if the category already exists in dataList
+            val categoryExists = dataList.any { it.expenses.equals(newCategoryValue, ignoreCase = true) }
+
+
+            if (categoryExists) {
+                // Display an error message or handle the case where the category already exists
+                mutationName.error = "Category Already Exist"
+                return@setOnClickListener
+            } else {
                 val data: Map<String, Any?> = hashMapOf(
-                    "Category" to newCategoryValue
+                    "Category" to newCategoryValue.capitalize()
                 )
                 newMutationRef.updateChildren(data)
+
                 val newCategory = ExpensesData()
-                newCategory.expenses = newCategoryValue
+                newCategory.expenses = newCategoryValue.capitalize()
+
                 dataList.add(newCategory)
+
                 adapter.notifyItemInserted(dataList.size - 1)
                 dataList.sortBy { it.expenses }
                 adapter.notifyDataSetChanged()
-
-                alertDialog.dismiss()
             }
 
-
+            alertDialog.dismiss()
         }
 
         alertDialog.show()
+
+
     }
+//    fun capitalizeFirstLetter(input: String): String {
+//        return input.take(1).toUpperCase() + input.drop(1)
+//    }
     override fun onResume() {
         super.onResume()
 

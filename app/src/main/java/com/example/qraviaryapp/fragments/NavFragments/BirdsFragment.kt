@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import BirdData
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -98,12 +99,14 @@ class BirdsFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
 
 
+
         lifecycleScope.launch {
             try {
 //                loadingProgressBar.visibility = View.VISIBLE
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
 
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
@@ -238,6 +241,7 @@ class BirdsFragment : Fragment() {
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Cage").value
                 val forSaleCageValue = itemSnapshot.child("Cage").value
+                val cageKey = itemSnapshot.child("CageKey").value
                 val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
                 val soldDateValue = itemSnapshot.child("Sold Date").value
                 val soldPriceValue = itemSnapshot.child("Sale Price").value
@@ -292,6 +296,7 @@ class BirdsFragment : Fragment() {
 
                 birdCount++
 //                data.bitmap = image
+                data.cageKey = cageKey.toString()
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
@@ -348,6 +353,7 @@ class BirdsFragment : Fragment() {
         }
 
         if(dataList.count()>1){
+
             totalBirds.text = dataList.count().toString() + " Birds"
         }
         else{
@@ -356,6 +362,9 @@ class BirdsFragment : Fragment() {
 
 //        dataList.sortBy { it.year}
         dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+
+        dataList.sortedBy { it.dateOfBirth }
+
 
         dataList
     }
@@ -424,7 +433,29 @@ class BirdsFragment : Fragment() {
         super.onResume()
 
         // Call a function to reload data from the database and update the RecyclerView
+        val selectedStatusList = arguments?.getStringArrayList("selectedStatusList")
+        val selectedGenderList = arguments?.getStringArrayList("selectedGenderList")
+        val selectedSortBy = arguments?.getString("selectedSort")
+        Log.d(TAG, selectedStatusList.toString())
+        val receivedStatusSet = selectedStatusList?.toSet() ?: emptySet()
+        val receivedGenderSet = selectedGenderList?.toSet() ?: emptySet()
+
         reloadDataFromDatabase()
+
+        var filteredData: Map<String, Set<String>> = mapOf(
+            "status" to receivedStatusSet,
+            "gender" to receivedGenderSet
+        )
+
+        Log.d(TAG,filteredData.toString())
+
+        if (receivedStatusSet.isNotEmpty() && receivedGenderSet.isNotEmpty()){
+            adapter.filterData(filteredData)
+            if (selectedSortBy != null) {
+                adapter.filterAge(selectedSortBy)
+            }
+        }
+
 
     }
 

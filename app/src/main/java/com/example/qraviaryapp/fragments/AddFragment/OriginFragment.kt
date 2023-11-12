@@ -357,11 +357,14 @@ class OriginFragment : Fragment() {
             }
             if (TextUtils.isEmpty(etBuyPrice.text)) {
                 etBuyPrice.error = "Enter Price"
-            } else if(!TextUtils.isDigitsOnly(etBuyPrice.text)){
+            } else if (!TextUtils.isDigitsOnly(etBuyPrice.text)) {
                 etBuyPrice.error = "Enter a valid price..."
-            }else {
+            } else {
                 validBought = true
             }
+        }
+        if (boughtLayout.visibility == View.VISIBLE) {
+
 
 
             if (validBought && successBasic) {

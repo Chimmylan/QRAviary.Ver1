@@ -910,6 +910,7 @@ class BasicFragment : Fragment() {
                         "Mutation4" to mutation4,
                         "Mutation5" to mutation5,
                         "Mutation6" to mutation6,
+                        "Maturing Days" to maturingDays,
                         /*  "Date of Banding" to birdData.dateOfBanding,*/
                         "Date of Birth" to birdData.dateOfBirth,
                         "Status" to birdData.status,

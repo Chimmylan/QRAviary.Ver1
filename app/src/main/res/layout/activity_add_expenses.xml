@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="openDatebandPicker"
-                android:hint="Pick Date"
+                android:hint="Today"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 tools:ignore="OnClick" />

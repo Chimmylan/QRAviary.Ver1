@@ -4,7 +4,9 @@ import ClickListener
 import MutationData
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -183,42 +185,64 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
         val newDb = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Mutations")
         val newMutationRef = newDb.push()
-        val mutationName = dialogView.findViewById<EditText>(R.id.mutationName)
+        val mutationNameEditText = dialogView.findViewById<EditText>(R.id.mutationName)
 
 
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
-
+        val sharedPreferences = this.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        val incubatingValue = sharedPreferences.getString("incubatingValue", "21")
+        val maturingValue = sharedPreferences.getString("maturingValue", "50")
+        editor.apply()
         btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
 
         btnSave.setOnClickListener {
+            val mutationNameValue = mutationNameEditText.text.toString()
 
-            val mutationNameValue = mutationName.text.toString()
-            if (TextUtils.isEmpty(mutationNameValue)){
-                mutationName.error = "Enter mutation name"
-            }else{
+
+            if (TextUtils.isEmpty(mutationNameValue)) {
+                mutationNameEditText.error = "Enter a name"
+                return@setOnClickListener
+            }
+            val categoryExists = dataList.any { it.mutations.equals(mutationNameValue, ignoreCase = true) }
+
+
+            if (categoryExists) {
+                // Display an error message or handle the case where the category already exists
+                mutationNameEditText.error = "Mutation Already Exist"
+                return@setOnClickListener
+            } else {
+                // Handle saving the data as you did before
+                val currentUserId = mAuth.currentUser?.uid
+                val newDb = FirebaseDatabase.getInstance().reference.child("Users")
+                    .child("ID: ${currentUserId.toString()}").child("Mutations")
+                val newMutationRef = newDb.push()
 
                 val data: Map<String, Any?> = hashMapOf(
-                    "Mutation" to mutationNameValue
+                    "Mutation" to mutationNameValue.capitalize(),
+                    "Incubating Days" to incubatingValue?.toInt(),
+                    "Maturing Days" to maturingValue?.toInt()
                 )
+
                 newMutationRef.updateChildren(data)
                 val newMutation = MutationData()
-                newMutation.mutations = mutationNameValue
+                newMutation.mutations = mutationNameValue.capitalize()
+
                 dataList.add(newMutation)
                 adapter.notifyItemInserted(dataList.size - 1)
                 dataList.sortBy { it.mutations }
                 adapter.notifyDataSetChanged()
-
                 alertDialog.dismiss()
             }
-
 
         }
 
         alertDialog.show()
     }
+
     override fun onResume() {
         super.onResume()
 

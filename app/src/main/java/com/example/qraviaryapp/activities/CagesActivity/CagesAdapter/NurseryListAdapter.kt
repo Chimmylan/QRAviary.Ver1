@@ -117,7 +117,7 @@ class NurseryListAdapter(
         if (ageInDays >= bird.maturingDays?.toInt()!!) {
             holder.layoutmovebtn.visibility = View.VISIBLE
 
-            var progressPercentage = (ageInDays.toFloat() / bird.maturingDays?.toFloat()!! * 100).toInt()
+            var progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
 
             if (progressPercentage >= 100) {
                 progressPercentage = 100
