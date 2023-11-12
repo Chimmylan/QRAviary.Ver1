@@ -20,10 +20,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CategoryFragmentAdapter
+import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationcategories
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -57,12 +61,17 @@ class CategoriesFragment : Fragment(){
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = view.findViewById(R.id.recyclerView)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = CategoryFragmentAdapter(requireContext(), dataList)
+//
+//        recyclerView.adapter = adapter
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = CategoryFragmentAdapter(requireContext(), dataList)
-
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationcategories(adapter))
 
         lifecycleScope.launch {
             try {

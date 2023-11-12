@@ -2,6 +2,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import PairData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -34,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -155,13 +157,7 @@ class PairsFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
             refreshApp()
-        total = totalcurrent + totalprevious
-        if (total>1){
-            totalBirds.text = total.toString() + " Pairs"
-        }
-        else{
-            totalBirds.text = total.toString() + " Pair"
-        }
+
 
         return view
     }
@@ -280,7 +276,7 @@ class PairsFragment : Fragment() {
             }
         }
         dataList.sortBy { it.pairDateBeg }
-        totalcurrent = dataList.count()
+        totalcurrent = dataList.size
         dataList
     }
     private fun extractYearFromDateString(dateString: String): String {
@@ -357,7 +353,7 @@ class PairsFragment : Fragment() {
             }
 
             dataList.sortBy { it.pairDateBeg }
-            totalprevious = dataList.count()
+            totalprevious = dataList.size
             dataList
         }
 
@@ -366,13 +362,22 @@ class PairsFragment : Fragment() {
 
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
+
     }
 
     private fun reloadDataFromDatabase() {
         loadingProgressBar.visibility = View.VISIBLE
+
+        // Use async to run getDataFromDatabase and getDataFromDatabasePrevious concurrently
         lifecycleScope.launch {
+            val dataDeferred = async { getDataFromDatabase() }
+            val dataPreviousDeferred = async { getDataFromDatabasePrevious() }
+
             try {
-                val data = getDataFromDatabase()
+                // Wait for the results of both async functions
+                val data = dataDeferred.await()
+                val dataPrevious = dataPreviousDeferred.await()
+
                 dataList.clear()
                 dataList.addAll(data)
                 adapter.notifyDataSetChanged()
@@ -381,28 +386,27 @@ class PairsFragment : Fragment() {
                 } else {
                     current.visibility = View.GONE
                 }
-            } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-            }
-            finally {
-                loadingProgressBar.visibility = View.GONE
-            }
-        }
-        lifecycleScope.launch {
-            try {
-                val data = getDataFromDatabasePrevious()
+
                 dataList1.clear()
-                dataList1.addAll(data)
+                dataList1.addAll(dataPrevious)
                 adapter1.notifyDataSetChanged()
                 if (!dataList1.isEmpty()) {
                     previous.visibility = View.VISIBLE
                 } else {
                     previous.visibility = View.GONE
                 }
+
+                // Calculate total after both async functions complete
+                total = totalcurrent + totalprevious
+                Log.d(TAG, total.toString())
+                if (total > 1) {
+                    totalBirds.text = total.toString() + " Pairs"
+                } else {
+                    totalBirds.text = total.toString() + " Pair"
+                }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-            }
-            finally {
+            } finally {
                 loadingProgressBar.visibility = View.GONE
             }
         }

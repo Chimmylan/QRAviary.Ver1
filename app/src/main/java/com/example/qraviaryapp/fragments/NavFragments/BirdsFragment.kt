@@ -308,6 +308,7 @@ class BirdsFragment : Fragment() {
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
                 data.year = extractYearFromDateString(dateOfBirth)
+                data.month = extractYearFromDate(dateOfBirth)
                 data.status = status
                 data.mutation1 = mutation1Value
                 data.mutation2 = mutation2Value
@@ -352,25 +353,28 @@ class BirdsFragment : Fragment() {
 
         }
 
-        if(dataList.count()>1){
 
+        if (dataList.count() > 1) {
             totalBirds.text = dataList.count().toString() + " Birds"
-        }
-        else{
+        } else {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
-//        dataList.sortBy { it.year}
         dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
 
-        dataList.sortedBy { it.dateOfBirth }
-
-
         dataList
+
+
     }
+
+
     private fun extractYearFromDateString(dateString: String): String {
         val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
         return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
+    }
+    private fun extractYearFromDate(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
     }
     fun getUrlImage(urlString: String): Bitmap? {
         var inputStream: InputStream? = null
