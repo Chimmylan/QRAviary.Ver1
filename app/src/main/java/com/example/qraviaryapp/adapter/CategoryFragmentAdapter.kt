@@ -29,7 +29,13 @@ class CategoryFragmentAdapter(
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_GENE = 1
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].expenses?.substring(0, 1)?.toUpperCase() ?: ""
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryFragmentViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_gene, parent, false)
 

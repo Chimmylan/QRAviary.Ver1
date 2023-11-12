@@ -196,8 +196,9 @@ class BirdListAdapter(
         if (age == "Youngest"){
             dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
         }else if (age == "Oldest"){
-            dataList.sortBy { it.dateOfBirth }
-        }else{
+            dataList.sortBy { it.month }
+        }
+        else{
             dataList.sortBy { it.identifier }
         }
 
