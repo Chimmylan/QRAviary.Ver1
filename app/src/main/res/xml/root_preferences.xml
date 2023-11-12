@@ -15,10 +15,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Basics">
-        <CheckBoxPreference
-            android:title="icheck mo to kase wala lang"
-            app:key="checkbox"
-            app:summary="Tap to Check if On or Off" />
+<!--        <CheckBoxPreference-->
+<!--            android:title="icheck mo to kase wala lang"-->
+<!--            app:key="checkbox"-->
+<!--            app:summary="Tap to Check if On or Off" />-->
 
         <EditTextPreference
             android:dialogTitle="Enter Days"
@@ -54,11 +54,11 @@
             android:title="Notification"
             app:key="switch" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:summary="Click to On or Off"
-            android:title="Auto Increment ID"
-            app:key="auto_increment_switch" />
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="true"-->
+<!--            android:summary="Click to On or Off"-->
+<!--            android:title="Auto Increment ID"-->
+<!--            app:key="auto_increment_switch" />-->
 
 
     </PreferenceCategory>

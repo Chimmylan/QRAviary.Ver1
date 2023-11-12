@@ -157,7 +157,7 @@ class SalesChartFragment : Fragment() {
                 maxLabelCount
             }
             setLabelCount(labelCount, true)
-            val xOffset = 20f // Adjust this value as needed.
+            val xOffset = 100f // Adjust this value as needed.
             setXOffset(xOffset)
         }
         lineChart.setScaleEnabled(false)
@@ -182,6 +182,7 @@ class SalesChartFragment : Fragment() {
         xAxis.setAvoidFirstLastClipping(true)
 
         val customMarker = MyMarker(requireContext(), R.layout.custom_marker)
+
         lineChart.marker = customMarker
 
 

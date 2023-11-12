@@ -20,18 +20,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationnursery
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class NurseryListActivity : AppCompatActivity() {
@@ -73,12 +76,16 @@ class NurseryListActivity : AppCompatActivity() {
 
 
         recyclerView = findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(this, 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(this, 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = NurseryListAdapter(this, dataList, maturingDays)
+//        recyclerView.adapter = adapter
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = NurseryListAdapter(this, dataList, maturingDays)
         recyclerView.adapter = adapter
-
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationnursery(adapter))
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
         val abcolortitle = resources.getColor(R.color.appbar)
@@ -248,6 +255,7 @@ class NurseryListActivity : AppCompatActivity() {
                 data.gender = gender
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
+                data.month = extractYearFromDate(dateOfBirth)
                 data.status = status
                 data.mutation1 = mutation1Value
                 data.mutation2 = mutation2Value
@@ -298,11 +306,14 @@ class NurseryListActivity : AppCompatActivity() {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
-
+        dataList.sortedByDescending { it.month }
         dataList
 
     }
-
+    private fun extractYearFromDate(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
+    }
     override fun onResume() {
         super.onResume()
 

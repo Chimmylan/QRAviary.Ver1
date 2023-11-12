@@ -36,14 +36,18 @@ import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 import java.util.concurrent.TimeUnit
 
 
@@ -685,25 +689,16 @@ class BasicFragment : Fragment() {
         var validDateOfBirth = false
         var validCage = false
         var validforsale = false
+        var valididexist = false
+        var validlegbandexist = false
         //Validation
-        if (TextUtils.isEmpty(dataIdentifier)) {
-            etIdentifier.error = "Identifier cannot be empty"
-        } else {
-            validIdentifier = true
 
-        }
-        
         if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4== "None" || birdData.mutation5== "None" || birdData.mutation6 == "None" ){
             btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
         }
 
-//        if (TextUtils.isEmpty(dataDateOfBanding)) {
-//            datebandButton.error = "Date of banding must not be empty..."
-//        } else {
-//            validDateOfBanding = true
-//        }
         var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
@@ -727,6 +722,34 @@ class BasicFragment : Fragment() {
             } else {
                 validDateOfBirth = true
             }
+        }
+        if (TextUtils.isEmpty(dataIdentifier)) {
+            etIdentifier.error = "Identifier cannot be empty"
+        } else {
+
+
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            userBirdsRef.orderByChild("Identifier").equalTo(dataIdentifier)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // ID already exists, show an error message
+                            etIdentifier.error = "Identifier already exists"
+
+                        } else {
+                            // ID doesn't exist, mark it as valid
+                                valididexist = true
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle the error if needed
+                    }
+                })
+
+
         }
 
         //soldlayout
@@ -754,9 +777,7 @@ class BasicFragment : Fragment() {
         }
 
 
-        if (validDateOfBirth && validMutation && validIdentifier) {
-            validInputs = true
-        }
+
         //
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -768,7 +789,11 @@ class BasicFragment : Fragment() {
             }!!
             cageBirdKey = cageReference.key.toString()
         }
+        Log.d(TAG, valididexist.toString())
 
+        if (validDateOfBirth && validMutation && valididexist ) {
+            validInputs = true
+        }
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
         val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
@@ -780,7 +805,6 @@ class BasicFragment : Fragment() {
         val birdId = newBirdPref.key
         val flightKey = newNurseryPref.key
         val args = Bundle()
-
 
         val originFragment = OriginFragment()
         originFragment.arguments = args

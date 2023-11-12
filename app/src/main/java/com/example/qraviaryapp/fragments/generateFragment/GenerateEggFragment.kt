@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -42,7 +43,6 @@ private const val ARG_PARAM2 = "param2"
 class GenerateEggFragment : Fragment() {
 
 
-
     private lateinit var hatchedDatePickerDialog: DatePickerDialog
     private lateinit var incubatingDatePickerDialog: DatePickerDialog
     private lateinit var btnHatched: MaterialButton
@@ -63,9 +63,10 @@ class GenerateEggFragment : Fragment() {
     private lateinit var dateTv: TextView
     private lateinit var incubatingDaysTv: TextView
     private lateinit var maturingDaysTv: TextView
-    private lateinit var hatchedDateBtn : MaterialButton
-    private lateinit var incubatingDateBtn : MaterialButton
-
+    private lateinit var hatchedDateBtn: MaterialButton
+    private lateinit var incubatingDateBtn: MaterialButton
+    private var incubatingStartDate: String? = null
+    private var maturingStartDate: String? = null
 
     private lateinit var hatchedLinearLayout: LinearLayout
     private lateinit var incubatingLinearLayout: LinearLayout
@@ -115,13 +116,37 @@ class GenerateEggFragment : Fragment() {
 
         showDatePickerDialog(requireContext(), btnHatched, hatchedDatePickerDialog)
         showDatePickerDialog(requireContext(), btnIncubating, incubatingDatePickerDialog)
+        val sharedPrefs = requireContext().getSharedPreferences("myPrefs", MODE_PRIVATE)
+        val edited = sharedPrefs.getBoolean("Edited", false)
+        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 50
 
+        val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
+        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
-
+        qrimageLayout.visibility = View.GONE
+        etMaturingDays.setText(maturingDays.toString())
+        etIncubatingDays.setText(incubatingDays.toString())
         generateBtn.setOnClickListener {
 
-            qrimageLayout.visibility = View.VISIBLE
-            var currentDate = LocalDate.now()
+            if (etMaturingDays.text.toString().isEmpty() && etIncubatingDays.text.toString().isEmpty()) {
+                etMaturingDays.error = "Maturing Days cannot be empty"
+                etIncubatingDays.error = "Incubating Days cannot be empty"
+                qrimageLayout.visibility = View.GONE
+                return@setOnClickListener
+            }
+            else if (etIncubatingDays.text.toString().isEmpty()) {
+                etIncubatingDays.error = "Incubating Days cannot be empty"
+                qrimageLayout.visibility = View.GONE
+                return@setOnClickListener
+            }
+            else if(etMaturingDays.text.toString().isEmpty()) {
+                etMaturingDays.error = "Maturing Days cannot be empty"
+                qrimageLayout.visibility = View.GONE
+                return@setOnClickListener
+            }
+
+            val currentDate = LocalDate.now()
             val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
             val formattedDate = currentDate.format(formatter)
@@ -140,15 +165,15 @@ class GenerateEggFragment : Fragment() {
             eggData.put("AddEggQR", true)
             eggData.put("EggStatus", status)
 
-            if (hatchedLinearLayout.visibility == View.VISIBLE){
+            if (hatchedLinearLayout.visibility == View.VISIBLE) {
                 eggData.put("EggDate", btnHatched.text)
                 dateTv.text = "Date: ${btnHatched.text}"
 
-            }else if(incubatingLinearLayout.visibility == View.VISIBLE){
+            } else if (incubatingLinearLayout.visibility == View.VISIBLE) {
                 eggData.put("EggDate", btnIncubating.text)
                 dateTv.text = "Date: ${btnIncubating.text}"
 
-            }else{
+            } else {
                 eggData.put("EggDate", currentDate)
                 dateTv.text = "Date: $currentDate"
             }
@@ -164,14 +189,22 @@ class GenerateEggFragment : Fragment() {
 
 
             qrImage.setImageBitmap(generateQRCodeUri(eggData.toString()))
+            qrimageLayout.visibility = View.VISIBLE
         }
         btndownload.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 // Permission is already granted. You can proceed with saving the image.
                 saveImage()
             } else {
                 // Request the WRITE_EXTERNAL_STORAGE permission.
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE
+                )
             }
         }
 
@@ -180,7 +213,12 @@ class GenerateEggFragment : Fragment() {
 
         return view
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -188,11 +226,16 @@ class GenerateEggFragment : Fragment() {
                     saveImage()
                 } else {
                     // Permission denied, show a message or handle it accordingly.
-                    Toast.makeText(requireContext(), "Permission denied. Image cannot be saved.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Permission denied. Image cannot be saved.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
+
     fun captureLayoutAsBitmap(view: View): Bitmap {
         view.isDrawingCacheEnabled = true
         view.buildDrawingCache()
@@ -202,7 +245,7 @@ class GenerateEggFragment : Fragment() {
     }
 
 
-//    fun saveImage(){
+    //    fun saveImage(){
 //        qrimageLayout.isDrawingCacheEnabled = true
 //        qrimageLayout.buildDrawingCache()
 //        qrimageLayout.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
@@ -210,11 +253,11 @@ class GenerateEggFragment : Fragment() {
 //
 //        save(bitmap)
 //    }
-        fun saveImage() {
-            val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
+    fun saveImage() {
+        val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
 
-             save(layoutBitmap)
-        }
+        save(layoutBitmap)
+    }
 
     fun save(bitmap: Bitmap?) {
         val displayName = "image.jpg"
@@ -241,9 +284,6 @@ class GenerateEggFragment : Fragment() {
             Toast.makeText(requireContext(), "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 
 
     private fun generateQRCodeUri(bundleEggData: String): Bitmap? {
@@ -290,6 +330,7 @@ class GenerateEggFragment : Fragment() {
 
                         incubatingLinearLayout.visibility = View.VISIBLE
                     }
+
                     "Hatched" -> {
 
                         hatchedLinearLayout.visibility = View.VISIBLE
@@ -368,6 +409,7 @@ class GenerateEggFragment : Fragment() {
 
     companion object {
         const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // You can choose any integer value
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
