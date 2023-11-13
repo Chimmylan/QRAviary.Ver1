@@ -613,7 +613,6 @@ class BasicFragment : Fragment() {
 
     suspend fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String, cagekeyvalue: String) -> Unit) {
 
-        /*val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
         /*==++==*/
         val dataSelectedGen: RadioButton
