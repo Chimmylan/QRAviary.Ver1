@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -418,9 +419,23 @@ class MoveEggActivity : AppCompatActivity() {
             btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
         )
 
+
+        val uniqueValues = HashSet<String>()
+
         for (i in spinners.indices) {
             if (spinners[i].visibility == View.VISIBLE) {
-                selectedMutations.add(spinners[i].text.toString())
+                val spinnerText = spinners[i].text.toString()
+
+                if (spinnerText !in uniqueValues) {
+                    selectedMutations.add(spinnerText)
+                    uniqueValues.add(spinnerText)
+                } else {
+                    spinners[i].error = "Error: Duplicate value in spinners"
+                    // Spinner has a duplicate value, show an error message
+                    // You might want to replace this with your own error handling logic
+                    Toast.makeText(this, "Error: Duplicate value in spinners", Toast.LENGTH_SHORT).show()
+                    return  // You can return or break out of the loop, depending on your requirements
+                }
             } else {
                 selectedMutations.add(null)
             }
@@ -434,8 +449,14 @@ class MoveEggActivity : AppCompatActivity() {
             mutation5 = selectedMutations[4],
             mutation6 = selectedMutations[5],
         )
-
-
+        if (birds.mutation1 == "None" || birds.mutation2 == "None" || birds.mutation3 == "None" || birds.mutation4== "None" || birds.mutation5== "None" || birds.mutation6 == "None" ){
+            btnMutation1.error = "Mutation must not be empty"
+            return
+        }
+        if (TextUtils.isEmpty(etIdentifier.toString())) {
+            etIdentifier.error = "Identifier cannot be empty"
+            return
+        }
 
         //toDeleteRef
         val eggRef = db.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey)
@@ -454,6 +475,7 @@ class MoveEggActivity : AppCompatActivity() {
             .child(pairBirdFemaleKey).child("Descendants").push()
         val nurseryRef = db.child("Users").child("ID: $currentUserId").child("Nursery Birds")
             .push()
+
 
         val descendantscagefather = db.child("Users").child("ID: $currentUserId").child("Cages")
             .child("Flight Cages").child(pairCageBirdMale.toString()).child("Birds").child(pairCageKeyMale).child("Descendants").push()

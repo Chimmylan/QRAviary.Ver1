@@ -156,7 +156,7 @@ class PairMaleBirdListActivity : AppCompatActivity(), ClickListener {
             val gallery = itemSnapshot.child("Gallery")
             val status = itemSnapshot.child("Status").value?.toString()
 
-            if (data != null && !listOf("Sold", "Deceased", "Lost", "Other", "Donated").contains(status)) {
+            if (data != null && !listOf("Paired","Sold", "Deceased", "Lost", "Other", "Donated").contains(status)) {
 
                     val male = itemSnapshot.child("Gender").value.toString()
 

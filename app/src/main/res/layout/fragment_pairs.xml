@@ -41,9 +41,10 @@
             android:layout_height="wrap_content"
             android:gravity="center|left"
             android:text="Current"
+            android:visibility="gone"
             android:background="@color/itemimagebg"
             android:padding="10dp"
-            android:visibility="gone"
+
             android:textSize="16sp" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +74,7 @@
                 android:text="Previous"
                 android:visibility="gone"
                 android:background="@color/itemimagebg"
-                android:layout_margin="10dp"
+                android:padding="10dp"
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
