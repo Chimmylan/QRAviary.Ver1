@@ -17,7 +17,7 @@
         <LinearLayout
             android:id="@+id/qrlayout"
             android:layout_width="match_parent"
-            android:visibility="gone"
+
             android:layout_height="match_parent"
 
             android:orientation="vertical">
@@ -81,7 +81,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="Sex"
+                                android:text="Gender"
                                 android:layout_weight="1"
                                 android:textStyle="bold"
                                 android:textColor="@color/black"
@@ -127,6 +127,147 @@
                                 android:textColor="@color/black"
                                 android:textSize="15sp" />
                             <TextView
+                                android:id="@+id/BirdSoldDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Sold Date"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdDeceasedDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Deceased Date"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdExchangedDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Exchanged Date"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdLostDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Lost Date"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdDonatedDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Donated Date"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdSalePrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Sale Price"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdBuyer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Buyer"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdDeathReason"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Death Reason"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdExchangeReason"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Exchanged Reason"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/BirdExchangeWith"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Exchanged With"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdDonatedContact"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Donated Contact"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdLostDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Lost Details"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdRequestedPrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Requested Price"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/BirdOtherComment"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Comment"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+                            <TextView
                                 android:id="@+id/BirdFather"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -161,12 +302,21 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="Breeder Contact"
+                                android:text="Bought to Breeder"
                                 android:layout_weight="1"
                                 android:textStyle="bold"
                                 android:textColor="@color/black"
                                 android:textSize="15sp" />
-
+                            <TextView
+                                android:id="@+id/BirdOtherBreeder"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Breeder"
+                                android:layout_weight="1"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
