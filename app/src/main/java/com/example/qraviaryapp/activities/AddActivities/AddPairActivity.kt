@@ -423,10 +423,10 @@ class AddPairActivity : AppCompatActivity() {
                 val newMaleBirdPref =
                     db.child("Users").child("ID: $userId").child("Birds")
                         .child(btnMaleValueKey.toString())
-                        .child("Pairs").push()
+                        .child("Pairs").child(btnFemaleValueKey.toString())
                 val newFemaleBirdPref = db.child("Users").child("ID: $userId").child("Birds")
                     .child(btnFemaleValueKey.toString())
-                    .child("Pairs").push()
+                    .child("Pairs").child(btnMaleValueKey.toString())
 
 
                 //Status Ref
