@@ -16,6 +16,7 @@
     <color name="bottom_nav_background">#D9DADA</color>
     <color name="bottom_background">#D9DADA</color>
     <color name="new_appbar_color">#D9DADA</color>
+    <color name="item_category">#F1F1F1</color>
     <color name="appbar_color">#D9DADA</color>
     <color name="toolbarcolor">#876EE1</color>
     <color name="totals">#8A77CC</color>
