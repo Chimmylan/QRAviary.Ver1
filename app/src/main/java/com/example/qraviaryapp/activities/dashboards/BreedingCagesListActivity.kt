@@ -374,9 +374,10 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
-            if (data != null) {
+            val pairBird = itemSnapshot.child("Pair Birds")
+            if (data != null && !pairBird.exists()) {
                 val key = itemSnapshot.key.toString()
-                val pairBird = itemSnapshot.child("Pair Birds")
+
 
                 val pairCount = pairBird.childrenCount
                 data.cagePairBirdCount = pairCount.toString()
@@ -400,10 +401,10 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
         }
         dataList.sortBy { it.cage?.toIntOrNull() }
         if(dataList.count()>1){
-            totalBirds.text = dataList.count().toString() + " Cages"
+            totalBirds.text = dataList.count().toString() + " Available Cages"
         }
         else{
-            totalBirds.text = dataList.count().toString() + " Cage"
+            totalBirds.text = dataList.count().toString() + " Available Cage"
         }
         dataList
     }
