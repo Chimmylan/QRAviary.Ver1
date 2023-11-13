@@ -205,9 +205,8 @@ class BasicFragment : Fragment() {
         slash3 = view.findViewById(R.id.slash3)
         slash4 = view.findViewById(R.id.slash4)
         slash5 = view.findViewById(R.id.slash5)
-
-        dbase = FirebaseDatabase.getInstance().reference
         cageReference = FirebaseDatabase.getInstance().reference
+        dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
         initDatePickers()
@@ -610,7 +609,31 @@ class BasicFragment : Fragment() {
                 }
             })
         }
+    suspend fun checkLegbandExistence(identifier: String): Boolean =
+        suspendCoroutine { continuaton ->
 
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            var identifierExists = false
+
+            userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val birds = snapshot.children
+                    for (birdId in birds) {
+                        if (identifier == birdId.child("Legband").value) {
+                            etLegband.error = "Legband already exists"
+                            identifierExists = true
+                            break
+                        }
+                    }
+                    continuaton.resume(identifierExists)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    continuaton.resume(false)  // Handle onCancelled
+                }
+            })
+        }
     suspend fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String, cagekeyvalue: String) -> Unit) {
 
         val dataDateOfBirth = birthFormattedDate
@@ -662,12 +685,12 @@ class BasicFragment : Fragment() {
                     selectedMutations.add(spinnerText)
                     uniqueValues.add(spinnerText)
                 } else {
-                    spinners[i].error = "Error: Duplicate value in spinners"
+                    spinners[i].error = "Duplicate Mutation"
                     // Spinner has a duplicate value, show an error message
                     // You might want to replace this with your own error handling logic
                     Toast.makeText(
                         context,
-                        "Error: Duplicate value in spinners",
+                        "Duplicate Mutation",
                         Toast.LENGTH_SHORT
                     ).show()
                     return  // You can return or break out of the loop, depending on your requirements
@@ -770,6 +793,19 @@ class BasicFragment : Fragment() {
 
 
         }
+        if (TextUtils.isEmpty(dataLegband)) {
+
+            validlegbandexist = true
+        }
+        else{
+            val result = checkLegbandExistence(dataLegband)
+            if (result) {
+                etLegband.error = "Legband already exists"
+            }
+            else{
+                validlegbandexist = true
+            }
+        }
 
         Log.d(TAG, "Check isssss " + valididexist)
 
@@ -810,7 +846,7 @@ class BasicFragment : Fragment() {
         }
         Log.d(TAG, valididexist.toString())
 
-        if (validDateOfBirth && validMutation && valididexist) {
+        if (validDateOfBirth && validMutation && valididexist && validlegbandexist) {
             validInputs = true
         }
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")

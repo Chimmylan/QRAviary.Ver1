@@ -114,6 +114,8 @@ data class CageData(
     var cageBirdsAvailCount: String? = null,
     var cagePairBirdCount: String? = null,
     var cageBirdCount: String? = null,
+    var cagemalemutation: String? =null,
+    var cagefemalemutation: String? =null
 )
 
 data class MutationData(
