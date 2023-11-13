@@ -12,7 +12,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -209,6 +208,22 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var tvBirdMother: TextView
     private lateinit var tvBirdBuyPrice: TextView
     private lateinit var tvBirdBreederContact: TextView
+    private lateinit var tvBirdSoldDate: TextView
+    private lateinit var tvBirdDeceasedDate: TextView
+    private lateinit var tvBirdExchangeDate: TextView
+    private lateinit var tvBirdLostDate: TextView
+    private lateinit var tvBirdDonatedDate: TextView
+    private lateinit var tvBirdSalePrice: TextView
+    private lateinit var tvBirdBuyer: TextView
+    private lateinit var tvBirdDeathReason: TextView
+    private lateinit var tvBirdExchangeReason: TextView
+    private lateinit var tvBirdExchangeWith: TextView
+    private lateinit var tvBirdDonatedContact: TextView
+    private lateinit var tvBirdLostDetails: TextView
+    private lateinit var tvBirdRequestedPrice: TextView
+    private lateinit var tvBirdComment: TextView
+    private lateinit var tvBirdBreederOtherBreed: TextView
+
     private lateinit var cagescan: CardView
     private lateinit var cagescan1: CardView
 
@@ -340,6 +355,21 @@ class GenerateBirdFragment : Fragment() {
         tvBirdMother = view.findViewById(R.id.BirdMother)
         tvBirdBuyPrice = view.findViewById(R.id.BirdBuyPrice)
         tvBirdBreederContact = view.findViewById(R.id.BirdBreederContact)
+        tvBirdSoldDate = view.findViewById(R.id.BirdSoldDate)
+        tvBirdDeceasedDate = view.findViewById(R.id.BirdDeceasedDate)
+        tvBirdExchangeDate = view.findViewById(R.id.BirdExchangedDate)
+        tvBirdLostDate = view.findViewById(R.id.BirdLostDate)
+        tvBirdDonatedDate = view.findViewById(R.id.BirdDonatedDate)
+        tvBirdSalePrice = view.findViewById(R.id.BirdSalePrice)
+        tvBirdBuyer = view.findViewById(R.id.BirdBuyer)
+        tvBirdDeathReason = view.findViewById(R.id.BirdDeathReason)
+        tvBirdExchangeReason = view.findViewById(R.id.BirdExchangeReason)
+        tvBirdExchangeWith = view.findViewById(R.id.BirdExchangeWith)
+        tvBirdDonatedContact = view.findViewById(R.id.BirdDonatedContact)
+        tvBirdLostDetails = view.findViewById(R.id.BirdLostDetails)
+        tvBirdRequestedPrice = view.findViewById(R.id.BirdRequestedPrice)
+        tvBirdComment = view.findViewById(R.id.BirdOtherComment)
+        tvBirdBreederOtherBreed = view.findViewById(R.id.BirdOtherBreeder)
 
         rbUnknown.isChecked
         cagescan = view.findViewById(R.id.cagescan)
@@ -576,24 +606,248 @@ class GenerateBirdFragment : Fragment() {
                     NonNullMutations.add(mutation.toString())
                 }
             }
-            val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
+            var CombinedMutations = if (NonNullMutations.isNotEmpty()) {
                 NonNullMutations.joinToString(" / ")
 
             } else {
                 "Mutation: None"
             }
 
-            tvBirdId.text = "BirdId: ${etIdentifier.text}"
-            tvBirdLegband.text = "Legband: ${etLegband.text}"
-            tvBirdSex.text = "Sex: ${dataSelectedGen.text}"
-            tvBirdMutation.text = "Mutation: $CombinedMutations"
-            tvBirdDateOfBirth.text = "Date of Birth: $birthFormattedDate"
-            tvBirdStatus.text = "Status: $status"
-            tvBirdCage.text = "Cage: $cageNameValue"
-            tvBirdFather.text = "Father: ${btnFather.text}"
-            tvBirdMother.text = "Mother: ${btnMother.text}"
-            tvBirdBuyPrice.text = "Buy Price: ${etBuyPrice.text}"
-            tvBirdBreederContact.text = "Breeder Contact: ${etBreederContact.text}"
+            if (etIdentifier.text.isNullOrEmpty()) {
+                tvBirdId.visibility = View.GONE
+            } else {
+                tvBirdId.visibility = View.VISIBLE
+                tvBirdId.text = "Bird ID: ${etIdentifier.text}"
+            }
+
+            if (etLegband.text.isNullOrBlank()) {
+                tvBirdLegband.visibility = View.GONE
+            } else {
+                tvBirdLegband.visibility = View.VISIBLE
+                tvBirdLegband.text = "Legband: ${etLegband.text}"
+            }
+
+            if (dataSelectedGen.text.isNullOrBlank()) {
+                tvBirdSex.visibility = View.GONE
+            } else {
+                tvBirdSex.visibility = View.VISIBLE
+                tvBirdSex.text = "Gender: ${dataSelectedGen.text}"
+            }
+
+            if (CombinedMutations == "None") {
+                tvBirdMutation.visibility = View.GONE
+            } else {
+                tvBirdMutation.visibility = View.VISIBLE
+                tvBirdMutation.text = "Mutation: $CombinedMutations"
+
+            }
+
+            if (birthFormattedDate.isNullOrBlank()) {
+                tvBirdDateOfBirth.visibility = View.GONE
+            } else {
+                tvBirdDateOfBirth.visibility = View.VISIBLE
+                tvBirdDateOfBirth.text = "Date of Birth: $birthFormattedDate"
+
+            }
+
+            if (status.isNullOrBlank()) {
+                tvBirdStatus.visibility = View.GONE
+            } else {
+                tvBirdStatus.visibility = View.VISIBLE
+                tvBirdStatus.text = "Status: $status"
+            }
+
+            if (cageNameValue.isNullOrBlank()) {
+                tvBirdCage.visibility = View.GONE
+            } else {
+                tvBirdCage.visibility = View.VISIBLE
+                tvBirdCage.text = "Cage: $cageNameValue"
+            }
+
+            if (soldFormattedDate.isNullOrBlank()) {
+                tvBirdSoldDate.visibility = View.GONE
+            } else {
+                tvBirdSoldDate.visibility = View.VISIBLE
+
+                tvBirdSoldDate.text = "Sold Date: $soldFormattedDate"
+            }
+
+            if (deathFormattedDate.isNullOrBlank()) {
+                tvBirdDeceasedDate.visibility = View.GONE
+            } else {
+                tvBirdDeceasedDate.visibility = View.VISIBLE
+
+                tvBirdDeceasedDate.text = "Deceased Date: $deathFormattedDate"
+            }
+
+            if (exchangeFormattedDate.isNullOrBlank()) {
+                tvBirdExchangeDate.visibility = View.GONE
+            } else {
+                tvBirdExchangeDate.visibility = View.VISIBLE
+                tvBirdExchangeDate.text = "Exchange Date: $exchangeFormattedDate"
+            }
+
+            if (lostFormattedDate.isNullOrBlank()) {
+                tvBirdLostDate.visibility = View.GONE
+            } else {
+                tvBirdLostDate.visibility = View.VISIBLE
+                tvBirdLostDate.text = "Lost Date: $lostFormattedDate"
+            }
+
+            if (donatedFormattedDate.isNullOrBlank()) {
+                tvBirdDonatedDate.visibility = View.GONE
+            } else {
+                tvBirdDonatedDate.visibility = View.VISIBLE
+
+                tvBirdDonatedDate.text = "Donated Date: $donatedFormattedDate"
+            }
+
+            if (etSoldSalePrice.text.isNullOrBlank()) {
+                tvBirdSalePrice.visibility = View.GONE
+            } else {
+                tvBirdSalePrice.visibility = View.VISIBLE
+
+                tvBirdSalePrice.text = "Sale Price: ${etSoldSalePrice.text}"
+            }
+
+            if (etSoldBuyer.text.isNullOrBlank()) {
+                tvBirdBuyer.visibility = View.GONE
+            } else {
+                tvBirdBuyer.visibility = View.VISIBLE
+
+                tvBirdBuyer.text = "Buyer: ${etSoldBuyer.text}"
+            }
+
+            if (etSoldBuyer.text.isNullOrBlank()) {
+                tvBirdBuyer.visibility = View.GONE
+            } else {
+                tvBirdBuyer.visibility = View.VISIBLE
+
+                tvBirdBuyer.text = "Buyer: ${etSoldBuyer.text}"
+            }
+
+            if (etDeathReason.text.isNullOrBlank()) {
+                tvBirdDeathReason.visibility = View.GONE
+            } else {
+                tvBirdDeathReason.visibility = View.VISIBLE
+
+                tvBirdDeathReason.text = "Death Reason: ${etDeathReason.text}"
+            }
+
+            if (etExReason.text.isNullOrBlank()) {
+                tvBirdExchangeReason.visibility = View.GONE
+            } else {
+                tvBirdExchangeReason.visibility = View.VISIBLE
+
+                tvBirdExchangeReason.text = "Exchange Reason: ${etExReason.text}"
+            }
+
+            if (etExWith.text.isNullOrBlank()) {
+                tvBirdExchangeWith.visibility = View.GONE
+            } else {
+                tvBirdExchangeWith.visibility = View.VISIBLE
+
+                tvBirdExchangeWith.text = "Exchange With: ${etExWith.text}"
+            }
+
+
+            if (etDonateChooseContract.text.isNullOrBlank()) {
+                tvBirdDonatedContact.visibility = View.GONE
+            } else {
+                tvBirdDonatedContact.visibility = View.VISIBLE
+                tvBirdDonatedContact.text = "Donated Contact: ${etDonateChooseContract.text}"
+            }
+
+            if (etLostDetails.text.isNullOrBlank()) {
+                tvBirdLostDetails.visibility = View.GONE
+            } else {
+                tvBirdLostDetails.visibility = View.VISIBLE
+                tvBirdLostDetails.text = "Lost Details: ${etLostDetails.text}"
+            }
+
+            if (etForSaleReqPrice.text.isNullOrBlank()) {
+                tvBirdRequestedPrice.visibility = View.GONE
+            } else {
+                tvBirdRequestedPrice.visibility = View.VISIBLE
+                tvBirdRequestedPrice.text = "Requested Price: ${etForSaleReqPrice.text}"
+            }
+
+            if (etOtherComm.text.isNullOrBlank()) {
+                tvBirdComment.visibility = View.GONE
+            } else {
+                tvBirdComment.visibility = View.VISIBLE
+
+                tvBirdComment.text = "Comment: ${etOtherComm.text}"
+            }
+
+            if (btnFather.text == "None") {
+                tvBirdFather.visibility = View.GONE
+            } else {
+                tvBirdFather.visibility = View.VISIBLE
+
+                tvBirdFather.text = "Father: ${btnFather.text}"
+            }
+
+            if (btnMother.text == "None") {
+                tvBirdMother.visibility = View.GONE
+            } else {
+                tvBirdMother.visibility = View.VISIBLE
+
+                tvBirdMother.text = "Mother: ${btnMother.text}"
+            }
+
+            if (etBuyPrice.text.isNullOrBlank()) {
+                tvBirdBuyPrice.visibility = View.GONE
+            } else {
+                tvBirdBuyPrice.visibility = View.VISIBLE
+
+                tvBirdBuyPrice.text = "Buy Price: ${etBuyPrice.text}"
+            }
+
+            if (etBreederContact.text.isNullOrBlank()) {
+                tvBirdBreederContact.visibility = View.GONE
+            } else {
+                tvBirdBreederContact.visibility = View.VISIBLE
+
+                tvBirdBreederContact.text = "Bought to Breeder: $etBreederContact"
+            }
+
+
+            if (etOtBreederContact.text.isNullOrBlank()) {
+                tvBirdBreederOtherBreed.visibility = View.GONE
+            } else {
+                tvBirdBreederOtherBreed.visibility = View.VISIBLE
+
+                tvBirdBreederOtherBreed.text = "Breeder: $etOtBreederContact"
+            }
+
+//            etIdentifier.text = null
+//            etLegband.text = null
+//            dataSelectedGen.text = null
+//            CombinedMutations = "None"
+//            birthFormattedDate = null
+//            status = null
+//            cageNameValue = null
+//            soldFormattedDate = null
+//            deathFormattedDate = null
+//            exchangeFormattedDate = null
+//            lostFormattedDate = null
+//            donatedFormattedDate = null
+//            etSoldSalePrice.text = null
+//            etSoldBuyer.text = null
+//            etDeathReason.text = null
+//            etExReason.text = null
+//            etExWith.text = null
+//            etDonateChooseContract.text = null
+//            etLostDetails.text = null
+//            etForSaleReqPrice.text = null
+//            etOtherComm.text = null
+//            btnFather.text = "None"
+//            btnMother.text = "None"
+//            etBuyPrice.text = null
+//            etBreederContact.text = null
+//            etOtBreederContact.text = null
+
 
             qrImage.setImageBitmap(generateQRCodeUri(birdData.toString()))
         }
@@ -619,6 +873,49 @@ class GenerateBirdFragment : Fragment() {
 
 
         return view
+    }
+
+    fun checkTextRadio(text: RadioButton? = null, view: TextView) {
+        if (text?.text.isNullOrEmpty()) {
+            view.visibility = View.GONE
+            return
+        }
+
+
+        view.text = "${view.text}: ${text?.text}"
+    }
+
+    fun checkTextMatButton(text: MaterialButton? = null, view: TextView) {
+        if (text?.text == "None") {
+            view.visibility = View.GONE
+            return
+        }
+        view.text = "${view.text}: ${text?.text}"
+    }
+
+    fun checkTextMutation(text: String? = null, view: TextView) {
+        if (text == "None") {
+            view.visibility = View.GONE
+            return
+        }
+        view.text = "${view.text}: ${text}"
+    }
+
+
+    fun checkText(text: EditText? = null, view: TextView) {
+        if (text?.text.isNullOrEmpty()) {
+            view.visibility = View.GONE
+            return
+        }
+        view.text = "${view.text}: ${text?.text}"
+    }
+
+    fun checkTextString(text: String? = null, view: TextView) {
+        if (text.isNullOrBlank()) {
+            view.visibility = View.GONE
+            return
+        }
+        view.text = "${view.text}: ${text}"
     }
 
     override fun onRequestPermissionsResult(
