@@ -338,7 +338,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         val formattedDate = DateFormat.format(date)
 
         val pairBreedingCageRefSeparate = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
-            .child(pairCageKey).child("Pair Birds").child(cagePairKey).child("Separate Date").setValue(formattedDate)
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).removeValue()
 
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).child("Separate Date").setValue(formattedDate)
