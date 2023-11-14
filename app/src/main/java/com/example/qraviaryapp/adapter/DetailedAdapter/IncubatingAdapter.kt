@@ -32,7 +32,7 @@ class EggAdapter(
         val laidCount = clutch.eggLaid
         val incubateDate = clutch.eggIncubationStartDate
         val laidDate = clutch.eggLaidStartDate
-
+        Log.d(TAG, "pairkey adapter" + clutch.pairKey)
         holder.tvTotal.text = eggCount
         if (incubatingCount != null) {
             if (incubatingCount > 0.toString()){
@@ -75,6 +75,7 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
             val bundle = Bundle()
 
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
+
             bundle.putString("EggKey", dataList[adapterPosition].eggKey)
             bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)
             bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)

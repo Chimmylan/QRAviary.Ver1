@@ -168,7 +168,7 @@ class IncubatingFragment : Fragment() {
             val pairMaleFlightKey = itemsnapshot.child("Male Flight Key").value.toString()
             val pairFemaleFlightKey = itemsnapshot.child("Female Flight Key").value.toString()
 
-
+            Log.d(TAG, "pairkey incubating " + key)
             data?.pairKey = key
             data?.pairFlightFemaleKey = pairFemaleFlightKey
             data?.pairFlightMaleKey = pairMaleFlightKey
@@ -176,6 +176,7 @@ class IncubatingFragment : Fragment() {
             data?.pairBirdFemaleKey = pairFemaleKey
             data?.pairMaleId = male
             data?.pairFemaleId = female
+            data?.cagename = cageName
             data?.eggcagebirdFemale = cageBirdFemale
             data?.eggcagebirdMale = cageBirdMale
             data?.eggcagekeyMale = cageKeyMale
@@ -183,12 +184,12 @@ class IncubatingFragment : Fragment() {
             var clutchCount = 0
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
-                val data = EggData()  // Create a new EggData object for each clutch
+                val data1 = EggData()  // Create a new EggData object for each clutch
 
-                val key = clutchSnapshot.key.toString()
+                val key1 = clutchSnapshot.key.toString()
                 var eggsCount = 0
 
-                if (data != null) {
+                if (data1 != null) {
                     for (eggSnapshot in clutchSnapshot.children) {
                         val eggStatus = eggSnapshot.child("Status").value.toString()
                         val eggDate = eggSnapshot.child("Date").value.toString()
@@ -196,15 +197,15 @@ class IncubatingFragment : Fragment() {
 
                         if (eggStatus == "Incubating") {
                             eggsCount++
-                            data.eggKey = key
-                            data.eggCount = eggsCount.toString()
-                            data.eggIncubating = eggsCount.toString()
-                            data.eggIncubationStartDate = eggDate
+                            data1.eggKey = key1
+                            data1.eggCount = eggsCount.toString()
+                            data1.eggIncubating = eggsCount.toString()
+                            data1.eggIncubationStartDate = eggDate
                         }
                     }
                     // Only add data to the list if it has Incubating eggs
-                    if (data.eggIncubating != null) {
-                        dataList.add(data)
+                    if (data1.eggIncubating != null) {
+                        dataList.add(data1)
                     }
                 }
             }

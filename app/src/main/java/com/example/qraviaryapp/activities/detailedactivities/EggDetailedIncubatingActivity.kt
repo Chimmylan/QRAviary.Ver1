@@ -158,6 +158,7 @@ class EggDetailedIncubatingActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
+        Log.d(TAG, "pairkey" + pairKey + eggKey)
         val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)

@@ -201,6 +201,7 @@ data class EggData(
     var pairMaleId: String? = null,
     var pairFemaleId: String? = null,
     var eggKey: String? = null,
+    var cagename: String? = null,
     var individualEggKey: String? = null,
     var eggCount: String? = null,
     var clutchCount: String? = null,
