@@ -442,6 +442,13 @@ class EditBasicFragment : Fragment() {
         datebirthButton.setText(birdDateBirth)
         birthFormattedDate = birdDateBirth
 
+
+
+
+        AddMutation()
+        RemoveLastMutation()
+        OnActiveSpinner()
+
         if (!birdMutation1.isNullOrEmpty()) {
             btnMutation1.setText(birdMutation1);
         } else {
@@ -450,48 +457,51 @@ class EditBasicFragment : Fragment() {
 
         if (!birdMutation2.isNullOrEmpty()) {
             btnMutation2.setText(birdMutation2);
+            slash1.visibility = View.VISIBLE
             btnMutation2.visibility = View.VISIBLE
         } else {
+            slash1.visibility = View.GONE
             btnMutation2.visibility = View.GONE
         }
 
         if (!birdMutation3.isNullOrEmpty()) {
             btnMutation3.setText(birdMutation3);
             btnMutation3.visibility = View.VISIBLE
+            slash2.visibility = View.VISIBLE
         } else {
+            slash2.visibility = View.GONE
             btnMutation3.visibility = View.GONE
         }
 
         if (!birdMutation4.isNullOrEmpty()) {
             btnMutation4.setText(birdMutation4);
+            slash3.visibility = View.VISIBLE
             btnMutation4.visibility = View.VISIBLE
         } else {
+            slash3.visibility = View.GONE
             btnMutation4.visibility = View.GONE
         }
 
         if (!birdMutation5.isNullOrEmpty()) {
             btnMutation5.setText(birdMutation5);
+            slash4.visibility = View.VISIBLE
             btnMutation5.visibility = View.VISIBLE
         } else {
+            slash4.visibility = View.GONE
             btnMutation5.visibility = View.GONE
         }
 
         if (!birdMutation6.isNullOrEmpty()) {
             btnMutation6.setText(birdMutation6);
+            slash5.visibility = View.VISIBLE
             btnMutation6.visibility = View.VISIBLE
-        } else {
-            btnMutation6.visibility = View.GONE
-        }
-
-
-        AddMutation()
-        RemoveLastMutation()
-        OnActiveSpinner()
-
+        } else
+            slash5.visibility = View.GONE
         if (etAvailCage.text.isEmpty() && !birdAvailCage.isNullOrEmpty()){
             etAvailCage.text = birdAvailCage
             //cageKeyValue = //
         }
+
         if (etForSaleCage.text.isEmpty() && !birdForsaleCage.isNullOrEmpty()){
             spinnerStatus.setSelection(1)
             etForSaleCage.text = birdForsaleCage
