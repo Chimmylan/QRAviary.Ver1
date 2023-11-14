@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.EditActivities.EditBirdActivity
+import com.example.qraviaryapp.activities.EditActivities.EditBirdFlightActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBabiesFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
@@ -76,6 +77,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
     private lateinit var mAuth: FirebaseAuth
+    private var flightType: String? = null
+    private var nurseryType: String? = null
 
     //cages
     private var fromFlightAdapter: Boolean = false
@@ -154,6 +157,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
             fromNurseryAdapter = bundle.getBoolean("fromNurseryListAdapter", false)
         }
         cageKeyValue = bundle?.getString("CageKeyValue").toString()//
+        flightType = bundle?.getString("FlightType")
+        nurseryType = bundle?.getString("NurseryType")
 
         Log.d(TAG, "BIRDKEY NEW $BirdKey" + cageKeyValue)
 
@@ -199,6 +204,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdMotherKey", BirdMotherKey)
         newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
         newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
+        newBundle.putString("NurseryType", nurseryType)
+        newBundle.putString("FlightType", flightType)
         val birdGalleryFragment = BirdGalleryFragment()
         val birdBasicFragment = BirdBasicFragment()
         val birdOriginFragment = BirdOriginFragment()
@@ -305,9 +312,22 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
 
             R.id.menu_edit -> {
-                val i = Intent(this, EditBirdActivity::class.java)
-                i.putExtras(newBundle)
-                startActivity(i)
+
+                if (flightType != "null") {
+                    val i = Intent(this, EditBirdFlightActivity::class.java)
+                    Log.d(TAG, flightType.toString())
+
+                    i.putExtras(newBundle)
+                    startActivity(i)
+                } else {
+                    val i = Intent(this, EditBirdActivity::class.java)
+                    Log.d(TAG, nurseryType.toString())
+
+                    i.putExtras(newBundle)
+                    startActivity(i)
+                }
+
+
                 true
             }
 
@@ -318,7 +338,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
             }
 
             R.id.menu_remove -> {
-                val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey)
+                val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds")
+                    .child(FlightKey)
 
                 flightRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

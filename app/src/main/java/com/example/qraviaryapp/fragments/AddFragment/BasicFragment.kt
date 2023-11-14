@@ -969,7 +969,7 @@ class BasicFragment : Fragment() {
                     "Cage Bird Key" to cageReference.key,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
-                    "Age" to ageInDays
+                    "Age" to ageInDays,
                 )
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(data)

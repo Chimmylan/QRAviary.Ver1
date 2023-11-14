@@ -263,6 +263,7 @@ class BirdsFragment : Fragment() {
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value
                 val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
                 val motherKeyValue = itemSnapshot.child("Parents").child("MotherKey").value
+                val nurseryType = itemSnapshot.child("Nursery Key").value.toString()
                 /*==++==*/
                 val legband = LegbandValue.toString() ?: ""
                 val identifier = identifierValue.toString() ?: ""
@@ -296,6 +297,8 @@ class BirdsFragment : Fragment() {
 
                 birdCount++
 //                data.bitmap = image
+                data.nurseryType = nurseryType
+                data.flightType = flightKey
                 data.cageKey = cageKey.toString()
                 data.img = mainPic
                 data.birdCount = birdCount.toString()

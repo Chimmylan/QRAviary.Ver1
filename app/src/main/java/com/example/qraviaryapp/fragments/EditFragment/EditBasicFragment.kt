@@ -352,6 +352,8 @@ class EditBasicFragment : Fragment() {
         birdMutation6 = arguments?.getString("BirdMutation6")
         fatherKey = arguments?.getString("BirdFatherKey")
         motherKey = arguments?.getString("BirdMotherKey")
+        val flightType = arguments?.getString("FlightType").toString()
+        val nurseryType = arguments?.getString("NurseryType").toString()
 
 
         Log.d(ContentValues.TAG, cageKeyValue.toString())
@@ -497,16 +499,23 @@ class EditBasicFragment : Fragment() {
             btnMutation6.visibility = View.VISIBLE
         } else
             slash5.visibility = View.GONE
-        if (etAvailCage.text.isEmpty() && !birdAvailCage.isNullOrEmpty()){
-            etAvailCage.text = birdAvailCage
-            //cageKeyValue = //
+
+        if (birdStatus == "Available"){
+            if (etAvailCage.text.isEmpty() && birdAvailCage != "null"){
+                etAvailCage.text = birdAvailCage
+                //cageKeyValue = //
+            }
         }
 
-        if (etForSaleCage.text.isEmpty() && !birdForsaleCage.isNullOrEmpty()){
-            spinnerStatus.setSelection(1)
-            etForSaleCage.text = birdForsaleCage
-            //cageKeyValue = //
+
+        if(birdStatus == "For Sale"){
+            if (etForSaleCage.text.isEmpty() && birdForsaleCage != "null"){
+                spinnerStatus.setSelection(1)
+                etForSaleCage.text = birdForsaleCage
+                //cageKeyValue = //
+            }
         }
+
 
 
         return view
@@ -950,12 +959,12 @@ class EditBasicFragment : Fragment() {
             val ageInMillis = currentDate.time - birthDate.time
             val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
 
-            if (ageInDays < 50) {
+            if (ageInDays > 50) {
                 // Age is less than 50 days, show an error message
-                datebirthButton.error = "Age must be more than 50 days"
+                datebirthButton.error = "Age must be less than 50 days"
                 Toast.makeText(
                     requireContext(),
-                    "Age must be more than 50 days",
+                    "Age must be less than 50 days",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
