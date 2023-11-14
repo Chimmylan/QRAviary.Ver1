@@ -1,11 +1,16 @@
 package com.example.qraviaryapp.activities.AddActivities
 
 import android.app.Activity
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +25,19 @@ import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
 import com.google.android.material.button.MaterialButton
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
 import org.json.JSONObject
+import java.io.IOException
 
 class AddBirdScanActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private lateinit var generate: MaterialButton
+    private lateinit var uploadqr: MaterialButton
+    private val GALLERY_REQUEST_CODE = 2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -51,7 +64,7 @@ class AddBirdScanActivity : AppCompatActivity() {
 
 
         generate = findViewById(R.id.GenerateQR)
-
+        uploadqr = findViewById(R.id.UploadQR)
         generate.setOnClickListener {
             startActivity(Intent(this, GenerateQrActivity::class.java))
         }
@@ -83,7 +96,7 @@ class AddBirdScanActivity : AppCompatActivity() {
                     i.putExtra("BirdIdentifier", jsonData.getString("Identifier"))
                     i.putExtra("BirdLegband", jsonData.getString("LegBand"))
                     i.putExtra("BirdGender", jsonData.getString("Gender"))
-
+                    Log.d(TAG,"Check")
 
 
                     if (jsonData.has("Mutation1")) {
@@ -189,11 +202,58 @@ class AddBirdScanActivity : AppCompatActivity() {
                 }
             }
         }
-
+        uploadqr.setOnClickListener {
+            openGalleryForImage()
+        }
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
 
+    }
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    }
+
+    private fun decodeQrCodeFromBitmap(bitmap: Bitmap) {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+        try {
+            val result = MultiFormatReader().decode(binaryBitmap)
+            // Handle the result, e.g., call your existing decodeCallback
+            codeScanner.decodeCallback?.onDecoded(result)
+        } catch (e: NotFoundException) {
+            // Handle exception if QR code is not found in the image
+            Log.e(ContentValues.TAG, "QR code not found in the image")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> {
+                    data?.data?.let { uri ->
+                        try {
+                            val inputStream = this.contentResolver.openInputStream(uri)
+                            val bitmap = BitmapFactory.decodeStream(inputStream)
+                            decodeQrCodeFromBitmap(bitmap)
+                        } catch (e: IOException) {
+                            Log.e(ContentValues.TAG, "Error loading image from gallery: ${e.message}")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
