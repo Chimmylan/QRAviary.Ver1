@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.EditActivities.EditPairActivity
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
@@ -244,7 +245,8 @@ class PairsDetailedActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_edit -> {
-
+                val i = Intent(this, EditPairActivity::class.java)
+                startActivity(i)
                 true
             }
             R.id.menu_qr -> {

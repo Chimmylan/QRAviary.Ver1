@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.ClutchesDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.EggDetailedIncubatingActivity
 
 class EggAdapter(
     private val context: android.content.Context,
@@ -85,7 +86,7 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
             bundle.putString("CageKeyMale", dataList[adapterPosition].eggcagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].eggcagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].eggcagebirdMale)
-            val i = Intent(itemView.context, ClutchesDetailedActivity::class.java)
+            val i = Intent(itemView.context, EggDetailedIncubatingActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)
         }
