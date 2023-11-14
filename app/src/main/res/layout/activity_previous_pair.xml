@@ -101,13 +101,12 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#E9E8E8"
-                android:elevation="4dp"
-                app:tabIndicatorColor="@color/black_white"
-                app:tabSelectedTextColor="@color/black_white"
+                android:layout_height="wrap_content"
+                android:background="@color/toolbarcolor"
+                app:tabIndicatorColor="@color/purpledark"
+                app:tabSelectedTextColor="@color/purplelight"
                 app:tabTextAppearance="@style/TabLayoutTextStyle"
-                app:tabTextColor="@color/black_white"/>
+                app:tabTextColor="@color/appbar_color"/>
 
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"

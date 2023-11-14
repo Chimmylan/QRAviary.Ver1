@@ -1,30 +1,22 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
 import EggData
-import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.CheckBox
-import android.widget.NumberPicker
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
@@ -37,15 +29,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.Locale
 
 class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
@@ -61,8 +47,11 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ClutchesListAdapter
     private lateinit var dataList: ArrayList<EggData>
+    private lateinit var pairCage: String
     private lateinit var pairId: String
     private lateinit var pairKey: String
+    private lateinit var pairCageKey: String
+    private lateinit var cagePairKey: String
     private lateinit var pairMaleKey: String
     private lateinit var pairFlightMaleKey: String
     private lateinit var pairFemaleKey: String
@@ -74,6 +63,8 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
+    private lateinit var CageQR: String
+    private lateinit var beginningDate: String
 //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -129,7 +120,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             pairId = bundle.getString("PairId").toString()
             pairMale = bundle.getString("MaleID").toString()
             pairFemale = bundle.getString("FemaleID").toString()
-            val beginningDate = bundle.getString("BeginningDate")
+            beginningDate = bundle.getString("BeginningDate").toString()
             val separateDate = bundle.getString("SeparateDate")
             val maleGender = bundle.getString("MaleGender")
             val femaleGender = bundle.getString("FemaleGender")
@@ -142,7 +133,10 @@ class PairsDetailedActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdFemale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
-
+            pairCageKey = bundle.getString("CageKey").toString()
+            cagePairKey = bundle.getString("CagePairKey").toString()
+            pairCage = bundle.getString("PairCage").toString()
+            newBundle.putString("PairCage", pairCage)
             newBundle.putString("PairId", pairId)
             newBundle.putString("MaleID", pairMale)
             newBundle.putString("FemaleID", pairFemale)
@@ -159,6 +153,9 @@ class PairsDetailedActivity : AppCompatActivity() {
             newBundle.putString("CageBirdMale", pairCageBirdMale)
             newBundle.putString("CageKeyFemale", pairCageKeyFemale)
             newBundle.putString("CageKeyMale", pairCageKeyMale)
+            newBundle.putString("CageKey", pairCageKey)
+            newBundle.putString("CagePairKey", cagePairKey)
+
             val clutchesFragment = ClutchesFragment() // Create an instance of ClutchesFragment
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
@@ -183,8 +180,23 @@ class PairsDetailedActivity : AppCompatActivity() {
             val db = FirebaseDatabase.getInstance().reference.child("Users")
                 .child("ID: ${currentUserId.toString()}").child("Pairs")
                 .child(pairKey)
+//            val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
+//                .child("ID: ${currentUserId.toString()}").child("Pairs")
+//                .child(pairKey)
+//
+//                qrRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        CageQR = snapshot.child("QR").value.toString()
+//                    }
+//                        override fun onCancelled(error: DatabaseError) {
+//                            TODO("Not yet implemented")
+//                        }
+//
+//                    })
+
             db.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    CageQR = snapshot.child("QR").value.toString()
                     if (snapshot.child("Separate Date").exists()){
                         tvDate.text = "${beginningDate.toString()} - ${separateDate.toString()}"
                     }else
@@ -201,8 +213,8 @@ class PairsDetailedActivity : AppCompatActivity() {
 
 
 
-
             tvMutations.text = "${maleGender.toString()} x ${femaleGender.toString()}"
+            Log.d(TAG,"mutation"  + tvMutations.text)
             btnFemale.text = pairFemale.toString()
             btnMale.text = pairMale.toString()
         }
@@ -235,7 +247,17 @@ class PairsDetailedActivity : AppCompatActivity() {
 
                 true
             }
-
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("CageQR", CageQR)
+                i.putExtra("PairId", pairId)
+                i.putExtra("Mutation", tvMutations.text)
+                i.putExtra("Cage", pairCage)
+                i.putExtra("Date", tvDate.toString())
+                i.putExtra("BegDate", beginningDate)
+                startActivity(i)
+                true
+            }
             R.id.menu_seperate ->{
                 showSeparateConfirmation()
                 true
@@ -269,9 +291,20 @@ class PairsDetailedActivity : AppCompatActivity() {
     }
     fun delete() {
         val currentUserId = mAuth.currentUser?.uid
+        val pairMaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairMaleKey).child("Status").setValue("Available")
+        val pairFemaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairFemaleKey).child("Status").setValue("Available")
+        val pairFemaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightFemaleKey).child("Status").setValue("Available")
+        val pairMaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightMaleKey).child("Status").setValue("Available")
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).removeValue()
-        }
+        val pairBreedingCageRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).removeValue()
+
+    }
     private fun showSeparateConfirmation() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Separate")
@@ -292,14 +325,28 @@ class PairsDetailedActivity : AppCompatActivity() {
             .child(pairMaleKey).child("Status").setValue("Available")
         val pairFemaleRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
             .child(pairFemaleKey).child("Status").setValue("Available")
+        val pairFemaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightFemaleKey).child("Status").setValue("Available")
+        val pairMaleFlightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Flight Birds")
+            .child(pairFlightMaleKey).child("Status").setValue("Available")
+        val pairBreedingCageRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).child("Status").setValue("Available")
 
         val milliSecons = System.currentTimeMillis()
         val DateFormat = SimpleDateFormat("MMM dd yyyy", Locale.US)
         val date = Date(milliSecons)
         val formattedDate = DateFormat.format(date)
 
+        val pairBreedingCageRefSeparate = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
+            .child(pairCageKey).child("Pair Birds").child(cagePairKey).removeValue()
+
         val database = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
             .child(pairKey).child("Separate Date").setValue(formattedDate)
+        val pairId = 0 // Set your desired integer value here
+        val pairID = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Pairs")
+            .child(pairKey).child("Pair ID").setValue(pairId)
+
+
 
     }
 

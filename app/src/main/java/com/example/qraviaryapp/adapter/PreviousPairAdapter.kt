@@ -1,6 +1,5 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
 import PairData
 import android.content.Context
 import android.content.Intent
@@ -13,9 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.PreviousPairActivity
-import org.w3c.dom.Text
 
 class PreviousPairAdapter(
     private val context: Context,
@@ -26,7 +23,13 @@ class PreviousPairAdapter(
 
         return PreviousViewHolder(view, dataList)
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].pairyearbeg?.substring(0, 4) ?: ""
+    }
     override fun onBindViewHolder(holder: PreviousViewHolder, position: Int) {
         val pairs = dataList[position]
         val femaleimg = pairs.pairfemaleimg
@@ -61,7 +64,7 @@ class PreviousPairAdapter(
                 .error(R.drawable.noimage)
                 .into(holder.maleimageview)
         }
-        holder.dateId.text = pairs.pairDateBeg
+        holder.dateId.text = pairs.pairDateBeg + "-" + pairs.pairDateSep
         holder.femaleBird.text = pairs.pairFemale
         holder.femaleMutation.text = pairs.pairFemaleMutation
         holder.maleBird.text = pairs.pairMale
@@ -87,7 +90,8 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()
-
+            bundle.putString("PairId", dataList[adapterPosition].pairId)
+            bundle.putString("PairCage", dataList[adapterPosition].pairCage)
             bundle.putString("PairMaleKey", dataList[adapterPosition].pairMaleKey)
             bundle.putString("PairFemaleKey", dataList[adapterPosition].pairFemaleKey)
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
@@ -101,6 +105,8 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
             bundle.putString("CageKeyMale", dataList[adapterPosition].paircagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].paircagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].paircagebirdMale)
+            bundle.putString("CageKey", dataList[adapterPosition].pairCageKey)
+            bundle.putString("CagePairKey", dataList[adapterPosition].cagePairKey)
             val i = Intent(itemView.context, PreviousPairActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

@@ -1,12 +1,11 @@
 package com.example.qraviaryapp.fragments.DetailedFragment
 
-import BirdData
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +14,7 @@ import com.example.qraviaryapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -177,6 +177,19 @@ class BirdBasicFragment : Fragment() {
 
 
         bird_status.text = birdStatus
+        val status = birdStatus
+        bird_status.text = status
+        when (status) {
+            "Available" -> bird_status.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> bird_status.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> bird_status.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> bird_status.setTextColor(Color.BLACK)
+            "Exchanged" -> bird_status.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> bird_status.setTextColor(Color.MAGENTA)
+            "Donated" -> bird_status.setTextColor(Color.YELLOW)
+            "Paired" -> bird_status.setTextColor(Color.parseColor("#FF69B4"))
+            else -> bird_status.setTextColor(Color.GRAY)
+        }
         bird_id.text = birdId
         val genderIcon = when (birdGender) {
             "Male" -> {
@@ -207,7 +220,7 @@ class BirdBasicFragment : Fragment() {
             }
         }
         val CombinedMutations = if (NonNullMutations.isNotEmpty()) {
-            NonNullMutations.joinToString(" x ")
+            NonNullMutations.joinToString(" / ")
 
         } else {
             "Mutation: None"
@@ -217,7 +230,7 @@ class BirdBasicFragment : Fragment() {
 
         bird_dateBirth.text = "Date of Birth: " + birdDateBirth
 
-
+        val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
         val dateFormatter = SimpleDateFormat("MMM d yyyy", Locale.US)
         val birthDate = dateFormatter.parse(birdDateBirth)
 
@@ -249,13 +262,15 @@ class BirdBasicFragment : Fragment() {
         if (birdRequestedPrice.isNullOrEmpty() || birdRequestedPrice == "null") {
             bird_requestedprice.visibility = View.GONE
         } else {
-            bird_requestedprice.text = "Requested Price: " + birdRequestedPrice
+            val price = birdRequestedPrice?.toDouble()
+            bird_requestedprice.text = "Requested Price: " + currencyFormat.format(price)
         }
 
         if (birdBuyPrice.isNullOrEmpty() || birdBuyPrice == "null") {
             bird_buyprice.visibility = View.GONE
         } else {
-            bird_buyprice.text = "Buy Price: " + birdBuyPrice
+            val price = birdBuyPrice?.toDouble()
+            bird_buyprice.text = "Buy Price: " + currencyFormat.format(price)
         }
 
         if (birdBoughtOn.isNullOrEmpty() || birdBoughtOn == "null") {
@@ -278,7 +293,8 @@ class BirdBasicFragment : Fragment() {
         if (birdsalePrice.isNullOrEmpty() || birdsalePrice == "null") {
             bird_salePrice.visibility = View.GONE
         } else {
-            bird_salePrice.text = "Sale Price: " + birdsalePrice
+            val price = birdsalePrice?.toDouble()
+            bird_salePrice.text = "Sale Price: " + currencyFormat.format(price)
         }
         if (birdBuyer.isNullOrEmpty() || birdBuyer == "null") {
             bird_buyer.visibility = View.GONE

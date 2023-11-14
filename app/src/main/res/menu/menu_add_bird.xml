@@ -3,8 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_qr"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@drawable/scanner"
+        tools:ignore="HardcodedText"
+        />
+    <item
         android:id="@+id/action_save"
         android:title="Save"
         app:showAsAction="always"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        />
 </menu>

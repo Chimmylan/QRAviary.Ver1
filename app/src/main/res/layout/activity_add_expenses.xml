@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bottom_nav_background"
     android:orientation="vertical"
     tools:context=".activities.AddActivities.AddExpensesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/white_black"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +25,7 @@
                 android:id="@+id/tvAmount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
+
                 android:layout_weight="1"
                 android:text="Amount (*)"
                 android:textSize="13sp"
@@ -32,7 +35,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
+
                 android:layout_weight="1"
                 android:text="Date (*)"
                 android:textSize="13sp"
@@ -50,20 +53,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:counterEnabled="true"
-                android:padding="5dp"
-                app:counterMaxLength="15"
-                app:endIconMode="clear_text"
-                app:helperTextTextColor="#5A0808"
-                app:hintTextColor="#000000"
-                app:startIconTint="#1E1D1D">
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etamount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:inputType="text"
+                    android:inputType="number"
                     tools:ignore="SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="openDatebandPicker"
-                android:text="Pick Date"
+                android:hint="Today"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 tools:ignore="OnClick" />
@@ -90,7 +87,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingLeft="16dp"
                 android:text="Category (*)"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -102,18 +98,17 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/btnCategory"
-                app:icon="@drawable/drop_down"
-                android:hint="Choose Category"
-
-                app:iconGravity="end"
-                app:iconTint="@color/black"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
                 android:layout_weight="1"
-                android:layout_margin="10dp"
-                android:minHeight="48dp" />
+                android:hint="Choose Category"
+                android:minHeight="48dp"
+                app:icon="@drawable/drop_down"
+                app:iconGravity="end"
+                app:iconTint="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,27 +120,24 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingLeft="16dp"
                 android:text="Comment"
                 android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutcomment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="50"
                 app:endIconMode="clear_text"
-                app:helperTextTextColor="#5A0808"
-                app:hintTextColor="#000000"
-                app:startIconTint="#1E1D1D">
+                app:helperTextTextColor="#5A0808">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etcomment"
@@ -160,7 +152,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </LinearLayout>

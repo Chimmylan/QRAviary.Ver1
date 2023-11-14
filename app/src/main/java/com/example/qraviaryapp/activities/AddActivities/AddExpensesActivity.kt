@@ -7,13 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -23,7 +23,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class AddExpensesActivity : AppCompatActivity() {
@@ -77,52 +80,66 @@ class AddExpensesActivity : AppCompatActivity() {
     }
 
     fun addCategory() {
-        val amountValue = etAmount.text.toString().toDouble()
+        val amountText = etAmount.text.toString()
         val commentValue = etComment.text.toString()
-
-        val expenses = ExpensesData(
-            price = amountValue,
-            expensesComment = commentValue,
-            expensesDate = beginningFormattedDate,
-
-        )
-
-        val userId = mAuth.currentUser?.uid.toString()
-        val userBird = db.child("Users").child("ID: $userId")
-            .child("Expenses")
-
-        val newExpenses = userBird.push()
-
+        val categoryValue = btnCategory.text.toString()
+        var dateValue = btnBeginningDate.text.toString()
         val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+        if (amountText.isEmpty()) {
+            etAmount.error = "Please input Amount"
+            return
+        }
 
-        val date = inputDateFormat.parse(beginningFormattedDate)
+        if (categoryValue.isEmpty()) {
+            btnCategory.error = "Please select a Category..."
+            return
+        }
+
+        if (dateValue.isEmpty()) {
+            val currentDate = Calendar.getInstance().time
+            dateValue = inputDateFormat.format(currentDate)
+            btnBeginningDate.text = dateValue
+
+        }
+
+
+        val amountValue: Double
+        try {
+            amountValue = amountText.toDouble()
+        } catch (e: NumberFormatException) {
+            etAmount.error = "Invalid Amount"
+            return
+        }
+
+        val userId = mAuth.currentUser?.uid.toString()
+        val userBird = db.child("Users").child("ID: $userId").child("Expenses")
+        val newExpenses = userBird.push()
+
+
+
+        val date = inputDateFormat.parse(dateValue)
         val formattedDate = outputDateFormat.format(date)
 
         val monthYearParts = formattedDate.split(" - ")
         val day = monthYearParts[0]
         val month = monthYearParts[1]
         val year = monthYearParts[2]
-        var validExpenses = false
 
-        if (btnCategory.text.isEmpty()) {
-            btnCategory.error = "Please select a Category..."
-        } else {
-            validExpenses = true
-        }
+        val data: Map<String, Any?> = hashMapOf(
+            "Amount" to amountValue,
+            "Beginning" to dateValue,
+            "Comment" to commentValue,
+            "Category" to categoryValue,
+            "Date" to month.toFloat(),
+            "Year" to year.toInt()
+        )
 
-        if (validExpenses) {
-            val data: Map<String, Any?> = hashMapOf (
-                "Amount" to expenses.price,
-                "Beginning" to expenses.expensesDate,
-                "Comment" to expenses.expensesComment,
-                "Category" to btnCategoryValue,
-                "Date" to month.toFloat(),
-                "Year" to year.toInt() // Add the year to the data map
-            )
-            newExpenses.updateChildren(data)
-        }
+        newExpenses.updateChildren(data)
+        onBackPressed()
+        finish()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -137,7 +154,8 @@ class AddExpensesActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
 
         val saveMenuItem = menu.findItem(R.id.action_save)
-
+        val scan =menu.findItem(R.id.menu_qr)
+        scan.isVisible = false
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode
@@ -157,8 +175,7 @@ class AddExpensesActivity : AppCompatActivity() {
             R.id.action_save -> {
                 addCategory()
 
-                onBackPressed()
-                finish()
+
                 true
             }
             android.R.id.home -> {

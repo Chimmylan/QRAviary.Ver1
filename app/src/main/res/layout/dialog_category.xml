@@ -6,14 +6,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/dialogTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="Name"
-        android:layout_marginBottom="1dp" />
 
 
     <EditText
@@ -21,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="Cancel"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/black"
+            android:textColor="@color/purple_700"
             android:layout_marginEnd="8dp" />
 
         <Button
@@ -43,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/black"
+            android:textColor="@color/purple_700"
             android:text="Save" />
     </LinearLayout>
 </LinearLayout>

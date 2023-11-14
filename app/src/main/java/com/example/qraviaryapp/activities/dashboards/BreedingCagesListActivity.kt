@@ -5,25 +5,30 @@ import ClickListener
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
 import android.os.Looper
-import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.CageListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,10 +38,20 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
 
@@ -47,6 +62,10 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
     private lateinit var adapter: CageListAdapter
     private lateinit var editText: EditText
     private lateinit var fabBtn: FloatingActionButton
+    private var storageRef = Firebase.storage.reference
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -55,7 +74,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
         setContentView(R.layout.activity_cages_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.elevation = 0f
+        supportActionBar?.elevation = 4f
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
@@ -64,6 +83,8 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Breeding Cages</font>",
@@ -71,7 +92,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.cageRecyclerView)
         val gridLayoutManager = GridLayoutManager(this, 1)
         recyclerView.layoutManager = gridLayoutManager
@@ -97,8 +118,27 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                try {
 
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+            Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+    }
 //    override fun onResume() {
 //        super.onResume()
 //        lifecycleScope.launch {
@@ -112,19 +152,62 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
 //            }
 //        }
 //    }
+private fun generateQRCodeUri(bundleCageData: String): Uri? {
+    val multiFormatWriter = MultiFormatWriter()
+    val bitMatrix = multiFormatWriter.encode(bundleCageData, BarcodeFormat.QR_CODE, 400, 400)
+    val barcodeEncoder = BarcodeEncoder()
+    val bitmap = barcodeEncoder.createBitmap(bitMatrix)
 
+    // Create a file to store the QR code image
+    val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    val imageFile = File.createTempFile("QRCode", ".png", storageDir)
+
+    try {
+        val stream = FileOutputStream(imageFile)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        stream.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
+
+    // Convert the file URI to a string and return
+    return Uri.fromFile(imageFile)
+}
+
+    fun qrAdd(bundle: JSONObject, pushKey: DatabaseReference){
+
+
+        val imageUri = generateQRCodeUri(bundle.toString())
+
+        val imageRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        val uploadTask = imageUri?.let { it1 -> imageRef.putFile(it1) }
+
+        uploadTask?.addOnSuccessListener { task ->
+            imageRef.downloadUrl.addOnSuccessListener{ uri->
+                val imageUrl = uri.toString()
+
+                val dataQR: Map<String, Any?> = hashMapOf(
+                    "QR" to imageUrl
+                )
+                pushKey.updateChildren(dataQR)
+            }
+        }
+    }
     private fun showCageAddDialog() {
 
-
+        storageRef = FirebaseStorage.getInstance().reference
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Cages")
             .child("Breeding Cages")
 
+        val pushKey = db.push()
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.cage_add_showlayout, null)
         editText = dialogLayout.findViewById<EditText>(R.id.etAddCage)
+        val progressbar = dialogLayout.findViewById<ProgressBar>(R.id.progressBar)
         val btncustom = dialogLayout.findViewById<Button>(R.id.custom)
         val btnclose = dialogLayout.findViewById<Button>(R.id.close)
 
@@ -155,20 +238,39 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
         builder.setView(dialogLayout)
 
         val alertDialog = builder.create()
+
         alertDialog.setOnShowListener {
+
             val addButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
             addButton.setOnClickListener {
+                addButton.isEnabled = false
                 val newCageNumber = editText.text.toString().trim()
 
                 if (newCageNumber.isNotEmpty()) {
+                    val cageNumberExists = dataList.any { it.cage == newCageNumber }
+
+                    if (cageNumberExists) {
+                        // Set an error on the EditText and return
+                        editText.error = "Cage number already exists"
+                        return@setOnClickListener
+                    }
                     // User entered a custom cage name, use it
                     val data: Map<String, Any?> = hashMapOf(
                         "Cage" to newCageNumber.toInt()
                     )
-                    db.push().updateChildren(data)
+                    pushKey.updateChildren(data)
 
-                    alertDialog.dismiss()
 
+                    val bundleData = JSONObject()
+
+                    bundleData.put("CageType", "Breeding")
+                    bundleData.put("CageKey", "${pushKey.key}")
+                    bundleData.put("CageNumber", newCageNumber)
+
+
+
+                    qrAdd(bundleData, pushKey)
                     val newCage = CageData()
                     newCage.cage = newCageNumber
                     dataList.add(newCage)
@@ -184,6 +286,12 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                             Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                         }
                     }
+                    progressbar.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        addButton.isEnabled = true
+                        alertDialog.dismiss()
+                        progressbar.visibility = View.GONE
+                    }, 1500)
                 }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -208,8 +316,14 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                                 "Cage" to newCageNumber
                             )
 
-                            db.push().updateChildren(data)
+                            pushKey.updateChildren(data)
+                            val bundleData = JSONObject()
 
+                            bundleData.put("CageType", "Breeding")
+                            bundleData.put("CageKey", "${pushKey.key}")
+                            bundleData.put("CageNumber", newCageNumber)
+
+                            qrAdd(bundleData, pushKey)
                             val newCage = CageData()
                             newCage.cage = newCageNumber.toString()
                             dataList.add(newCage)
@@ -225,7 +339,12 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                                     Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
                                 }
                             }
-                            alertDialog.dismiss()
+                            progressbar.visibility = View.VISIBLE
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                addButton.isEnabled = true
+                                alertDialog.dismiss()
+                                progressbar.visibility = View.GONE
+                            }, 1500)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -239,6 +358,7 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
                 alertDialog.dismiss()
             }
         }
+        alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.show()
 
     }
@@ -254,17 +374,21 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
-            if (data != null) {
+            val pairBird = itemSnapshot.child("Pair Birds")
+            if (data != null && !pairBird.exists()) {
                 val key = itemSnapshot.key.toString()
-                val pairBird = itemSnapshot.child("Pair Birds")
+
 
                 val pairCount = pairBird.childrenCount
                 data.cagePairBirdCount = pairCount.toString()
                 data.cageId = key
+
+
+                val cageQR = itemSnapshot.child("QR").value
                 val cageName = itemSnapshot.child("Cage").value
                 val cageNameValue = cageName.toString()
                 data.cage = cageNameValue
-
+                data.cageQR = cageQR.toString()
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")
                 } else {
@@ -275,7 +399,13 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
             }
 
         }
-        dataList.sortBy { it.cage }
+        dataList.sortBy { it.cage?.toIntOrNull() }
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Available Cages"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Available Cage"
+        }
         dataList
     }
 
@@ -290,7 +420,31 @@ class BreedingCagesListActivity : AppCompatActivity(), ClickListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+    override fun onResume() {
+        super.onResume()
 
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
     override fun onClick(nameValue: String) {
         val intent = Intent()
         intent.putExtra("selectedCageId", nameValue)

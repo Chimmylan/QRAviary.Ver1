@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bottom_background"
+    android:orientation="vertical"
+    tools:context=".monitoring.IncubatorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:elevation="4dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:id="@+id/incubator"
+                android:layout_height="match_parent"
+                android:buttonTint="@color/purpledark"
+                android:textColor="@color/purpledark"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Turn On Incubator">
+
+            </com.google.android.material.switchmaterial.SwitchMaterial>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:src="@drawable/line"
+                app:tint="@color/purplelight"
+                android:scaleType="centerCrop"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layouton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/purpledark"
+                android:text="Set Incubator Temperature "/>
+
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_marginTop="10dp"
+
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+            <ImageView
+                android:id="@+id/minus"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                android:focusable="true"
+                app:tint="@color/purpledark"
+                android:layout_height="50dp"
+                android:src="@drawable/downarrow"/>
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+
+            android:layout_weight="4"
+            android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+           android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+
+            <TextView
+                android:id="@+id/text_view_progress"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:textSize="45dp"
+                android:textColor="@color/purpledark"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center"
+                android:text="" />
+
+
+        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="2">
+            <ImageView
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                android:focusable="true"
+                android:padding="10dp"
+                app:tint="@color/purpledark"
+                android:layout_height="50dp"
+                android:src="@drawable/uparrowt"/>
+        </LinearLayout>
+  </LinearLayout>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

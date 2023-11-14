@@ -3,35 +3,40 @@ package com.example.qraviaryapp.fragments.NavFragments
 import BirdData
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.ArraySet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.activities.AddActivities.AddBirdFlightActivity
-import com.example.qraviaryapp.activities.dashboards.BalanceActivity
 import com.example.qraviaryapp.adapter.BirdListAdapter
+import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -46,9 +51,10 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class BirdsFragment : Fragment() {
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
@@ -56,10 +62,16 @@ class BirdsFragment : Fragment() {
     private lateinit var adapter: BirdListAdapter
     private lateinit var fab: FloatingActionButton
     private lateinit var totalBirds: TextView
+    private var status = ArraySet<String>()
     private var birdCount = 0
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -73,27 +85,46 @@ class BirdsFragment : Fragment() {
             activity?.window?.statusBarColor =
                 ContextCompat.getColor(requireContext(), R.color.totalbirds)
         }
-
-
-        totalBirds = rootView.findViewById<TextView>(R.id.tvBirdCount)
+        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
+        totalBirds = rootView.findViewById(R.id.tvBirdCount)
         fab = rootView.findViewById(R.id.fab)
         recyclerView = rootView.findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
+
+//        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = BirdListAdapter(requireContext(), dataList)
+//        recyclerView.adapter = adapter
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = BirdListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationbirdlist(adapter))
         mAuth = FirebaseAuth.getInstance()
+
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+
+
         lifecycleScope.launch {
             try {
+//                loadingProgressBar.visibility = View.VISIBLE
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
             }
+//            finally {
+//                // Hide the loading ProgressBar when reloading finishes
+//                loadingProgressBar.visibility = View.GONE
+//            }
         }
         fab.setOnClickListener {
             showOptionDialog()
@@ -125,10 +156,32 @@ class BirdsFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
+        refreshApp()
 
 
         return rootView
     }
+
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
 
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
@@ -155,12 +208,13 @@ class BirdsFragment : Fragment() {
             if (data != null) {
 
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
-                val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
+//                val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
                 val birdKey = itemSnapshot.key
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
                 val genderValue = itemSnapshot.child("Gender").value
+
                 val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
                     itemSnapshot.child("Mutation1").child("Mutation Name").value.toString()
                 } else {
@@ -196,6 +250,7 @@ class BirdsFragment : Fragment() {
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Cage").value
                 val forSaleCageValue = itemSnapshot.child("Cage").value
+                val cageKey = itemSnapshot.child("CageKey").value
                 val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
                 val soldDateValue = itemSnapshot.child("Sold Date").value
                 val soldPriceValue = itemSnapshot.child("Sale Price").value
@@ -217,6 +272,7 @@ class BirdsFragment : Fragment() {
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value
                 val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
                 val motherKeyValue = itemSnapshot.child("Parents").child("MotherKey").value
+                val nurseryType = itemSnapshot.child("Nursery Key").value.toString()
                 /*==++==*/
                 val legband = LegbandValue.toString() ?: ""
                 val identifier = identifierValue.toString() ?: ""
@@ -246,11 +302,14 @@ class BirdsFragment : Fragment() {
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
 
-                val image = getUrlImage(imageUrl)
+//                val image = getUrlImage(imageUrl)
 
                 birdCount++
-                data.bitmap = image
-                data.img = imageUrl
+//                data.bitmap = image
+                data.nurseryType = nurseryType
+                data.flightType = flightKey
+                data.cageKey = cageKey.toString()
+                data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
                 data.flightKey = flightKey
@@ -260,6 +319,8 @@ class BirdsFragment : Fragment() {
                 data.gender = gender
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
+                data.year = extractYearFromDateString(dateOfBirth)
+                data.month = extractYearFromDate(dateOfBirth)
                 data.status = status
                 data.mutation1 = mutation1Value
                 data.mutation2 = mutation2Value
@@ -304,11 +365,31 @@ class BirdsFragment : Fragment() {
 
         }
 
-        totalBirds.text = dataList.count().toString() + " Birds"
 
+        if (dataList.count() > 1) {
+            totalBirds.text = dataList.count().toString() + " Birds"
+        } else {
+            totalBirds.text = dataList.count().toString() + " Bird"
+        }
+
+        dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
 
         dataList
+
+
     }
+
+
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
+    }
+
+    private fun extractYearFromDate(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
+    }
+
     fun getUrlImage(urlString: String): Bitmap? {
         var inputStream: InputStream? = null
         var bitmap: Bitmap? = null
@@ -370,14 +451,75 @@ class BirdsFragment : Fragment() {
         super.onResume()
 
         // Call a function to reload data from the database and update the RecyclerView
+        val selectedStatusList = arguments?.getStringArrayList("selectedStatusList")
+        val selectedGenderList = arguments?.getStringArrayList("selectedGenderList")
+        val selectedSortBy = arguments?.getString("selectedSort")
+        Log.d(TAG, selectedStatusList.toString())
+        val receivedStatusSet = selectedStatusList?.toSet() ?: emptySet()
+        val receivedGenderSet = selectedGenderList?.toSet() ?: emptySet()
+
+
+        //sharedpref
+
+
+        //category
+        val paired = sharedPreferences.getString("category_Paired", "Paired")
+        val forSale = sharedPreferences.getString("category_For Sale", "For Sale")
+        val deceased = sharedPreferences.getString("category_Deceased", "")
+        val lost = sharedPreferences.getString("category_Lost", "")
+        val sold = sharedPreferences.getString("category_Sold", "")
+        val exchange = sharedPreferences.getString("category_Exchanged", "")
+        val available = sharedPreferences.getString("category_Available", "Available")
+        val donated = sharedPreferences.getString("category_Donated", "")
+        val other = sharedPreferences.getString("category_Other", "")
+
+        //gender
+        val unknown = sharedPreferences.getString("category_Unknown", "Unknown")
+        val male = sharedPreferences.getString("gender_Male", "Male")
+        val female = sharedPreferences.getString("gender_Female", "Female")
+
+        val categoryFilters: Set<String> = setOf(
+            paired,
+            forSale,
+            deceased,
+            lost,
+            sold,
+            exchange,
+            available,
+            donated,
+            other
+        ).filter { it?.isNotBlank()!! }.toSet() as Set<String>
+
+        val genderFilters: Set<String> = setOf(
+            unknown,
+            male,
+            female
+        ).filter { it?.isNotEmpty()!! }.toSet() as Set<String>
+
+
         reloadDataFromDatabase()
+
+        var filteredData: Map<String, Set<String>> = mapOf(
+            "status" to categoryFilters,
+            "gender" to genderFilters
+        )
+
+        Log.d(TAG, filteredData.toString())
+
+
+            adapter.filterData(filteredData)
+
+//                adapter.filterAge(selectedSortBy)
+
+
+
 
     }
 
     private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                delay(4000)
 
                 val data = getDataFromDatabase()
                 dataList.clear()
@@ -386,6 +528,9 @@ class BirdsFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
         }
     }

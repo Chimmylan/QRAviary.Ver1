@@ -48,7 +48,7 @@
                     android:text="1000"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:textSize="30sp"
+                    android:textSize="23sp"
                     android:layout_weight="2"/>
                 </LinearLayout>
                 <LinearLayout

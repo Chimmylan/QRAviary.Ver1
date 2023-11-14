@@ -7,512 +7,203 @@
     android:background="@color/new_appbar_color"
     tools:context=".activities.detailedactivities.BirdFilterActivity">
 
-    <ScrollView
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="5"
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/white_black"
             android:orientation="vertical"
-            android:weightSum="5"
-            tools:ignore="MissingConstraints">
+            android:padding="15dp"
+            android:weightSum="2">
+            <RadioGroup
+                android:id="@+id/rgGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/oldest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text = "Oldest"/>
+                <RadioButton
+                    android:id="@+id/youngest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text = "Youngest"/>
+                <RadioButton
+                    android:id="@+id/identifier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text = "Id"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white_black"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_black"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:weightSum="2">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Identifier"
+                    android:layout_weight="1"
+                    android:text="Sex"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="8">
-
-                    <EditText
-                        android:id="@+id/etIdentifier"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Status"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_black"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:weightSum="5">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="5">
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center|left"
-                        android:text="Mutations"
-                        android:textColor="@color/black"
+                    <CheckBox
+                        android:id="@+id/cbMale"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="Male"
                         android:textSize="15sp" />
 
-                    <Button
-                        android:id="@+id/removeBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
+                    <CheckBox
+                        android:id="@+id/cbFemale"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/bottom_nav_background"
-                        android:text="-"
-                        android:textColor="@color/black_white"
-                        android:textSize="20sp" />
-
-                    <Button
-                        android:id="@+id/addBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/bottom_nav_background"
-                        android:text="+"
-                        android:textColor="@color/black_white"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation1"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation2"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation3"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation4"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation5"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mutationslayout6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnmutation6"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="6dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_black"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:weightSum="2">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Nursery Cage"
-                        android:textColor="@color/black"
+                        android:checked="true"
+                        android:text="Female"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <CheckBox
+                        android:id="@+id/cbUnknown"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="Flight Cage"
-                        android:textColor="@color/black"
+                        android:checked="true"
+                        android:text="Unknown"
                         android:textSize="15sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnnurserycage"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                    <CheckBox
+                        android:id="@+id/cbAvailable"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:padding="2dp"
-                        android:src="@drawable/x" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnflightcage"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:minHeight="48dp"
-                        android:text="Choose One"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-
-                        android:padding="2dp"
-                        android:src="@drawable/x" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/white_black"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:weightSum="2">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Sex"
-                        android:textColor="@color/black"
+                        android:checked="true"
+                        android:text="Available"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <CheckBox
+                        android:id="@+id/cbPaired"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="Status"
-                        android:textColor="@color/black"
+                        android:checked="true"
+                        android:text="Paired"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbForSale"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="For Sale"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbSold"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Sold"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbDeceased"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Deceased"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbExchange"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Exchanged"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbLost"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lost"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbDonated"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Donated"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/cbOther"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Other"
                         android:textSize="15sp" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="150dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <CheckBox
-                            android:id="@+id/cbMale"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="Male"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbFemale"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="Female"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbUnknown"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="Unknown"
-                            android:textSize="15sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="400dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <CheckBox
-                            android:id="@+id/cbAvailable"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="Available"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbPaired"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="Paired"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbForSale"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="For Sale"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbSold"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Sold"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbDeceased"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Deceased"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbExchange"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Exchanged"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbLost"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Lost"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbDonated"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Donated"
-                            android:textSize="15sp" />
-
-                        <CheckBox
-                            android:id="@+id/cbOther"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Other"
-                            android:textSize="15sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

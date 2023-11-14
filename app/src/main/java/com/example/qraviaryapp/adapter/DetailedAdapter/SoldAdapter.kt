@@ -1,11 +1,9 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.media.Image
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import java.text.NumberFormat
+import java.util.Locale
 
 class SoldAdapter(
     private val context: android.content.Context,
@@ -25,7 +24,13 @@ class SoldAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].monthyr?.substring(0, 8) ?: ""
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoldViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
@@ -78,34 +83,17 @@ class SoldAdapter(
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-            "Mutation: " + nonNullMutations.joinToString(" x ")
+            "Mutation: " + nonNullMutations.joinToString(" / ")
         } else {
             "Mutation: None"
         }
 
         holder.tvMutation.text = combinedMutations
 
-
-        holder.tvStatus.text = bird.status
-
-
-        if (bird.status == "Available" || bird.status == "For Sale") {
-            val cageInfo = when {
-                bird.status == "Available" -> bird.availCage
-                bird.status == "For Sale" -> bird.forSaleCage
-                else -> ""
-            }
-
-            if (cageInfo.isNullOrBlank() ) {
-                holder.tvCage.visibility = View.GONE
-            } else {
-                holder.tvCage.visibility = View.VISIBLE
-                holder.tvCage.text = "Cage: $cageInfo"
-            }
-        } else {
-            holder.tvCage.visibility = View.GONE
-        }
-
+        val status = bird.soldPrice?.toDouble()
+        val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
+        holder.tvStatus.text = currencyFormat.format(status)
+        holder.tvCage.visibility = View.GONE
         val genderIcon = when (bird.gender) {
             "Male" -> {
                 R.drawable.baseline_male_24
@@ -121,7 +109,7 @@ class SoldAdapter(
         }
 
         holder.imageGender.setImageResource(genderIcon)
-        holder.tvGender.text = bird.gender
+        holder.tvGender.text = bird.soldDate
 
         if (bird.legband.isNullOrEmpty()) {
             holder.tvLegband.visibility = View.GONE

@@ -2,35 +2,23 @@ package com.example.qraviaryapp.fragments.Expenses
 
 import BirdData
 import DateTotalExpense
-import ExpensesData
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Debug
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.MyMarker
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -38,8 +26,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -171,7 +157,7 @@ class SalesChartFragment : Fragment() {
                 maxLabelCount
             }
             setLabelCount(labelCount, true)
-            val xOffset = 20f // Adjust this value as needed.
+            val xOffset = 100f // Adjust this value as needed.
             setXOffset(xOffset)
         }
         lineChart.setScaleEnabled(false)
@@ -196,6 +182,7 @@ class SalesChartFragment : Fragment() {
         xAxis.setAvoidFirstLastClipping(true)
 
         val customMarker = MyMarker(requireContext(), R.layout.custom_marker)
+
         lineChart.marker = customMarker
 
 

@@ -2,29 +2,33 @@ package com.example.qraviaryapp.activities.detailedactivities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.HtmlCompat
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.EditActivities.EditBirdActivity
+import com.example.qraviaryapp.activities.EditActivities.EditBirdFlightActivity
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBabiesFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdOriginFragment
 import com.example.qraviaryapp.fragments.DetailedFragment.BirdPairingFragment
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class BirdsDetailedActivity : AppCompatActivity() {
@@ -35,6 +39,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var ImageView: ImageView
     private lateinit var BirdKey: String
     private lateinit var FlightKey: String
+    private lateinit var NurseryKey: String
     private lateinit var BirdId: String
     private lateinit var BirdLegband: String
     private lateinit var BirdImage: String
@@ -71,18 +76,24 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+    private lateinit var mAuth: FirebaseAuth
+    private var flightType: String? = null
+    private var nurseryType: String? = null
 
     //cages
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
-
-
-
+    private lateinit var CageQR: String
+    private lateinit var SoldId: String
+    private lateinit var PurchaseId: String
+    private lateinit var CageKey: String
+    private lateinit var CageBirdKey: String
     private lateinit var databaseReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var currentUser: String
     private lateinit var Auth: FirebaseAuth
+    val newBundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -91,64 +102,67 @@ class BirdsDetailedActivity : AppCompatActivity() {
         setContentView(R.layout.activity_birds_detailed)
         Auth = FirebaseAuth.getInstance()
         currentUser = Auth.currentUser?.uid.toString()
-        toolbar= findViewById(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
+        supportActionBar?.elevation = 0f
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val bundle = intent.extras
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference("Users")
 
-        val newBundle = Bundle()
 
+        mAuth = FirebaseAuth.getInstance()
 
-        BirdId = bundle?.getString("BirdId").toString()
-        BirdLegband = bundle?.getString("BirdLegband").toString()
+        BirdId = bundle?.getString("BirdId").toString()//
+        BirdLegband = bundle?.getString("BirdLegband").toString()//
         BirdKey = bundle?.getString("BirdKey").toString()
-        val nureseryKey = bundle?.getString("NurseryKey")
+        NurseryKey = bundle?.getString("NurseryKey").toString()
         FlightKey = bundle?.getString("FlightKey").toString()
-        BirdImage = bundle?.getString("BirdImage").toString()
-        BirdGender = bundle?.getString("BirdGender").toString()
-        BirdStatus = bundle?.getString("BirdStatus").toString()
-        BirdDateBirth = bundle?.getString("BirdDateBirth").toString()
-        BirdSalePrice = bundle?.getString("BirdSalePrice").toString()
-        BirdBuyer = bundle?.getString("BirdBuyer").toString()
-        BirdDeathReason = bundle?.getString("BirdDeathReason").toString()
-        BirdExchangeWith = bundle?.getString("BirdExchangeWith").toString()
-        BirdLostDetails = bundle?.getString("BirdLostDetails").toString()
-        BirdAvailCage = bundle?.getString("BirdAvailCage").toString()
-        BirdForsaleCage = bundle?.getString("BirdForsaleCage").toString()
-        BirdExchangeReason = bundle?.getString("BirdDeathReason").toString()
-        BirdRequestedPrice = bundle?.getString("BirdRequestedPrice").toString()
-        BirdComment = bundle?.getString("BirdComment").toString()
-        BirdBuyPrice = bundle?.getString("BirdBuyPrice").toString()
-        BirdBoughtOn = bundle?.getString("BirdBoughtOn").toString()
-        BirdBoughtBreeder = bundle?.getString("BirdBoughtBreeder").toString()
-        BirdBreeder = bundle?.getString("BirdBreeder").toString()
-        BirdDeceaseDate= bundle?.getString("BirdDeceaseDate").toString()
-        BirdSoldDate = bundle?.getString("BirdSoldDate").toString()
-        BirdLostDate = bundle?.getString("BirdLostDate").toString()
-        BirdExchangeDate = bundle?.getString("BirdExchangeDate").toString()
-        BirdDonatedDate = bundle?.getString("BirdDonatedDate").toString()
-        BirdDonatedContact = bundle?.getString("BirdDonatedContact").toString()
-        BirdMutation1 = bundle?.getString("BirdMutation1").toString()
-        BirdMutation2 = bundle?.getString("BirdMutation2").toString()
-        BirdMutation3 = bundle?.getString("BirdMutation3").toString()
-        BirdMutation4 = bundle?.getString("BirdMutation4").toString()
-        BirdMutation5 = bundle?.getString("BirdMutation5").toString()
-        BirdMutation6 = bundle?.getString("BirdMutation6").toString()
-        BirdFather = bundle?.getString("BirdFather").toString()
-        BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
-        BirdMother= bundle?.getString("BirdMother").toString()
-        BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        BirdImage = bundle?.getString("BirdImage").toString()//
+        BirdGender = bundle?.getString("BirdGender").toString()//
+        BirdStatus = bundle?.getString("BirdStatus").toString()//
+        BirdDateBirth = bundle?.getString("BirdDateBirth").toString()//
+        BirdSalePrice = bundle?.getString("BirdSalePrice").toString()//
+        BirdBuyer = bundle?.getString("BirdBuyer").toString()//
+        BirdDeathReason = bundle?.getString("BirdDeathReason").toString()//
+        BirdExchangeWith = bundle?.getString("BirdExchangeWith").toString()//
+        BirdLostDetails = bundle?.getString("BirdLostDetails").toString()//
+        BirdAvailCage = bundle?.getString("BirdAvailCage").toString()//
+        BirdForsaleCage = bundle?.getString("BirdForsaleCage").toString()//
+        BirdExchangeReason = bundle?.getString("BirdExchangeReason").toString()//
+        BirdRequestedPrice = bundle?.getString("BirdRequestedPrice").toString()//
+        BirdComment = bundle?.getString("BirdComment").toString()//
+        BirdBuyPrice = bundle?.getString("BirdBuyPrice").toString()//
+        BirdBoughtOn = bundle?.getString("BirdBoughtOn").toString()//
+        BirdBoughtBreeder = bundle?.getString("BirdBoughtBreeder").toString()//
+        BirdBreeder = bundle?.getString("BirdBreeder").toString()//
+        BirdDeceaseDate = bundle?.getString("BirdDeceaseDate").toString()//
+        BirdSoldDate = bundle?.getString("BirdSoldDate").toString()//
+        BirdLostDate = bundle?.getString("BirdLostDate").toString()//
+        BirdExchangeDate = bundle?.getString("BirdExchangeDate").toString()//
+        BirdDonatedDate = bundle?.getString("BirdDonatedDate").toString()//
+        BirdDonatedContact = bundle?.getString("BirdDonatedContact").toString()//
+        BirdMutation1 = bundle?.getString("BirdMutation1").toString()//
+        BirdMutation2 = bundle?.getString("BirdMutation2").toString()//
+        BirdMutation3 = bundle?.getString("BirdMutation3").toString()//
+        BirdMutation4 = bundle?.getString("BirdMutation4").toString()//
+        BirdMutation5 = bundle?.getString("BirdMutation5").toString()//
+        BirdMutation6 = bundle?.getString("BirdMutation6").toString()//
+        BirdFather = bundle?.getString("BirdFather").toString()//
+        BirdFatherKey = bundle?.getString("BirdFatherKey").toString()//
+        BirdMother = bundle?.getString("BirdMother").toString()//
+        BirdMotherKey = bundle?.getString("BirdMotherKey").toString()//
         if (bundle != null) {
             fromFlightAdapter = bundle.getBoolean("fromFlightListAdapter", false)
             fromNurseryAdapter = bundle.getBoolean("fromNurseryListAdapter", false)
         }
-        cageKeyValue = bundle?.getString("CageKeyValue").toString()
+        cageKeyValue = bundle?.getString("CageKeyValue").toString()//
+        flightType = bundle?.getString("FlightType")
+        nurseryType = bundle?.getString("NurseryType")
 
-        Log.d(TAG, "BIRDKEY NEW $BirdKey")
+        Log.d(TAG, "BIRDKEY NEW $BirdKey" + cageKeyValue)
 
-        newBundle.putString("NurseryKey", nureseryKey)
+        newBundle.putString("NurseryKey", NurseryKey)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
         newBundle.putString("FlightKey", FlightKey)
@@ -190,6 +204,8 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdMotherKey", BirdMotherKey)
         newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
         newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
+        newBundle.putString("NurseryType", nurseryType)
+        newBundle.putString("FlightType", flightType)
         val birdGalleryFragment = BirdGalleryFragment()
         val birdBasicFragment = BirdBasicFragment()
         val birdOriginFragment = BirdOriginFragment()
@@ -203,30 +219,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
         ImageView = findViewById(R.id.imageView)
 
         if (BirdImage.isEmpty() || BirdImage == "null") {
-//            val view = findViewById<View>(R.id.view)
-            val collapsingToolbar = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-//            val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
-//
-//            val params = collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
-//            params.scrollFlags = 0 // Remove the scroll flag
-//            collapsingToolbar.layoutParams = params
             Glide.with(this)
                 .load(R.drawable.nobirdimage)
                 .placeholder(R.drawable.nobirdimage)
                 .error(R.drawable.nobirdimage)
                 .into(ImageView)
-////            view.visibility = GONE
-
-//            val toolbar = findViewById<Toolbar>(R.id.toolbar)
-//            val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
-//
-//            // Set the height of the AppBarLayout to match the Toolbar's height
-//
-//            val toolbarLayoutParams = toolbar.layoutParams
-//            val appBarLayoutParams = view.layoutParams
-//            appBarLayoutParams.height = toolbarLayoutParams.height
-//            view.layoutParams = appBarLayoutParams
-//            ImageView.visibility = GONE
 
         } else {
             Glide.with(this)
@@ -258,6 +255,23 @@ class BirdsDetailedActivity : AppCompatActivity() {
         fragmentAdapter.addFragment(birdGalleryFragment, "GALLERY")
         viewPager.adapter = fragmentAdapter
         tablayout.setupWithViewPager(viewPager)
+        val currentUserId = mAuth.currentUser?.uid
+        val qrRef = FirebaseDatabase.getInstance().getReference("Users")
+            .child("ID: ${currentUserId.toString()}")
+            .child("Birds").child(BirdKey)
+        qrRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                CageQR = dataSnapshot.child("QR").value.toString()
+                CageKey = dataSnapshot.child("CageKey").value.toString()
+                CageBirdKey = dataSnapshot.child("Cage Bird Key").value.toString()
+                SoldId = dataSnapshot.child("Sold Id").value.toString()
+                PurchaseId = dataSnapshot.child("Purchase Id").value.toString()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle errors or onCancelled event
+            }
+        })
 
 
     }
@@ -278,30 +292,92 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
-            R.id.menu_edit -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
+
+            R.id.menu_qr -> {
+                val i = Intent(this, QRCodeActivity::class.java)
+                i.putExtra("BirdId", BirdId)
+                i.putExtra("Legband", BirdLegband)
+                i.putExtra("Mutation1", BirdMutation1)
+                i.putExtra("Mutation2", BirdMutation2)
+                i.putExtra("Mutation3", BirdMutation3)
+                i.putExtra("Mutation4", BirdMutation4)
+                i.putExtra("Mutation5", BirdMutation5)
+                i.putExtra("Mutation6", BirdMutation6)
+                i.putExtra("BirdAvailCage", BirdAvailCage)
+                i.putExtra("BirdForSaleCage", BirdForsaleCage)
+                i.putExtra("BirdStatus", BirdStatus)
+                i.putExtra("CageQR", CageQR)
+                startActivity(i)
                 true
             }
+
+            R.id.menu_edit -> {
+
+                if (flightType != "null") {
+                    val i = Intent(this, EditBirdFlightActivity::class.java)
+                    Log.d(TAG, flightType.toString())
+
+                    i.putExtras(newBundle)
+                    startActivity(i)
+                } else {
+                    val i = Intent(this, EditBirdActivity::class.java)
+                    Log.d(TAG, nurseryType.toString())
+
+                    i.putExtras(newBundle)
+                    startActivity(i)
+                }
+
+
+                true
+            }
+
             R.id.menu_share -> {
                 // Handle the Remove button click here
                 // Implement the logic to remove the item or perform any action you need.
                 true
             }
+
             R.id.menu_remove -> {
-                showDeleteConfirmation()
+                val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds")
+                    .child(FlightKey)
+
+                flightRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val isPaired = dataSnapshot.child("Status").value.toString()
+                        val descendantsRef = dataSnapshot.child("Descendants")
+
+                        if (isPaired == "Paired") {
+                            showPairedFlightBirdDialog()
+                        } else if (descendantsRef.hasChildren()) {
+
+                            showDescendantsDialog()
+                        } else {
+                            showDeleteConfirmation()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle errors or onCancelled event
+                    }
+                })
+
+
 
                 return true
 
             }
+
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     private fun showDeleteConfirmation() {
+
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Delete")
         builder.setMessage("Are you sure you want to delete this bird?")
@@ -315,9 +391,45 @@ class BirdsDetailedActivity : AppCompatActivity() {
         val dialog: android.app.AlertDialog = builder.create()
         dialog.show()
     }
+
     fun delete() {
+
+
         databaseReference.child("ID: $currentUser").child("Birds").child(BirdKey).removeValue()
-        databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey).removeValue()
-        databaseReference.child("ID: $currentUser").child("Nursery Birds").child(FlightKey).removeValue()
+        databaseReference.child("ID: $currentUser").child("Flight Birds").child(FlightKey)
+            .removeValue()
+        databaseReference.child("ID: $currentUser").child("Nursery Birds").child(NurseryKey)
+            .removeValue()
+        databaseReference.child("ID: $currentUser").child("Cages").child("Nursery Cages")
+            .child(CageKey).child("Birds").child(CageBirdKey).removeValue()
+        databaseReference.child("ID: $currentUser").child("Cages").child("Flight Cages")
+            .child(CageKey).child("Birds").child(CageBirdKey).removeValue()
+        databaseReference.child("ID: $currentUser").child("Sold Items").child(SoldId).removeValue()
+        databaseReference.child("ID: $currentUser").child("Purchase Items").child(PurchaseId)
+            .removeValue()
+
     }
+
+    fun showPairedFlightBirdDialog() {
+        // Show a dialog to inform the user that the flight bird is paired and cannot be deleted
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Cannot Delete")
+        alertDialog.setMessage("This flight bird is paired and cannot be deleted.")
+        alertDialog.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    fun showDescendantsDialog() {
+        // Show a dialog to inform the user that the flight bird has descendants and cannot be deleted
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Cannot Delete")
+        alertDialog.setMessage("This flight bird has descendants and cannot be deleted.")
+        alertDialog.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
 }

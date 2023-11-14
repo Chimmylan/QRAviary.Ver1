@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     app:cardElevation="1dp"
     app:cardCornerRadius="1dp"
-    app:cardUseCompatPadding="true"
+    android:layout_marginTop="2dp"
 
-    android:backgroundTint="@color/new_appbar_color">
+    android:backgroundTint="@color/item_category">
 
     <CheckBox
         android:id="@+id/category"

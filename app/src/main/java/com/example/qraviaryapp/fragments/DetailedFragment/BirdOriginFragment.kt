@@ -24,7 +24,11 @@ import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivi
 import com.example.qraviaryapp.adapter.DetailedAdapter.BirdSiblingsAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -81,13 +85,12 @@ class BirdOriginFragment : Fragment() {
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
-    private lateinit var layoutnofound: LinearLayout
+
 
     private lateinit var ParentRef: DatabaseReference
     private lateinit var cageKey: String
     private var nurseryCageValue: String? = null
-    private var nofoundparent = false
-    private var nofoundsiblings = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -123,7 +126,6 @@ class BirdOriginFragment : Fragment() {
         parentlinear = view.findViewById(R.id.ParentLinearLayout)
         fatherLinearLayout = view.findViewById(R.id.fatherLayout)
         motherLinearLayout = view.findViewById(R.id.motherLayout)
-        layoutnofound = view.findViewById(R.id.layouttvnofound)
         mAuth = FirebaseAuth.getInstance()
         dbase = FirebaseDatabase.getInstance().reference
 
@@ -142,6 +144,7 @@ class BirdOriginFragment : Fragment() {
         Log.d(TAG, "FatherKey ORIGIN: ${birdFatherKey.toString()}")
         Log.d(TAG, "MotherKey ORIGIN: ${birdMotherKey.toString()}")
         Log.d(TAG, "birdKey ORIGIN: ${birdKey.toString()}")
+        Log.d(TAG, "NurseryKey ORIGIN: ${nurseryKey.toString()}")
         Log.d(TAG, "From flight: ${fromFlightAdapter}")
         Log.d(TAG, "From Nursery: ${fromNurseryAdapter}")
         Log.d(TAG, "birdCageKey ORIGIN: ${cageKey}")
@@ -380,12 +383,12 @@ class BirdOriginFragment : Fragment() {
                         if (motherCageValue.isNullOrEmpty()) {
                             tvMotherCage.visibility = GONE
                         } else {
-                            tvMotherCage.text = motherCageValue
+                            tvMotherCage.text = "Cage: "+motherCageValue
                         }
                         if (motherLegbandValue.isNullOrEmpty()) {
                             tvMotherLegband.visibility = GONE
                         } else {
-                            tvMotherLegband.text = motherLegbandValue
+                            tvMotherLegband.text = "Legband: "+motherLegbandValue
                         }
 
                         val fatherMutations = listOf(
@@ -403,29 +406,29 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val fatherCombinedMutations = if (fatherNonNullMutations.isNotEmpty()) {
-                            fatherNonNullMutations.joinToString(" x ")
+                            fatherNonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
                         }
                         Log.d(TAG, "mutation:$fatherCombinedMutations ")
-                        tvFatherMutation.text = fatherCombinedMutations
+                        tvFatherMutation.text = "Mutation: "+fatherCombinedMutations
 
                         tvMotherStatus.text = motherStatusValue
-                        tvMotherId.text = motherIdValue
+                        tvMotherId.text = "ID: "+motherIdValue
 
-                        tvFatherId.text = fatherIdValue
+                        tvFatherId.text = "ID: "+fatherIdValue
                         tvFatherStatus.text = fatherStatusValue
 
                         if (fatherCageValue.isNullOrEmpty()) {
                             tvFatherCage.visibility = GONE
                         } else {
-                            tvFatherCage.text = fatherCageValue
+                            tvFatherCage.text = "Cage: "+fatherCageValue
                         }
                         if (fatherLegbandValue.isNullOrEmpty()) {
                             tvFatherLegband.visibility = GONE
                         } else {
-                            tvFatherLegband.text = fatherLegbandValue
+                            tvFatherLegband.text = "Legband:"+fatherLegbandValue
                         }
                         val motherMutations = listOf(
                             fatherMutation1Value,
@@ -443,29 +446,29 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val motherCombinedMutations = if (motherNonNullMutations.isNotEmpty()) {
-                            motherNonNullMutations.joinToString(" x ")
+                            motherNonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
                         }
                         Log.d(TAG, "mutation:$motherCombinedMutations ")
-                        tvMotherMutation.text = motherCombinedMutations
+                        tvMotherMutation.text = "Mutation: "+motherCombinedMutations
 
 
                     }
                     if (father == "None" && mother.isNotEmpty()) {
                         fatherLinearLayout.visibility = GONE
-                        tvMotherId.text = motherIdValue
+                        tvMotherId.text = "ID: "+motherIdValue
                         tvMotherStatus.text = motherStatusValue
                         if (motherCageValue.isNullOrEmpty()) {
                             tvMotherCage.visibility = GONE
                         } else {
-                            tvMotherCage.text = motherCageValue
+                            tvMotherCage.text = "Cage: "+motherCageValue
                         }
                         if (motherLegbandValue.isNullOrEmpty()) {
                             tvMotherLegband.visibility = GONE
                         } else {
-                            tvMotherLegband.text = motherLegbandValue
+                            tvMotherLegband.text = "Legband: "+motherLegbandValue
                         }
 
                         val mutations = listOf(
@@ -483,30 +486,30 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-                            nonNullMutations.joinToString(" x ")
+                            nonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
                         }
                         Log.d(TAG, "mutation:$combinedMutations ")
-                        tvFatherMutation.text = combinedMutations
+                        tvMotherMutation.text =  "Mutation: "+combinedMutations
 
                     }
                     if (father.isNotEmpty() && mother == "None") {
                         motherLinearLayout.visibility = GONE
 
-                        tvFatherId.text = fatherIdValue
+                        tvFatherId.text = "ID: "+fatherIdValue
                         tvFatherStatus.text = fatherStatusValue
 
                         if (fatherCageValue.isNullOrEmpty()) {
                             tvFatherCage.visibility = GONE
                         } else {
-                            tvFatherCage.text = fatherCageValue
+                            tvFatherCage.text = "Cage: "+fatherCageValue
                         }
                         if (fatherLegbandValue.isNullOrEmpty()) {
                             tvFatherLegband.visibility = GONE
                         } else {
-                            tvFatherLegband.text = fatherLegbandValue
+                            tvFatherLegband.text = "Legband: "+fatherLegbandValue
                         }
                         val mutations = listOf(
                             fatherMutation1Value,
@@ -524,17 +527,17 @@ class BirdOriginFragment : Fragment() {
                             }
                         }
                         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-                            nonNullMutations.joinToString(" x ")
+                            nonNullMutations.joinToString(" / ")
 
                         } else {
                             "Mutation: None"
                         }
                         Log.d(TAG, "mutation:$combinedMutations ")
-                        tvFatherMutation.text = combinedMutations
+                        tvFatherMutation.text = "Mutation: "+combinedMutations
                     }
                     if (father == "None" && mother == "None") {
                         parentlinear.visibility = GONE
-                        nofoundparent = true
+
                         Log.d(TAG, "ELSE!")
                     }
                 }
@@ -645,15 +648,8 @@ class BirdOriginFragment : Fragment() {
                     dataList.clear()
                     dataList.addAll(data)
                     adapter.notifyDataSetChanged()
-                    Log.d(TAG,"$nofoundparent+$nofoundsiblings")
-//                    layoutnofound.visibility = VISIBLE
-                    if (nofoundsiblings == true && nofoundparent == true){
-                        layoutnofound.visibility = VISIBLE
-                        Log.d(TAG,"$nofoundparent+$nofoundsiblings")
-                    }
-                    else{
-                        layoutnofound.visibility = GONE
-                    }
+
+
                 }
 
             } catch (e: Exception) {
@@ -852,7 +848,7 @@ class BirdOriginFragment : Fragment() {
                                 tvSiblings.visibility = VISIBLE
                             }
                         } else {
-                               nofoundsiblings = true
+
                         }
 
 

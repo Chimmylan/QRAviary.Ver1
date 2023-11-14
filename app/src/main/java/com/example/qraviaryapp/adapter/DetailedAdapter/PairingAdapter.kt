@@ -1,9 +1,7 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
-import PairData
-import android.content.ContentValues
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,14 +36,26 @@ class PairingAdapter(
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-            "Mutation: " + nonNullMutations.joinToString(" x ")
+            "Mutation: " + nonNullMutations.joinToString(" / ")
         } else {
             "Mutation: None"
         }
 
         holder.tvMutation.text = combinedMutations
         holder.tvStatus.text = pair.status
-
+        val status = pair.status
+        holder.tvStatus.text = status
+        when (status) {
+            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
+            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
+            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
+            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
+            else -> holder.tvStatus.setTextColor(Color.GRAY)
+        }
 
         if (pair.status == "Available" || pair.status == "For Sale") {
             val cageInfo = when {

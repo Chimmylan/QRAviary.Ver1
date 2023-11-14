@@ -6,22 +6,27 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddExpensesActivity
 import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
+import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationexpenses
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationsold
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +36,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ExpenseFragment : Fragment() {
 
@@ -45,25 +52,29 @@ class ExpenseFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expense, container, false)
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         fab = view.findViewById(R.id.fab)
         recyclerView = view.findViewById(R.id.recyclerView)
-        val gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = ExpensesAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationexpenses(adapter))
 
         lifecycleScope.launch {
             try {
                 val data = getDataFromDataBase()
+                dataList.clear()
                 dataList.addAll(data)
 
                 adapter.notifyDataSetChanged()
@@ -104,9 +115,30 @@ class ExpenseFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
 
+        refreshApp()
 
         return view
     }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
@@ -138,6 +170,7 @@ class ExpenseFragment : Fragment() {
                     data.expensesCount = expensesCount.toString()
                     data.expenses = mutationNameValue
                     data.price = priceNameValue.toDouble()
+                    data.monthyr = extractYearFromDateString(dateValue)
                     data.expensesComment = commentValue
                     data.expensesDate = dateValue
                     data.date = dateNumber.toDouble()
@@ -150,29 +183,45 @@ class ExpenseFragment : Fragment() {
                     dataList.add(data)
                 }
             }
-            totalBirds.text = "Total Expenses: $expensesCount"
-            dataList.sortBy { it.expenses }
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Expenses"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Expenses"
+            }
+            dataList.sortByDescending { it.expenses}
             dataList
         }
-
+    private fun extractYearFromDateString(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(it) } ?: ""
+    }
     override fun onResume() {
         super.onResume()
 
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
+
     }
+
     private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDataBase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
+
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed
 }

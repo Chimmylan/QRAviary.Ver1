@@ -11,10 +11,11 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/purple_500"
-        app:tabSelectedTextColor="@color/purple_700"
+        android:background="@color/toolbarcolor"
+        app:tabIndicatorColor="@color/purpledark"
+        app:tabSelectedTextColor="@color/purplelight"
         app:tabTextAppearance="@style/TabLayoutTextStyle"
-        app:tabTextColor="@color/black"/>
+        app:tabTextColor="@color/appbar_color"/>
 
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"

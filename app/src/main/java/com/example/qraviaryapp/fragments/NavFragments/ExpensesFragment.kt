@@ -1,42 +1,24 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
-import ExpensesData
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.AddActivities.AddExpensesActivity
-import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
-import com.example.qraviaryapp.fragments.DetailedFragment.BirdBasicFragment
-import com.example.qraviaryapp.fragments.DetailedFragment.BirdGalleryFragment
 import com.example.qraviaryapp.fragments.Expenses.ExpensesChartFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ExpensesFragment : Fragment() {
     private lateinit var viewPager: ViewPager
@@ -53,6 +35,7 @@ class ExpensesFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+    private lateinit var options: ImageView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

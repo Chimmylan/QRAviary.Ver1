@@ -2,39 +2,27 @@ package com.example.qraviaryapp.fragments.Pairs
 
 import EggData
 import android.content.ContentValues
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.PreviousClutchesListAdapter
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,6 +62,7 @@ class PreviousClutchesFragment : Fragment() {
     private lateinit var pairCageBirdFemale: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var clutchCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +87,7 @@ class PreviousClutchesFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         adapter = PreviousClutchesListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
 
         pairKey = arguments?.getString("BirdKey").toString()
         pairId = arguments?.getString("PairId").toString()
@@ -130,7 +119,27 @@ class PreviousClutchesFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
         return view
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+        }
+
     }
     private suspend fun getDataFromDatabase(): List<EggData> = withContext(Dispatchers.IO) {
 

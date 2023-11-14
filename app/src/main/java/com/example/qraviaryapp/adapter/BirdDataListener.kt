@@ -15,6 +15,10 @@ interface ClickListener {
 
 }
 
+data class AccountData(
+    var username: String? = null,
+    var password: String? = null
+)
 
 data class BirdData(
     /*addBird*/
@@ -42,6 +46,8 @@ data class BirdData(
     var forSaleCage: String? = null,
     var reqPrice: String? = null,
     var soldDate: String? = null,
+    var monthyr: String? = null,
+    var sort: String? = null,
     var soldPrice: String? = null,
     var saleContact: String? = null,
     var deathDate: String? = null,
@@ -70,25 +76,38 @@ data class BirdData(
     var cagebirdkey: String? = null,
     var cagekeymalevalue: String? = null,
     var cagebirdmalekey: String? = null,
-    var adultingKey: String? = null
+    var adultingKey: String? = null,
+    var maturingDays: String? = null,
+    var qr: String? = null,
+    var year: String? = null,
+    var month: String? = null,
+    var days: String? = null,
+    var flightType: String? = null,
+    var nurseryType: String? = null
 )
+
 data class BirdGenderBarChart(
     var gender: String?
 )
+
 data class BirdStatusBarChart(
     var status: String?
 )
+
 data class BirdBarChart(
     var mutations: String?,
     var gender: String?,
     var status: String?,
 )
+
 data class PairBarChart(
     var malemutations: String?,
     var femalemutations: String?,
     var status: String?,
 )
+
 data class CageData(
+    var cageQR:String? =null,
     var cage: String? = null,
     var cageId: String? = null,
     var cageCount: String? = null,
@@ -97,6 +116,8 @@ data class CageData(
     var cageBirdsAvailCount: String? = null,
     var cagePairBirdCount: String? = null,
     var cageBirdCount: String? = null,
+    var cagemalemutation: String? =null,
+    var cagefemalemutation: String? =null
 )
 
 data class MutationData(
@@ -107,24 +128,33 @@ data class MutationData(
     var mutationsMaturingDays: String? = null
 
 )
-data class DateTotalExpense(var date: String, var price: Double, var month: Double, var year: Double)
+
+data class DateTotalExpense(
+    var date: String,
+    var price: Double,
+    var month: Double,
+    var year: Double
+)
 
 data class MonthYearEntry(val monthYearValue: Float, val amount: Float)
 data class ExpensesData(
     var expenses: String? = null,
-    var price: Double? =null,
+    var price: Double? = null,
     var date: Double? = null,
     var expensesId: String? = null,
     var expensesCount: String? = null,
     var expensesComment: String? = null,
     var expensesDate: String? = null,
-
-)
+    var categorykey: String? = null,
+    var monthyr: String?=null
+    )
 
 data class PairData(
     var pairfemaleimg: String? = null,
     var pairmaleimg: String? = null,
     var pairKey: String? = null,
+    var parentPairKey: String? = null,
+    var pairClutchKey: String? = null,
     var pairId: String? = null,
     var nest: String? = null,
     var pairCage: String? = null,
@@ -141,6 +171,8 @@ data class PairData(
     var pairFemaleGender: String? = null,
     var pairMaleMutation: String? = null,
     var pairFemaleMutation: String? = null,
+    var pairCageKey: String? = null,
+    var cagePairKey: String? = null,
     var paircagekeyFemale: String? = null,
     var paircagekeyMale: String? = null,
     var paircagebirdMale: String? = null,
@@ -153,8 +185,9 @@ data class PairData(
     var eggcagekeyMale: String? = null,
     var eggcagebirdMale: String? = null,
     var eggcagebirdFemale: String? = null,
+    var pairyearbeg: String? = null
 
-)
+    )
 
 data class EggData(
     var eggStatus: String? = null,
@@ -171,6 +204,7 @@ data class EggData(
     var individualEggKey: String? = null,
     var eggCount: String? = null,
     var clutchCount: String? = null,
+    var paircagekey: String? = null,
     var eggIncubating: String? = null,
     var eggLaid: String? = null,
     var eggHatched: String? = null,
@@ -179,8 +213,10 @@ data class EggData(
     var eggAbandon: String? = null,
     var eggDeadInShell: String? = null,
     var eggDeadBeforeMovingToNursery: String? = null,
+    var eggMoved: String? = null,
     var eggLaidStartDate: String? = null,
     var eggIncubationStartDate: String? = null,
+    var estimatedHatchedDate: String? = null,
     var eggMaturingStartDate: String? = null,
     var eggcagekeyFemale: String? = null,
     var eggcagekeyMale: String? = null,
@@ -206,4 +242,6 @@ data class EggData(
     var motherkey: String? = null,
     var motherbirdkey: String? = null,
     var status1: String? = null,
+    var fosterPair: Boolean? = null,
+    var parentPair: Boolean? = null
 )

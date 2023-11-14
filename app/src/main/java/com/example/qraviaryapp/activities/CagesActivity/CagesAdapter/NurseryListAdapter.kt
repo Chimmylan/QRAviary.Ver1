@@ -3,32 +3,37 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 import BirdData
 import android.animation.ObjectAnimator
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.media.Image
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
-import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.MoveNurseryScannerActivity
+import com.example.qraviaryapp.adapter.channelId
+import com.example.qraviaryapp.adapter.channelName
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -45,7 +50,13 @@ class NurseryListAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].month?.substring(0, 4) ?: ""
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder2 {
         val view = LayoutInflater.from(context).inflate(R.layout.item_nurserylist, parent, false)
 
@@ -101,7 +112,7 @@ class NurseryListAdapter(
         )
 
         val datebirth = bird.dateOfBirth
-        Log.d(TAG,"$maturingDays")
+        Log.d(TAG,"${bird.maturingDays}")
         val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
         val birthDate = datebirth?.let { dateFormat.parse(it) }
         val currentDate = Calendar.getInstance().time
@@ -109,18 +120,19 @@ class NurseryListAdapter(
         val ageInMillis = currentDate.time - birthDate?.time!!
         val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
 
-        if (ageInDays >= maturingDays) {
+        if (ageInDays >= bird.maturingDays?.toInt()!!) {
             holder.layoutmovebtn.visibility = View.VISIBLE
 
-            var progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
+            var progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
 
             if (progressPercentage >= 100) {
                 progressPercentage = 100
+                sendNotification(bird, context)
 
                 val statusRef = db.child("Users").child("ID: ${currentUserId.toString()}").child("Cages").child("Nursery Cages")
                     .child(bird.cageKey.toString())
                     .child("Birds")
-                    .child(bird.birdKey.toString())
+                    .child(bird.adultingKey.toString())
 
                 statusRef.child("Status").setValue("Matured")
                 holder.chickImg.setImageResource(R.drawable.hatchcolor)
@@ -137,10 +149,10 @@ class NurseryListAdapter(
             holder.movebtn.setOnClickListener{
 
 
-                val intent = Intent(context, MoveNurseryActivity::class.java)
+                val intent = Intent(context, MoveNurseryScannerActivity::class.java)
                 intent.putExtra("Nursery Key", bird.nurseryKey)
                 intent.putExtra("CageKeyValue", bird.cageKey)
-                intent.putExtra("BirdKey", bird.birdKey)
+                intent.putExtra("BirdKey", bird.adultingKey)
                 context.startActivity(intent)
             }
 
@@ -149,12 +161,18 @@ class NurseryListAdapter(
             holder.layoutmovebtn.visibility = View.GONE
             holder.tvprogressbar.visibility = View.VISIBLE
 
-            val progressPercentage = (ageInDays.toFloat() / maturingDays.toFloat() * 100).toInt()
+            val progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
 
 
             holder.tvpercentage.text = "$progressPercentage%"
 
+            val remainingDays = bird.maturingDays?.toInt()!! - ageInDays
 
+
+            if (remainingDays > 0) {
+                val daysText = if (remainingDays.toInt() == 1) "day" else "days"
+                holder.tvTime.text = "$remainingDays $daysText left"
+            }
             val animator = ObjectAnimator.ofInt(holder.tvprogressbar, "progress", progressPercentage)
             animator.duration = 1000
             animator.start()
@@ -171,7 +189,7 @@ class NurseryListAdapter(
         val nonNullMutations = mutationList.filter { !it.isNullOrBlank() }
 
         val combinedMutations = if (nonNullMutations.isNotEmpty()) {
-            "Mutation: " + nonNullMutations.joinToString(" x ")
+            "Mutation: " + nonNullMutations.joinToString(" / ")
         } else {
             "Mutation: None"
         }
@@ -180,7 +198,19 @@ class NurseryListAdapter(
 
 
         holder.tvStatus.text = bird.status
-
+        val status = bird.status
+        holder.tvStatus.text = status
+        when (status) {
+            "Available" -> holder.tvStatus.setTextColor(Color.parseColor("#006400"))
+            "For Sale" -> holder.tvStatus.setTextColor(Color.parseColor("#000080")) // Dark blue
+            "Sold" -> holder.tvStatus.setTextColor(Color.parseColor("#8B0000")) // Dark red
+            "Deceased" -> holder.tvStatus.setTextColor(Color.BLACK)
+            "Exchanged" -> holder.tvStatus.setTextColor(Color.CYAN) // You can change this color
+            "Lost" -> holder.tvStatus.setTextColor(Color.MAGENTA)
+            "Donated" -> holder.tvStatus.setTextColor(Color.YELLOW)
+            "Paired" -> holder.tvStatus.setTextColor(Color.parseColor("#FF69B4"))
+            else -> holder.tvStatus.setTextColor(Color.GRAY)
+        }
 
 
 
@@ -209,9 +239,52 @@ class NurseryListAdapter(
         }
     }
 }
+    private fun sendNotification(bird: BirdData, context: Context) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            notificationManager?.createNotificationChannel(notificationChannel)
+        }
+
+        val title = "Bird is matured"
+        val message = "Bird ID: ${bird.identifier} is now matured."
+
+        val intent = Intent(context, BirdsDetailedActivity::class.java)
+        // Set any data you want to pass to the detailed activity
+        intent.putExtra("BirdKey", bird.birdKey)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val builder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.logoqraviary)
+            .setAutoCancel(true)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(title)
+            .setContentText(message)
+
+        val notification = RemoteMessage.Builder("com.example.qraviaryapp")
+            .setMessageId(Integer.toString(0))
+            .addData("title", "Bird is matured")
+            .addData("body", "Bird ID: ${bird.identifier} is now matured")
+            .build()
+
+        notificationManager?.notify(0, builder.build())
+        FirebaseMessaging.getInstance().send(notification)
+    }
+
+
+
 
 class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
+    val tvTime: TextView = itemView.findViewById(R.id.tvdaysLeft)
+
     var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)

@@ -1,35 +1,59 @@
 package com.example.qraviaryapp.activities.mainactivities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
+
 import com.example.qraviaryapp.activities.detailedactivities.BirdFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.ExpensesFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.PairFilteringActivity
+
+import com.example.qraviaryapp.activities.detailedactivities.PurchaseFilterActivity
+import com.example.qraviaryapp.activities.detailedactivities.SaleFilterActivity
+
+import com.example.qraviaryapp.adapter.MyFirebaseMessagingService
 import com.example.qraviaryapp.databinding.ActivityNavHomeBinding
 import com.example.qraviaryapp.fragments.NavFragments.*
+import com.example.qraviaryapp.fragments.ScanFragment
 import com.example.qraviaryapp.fragments.SettingsFragment
 import com.example.qraviaryapp.monitoring.MonitoringFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
-class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
+class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var binding : ActivityNavHomeBinding
@@ -38,8 +62,13 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var gso: GoogleSignInOptions
     private lateinit  var gsc: GoogleSignInClient
     private lateinit var menu: Menu
-
+    private var currentFragment: Fragment? = null
+    private var lastBackPressTime: Long = 0
+    private lateinit var navigationView: NavigationView
+    lateinit var incubating: TextView
+    lateinit var adulting: TextView
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var incubatingBadge: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,15 +79,16 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         binding = ActivityNavHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mAuth = FirebaseAuth.getInstance()
 
+        mAuth = FirebaseAuth.getInstance()
+        val MyFirebaseMessagingService = MyFirebaseMessagingService()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this, gso)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar = binding.toolbar
         drawerLayout = binding.drawerLayout
-        val navigationView = binding.navView
+        navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
             .apply {
@@ -73,9 +103,41 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         }
 
+
+
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            Log.d(TAG, "My token: $token")
+//            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+        })
+
+        incubating = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_incubating)) as TextView
+        adulting = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_aldulting)) as TextView
+
+        initializeCountDrawer()
+
         checkElapsedTime()
+    }
+    private fun initializeCountDrawer() {
+        val totalEggCount = sharedPreferences.getInt("totalEggCount", 0)
+        incubating.gravity = Gravity.CENTER_VERTICAL
+        incubating.setTypeface(null, Typeface.BOLD)
+        incubating.setTextColor(resources.getColor(R.color.purpledark))
+        incubating.text = totalEggCount.toString()
+        adulting.gravity = Gravity.CENTER_VERTICAL
+       adulting.setTypeface(null, Typeface.BOLD)
+        adulting.setTextColor(resources.getColor(R.color.purpledark))
+        adulting.text = ""
     }
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
@@ -83,14 +145,16 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val elapsedTime = currentTimeMillis - appStoppedTime
         val thresholdTime = 60000 // 5 seconds in milliseconds
 
-        if (elapsedTime >= thresholdTime) {
-            // Show the splash activity
-            val intent = Intent(this, SplashActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+//        if (elapsedTime >= thresholdTime) {
+//            // Show the splash activity
+//            val intent = Intent(this, SplashActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//        }
     }
-
+//    private fun initializeCountDrawer() {
+//        // TODO: Implement the count initialization logic
+//    }
     override fun onPause() {
         Log.d(ContentValues.TAG, "onPause")
         super.onPause()
@@ -108,9 +172,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
 
+    private lateinit var fragment: Fragment
+
+    @SuppressLint("SuspiciousIndentation")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-        val fragment: Fragment
         val title: String
         val isMonitoringFragment: Boolean
 
@@ -142,6 +208,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 title = "Mutations"
                 isMonitoringFragment = false
             }
+            R.id.nav_scanner-> {
+                fragment = ScanFragment()
+                title = "QR Reader"
+                isMonitoringFragment = false
+            }
             R.id.nav_aldulting -> {
                 fragment = AdultingFragment()
                 title = "Adulting"
@@ -151,17 +222,17 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 fragment = ExpensesFragment()
                 title = "Expenses"
 
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_sales -> {
                 fragment = NavSalesFragment()
                 title = "Sales"
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_purchases -> {
                 fragment = NavPurchasesFragment()
                 title = "Purchases"
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
@@ -198,24 +269,15 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
                 hideMenuItems()
-                isMonitoringFragment = true
+                isMonitoringFragment = false
             }
         }
         if (!isMonitoringFragment) {
-            if(title == "Expenses" || title == "Purchases" || title == "Sales"){
-                toolbar.elevation = 0f
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
-            }else{
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
-                }
+
         } else {
-            if (title.equals("Balance")){
-                toolbar.elevation = 0f
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.white_black)))
-            }
-            else {
-                toolbar.elevation = 0f
+            toolbar.elevation = 0f
                 supportActionBar?.setBackgroundDrawable(
                     ColorDrawable(
                         ContextCompat.getColor(
@@ -224,11 +286,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         )
                     )
                 )
-            }
+            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
                 title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
-                title == "Categories"||title == "Settings") {
+                title == "Categories"||title == "Settings"|| title == "QR Reader") {
             hideMenuItems()
         } else {
             showMenuItems()
@@ -241,7 +304,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.title = title
 
-
+        currentFragment = fragment
         return true
     }
     private fun hideMenuItems() {
@@ -263,11 +326,61 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.ic_filter -> {
-                val intent = Intent(this, BirdFilterActivity::class.java)
-                startActivity(intent)
+                // Determine the current fragment
+                when (currentFragment) {
+                    is BirdsFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val requestCode = 0
+                        val intent = Intent(this, BirdFilterActivity::class.java)
+                        startActivityForResult(intent, requestCode)
+                    }
+                    is PairsFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, PairFilteringActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is NavSalesFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, SaleFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is NavPurchasesFragment -> {
+                        // Handle the ic_filter action for the BirdsFragment
+                        val intent = Intent(this, PurchaseFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+
+                    // Add more cases for other fragments as needed
+                    else -> {
+                        val intent = Intent(this, ExpensesFilterActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0){
+            if (resultCode == RESULT_OK){
+                val selectedStatus = data?.getStringArrayListExtra("selectedStatusList")
+                val selectedGender = data?.getStringArrayListExtra("selectedGenderList")
+                val selectedSort = data?.getStringExtra("selectedSort")
+                val bundle = Bundle()
+
+                bundle.putStringArrayList("selectedStatusList", selectedStatus)
+                bundle.putStringArrayList("selectedGenderList", selectedGender)
+                bundle.putString("selectedSort", selectedSort)
+
+
+                fragment.arguments = bundle
+
+
+
+            }
         }
     }
 
@@ -284,18 +397,72 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+
     fun signOut() {
         mAuth.signOut()
         gsc.signOut().addOnCompleteListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-            this.finish()
+            if (isAnyAccountOccupyingASlot()){
+                startActivity(Intent(this, SaveLoginActivity::class.java))
+                this.finish()
+            }
+            else{
+                startActivity(Intent(this, LoginActivity::class.java))
+                this.finish()
+            }
+
         }
+    }
+    fun isAnyAccountOccupyingASlot(): Boolean {
+        val maxAccounts = 4
+        for (i in 1..maxAccounts) {
+            val userKey = "user$i"
+            if (sharedPreferences.contains(userKey)) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun replaceFragment(fragment : Fragment){
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_layout,fragment)
             .commit()
+    }
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        val doublePressInterval = 2000 // 2 seconds
+
+        if (currentTime - lastBackPressTime < doublePressInterval) {
+            super.onBackPressed() // Close the app
+        } else {
+            lastBackPressTime = currentTime
+            val message = when (currentFragment) {
+                is BirdsFragment -> "Bird Page"
+                is PairsFragment -> "Pairs Page"
+                is CagesFragment -> "Cages Page"
+                is StatisticsFragment -> "Statistics Page"
+                is MutationsFragment -> "Mutations Page"
+                is ScanFragment -> "QR Reader Page"
+                is AdultingFragment -> "Adulting Page"
+                is ExpensesFragment -> "Expenses Page"
+                is NavSalesFragment -> "Sales Page"
+                is NavPurchasesFragment -> "Purchases Page"
+                is BalanceFragment -> "Balance Page"
+                is GalleryFragment -> "Gallery Page"
+                is IncubatingFragment -> "Incubating Page"
+                is SettingsFragment -> "Settings Page"
+                is CategoriesFragment -> "Categories Page"
+                else -> "Home Page"
+            }
+
+            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+        }
+        // If you want to navigate back to the default fragment when the back button is pressed on the default fragment,
+        // you can use the following code:
+        if (currentFragment is MonitoringFragment) {
+            // Navigate to the default fragment (e.g., MonitoringFragment)
+            replaceFragment(MonitoringFragment())
+        }
     }
 
 }

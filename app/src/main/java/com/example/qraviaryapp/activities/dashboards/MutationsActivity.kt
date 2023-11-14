@@ -4,10 +4,11 @@ import ClickListener
 import MutationData
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.text.TextUtils
@@ -17,15 +18,23 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.GenesAdapter
+import com.example.qraviaryapp.adapter.HomeGenesAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration1
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -41,7 +50,9 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private lateinit var adapter: GenesAdapter
-
+    private lateinit var totalBirds: TextView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var loadingProgressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -60,6 +71,7 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                 )
             )
         )
+        totalBirds = findViewById(R.id.tvBirdCount)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Mutations</font>",
@@ -67,15 +79,22 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
-
+        swipeToRefresh = findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
         recyclerView = findViewById(R.id.recyclerView)
-        val gridLayoutManager = GridLayoutManager(this,1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(this,1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = GenesAdapter(this,dataList,this)
+//        recyclerView.adapter = adapter
+
         dataList = ArrayList()
-        adapter = GenesAdapter(this,dataList,this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = GenesAdapter(this, dataList,this)
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecoration1(adapter))
 
         lifecycleScope.launch {
             try {
@@ -87,7 +106,26 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
+        refreshApp()
 
+    }
+    private fun refreshApp() {
+        swipeToRefresh.setOnRefreshListener {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    val data = getDataFromDataBase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
+
+            Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show()
+        }
 
     }
     fun fab(view: View) {
@@ -125,6 +163,12 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
                 }
             }
             dataList.sortBy { it.mutations }
+            if(dataList.count()>1){
+                totalBirds.text = dataList.count().toString() + " Mutations"
+            }
+            else{
+                totalBirds.text = dataList.count().toString() + " Mutation"
+            }
             dataList
         }
 
@@ -141,43 +185,89 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
         val newDb = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currentUserId.toString()}").child("Mutations")
         val newMutationRef = newDb.push()
-        val mutationName = dialogView.findViewById<EditText>(R.id.mutationName)
+        val mutationNameEditText = dialogView.findViewById<EditText>(R.id.mutationName)
 
 
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
-
+        val sharedPreferences = this.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        val incubatingValue = sharedPreferences.getString("incubatingValue", "21")
+        val maturingValue = sharedPreferences.getString("maturingValue", "50")
+        editor.apply()
         btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
 
         btnSave.setOnClickListener {
+            val mutationNameValue = mutationNameEditText.text.toString()
 
-            val mutationNameValue = mutationName.text.toString()
-            if (TextUtils.isEmpty(mutationNameValue)){
-                mutationName.error = "Enter mutation name"
-            }else{
+
+            if (TextUtils.isEmpty(mutationNameValue)) {
+                mutationNameEditText.error = "Enter a name"
+                return@setOnClickListener
+            }
+            val categoryExists = dataList.any { it.mutations.equals(mutationNameValue, ignoreCase = true) }
+
+
+            if (categoryExists) {
+                // Display an error message or handle the case where the category already exists
+                mutationNameEditText.error = "Mutation Already Exist"
+                return@setOnClickListener
+            } else {
+                // Handle saving the data as you did before
+                val currentUserId = mAuth.currentUser?.uid
+                val newDb = FirebaseDatabase.getInstance().reference.child("Users")
+                    .child("ID: ${currentUserId.toString()}").child("Mutations")
+                val newMutationRef = newDb.push()
 
                 val data: Map<String, Any?> = hashMapOf(
-                    "Mutation" to mutationNameValue
+                    "Mutation" to mutationNameValue.capitalize(),
+                    "Incubating Days" to incubatingValue?.toInt(),
+                    "Maturing Days" to maturingValue?.toInt()
                 )
+
                 newMutationRef.updateChildren(data)
                 val newMutation = MutationData()
-                newMutation.mutations = mutationNameValue
+                newMutation.mutations = mutationNameValue.capitalize()
+
                 dataList.add(newMutation)
                 adapter.notifyItemInserted(dataList.size - 1)
                 dataList.sortBy { it.mutations }
                 adapter.notifyDataSetChanged()
-
                 alertDialog.dismiss()
             }
-
 
         }
 
         alertDialog.show()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDataBase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }}
 
     private fun getSortedGenesWithHeaders(sortedGenes: Array<String>): List<Pair<String, String>> {
         val genesWithHeaders = mutableListOf<Pair<String, String>>()

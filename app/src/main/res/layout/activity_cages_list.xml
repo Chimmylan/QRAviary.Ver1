@@ -13,7 +13,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,11 +48,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbarStyle="outsideInset"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="none"/>
 
             </LinearLayout>
 
     </LinearLayout>
+</ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCage"
         android:layout_width="wrap_content"
@@ -54,7 +69,8 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/new_appbar_color"
+        app:backgroundTint="@color/fab"
         app:srcCompat="@drawable/ic_add"
+        app:tint="@color/black_white"
         tools:ignore="SpeakableTextPresentCheck" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

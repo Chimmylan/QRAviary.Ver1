@@ -1,9 +1,6 @@
 package com.example.qraviaryapp.adapter
 
-import BirdData
-import ClickListener
 import ExpensesData
-import MutationData
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -14,8 +11,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.ChooseCategoryActivity
-import com.example.qraviaryapp.activities.dashboards.HomeMutationActivity
-import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 
 class CategoryAdapter(
     private val context: Context,

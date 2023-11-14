@@ -9,12 +9,19 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.FemaleBirdListActivity
 import com.example.qraviaryapp.activities.dashboards.MaleBirdListActivity
@@ -23,7 +30,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -154,6 +163,53 @@ class OriginFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (arguments?.getString("BirdFatherId")?.isNotEmpty() == true) {
+            btnFather.text = arguments?.getString("BirdFatherId")
+        }
+        if (arguments?.getString("BirdMotherId")?.isNotEmpty() == true) {
+            btnMother.text = arguments?.getString("BirdMotherId")
+        }
+        if (arguments?.getString("BirdFatherKey")?.isNotEmpty() == true) {
+            birdFatherKey = arguments?.getString("BirdFatherKey")
+        }
+        if (arguments?.getString("BirdMotherKey")?.isNotEmpty() == true) {
+            birdMotherKey = arguments?.getString("BirdMotherKey")
+        }
+        if (arguments?.getString("BirdFatherBirdKey")?.isNotEmpty() == true) {
+            birdBirdsFatherKey = arguments?.getString("BirdFatherBirdKey")
+        }
+        if (arguments?.getString("BirdMotherBirdKey")?.isNotEmpty() == true) {
+            birdBirdsMotherKey = arguments?.getString("BirdMotherBirdKey")
+        }
+        val provenance = arguments?.getString("BirdProvenance")
+
+        when (provenance) {
+            "Bought" -> {
+                if (arguments?.getString("BirdBreederContact")?.isNotEmpty() == true) {
+                    etBreederContact.setText(arguments?.getString("BirdBreederContact"))
+                }
+                if (arguments?.getString("BirdBreederBuyPrice")?.isNotEmpty() == true) {
+                    etBuyPrice.setText(arguments?.getString("BirdBreederBuyPrice"))
+                }
+                if (arguments?.getString("BirdBreederBuyDate")?.isNotEmpty() == true) {
+                    boughtDateBtn.text = arguments?.getString("BirdBreederBuyDate")
+                }
+            }
+            "Other" -> {
+                if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
+                    etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
+                }
+            }
+        }
+
+
+
+        arguments?.clear()
+    }
+
     private fun getTextFromVisibleDatePicker(Button: Button, layout: View): String {
         return if (layout.visibility == View.VISIBLE) {
             Button.text.toString()
@@ -162,7 +218,15 @@ class OriginFragment : Fragment() {
         }
     }
 
-    fun addOirigin(birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, callback: (motherKey: String, fatherKey: String,descendantfatherkey: String, descendantmotherkey: String, purchaseId: String) -> Unit) {
+    fun addOirigin(
+        birdId: String,
+        NurseryId: String,
+        newBundle: Bundle,
+        soldId: String,
+        successBasic: Boolean,
+
+        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String, originBundle: Bundle) -> Unit
+    ) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -172,7 +236,6 @@ class OriginFragment : Fragment() {
         val dataBreederOtContact = etOtBreederContact.text.toString()
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
-
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
@@ -229,11 +292,36 @@ class OriginFragment : Fragment() {
         val userId = mAuth.currentUser?.uid.toString()
 
 
+        val bundle = Bundle()
+
+        bundle.putString("BreederContact", birdData.breederContact)
+        bundle.putString("Provenance", birdData.provenance)
+        bundle.putString("BuyPrice", birdData.buyPrice)
+        bundle.putString("BoughtDate", birdData.boughtDate)
+        bundle.putString("OtOtherComment", birdData.otOtherContact)
+        bundle.putString("Father", birdData.father)
+        bundle.putString("Mother", birdData.mother)
+        bundle.putString("BirdFather", birdData.father)//
+        bundle.putString("BirdFatherKey", birdData.fatherKey)//
+        bundle.putString("BirdMother", birdData.mother)//
+        bundle.putString("BirdMotherKey", birdData.motherKey)//
+
+
+        val newOriginBundle = Bundle()
+
+        newOriginBundle.putString("BirdFather", birdData.father)
+        newOriginBundle.putString("BirdMother", birdData.mother)
+        newOriginBundle.putString("BirdMotherKey", birdMotherKey)
+        newOriginBundle.putString("BirdFatherKey", birdFatherKey)
+
+
+
 
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString())
+                    .child("Parents")
             }!!
         }
 
@@ -253,115 +341,263 @@ class OriginFragment : Fragment() {
             .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-
+        val purchasekey = purchasesRef.key
         var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
+
+        var validBought = false
 
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         if (boughtLayout.visibility == View.VISIBLE) {
-            purchaseId = purchasesRef.key
-            val date = inputDateFormat.parse(dataBoughtDate)
-            val formattedDate = outputDateFormat.format(date)
+            if (TextUtils.isEmpty(boughtDateBtn.text)) {
+                boughtDateBtn.error = "Pick Bought Date"
+            } else {
+                validBought = true
+            }
+            if (TextUtils.isEmpty(etBuyPrice.text)) {
+                etBuyPrice.error = "Enter Price"
+            } else if (!TextUtils.isDigitsOnly(etBuyPrice.text)) {
+                etBuyPrice.error = "Enter a valid price..."
+            } else {
+                validBought = true
+            }
+        }
+        if (boughtLayout.visibility == View.VISIBLE) {
 
-            val monthYearParts = formattedDate.split(" - ")
-            val day = monthYearParts[0]
-            val month = monthYearParts[1]
-            val year = monthYearParts[2]
-            if (btnFather.text == "None" && btnMother.text == "None" ) {
-                Log.d(TAG, "NONEEE")
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
+
+
+            if (validBought && successBasic) {
+                purchaseId = purchasesRef.key
+                var date: Date? = null
+                if (!dataBoughtDate.isNullOrBlank()) {
+                    date = inputDateFormat.parse(dataBoughtDate)
+                    // Do something with the parsed date
+                } else {
+                    // Handle the case when dataBoughtDate is empty or null
+                }
+                val formattedDate = outputDateFormat.format(date)
+
+                val monthYearParts = formattedDate.split(" - ")
+                val day = monthYearParts[0]
+                val month = monthYearParts[1]
+                val year = monthYearParts[2]
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
 //                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey,
-                    "Bird Key" to birdId
-                )
+                    val fatherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey,
+                        "Bird Key" to birdId
+                    )
 
-                purchaseRef.updateChildren(fatherRefdata)
-                purchasesRef.updateChildren(descendantdata)
+                    purchaseRef.updateChildren(fatherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
 //                fatherRef.updateChildren(fatherRefdata)
 
 
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                // Update descendantsFatherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
+                    // Update descendantsFatherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdData.buyPrice,
+                        "Purchase Id" to purchasekey,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val fatherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+
+                    purchaseRef.updateChildren(fatherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+                    fatherRef.updateChildren(fatherRefdata)
+                    Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
+                    // Update descendantMotherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdData.buyPrice,
+                        "Purchase Id" to purchasekey,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    purchaseRef.updateChildren(motherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+                    motherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!!")
+                } else {
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Purchase Id" to purchasekey,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    purchaseRef.updateChildren(motherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+                    motherRef.updateChildren(motherRefdata)
+                    fatherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                }
+
+                val parentdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
@@ -370,183 +606,178 @@ class OriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                purchaseRef.updateChildren(fatherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
-                Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                // Update descendantMotherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(parentdata)
+                }
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                }
+                purchaseRef.updateChildren(parentdata)
+                relationshipRef.updateChildren(parentdata)
+                nurseryRelationshipRef.updateChildren(parentdata)
+                val data: Map<String, Any?> = hashMapOf(
+
+                    "Breeder Contact" to birdData.breederContact,
                     "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
+                    "Bought Date" to birdData.boughtDate,
+                    "Purchase Id" to purchasekey
                 )
-                descendantMotherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                purchaseRef.updateChildren(motherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!!")
+                birdRef.updateChildren(data)
+                nurseryRef.updateChildren(data)
             } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                purchaseRef.updateChildren(motherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                motherRef.updateChildren(motherRefdata)
-                fatherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
+                return
             }
 
-            val parentdata: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-                "MotherKey" to birdMotherKey
-            )
-
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(parentdata)
-            }
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
-                soldidref.updateChildren(parentdata)
-            }
-            purchaseRef.updateChildren(parentdata)
-            relationshipRef.updateChildren(parentdata)
-            nurseryRelationshipRef.updateChildren(parentdata)
-            val data: Map<String, Any?> = hashMapOf(
-
-                "Breeder Contact" to birdData.breederContact,
-                "Buy Price" to birdData.buyPrice,
-                "Bought Date" to birdData.boughtDate
-            )
-            birdRef.updateChildren(data)
-            nurseryRef.updateChildren(data)
         } else if (otLayout.visibility == View.VISIBLE) {
 
-            if (btnFather.text == "None" && btnMother.text == "None") {
-                Log.d(TAG, "NONEEE")
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                // Update descendantsFatherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdData.otOtherContact,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
+            if (successBasic) {
+
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
+                    // Update descendantsFatherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdData.otOtherContact,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val fatherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    fatherRef.updateChildren(fatherRefdata)
+                    Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
+                    // Update descendantMotherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdData.otOtherContact,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    motherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!!")
+                } else {
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdData.otOtherContact,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    motherRef.updateChildren(motherRefdata)
+                    fatherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                }
+                val parentdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
@@ -554,171 +785,176 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                fatherRef.updateChildren(fatherRefdata)
-                Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                // Update descendantMotherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdData.otOtherContact,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
+
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(parentdata)
+                }
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                }
+                relationshipRef.updateChildren(parentdata)
+                nurseryRelationshipRef.updateChildren(parentdata)
+
+                val data: Map<String, Any?> = hashMapOf(
+
+                    "Other Breeder Contact" to birdData.otOtherContact
                 )
-                descendantMotherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!!")
+                birdRef.updateChildren(data)
+                nurseryRef.updateChildren(data)
+
             } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdData.otOtherContact,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                motherRef.updateChildren(motherRefdata)
-                fatherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
+                return
             }
-            val parentdata: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-                "MotherKey" to birdMotherKey
-            )
-
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(parentdata)
-            }
-            if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                soldidref.updateChildren(parentdata)
-            }
-            relationshipRef.updateChildren(parentdata)
-            nurseryRelationshipRef.updateChildren(parentdata)
-
-            val data: Map<String, Any?> = hashMapOf(
-
-                "Other Breeder Contact" to birdData.otOtherContact
-            )
-            birdRef.updateChildren(data)
-            nurseryRef.updateChildren(data)
 
         } else {
 
-            if (btnFather.text == "None" && btnMother.text == "None") {
-                Log.d(TAG, "NONEEE")
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                // Update descendantsFatherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
+            if (successBasic) {
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
+                    // Update descendantsFatherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val fatherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    fatherRef.updateChildren(fatherRefdata)
+                    Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
+                    // Update descendantMotherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    motherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!!")
+                } else {
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Buy Price" to birdBuyPrice,
+                        "Bought On" to birdBoughtOn,
+                        "Bought Breeder" to birdBoughtBreeder,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "MotherKey" to birdMotherKey
+                    )
+                    motherRef.updateChildren(motherRefdata)
+                    fatherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                }
+                val data: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
@@ -726,130 +962,38 @@ class OriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                fatherRef.updateChildren(fatherRefdata)
-                Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                // Update descendantMotherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!!")
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(data)
+                }
+                relationshipRef.updateChildren(data)
+                nurseryRelationshipRef.updateChildren(data)
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(data)
+                }
             } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "MotherKey" to birdMotherKey
-                )
-                motherRef.updateChildren(motherRefdata)
-                fatherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
-            }
-            val data: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-                "MotherKey" to birdMotherKey
-            )
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(data)
-            }
-            relationshipRef.updateChildren(data)
-            nurseryRelationshipRef.updateChildren(data)
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
-                soldidref.updateChildren(data)
+                return
             }
 
+
         }
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
+        callback(
+            birdMotherKey.toString(),
+            birdFatherKey.toString(),
+            descendantsfatherkey.toString(),
+            descendantsmotherkey.toString(),
+            purchaseId.toString(),
+            newOriginBundle
+        )
     }
 
 
-    fun addFlightOrigin(birdId: String,
-    FlightId: String,
-    newBundle: Bundle,soldId: String,
-    callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String,  purchaseId: String) -> Unit) {
+    fun addFlightOrigin(
+        birdId: String,
+        FlightId: String,
+        newBundle: Bundle, soldId: String,
+        successBasic: Boolean,
+        callback: (motherKey: String, fatherKey: String, descendantfatherkey: String, descendantmotherkey: String, purchaseId: String, originBundle: Bundle) -> Unit
+    ) {
         val fragment = BasicFragment()
         //  val dataSpinnerFather = spinnerFather.selectedItem.toString()
         // val dataSpinnerMother = spinnerMother.selectedItem.toString()
@@ -880,7 +1024,6 @@ class OriginFragment : Fragment() {
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
 
 
-
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
         val birdLegband = newBundle.getString("BirdLegband")
@@ -917,13 +1060,24 @@ class OriginFragment : Fragment() {
         val cageKeyValue = newBundle.getString("CageKeyValue")
         val cageBirdKey = newBundle.getString("CageBirdKeyValue")
 
+
+        val newOriginBundle = Bundle()
+
+        newOriginBundle.putString("BirdFather", birdData.father)
+        newOriginBundle.putString("BirdMother", birdData.mother)
+        newOriginBundle.putString("BirdMotherKey", birdMotherKey)
+        newOriginBundle.putString("BirdFatherKey", birdFatherKey)
+
+
+
         Log.d(TAG, birdIdentifier.toString())
         val userId = mAuth.currentUser?.uid.toString()
 
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString()).child("Parents")
+                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString())
+                    .child("Parents")
             }!!
         }
 
@@ -947,268 +1101,92 @@ class OriginFragment : Fragment() {
             .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
         val fatherRef = descendantsFatherRef.child("Parents")
-       var purchaseId: String? = null
+        var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
+        val purchasekey = purchasesRef.key
+        var validBought = false
         if (boughtLayout.visibility == View.VISIBLE) {
-            purchaseId = purchasesRef.key
-            val date = inputDateFormat.parse(dataBoughtDate)
-            val formattedDate = outputDateFormat.format(date)
 
-            val monthYearParts = formattedDate.split(" - ")
-            val day = monthYearParts[0]
-            val month = monthYearParts[1]
-            val year = monthYearParts[2]
-            if (btnFather.text == "None" && btnMother.text == "None") {
-                Log.d(TAG, "NONEEE")
-
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-//                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
-                )
-                purchaseRef.updateChildren(fatherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-//                fatherRef.updateChildren(fatherRefdata)
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                // Update descendantsFatherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                descendantsFatherRef.updateChildren(descendantdata)
-                val fatherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
-                )
-
-                purchaseRef.updateChildren(fatherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(fatherRefdata)
-                Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                // Update descendantMotherRef
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
-                )
-                purchaseRef.updateChildren(motherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!!")
+            if (TextUtils.isEmpty(boughtDateBtn.text)) {
+                boughtDateBtn.error = "Pick Bought Date"
             } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdData.buyPrice,
-                    "Bought On" to birdData.boughtDate,
-                    "Bought Breeder" to birdData.breederContact,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                    "Month" to month.toFloat(),
-                    "Year" to year.toFloat()
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
-                )
-                purchaseRef.updateChildren(motherRefdata)
-                purchasesRef.updateChildren(descendantdata)
-                fatherRef.updateChildren(motherRefdata)
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
+                validBought = true
+            }
+            if (TextUtils.isEmpty(etBuyPrice.text)) {
+                etBuyPrice.error = "Enter Price"
+            }
+            else if(!TextUtils.isDigitsOnly(etBuyPrice.text)){
+                etBuyPrice.error = "Enter a valid price..."
+            }else {
+                validBought = true
             }
 
+            if (validBought && successBasic) {
+                purchaseId = purchasesRef.key
+                val date = inputDateFormat.parse(dataBoughtDate)
+                val formattedDate = outputDateFormat.format(date)
 
-            val parentdata: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "MotherKey" to birdMotherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-            )
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(parentdata)
-            }
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
-                soldidref.updateChildren(parentdata)
-            }
-            purchaseRef.updateChildren(parentdata)
-            relationshipRef.updateChildren(parentdata)
-            nurseryRelationshipRef.updateChildren(parentdata)
+                val monthYearParts = formattedDate.split(" - ")
+                val day = monthYearParts[0]
+                val month = monthYearParts[1]
+                val year = monthYearParts[2]
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
 
-            val data: Map<String, Any?> = hashMapOf(
-
-                "Breeder Contact" to birdData.breederContact,
-                "Buy Price" to birdData.buyPrice,
-                "Bought Date" to birdData.boughtDate
-            )
-            birdRef.updateChildren(data)
-            nurseryRef.updateChildren(data)
-        } else if (otLayout.visibility == View.VISIBLE) {
-
-            if (btnFather.text == "None" && btnMother.text == "None") {
-                Log.d(TAG, "NONEEE")
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                if (descendantsFatherRef != null) {
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "Flight Key" to FlightId,
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+//                descendantsFatherRef.updateChildren(descendantdata)
+                    val fatherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "Bird Key" to birdId
+                    )
+                    purchaseRef.updateChildren(fatherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+//                fatherRef.updateChildren(fatherRefdata)
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
                     // Update descendantsFatherRef
                     val descendantdata: Map<String, Any?> = hashMapOf(
                         "Flight Key" to FlightId,
@@ -1230,10 +1208,11 @@ class OriginFragment : Fragment() {
                         "For Sale Cage" to birdForsaleCage,
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
-                        "Buy Price" to birdBuyPrice,
-                        "Bought On" to birdBoughtOn,
-                        "Bought Breeder" to birdBoughtBreeder,
-                        "Breeder" to birdData.otOtherContact,
+                        "Purchase Id" to purchasekey,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
                         "Death Date" to birdDeceaseDate,
                         "Sold Date" to birdSoldDate,
                         "Lost Date" to birdLostDate,
@@ -1244,6 +1223,8 @@ class OriginFragment : Fragment() {
                         "Mutation4" to birdMutation4,
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
                     )
                     descendantsFatherRef.updateChildren(descendantdata)
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
@@ -1255,12 +1236,262 @@ class OriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
+
+                    purchaseRef.updateChildren(fatherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
                     fatherRef.updateChildren(fatherRefdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
-                }
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                if (descendantMotherRef != null) {
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "Flight Key" to FlightId,
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "Bird Key" to birdId
+                    )
+                    purchaseRef.updateChildren(motherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+                    motherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!!")
+                } else {
+                    val descendantdata: Map<String, Any?> = hashMapOf(
+                        "Flight Key" to FlightId,
+                        "ChildKey" to birdId,
+                        "Identifier" to birdIdentifier,
+                        "Legband" to birdLegband,
+                        "Status" to birdStatus,
+                        "Donated Contact" to birdDonatedContact,
+                        "Gender" to birdGender,
+                        "Sale Price" to birdsalePrice,
+                        "Date of Birth" to birdDateBirth,
+                        "Breeder Contact" to birdBuyer,
+                        "Death Reason" to birdDeathReason,
+                        "Exchange Reason" to birdExchangeReason,
+                        "Exchange With" to birdExchangeWith,
+                        "Exchange Date" to birdExchangeDate,
+                        "Lost Details" to birdLostDetails,
+                        "Avail Cage" to birdAvailCage,
+                        "For Sale Cage" to birdForsaleCage,
+                        "Requested Price" to birdRequestedPrice,
+                        "Comments" to birdComment,
+                        "Purchase Id" to purchasekey,
+                        "Buy Price" to birdData.buyPrice,
+                        "Bought On" to birdData.boughtDate,
+                        "Bought Breeder" to birdData.breederContact,
+                        "Breeder" to birdBreeder,
+                        "Death Date" to birdDeceaseDate,
+                        "Sold Date" to birdSoldDate,
+                        "Lost Date" to birdLostDate,
+                        "Donated Date" to birdDonatedDate,
+                        "Mutation1" to birdMutation1,
+                        "Mutation2" to birdMutation2,
+                        "Mutation3" to birdMutation3,
+                        "Mutation4" to birdMutation4,
+                        "Mutation5" to birdMutation5,
+                        "Mutation6" to birdMutation6,
+                        "Month" to month.toFloat(),
+                        "Year" to year.toFloat()
+                    )
+                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
+                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                        "Father" to birdData.father,
+                        "Mother" to birdData.mother,
+                        "FatherKey" to birdFatherKey,
+                        "MotherKey" to birdMotherKey,
+                        "BirdFatherKey" to birdBirdsFatherKey,
+                        "BirdMotherKey" to birdBirdsMotherKey,
+                        "Bird Key" to birdId
+                    )
+                    purchaseRef.updateChildren(motherRefdata)
+                    purchasesRef.updateChildren(descendantdata)
+                    fatherRef.updateChildren(motherRefdata)
+                    motherRef.updateChildren(motherRefdata)
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                }
+
+
+                val parentdata: Map<String, Any?> = hashMapOf(
+                    "Father" to birdData.father,
+                    "Mother" to birdData.mother,
+                    "FatherKey" to birdFatherKey,
+                    "MotherKey" to birdMotherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
+                )
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(parentdata)
+                }
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                }
+                purchaseRef.updateChildren(parentdata)
+                relationshipRef.updateChildren(parentdata)
+                nurseryRelationshipRef.updateChildren(parentdata)
+
+                val data: Map<String, Any?> = hashMapOf(
+
+                    "Breeder Contact" to birdData.breederContact,
+                    "Buy Price" to birdData.buyPrice,
+                    "Bought Date" to birdData.boughtDate,
+                    "Purchase Id" to purchasekey,
+                )
+                birdRef.updateChildren(data)
+                nurseryRef.updateChildren(data)
+            } else {
+                return
+            }
+
+        } else if (otLayout.visibility == View.VISIBLE) {
+
+            if (successBasic) {
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
+                    if (descendantsFatherRef != null) {
+                        // Update descendantsFatherRef
+                        val descendantdata: Map<String, Any?> = hashMapOf(
+                            "Flight Key" to FlightId,
+                            "ChildKey" to birdId,
+                            "Identifier" to birdIdentifier,
+                            "Legband" to birdLegband,
+                            "Status" to birdStatus,
+                            "Donated Contact" to birdDonatedContact,
+                            "Gender" to birdGender,
+                            "Sale Price" to birdsalePrice,
+                            "Date of Birth" to birdDateBirth,
+                            "Breeder Contact" to birdBuyer,
+                            "Death Reason" to birdDeathReason,
+                            "Exchange Reason" to birdExchangeReason,
+                            "Exchange With" to birdExchangeWith,
+                            "Exchange Date" to birdExchangeDate,
+                            "Lost Details" to birdLostDetails,
+                            "Avail Cage" to birdAvailCage,
+                            "For Sale Cage" to birdForsaleCage,
+                            "Requested Price" to birdRequestedPrice,
+                            "Comments" to birdComment,
+                            "Buy Price" to birdBuyPrice,
+                            "Bought On" to birdBoughtOn,
+                            "Bought Breeder" to birdBoughtBreeder,
+                            "Breeder" to birdData.otOtherContact,
+                            "Death Date" to birdDeceaseDate,
+                            "Sold Date" to birdSoldDate,
+                            "Lost Date" to birdLostDate,
+                            "Donated Date" to birdDonatedDate,
+                            "Mutation1" to birdMutation1,
+                            "Mutation2" to birdMutation2,
+                            "Mutation3" to birdMutation3,
+                            "Mutation4" to birdMutation4,
+                            "Mutation5" to birdMutation5,
+                            "Mutation6" to birdMutation6,
+                        )
+                        descendantsFatherRef.updateChildren(descendantdata)
+                        val fatherRefdata: Map<String, Any?> = hashMapOf(
+                            "Father" to birdData.father,
+                            "Mother" to birdData.mother,
+                            "FatherKey" to birdFatherKey,
+                            "MotherKey" to birdMotherKey,
+                            "BirdFatherKey" to birdBirdsFatherKey,
+                            "BirdMotherKey" to birdBirdsMotherKey,
+                            "Bird Key" to birdId
+                        )
+                        fatherRef.updateChildren(fatherRefdata)
+                        Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+                    }
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
+                    if (descendantMotherRef != null) {
+                        // Update descendantMotherRef
+                        val descendantdata: Map<String, Any?> = hashMapOf(
+                            "Flight Key" to FlightId,
+                            "ChildKey" to birdId,
+                            "Identifier" to birdIdentifier,
+                            "Legband" to birdLegband,
+                            "Status" to birdStatus,
+                            "Donated Contact" to birdDonatedContact,
+                            "Gender" to birdGender,
+                            "Sale Price" to birdsalePrice,
+                            "Date of Birth" to birdDateBirth,
+                            "Breeder Contact" to birdBuyer,
+                            "Death Reason" to birdDeathReason,
+                            "Exchange Reason" to birdExchangeReason,
+                            "Exchange With" to birdExchangeWith,
+                            "Exchange Date" to birdExchangeDate,
+                            "Lost Details" to birdLostDetails,
+                            "Avail Cage" to birdAvailCage,
+                            "For Sale Cage" to birdForsaleCage,
+                            "Requested Price" to birdRequestedPrice,
+                            "Comments" to birdComment,
+                            "Buy Price" to birdBuyPrice,
+                            "Bought On" to birdBoughtOn,
+                            "Bought Breeder" to birdBoughtBreeder,
+                            "Breeder" to birdData.otOtherContact,
+                            "Death Date" to birdDeceaseDate,
+                            "Sold Date" to birdSoldDate,
+                            "Lost Date" to birdLostDate,
+                            "Donated Date" to birdDonatedDate,
+                            "Mutation1" to birdMutation1,
+                            "Mutation2" to birdMutation2,
+                            "Mutation3" to birdMutation3,
+                            "Mutation4" to birdMutation4,
+                            "Mutation5" to birdMutation5,
+                            "Mutation6" to birdMutation6,
+                        )
+                        descendantMotherRef.updateChildren(descendantdata)
+                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                            "Father" to birdData.father,
+                            "Mother" to birdData.mother,
+                            "FatherKey" to birdFatherKey,
+                            "MotherKey" to birdMotherKey,
+                            "BirdFatherKey" to birdBirdsFatherKey,
+                            "BirdMotherKey" to birdBirdsMotherKey,
+                            "Bird Key" to birdId
+                        )
+                        motherRef.updateChildren(motherRefdata)
+                        Log.d(TAG, "MotherRef!!")
+                    }
+                } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
                         "Flight Key" to FlightId,
                         "ChildKey" to birdId,
@@ -1297,6 +1528,7 @@ class OriginFragment : Fragment() {
                         "Mutation6" to birdMutation6,
                     )
                     descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1306,158 +1538,164 @@ class OriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
+                    fatherRef.updateChildren(motherRefdata)
                     motherRef.updateChildren(motherRefdata)
-                    Log.d(TAG, "MotherRef!!")
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
-            } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdData.otOtherContact,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
+
+                val parentdata: Map<String, Any?> = hashMapOf(
                     "Father" to birdData.father,
                     "Mother" to birdData.mother,
                     "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
                     "BirdFatherKey" to birdBirdsFatherKey,
                     "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
+                    "MotherKey" to birdMotherKey
                 )
-                fatherRef.updateChildren(motherRefdata)
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
-            }
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(parentdata)
+                }
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                }
+                relationshipRef.updateChildren(parentdata)
+                nurseryRelationshipRef.updateChildren(parentdata)
 
-            val parentdata: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-                "MotherKey" to birdMotherKey
-            )
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(parentdata)
-            }
-            if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                soldidref.updateChildren(parentdata)
-            }
-            relationshipRef.updateChildren(parentdata)
-            nurseryRelationshipRef.updateChildren(parentdata)
+                val data: Map<String, Any?> = hashMapOf(
 
-            val data: Map<String, Any?> = hashMapOf(
+                    "Other Breeder Contact" to birdData.otOtherContact
+                )
+                birdRef.updateChildren(data)
+                nurseryRef.updateChildren(data)
 
-                "Other Breeder Contact" to birdData.otOtherContact
-            )
-            birdRef.updateChildren(data)
-            nurseryRef.updateChildren(data)
+
+            } else {
+                return
+            }
 
 
         } else {
-            val data: Map<String, Any?> = hashMapOf(
-                "Father" to birdData.father,
-                "Mother" to birdData.mother,
-                "FatherKey" to birdFatherKey,
-                "BirdFatherKey" to birdBirdsFatherKey,
-                "BirdMotherKey" to birdBirdsMotherKey,
-                "MotherKey" to birdMotherKey
-            )
-            if (!cageKeyValue.isNullOrEmpty()){
-                cageReference.updateChildren(data)
-            }
-            relationshipRef.updateChildren(data)
-            nurseryRelationshipRef.updateChildren(data)
-            if (soldId != "null" && !soldId.isNullOrEmpty()){
-                soldidref.updateChildren(data)
-            }
-            if (btnFather.text == "None" && btnMother.text == "None") {
-                Log.d(TAG, "NONEEE")
-            } else if (btnFather.text != "None" && btnMother.text == "None") {
-                if (descendantsFatherRef != null) {
-                    // Update descendantsFatherRef
-                    val descendantdata: Map<String, Any?> = hashMapOf(
-                        "ChildKey" to birdId,
-                        "Identifier" to birdIdentifier,
-                        "Legband" to birdLegband,
-                        "Status" to birdStatus,
-                        "Donated Contact" to birdDonatedContact,
-                        "Gender" to birdGender,
-                        "Sale Price" to birdsalePrice,
-                        "Date of Birth" to birdDateBirth,
-                        "Breeder Contact" to birdBuyer,
-                        "Death Reason" to birdDeathReason,
-                        "Exchange Reason" to birdExchangeReason,
-                        "Exchange With" to birdExchangeWith,
-                        "Exchange Date" to birdExchangeDate,
-                        "Lost Details" to birdLostDetails,
-                        "Avail Cage" to birdAvailCage,
-                        "For Sale Cage" to birdForsaleCage,
-                        "Requested Price" to birdRequestedPrice,
-                        "Comments" to birdComment,
-                        "Buy Price" to birdBuyPrice,
-                        "Bought On" to birdBoughtOn,
-                        "Bought Breeder" to birdBoughtBreeder,
-                        "Breeder" to birdBreeder,
-                        "Death Date" to birdDeceaseDate,
-                        "Sold Date" to birdSoldDate,
-                        "Lost Date" to birdLostDate,
-                        "Donated Date" to birdDonatedDate,
-                        "Mutation1" to birdMutation1,
-                        "Mutation2" to birdMutation2,
-                        "Mutation3" to birdMutation3,
-                        "Mutation4" to birdMutation4,
-                        "Mutation5" to birdMutation5,
-                        "Mutation6" to birdMutation6,
-                    )
-                    descendantsFatherRef.updateChildren(descendantdata)
-                    val fatherRefdata: Map<String, Any?> = hashMapOf(
-                        "Father" to birdData.father,
-                        "Mother" to birdData.mother,
-                        "FatherKey" to birdFatherKey,
-                        "MotherKey" to birdMotherKey,
-                        "BirdFatherKey" to birdBirdsFatherKey,
-                        "BirdMotherKey" to birdBirdsMotherKey,
-                        "Bird Key" to birdId
-                    )
-                    fatherRef.updateChildren(fatherRefdata)
-                    Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+
+            if (successBasic) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Father" to birdData.father,
+                    "Mother" to birdData.mother,
+                    "FatherKey" to birdFatherKey,
+                    "BirdFatherKey" to birdBirdsFatherKey,
+                    "BirdMotherKey" to birdBirdsMotherKey,
+                    "MotherKey" to birdMotherKey
+                )
+                if (!cageKeyValue.isNullOrEmpty()) {
+                    cageReference.updateChildren(data)
                 }
-            } else if (btnMother.text != "None" && btnFather.text == "None") {
-                if (descendantMotherRef != null) {
-                    // Update descendantMotherRef
+                relationshipRef.updateChildren(data)
+                nurseryRelationshipRef.updateChildren(data)
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(data)
+                }
+                if (btnFather.text == "None" && btnMother.text == "None") {
+                    Log.d(TAG, "NONEEE")
+                } else if (btnFather.text != "None" && btnMother.text == "None") {
+                    if (descendantsFatherRef != null) {
+                        // Update descendantsFatherRef
+                        val descendantdata: Map<String, Any?> = hashMapOf(
+                            "ChildKey" to birdId,
+                            "Identifier" to birdIdentifier,
+                            "Legband" to birdLegband,
+                            "Status" to birdStatus,
+                            "Donated Contact" to birdDonatedContact,
+                            "Gender" to birdGender,
+                            "Sale Price" to birdsalePrice,
+                            "Date of Birth" to birdDateBirth,
+                            "Breeder Contact" to birdBuyer,
+                            "Death Reason" to birdDeathReason,
+                            "Exchange Reason" to birdExchangeReason,
+                            "Exchange With" to birdExchangeWith,
+                            "Exchange Date" to birdExchangeDate,
+                            "Lost Details" to birdLostDetails,
+                            "Avail Cage" to birdAvailCage,
+                            "For Sale Cage" to birdForsaleCage,
+                            "Requested Price" to birdRequestedPrice,
+                            "Comments" to birdComment,
+                            "Buy Price" to birdBuyPrice,
+                            "Bought On" to birdBoughtOn,
+                            "Bought Breeder" to birdBoughtBreeder,
+                            "Breeder" to birdBreeder,
+                            "Death Date" to birdDeceaseDate,
+                            "Sold Date" to birdSoldDate,
+                            "Lost Date" to birdLostDate,
+                            "Donated Date" to birdDonatedDate,
+                            "Mutation1" to birdMutation1,
+                            "Mutation2" to birdMutation2,
+                            "Mutation3" to birdMutation3,
+                            "Mutation4" to birdMutation4,
+                            "Mutation5" to birdMutation5,
+                            "Mutation6" to birdMutation6,
+                        )
+                        descendantsFatherRef.updateChildren(descendantdata)
+                        val fatherRefdata: Map<String, Any?> = hashMapOf(
+                            "Father" to birdData.father,
+                            "Mother" to birdData.mother,
+                            "FatherKey" to birdFatherKey,
+                            "MotherKey" to birdMotherKey,
+                            "BirdFatherKey" to birdBirdsFatherKey,
+                            "BirdMotherKey" to birdBirdsMotherKey,
+                            "Bird Key" to birdId
+                        )
+                        fatherRef.updateChildren(fatherRefdata)
+                        Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
+                    }
+                } else if (btnMother.text != "None" && btnFather.text == "None") {
+                    if (descendantMotherRef != null) {
+                        // Update descendantMotherRef
+                        val descendantdata: Map<String, Any?> = hashMapOf(
+                            "Flight Key" to FlightId,
+                            "ChildKey" to birdId,
+                            "Identifier" to birdIdentifier,
+                            "Legband" to birdLegband,
+                            "Status" to birdStatus,
+                            "Donated Contact" to birdDonatedContact,
+                            "Gender" to birdGender,
+                            "Sale Price" to birdsalePrice,
+                            "Date of Birth" to birdDateBirth,
+                            "Breeder Contact" to birdBuyer,
+                            "Death Reason" to birdDeathReason,
+                            "Exchange Reason" to birdExchangeReason,
+                            "Exchange With" to birdExchangeWith,
+                            "Exchange Date" to birdExchangeDate,
+                            "Lost Details" to birdLostDetails,
+                            "Avail Cage" to birdAvailCage,
+                            "For Sale Cage" to birdForsaleCage,
+                            "Requested Price" to birdRequestedPrice,
+                            "Comments" to birdComment,
+                            "Buy Price" to birdBuyPrice,
+                            "Bought On" to birdBoughtOn,
+                            "Bought Breeder" to birdBoughtBreeder,
+                            "Breeder" to birdBreeder,
+                            "Death Date" to birdDeceaseDate,
+                            "Sold Date" to birdSoldDate,
+                            "Lost Date" to birdLostDate,
+                            "Donated Date" to birdDonatedDate,
+                            "Mutation1" to birdMutation1,
+                            "Mutation2" to birdMutation2,
+                            "Mutation3" to birdMutation3,
+                            "Mutation4" to birdMutation4,
+                            "Mutation5" to birdMutation5,
+                            "Mutation6" to birdMutation6,
+                        )
+                        descendantMotherRef.updateChildren(descendantdata)
+                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                            "Father" to birdData.father,
+                            "Mother" to birdData.mother,
+                            "FatherKey" to birdFatherKey,
+                            "MotherKey" to birdMotherKey,
+                            "BirdFatherKey" to birdBirdsFatherKey,
+                            "BirdMotherKey" to birdBirdsMotherKey,
+                            "Bird Key" to birdId
+                        )
+                        motherRef.updateChildren(motherRefdata)
+                        Log.d(TAG, "MotherRef!!")
+                    }
+                } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
                         "Flight Key" to FlightId,
                         "ChildKey" to birdId,
@@ -1494,6 +1732,7 @@ class OriginFragment : Fragment() {
                         "Mutation6" to birdMutation6,
                     )
                     descendantMotherRef.updateChildren(descendantdata)
+                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1503,68 +1742,35 @@ class OriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
+
+                    fatherRef.updateChildren(motherRefdata)
                     motherRef.updateChildren(motherRefdata)
-                    Log.d(TAG, "MotherRef!!")
+                    Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
             } else {
-                val descendantdata: Map<String, Any?> = hashMapOf(
-                    "Flight Key" to FlightId,
-                    "ChildKey" to birdId,
-                    "Identifier" to birdIdentifier,
-                    "Legband" to birdLegband,
-                    "Status" to birdStatus,
-                    "Donated Contact" to birdDonatedContact,
-                    "Gender" to birdGender,
-                    "Sale Price" to birdsalePrice,
-                    "Date of Birth" to birdDateBirth,
-                    "Breeder Contact" to birdBuyer,
-                    "Death Reason" to birdDeathReason,
-                    "Exchange Reason" to birdExchangeReason,
-                    "Exchange With" to birdExchangeWith,
-                    "Exchange Date" to birdExchangeDate,
-                    "Lost Details" to birdLostDetails,
-                    "Avail Cage" to birdAvailCage,
-                    "For Sale Cage" to birdForsaleCage,
-                    "Requested Price" to birdRequestedPrice,
-                    "Comments" to birdComment,
-                    "Buy Price" to birdBuyPrice,
-                    "Bought On" to birdBoughtOn,
-                    "Bought Breeder" to birdBoughtBreeder,
-                    "Breeder" to birdBreeder,
-                    "Death Date" to birdDeceaseDate,
-                    "Sold Date" to birdSoldDate,
-                    "Lost Date" to birdLostDate,
-                    "Donated Date" to birdDonatedDate,
-                    "Mutation1" to birdMutation1,
-                    "Mutation2" to birdMutation2,
-                    "Mutation3" to birdMutation3,
-                    "Mutation4" to birdMutation4,
-                    "Mutation5" to birdMutation5,
-                    "Mutation6" to birdMutation6,
-                )
-                descendantMotherRef.updateChildren(descendantdata)
-                descendantsFatherRef.updateChildren(descendantdata)
-                val motherRefdata: Map<String, Any?> = hashMapOf(
-                    "Father" to birdData.father,
-                    "Mother" to birdData.mother,
-                    "FatherKey" to birdFatherKey,
-                    "MotherKey" to birdMotherKey,
-                    "BirdFatherKey" to birdBirdsFatherKey,
-                    "BirdMotherKey" to birdBirdsMotherKey,
-                    "Bird Key" to birdId
-                )
-
-                fatherRef.updateChildren(motherRefdata)
-                motherRef.updateChildren(motherRefdata)
-                Log.d(TAG, "MotherRef!! and FatherRef!!")
+                return
             }
         }
 
-        callback(birdMotherKey.toString(), birdFatherKey.toString(), descendantsfatherkey.toString(), descendantsmotherkey.toString(), purchaseId.toString())
+
+        callback(
+            birdMotherKey.toString(),
+            birdFatherKey.toString(),
+            descendantsfatherkey.toString(),
+            descendantsmotherkey.toString(),
+            purchaseId.toString(),
+            newOriginBundle
+        )
     }
 
-    interface OriginFragmentCallback{
-        fun onOriginDatSaved(birdId: String, nurseryId: String, newBundle: Bundle, birdMotherKey: String?, birdFatherKey: String?)
+    interface OriginFragmentCallback {
+        fun onOriginDatSaved(
+            birdId: String,
+            nurseryId: String,
+            newBundle: Bundle,
+            birdMotherKey: String?,
+            birdFatherKey: String?
+        )
     }
 
     fun radioSelection() {

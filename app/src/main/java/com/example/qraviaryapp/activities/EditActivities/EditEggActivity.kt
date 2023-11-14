@@ -2,28 +2,35 @@ package com.example.qraviaryapp.activities.EditActivities
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class EditEggActivity : AppCompatActivity() {
 
@@ -58,6 +65,10 @@ class EditEggActivity : AppCompatActivity() {
     private var pairKey: String? = null
     private var individualEggKey: String? = null
     private var currentUserId: String? = null
+    private lateinit var formattedEstimatedHatchedDate: String
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+    private val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
+    private var incubatingDays: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +122,7 @@ class EditEggActivity : AppCompatActivity() {
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
 
         val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
-        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
+        incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
         val currentUserId = mAuth.currentUser?.uid
 
@@ -192,16 +203,31 @@ class EditEggActivity : AppCompatActivity() {
 
             btnHatched.text = formattedDate
         }
-        if (btnIncubating.text.toString() == "TODAY") {
-            // Set the incubating date to the current date and time
-            val currentDateTime = LocalDateTime.now()
-            val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
 
-            btnIncubating.text = formattedDate
-        }
 
         if (incubatingLinearLayout.visibility == View.VISIBLE) {
-            eggRef.child("Date").setValue(btnIncubating.text)
+
+            if (btnIncubating.text.toString() == "TODAY") {
+                // Set the incubating date to the current date and time
+                val currentDateTime = LocalDateTime.now()
+                val formattedDate = currentDateTime.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US))
+
+                btnIncubating.text = formattedDate
+                eggRef.child("Date").setValue(btnIncubating.text)
+            }
+            else{
+                val incubatingDays = etIncubatingDate.text.toString().toInt()
+                val incubatingDate = parseDate(btnIncubating.text.toString())
+                val estimatedHatchedDate = incubatingDate.plusDays(incubatingDays.toLong())
+
+                val formattedDate = incubatingDate.format(formatter)
+                btnIncubating.text = formattedDate
+                formattedEstimatedHatchedDate =
+                    estimatedHatchedDate.format(formatter1)
+                eggRef.child("Date").setValue(btnIncubating.text)
+                eggRef.child("Estimated Hatching Date").setValue(formattedEstimatedHatchedDate)
+
+            }
         }
         if (hatchedLinearLayout.visibility == View.VISIBLE) {
             eggRef.child("Date").setValue(btnHatched.text)
@@ -216,7 +242,12 @@ class EditEggActivity : AppCompatActivity() {
 
 
     }
-
+    private fun parseDate(dateString: String): LocalDateTime {
+        return LocalDateTime.parse(dateString, formatter1)
+    }
+    private fun parseDate1(dateString: String): LocalDateTime {
+        return LocalDateTime.parse(dateString, formatter)
+    }
 
     fun OnActiveSpinner() {
         val spinnerItems = resources.getStringArray(R.array.EggStatus)
@@ -261,12 +292,16 @@ class EditEggActivity : AppCompatActivity() {
     private fun initDatePickers() {
         val dateSetListenerIncubating =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-                incubatingFormattedDate = makeDateString(day, month + 1, year)
+                val currentDateTime = LocalDateTime.now()
+                val selectedDate = LocalDateTime.of(year, month + 1, day, currentDateTime.hour, currentDateTime.minute)
+                incubatingFormattedDate = selectedDate.format(DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US))
                 btnIncubating.text = incubatingFormattedDate
             }
         val dateSetListenerHatched =
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
-                hatchedFormattedDate = makeDateString(day, month + 1, year)
+                val currentDateTime = LocalDateTime.now()
+                val selectedDate = LocalDateTime.of(year, month + 1, day, currentDateTime.hour, currentDateTime.minute)
+                hatchedFormattedDate = selectedDate.format(DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US))
                 btnHatched.text = hatchedFormattedDate
             }
 
@@ -281,14 +316,15 @@ class EditEggActivity : AppCompatActivity() {
             DatePickerDialog(this, style, dateSetListenerIncubating, year, month, day)
         hatchedDatePickerDialog =
             DatePickerDialog(this, style, dateSetListenerHatched, year, month, day)
-
     }
+
 
     fun showDatePickerDialog(
         context: Context, button: Button, datePickerDialog: DatePickerDialog
     ) {
         button.setOnClickListener {
             datePickerDialog.show()
+
         }
     }
 
@@ -329,7 +365,10 @@ class EditEggActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_remove -> {
+                val dbase = FirebaseDatabase.getInstance().reference
+                val eggref = dbase.child("Users").child("ID: $currentUserId").child("Pairs").child(pairKey.toString()).child("Clutches").child(eggKey.toString()).child(individualEggKey.toString()).removeValue()
 
+                onBackPressed()
                 true
             }
             android.R.id.home -> {
