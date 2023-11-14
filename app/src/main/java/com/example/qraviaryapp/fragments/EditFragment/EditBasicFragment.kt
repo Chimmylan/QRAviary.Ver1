@@ -397,6 +397,7 @@ class EditBasicFragment : Fragment() {
 
         }
         btnMutation6.setOnClickListener {
+
             val requestCode = 6 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
             startActivityForResult(intent, requestCode)
@@ -439,8 +440,48 @@ class EditBasicFragment : Fragment() {
         }
 
         datebirthButton.setText(birdDateBirth)
+        birthFormattedDate = birdDateBirth
 
+        if (!birdMutation1.isNullOrEmpty()) {
+            btnMutation1.setText(birdMutation1);
+        } else {
+            btnMutation1.visibility = View.GONE
+        }
 
+        if (!birdMutation2.isNullOrEmpty()) {
+            btnMutation2.setText(birdMutation2);
+            btnMutation2.visibility = View.VISIBLE
+        } else {
+            btnMutation2.visibility = View.GONE
+        }
+
+        if (!birdMutation3.isNullOrEmpty()) {
+            btnMutation3.setText(birdMutation3);
+            btnMutation3.visibility = View.VISIBLE
+        } else {
+            btnMutation3.visibility = View.GONE
+        }
+
+        if (!birdMutation4.isNullOrEmpty()) {
+            btnMutation4.setText(birdMutation4);
+            btnMutation4.visibility = View.VISIBLE
+        } else {
+            btnMutation4.visibility = View.GONE
+        }
+
+        if (!birdMutation5.isNullOrEmpty()) {
+            btnMutation5.setText(birdMutation5);
+            btnMutation5.visibility = View.VISIBLE
+        } else {
+            btnMutation5.visibility = View.GONE
+        }
+
+        if (!birdMutation6.isNullOrEmpty()) {
+            btnMutation6.setText(birdMutation6);
+            btnMutation6.visibility = View.VISIBLE
+        } else {
+            btnMutation6.visibility = View.GONE
+        }
 
 
         AddMutation()
@@ -456,6 +497,7 @@ class EditBasicFragment : Fragment() {
             etForSaleCage.text = birdForsaleCage
             //cageKeyValue = //
         }
+
 
         return view
 
@@ -1288,7 +1330,7 @@ class EditBasicFragment : Fragment() {
             }
             Log.d(ContentValues.TAG, birdData.toString())
         } else {
-            Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Empty/Invalid Inputs", Toast.LENGTH_SHORT).show()
         }
 
         args.putString("birdId", birdId)
