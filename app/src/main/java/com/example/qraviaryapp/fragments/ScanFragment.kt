@@ -1,10 +1,16 @@
 package com.example.qraviaryapp.fragments
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,8 +43,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,6 +75,8 @@ class ScanFragment : Fragment() {
     private lateinit var gsc: GoogleSignInClient
     private lateinit var generate: MaterialButton
     private lateinit var options: TextView
+    private lateinit var uploadqr: MaterialButton
+    private val GALLERY_REQUEST_CODE = 2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -82,31 +97,14 @@ class ScanFragment : Fragment() {
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireActivity(), gso)
         generate = view.findViewById(R.id.GenerateQR)
-
+        uploadqr = view.findViewById(R.id.UploadQR)
         generate.setOnClickListener {
             startActivity(Intent(requireContext(), GenerateQrActivity::class.java))
         }
-//
 
-//        addmanually.setOnClickListener {
-//            showPopupDialog()
-//        }
         return view
     }
 
-    private fun showLogoutConfirmationDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Logout")
-        builder.setMessage("Are you sure you want to logout?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            signOut()
-        }
-        builder.setNegativeButton("No") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
 
     fun signOut() {
         mAuth.signOut()
@@ -116,30 +114,7 @@ class ScanFragment : Fragment() {
         }
     }
 
-    private fun showCageAddDialog() {
-        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val inflater = layoutInflater
-        val popUp = inflater.inflate(R.layout.dialog_addbird_option, null)
-        val btnNursery = popUp.findViewById<MaterialButton>(R.id.btnNursery)
-        val btnFlight = popUp.findViewById<MaterialButton>(R.id.btnFlight)
 
-        btnNursery.setOnClickListener {
-            val i = Intent(requireContext(), AddBirdActivity::class.java)
-            startActivity(i)
-        }
-        btnFlight.setOnClickListener {
-            val i = Intent(requireContext(), AddBirdFlightActivity::class.java)
-            startActivity(i)
-        }
-
-        builder.setTitle("Add Bird Selection")
-        builder.setView(popUp)
-        val alertDialog = builder.create()
-
-
-        alertDialog.show()
-
-    }
 
     private lateinit var codeScanner: CodeScanner
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -169,8 +144,58 @@ class ScanFragment : Fragment() {
             }
         }
 
+        uploadqr.setOnClickListener {
+            openGalleryForImage()
+        }
+
         scannerView.setOnClickListener {
             codeScanner.startPreview()
+        }
+    }
+
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    }
+
+    private fun decodeQrCodeFromBitmap(bitmap: Bitmap) {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+        try {
+            val result = MultiFormatReader().decode(binaryBitmap)
+            // Handle the result, e.g., call your existing decodeCallback
+            codeScanner.decodeCallback?.onDecoded(result)
+        } catch (e: NotFoundException) {
+            // Handle exception if QR code is not found in the image
+            Log.e(TAG, "QR code not found in the image")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> {
+                    data?.data?.let { uri ->
+                        try {
+                            val inputStream = requireActivity().contentResolver.openInputStream(uri)
+                            val bitmap = BitmapFactory.decodeStream(inputStream)
+                            decodeQrCodeFromBitmap(bitmap)
+                        } catch (e: IOException) {
+                            Log.e(TAG, "Error loading image from gallery: ${e.message}")
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -519,6 +544,7 @@ class ScanFragment : Fragment() {
     }
 
     companion object {
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

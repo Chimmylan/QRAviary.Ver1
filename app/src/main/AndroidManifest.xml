@@ -127,6 +127,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.EditActivities.EditBirdFlightActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.detailedactivities.PreviousClutchesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

@@ -82,6 +82,8 @@ data class BirdData(
     var year: String? = null,
     var month: String? = null,
     var days: String? = null,
+    var flightType: String? = null,
+    var nurseryType: String? = null
 )
 
 data class BirdGenderBarChart(
@@ -114,6 +116,8 @@ data class CageData(
     var cageBirdsAvailCount: String? = null,
     var cagePairBirdCount: String? = null,
     var cageBirdCount: String? = null,
+    var cagemalemutation: String? =null,
+    var cagefemalemutation: String? =null
 )
 
 data class MutationData(

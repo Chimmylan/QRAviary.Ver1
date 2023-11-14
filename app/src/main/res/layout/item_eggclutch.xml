@@ -128,7 +128,7 @@
             android:padding="15dp">
 
             <ImageView
-                android:id="@+id/birdImageView"
+                android:id="@+id/eggStatus"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"

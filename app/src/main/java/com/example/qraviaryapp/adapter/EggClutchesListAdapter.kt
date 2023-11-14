@@ -126,6 +126,7 @@ class EggClutchesListAdapter(
 
             }
             "Hatched" -> {
+                holder.eggStatus.setImageResource(R.drawable.egghatched)
 //                holder.tvTime.text = "ready to move in nursery cage!"
                 holder.tvTime.visibility = View.GONE
                 holder.layoutmove.visibility = View.VISIBLE // Show layoutmove
@@ -153,6 +154,7 @@ class EggClutchesListAdapter(
 
             }
             "Moved" -> {
+                holder.eggStatus.setImageResource(R.drawable.eggmoved)
                 holder.tvTime.text = "ID"
                 holder.tvTime.visibility = View.GONE
                 holder.layoutmove.visibility = View.GONE // Show layoutmove
@@ -162,6 +164,7 @@ class EggClutchesListAdapter(
 
             }
             else -> {
+                holder.eggStatus.setImageResource(R.drawable.eggdead)
                 // Hide the date TextView and layoutmove for other statuses
                 holder.tvTime.visibility = View.GONE
                 holder.layoutmove.visibility = View.GONE
@@ -218,6 +221,7 @@ class EggClutchesHolder(itemvView: View, private val dataList: MutableList<EggDa
     var tvpercentage: TextView = itemvView.findViewById(R.id.tvpercentage)
     var chickImg: ImageView = itemView.findViewById(R.id.chickImageView)
     var eggImg: ImageView = itemView.findViewById(R.id.eggImageView)
+    var eggStatus: ImageView = itemView.findViewById(R.id.eggStatus)
     init {
 
 

@@ -34,8 +34,11 @@ import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import org.json.JSONObject
@@ -43,6 +46,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -574,8 +579,57 @@ class BasicFlightFragment : Fragment() {
             }
         }
     }
+    suspend fun checkIdentifierExistence(identifier: String): Boolean =
+        suspendCoroutine { continuaton ->
 
-    fun birdDataGetters(callback: (birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, cagebirdkey: String, cagekeyvalue: String) -> Unit) {
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            var identifierExists = false
+
+            userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val birds = snapshot.children
+                    for (birdId in birds) {
+                        if (identifier == birdId.child("Identifier").value) {
+                            etIdentifier.error = "Identifier already exists"
+                            identifierExists = true
+                            break
+                        }
+                    }
+                    continuaton.resume(identifierExists)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    continuaton.resume(false)  // Handle onCancelled
+                }
+            })
+        }
+    suspend fun checkLegbandExistence(identifier: String): Boolean =
+        suspendCoroutine { continuaton ->
+
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            var identifierExists = false
+
+            userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val birds = snapshot.children
+                    for (birdId in birds) {
+                        if (identifier == birdId.child("Legband").value) {
+                            etLegband.error = "Legband already exists"
+                            identifierExists = true
+                            break
+                        }
+                    }
+                    continuaton.resume(identifierExists)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    continuaton.resume(false)  // Handle onCancelled
+                }
+            })
+        }
+    suspend fun birdDataGetters(callback: (birdId: String, NurseryId: String, newBundle: Bundle, soldId: String, cagebirdkey: String, cagekeyvalue: String) -> Unit) {
 
         /* val dataDateOfBanding = bandFormattedDate*/
         val dataDateOfBirth = birthFormattedDate
@@ -621,10 +675,10 @@ class BasicFlightFragment : Fragment() {
                     selectedMutations.add(spinnerText)
                     uniqueValues.add(spinnerText)
                 } else {
-                    spinners[i].error = "Error: Duplicate value in spinners"
+                    spinners[i].error = "Duplicate Mutation"
                     // Spinner has a duplicate value, show an error message
                     // You might want to replace this with your own error handling logic
-                    Toast.makeText(context, "Error: Duplicate value in spinners", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Duplicate Mutation", Toast.LENGTH_SHORT).show()
                     return  // You can return or break out of the loop, depending on your requirements
                 }
             } else {
@@ -677,12 +731,40 @@ class BasicFlightFragment : Fragment() {
         /* var validDateOfBanding = false*/
         var validDateOfBirth = false
         var validforsale = false
+        var valididexist = false
+        var validlegbandexist = false
         //Validation
         if (TextUtils.isEmpty(dataIdentifier)) {
-            etIdentifier.error = "Identifier cannot be Empty..."
+            etIdentifier.error = "Identifier cannot be empty"
         } else {
-            validIdentifier = true
+
+            val result = checkIdentifierExistence(dataIdentifier)
+
+            if (result) {
+                etIdentifier.error = "Identifier already exists"
+
+            } else {
+                valididexist = true
+            }
+
+
         }
+        if (TextUtils.isEmpty(dataLegband)) {
+
+            validlegbandexist = true
+        }
+        else{
+            val result = checkLegbandExistence(dataLegband)
+            if (result) {
+                etLegband.error = "Legband already exists"
+            }
+            else{
+                validlegbandexist = true
+            }
+        }
+
+
+
 
         if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4== "None" || birdData.mutation5== "None" || birdData.mutation6 == "None" ){
             btnMutation1.error = "Mutation must not be empty"
@@ -746,7 +828,7 @@ class BasicFlightFragment : Fragment() {
             }
         }
 
-        if (validDateOfBirth && validMutation && validIdentifier) {
+        if (validDateOfBirth && validMutation && valididexist && validlegbandexist) {
             validInputs = true
         }
         //

@@ -36,15 +36,23 @@ import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.inject.Deferred
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlinx.coroutines.*
+
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -197,9 +205,8 @@ class BasicFragment : Fragment() {
         slash3 = view.findViewById(R.id.slash3)
         slash4 = view.findViewById(R.id.slash4)
         slash5 = view.findViewById(R.id.slash5)
-
-        dbase = FirebaseDatabase.getInstance().reference
         cageReference = FirebaseDatabase.getInstance().reference
+        dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
         initDatePickers()
@@ -577,9 +584,58 @@ class BasicFragment : Fragment() {
         }
     }
 
-    fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String, cagekeyvalue: String) -> Unit) {
+    suspend fun checkIdentifierExistence(identifier: String): Boolean =
+        suspendCoroutine { continuaton ->
 
-        /*val dataDateOfBanding = bandFormattedDate*/
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            var identifierExists = false
+
+            userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val birds = snapshot.children
+                    for (birdId in birds) {
+                        if (identifier == birdId.child("Identifier").value) {
+                            etIdentifier.error = "Identifier already exists"
+                            identifierExists = true
+                            break
+                        }
+                    }
+                    continuaton.resume(identifierExists)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    continuaton.resume(false)  // Handle onCancelled
+                }
+            })
+        }
+    suspend fun checkLegbandExistence(identifier: String): Boolean =
+        suspendCoroutine { continuaton ->
+
+            val userId = mAuth.currentUser?.uid.toString()
+            val userBirdsRef = dbase.child("Users").child("ID: $userId").child("Birds")
+
+            var identifierExists = false
+
+            userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val birds = snapshot.children
+                    for (birdId in birds) {
+                        if (identifier == birdId.child("Legband").value) {
+                            etLegband.error = "Legband already exists"
+                            identifierExists = true
+                            break
+                        }
+                    }
+                    continuaton.resume(identifierExists)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    continuaton.resume(false)  // Handle onCancelled
+                }
+            })
+        }
+    suspend fun birdDataGetters(callback: (birdId: String, nurseryId: String, newBundle: Bundle, soldId: String, cagebirdKey: String, cagekeyvalue: String) -> Unit) {
+
         val dataDateOfBirth = birthFormattedDate
         /*==++==*/
         val dataSelectedGen: RadioButton
@@ -589,7 +645,6 @@ class BasicFragment : Fragment() {
         val stat = status
 
         val maturingDays = sharedPreferences.getString("maturingValue", "50")
-
 
         /*Uses a function for comparison of visibility layouts*/
         val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
@@ -630,18 +685,22 @@ class BasicFragment : Fragment() {
                     selectedMutations.add(spinnerText)
                     uniqueValues.add(spinnerText)
                 } else {
-                    spinners[i].error = "Error: Duplicate value in spinners"
+                    spinners[i].error = "Duplicate Mutation"
                     // Spinner has a duplicate value, show an error message
                     // You might want to replace this with your own error handling logic
-                    Toast.makeText(context, "Error: Duplicate value in spinners", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Duplicate Mutation",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return  // You can return or break out of the loop, depending on your requirements
                 }
             } else {
                 selectedMutations.add(null)
             }
         }
-        val selectedOption: Int = rgGender.checkedRadioButtonId
 
+        val selectedOption: Int = rgGender.checkedRadioButtonId
         dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
 
         birdData = BirdData(
@@ -685,25 +744,16 @@ class BasicFragment : Fragment() {
         var validDateOfBirth = false
         var validCage = false
         var validforsale = false
+        var valididexist = false
+        var validlegbandexist = false
         //Validation
-        if (TextUtils.isEmpty(dataIdentifier)) {
-            etIdentifier.error = "Identifier cannot be empty"
-        } else {
-            validIdentifier = true
 
-        }
-        
-        if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4== "None" || birdData.mutation5== "None" || birdData.mutation6 == "None" ){
+        if (birdData.mutation1 == "None" || birdData.mutation2 == "None" || birdData.mutation3 == "None" || birdData.mutation4 == "None" || birdData.mutation5 == "None" || birdData.mutation6 == "None") {
             btnMutation1.error = "Mutation must not be empty"
         } else {
             validMutation = true
         }
 
-//        if (TextUtils.isEmpty(dataDateOfBanding)) {
-//            datebandButton.error = "Date of banding must not be empty..."
-//        } else {
-//            validDateOfBanding = true
-//        }
         var ageInDays = 0
         if (TextUtils.isEmpty(dataDateOfBirth)) {
             datebirthButton.error = "Date of birth must not be empty..."
@@ -728,6 +778,36 @@ class BasicFragment : Fragment() {
                 validDateOfBirth = true
             }
         }
+        if (TextUtils.isEmpty(dataIdentifier)) {
+            etIdentifier.error = "Identifier cannot be empty"
+        } else {
+
+            val result = checkIdentifierExistence(dataIdentifier)
+
+            if (result) {
+                etIdentifier.error = "Identifier already exists"
+
+            } else {
+                valididexist = true
+            }
+
+
+        }
+        if (TextUtils.isEmpty(dataLegband)) {
+
+            validlegbandexist = true
+        }
+        else{
+            val result = checkLegbandExistence(dataLegband)
+            if (result) {
+                etLegband.error = "Legband already exists"
+            }
+            else{
+                validlegbandexist = true
+            }
+        }
+
+        Log.d(TAG, "Check isssss " + valididexist)
 
         //soldlayout
         var validSold = false
@@ -747,16 +827,12 @@ class BasicFragment : Fragment() {
         if (forSaleLayout.visibility == View.VISIBLE) {
             if (!TextUtils.isDigitsOnly(etForSaleReqPrice.text)) {
                 etForSaleReqPrice.error = "Enter a valid price..."
-            }
-            else {
+            } else {
                 validforsale = true
             }
         }
 
 
-        if (validDateOfBirth && validMutation && validIdentifier) {
-            validInputs = true
-        }
         //
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -768,7 +844,11 @@ class BasicFragment : Fragment() {
             }!!
             cageBirdKey = cageReference.key.toString()
         }
+        Log.d(TAG, valididexist.toString())
 
+        if (validDateOfBirth && validMutation && valididexist && validlegbandexist) {
+            validInputs = true
+        }
         val userBird = dbase.child("Users").child("ID: $userId").child("Birds")
         val NurseryBird = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
         val SoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
@@ -780,7 +860,6 @@ class BasicFragment : Fragment() {
         val birdId = newBirdPref.key
         val flightKey = newNurseryPref.key
         val args = Bundle()
-
 
         val originFragment = OriginFragment()
         originFragment.arguments = args
@@ -890,7 +969,7 @@ class BasicFragment : Fragment() {
                     "Cage Bird Key" to cageReference.key,
                     "Nursery Key" to flightKey,
                     "Bird Key" to birdId,
-                    "Age" to ageInDays
+                    "Age" to ageInDays,
                 )
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(data)
@@ -928,8 +1007,7 @@ class BasicFragment : Fragment() {
                     }
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
-                }
-                else{
+                } else {
                     return
                 }
             } else if (soldLayout.visibility == View.VISIBLE) {
@@ -1113,7 +1191,8 @@ class BasicFragment : Fragment() {
             args.putString("nurseryId", flightKey)
             Log.d(TAG, birdData.toString())
         } else {
-            Toast.makeText(requireContext(), "Empty Inputs/Invalid Inputs", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Empty Inputs/Invalid Inputs", Toast.LENGTH_SHORT)
+                .show()
         }
 
         Log.d(ContentValues.TAG, "sold id $soldId")

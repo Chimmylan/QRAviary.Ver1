@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.EditActivities
 import BirdData
 import BirdDataListener
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -24,14 +25,16 @@ import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.AddFragment.BasicFragment
 import com.example.qraviaryapp.fragments.AddFragment.EditGalleryFragment
 import com.example.qraviaryapp.fragments.AddFragment.EditOriginFragment
+import com.example.qraviaryapp.fragments.EditFragment.EditBasicFlightFragment
 import com.example.qraviaryapp.fragments.EditFragment.EditBasicFragment
+import com.example.qraviaryapp.fragments.NavFragments.BirdsFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
 
-class EditBirdActivity : AppCompatActivity(), BirdDataListener {
+class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var viewPager: ViewPager
     private lateinit var tablayout: TabLayout
     private lateinit var spinner: Spinner
@@ -203,7 +206,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
 
-        Log.d(TAG, "Hello from EditBirdActivity ")
+        Log.d(TAG, "Hello from EditBirdFlightActivity ")
 
 
 
@@ -215,7 +218,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
 
 
-        val basicFragment = EditBasicFragment()
+        val basicFragment = EditBasicFlightFragment()
         val originFragment = EditOriginFragment()
         val galleryFragment = EditGalleryFragment()
         basicFragment.arguments = newBundle
@@ -265,7 +268,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
             R.id.action_save -> {
 
 
-                val basicFragment = fragmentAdapter.getItem(0) as EditBasicFragment
+                val basicFragment = fragmentAdapter.getItem(0) as EditBasicFlightFragment
                 val originFragment = fragmentAdapter.getItem(1) as EditOriginFragment
                 val galleryFragment = fragmentAdapter.getItem(2) as EditGalleryFragment
 
@@ -290,7 +293,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
                             successBasic = true
                             originFragment.addOirigin(birdId, nurseryId, newBundle, soldId,successBasic)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, newOriginalBundle->
-                                galleryFragment.uploadImageToStorage(birdId,
+                                galleryFragment.FlightuploadImageToStorage(birdId,
                                     nurseryId,
                                     newBundle,
                                     callBackMotherKey,
@@ -302,6 +305,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
                                     soldId,
                                     purchaseId)
                             }
+
                             onBackPressed()
                             finish()
 

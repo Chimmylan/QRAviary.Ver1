@@ -72,17 +72,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 editor.apply()
             }
 
-            "auto_increment_switch" -> {
-                val isChecked = sharedPreferences?.getBoolean(key, true)
-
-                if (isChecked == true) {
-                    editor.putBoolean("Check", true)
-                    editor.apply()
-                } else {
-                    editor.putBoolean("Check", false)
-                    editor.apply()
-                }
-            }
+//            "auto_increment_switch" -> {
+//                val isChecked = sharedPreferences?.getBoolean(key, true)
+//
+//                if (isChecked == true) {
+//                    editor.putBoolean("Check", true)
+//                    editor.apply()
+//                } else {
+//                    editor.putBoolean("Check", false)
+//                    editor.apply()
+//                }
+//            }
             // Handle other preferences if needed
         }
     }

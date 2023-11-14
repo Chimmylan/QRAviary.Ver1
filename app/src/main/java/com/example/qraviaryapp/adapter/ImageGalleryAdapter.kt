@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 
 class ImageGalleryAdapter(private val context: android.content.Context,
@@ -24,7 +25,10 @@ class ImageGalleryAdapter(private val context: android.content.Context,
     override fun onBindViewHolder(holder: MyGalleryHolder, position: Int) {
         val imageLists = imageList[position]
 
-        holder.imgItem.setImageURI(imageLists)
+
+        Glide.with(context)
+            .load(imageLists)
+            .into(holder.imgItem)
 
         holder.delete.setOnClickListener{
             val alertDialog = AlertDialog.Builder(holder.itemView.context)

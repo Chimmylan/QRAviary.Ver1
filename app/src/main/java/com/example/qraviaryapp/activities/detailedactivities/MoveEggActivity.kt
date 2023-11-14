@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -26,14 +27,19 @@ import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 import com.example.qraviaryapp.adapter.MyAlarmReceiver
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class MoveEggActivity : AppCompatActivity() {
     private lateinit var choosecage: MaterialButton
@@ -403,7 +409,27 @@ class MoveEggActivity : AppCompatActivity() {
 
         return true
     }
+    private fun checkIdentifierExistence(identifier: String, callback: (Boolean) -> Unit) {
+        val userId = mAuth.currentUser?.uid.toString()
+        val userBirdsRef = db.child("Users").child("ID: $userId").child("Birds")
 
+        userBirdsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val birds = snapshot.children
+                for (birdId in birds) {
+                    if (identifier == birdId.child("Identifier").value) {
+                        etIdentifier.error = "Identifier already exists"
+                        callback(true)
+                    }
+                }
+                callback(false)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle onCancelled event
+            }
+        })
+    }
     fun saveNursery(){
         val birdRef = db.child("Users").child("ID: $currentUserId").child("Birds")
         val newPrefBird = birdRef.push()
@@ -412,15 +438,38 @@ class MoveEggActivity : AppCompatActivity() {
         val selectedOption: Int = rgGender.checkedRadioButtonId
         val dataSelectedGen = findViewById<RadioButton>(selectedOption)!!
 
+        if (TextUtils.isEmpty(etIdentifier.text.toString())) {
+            etIdentifier.error = "Identifier cannot be empty"
+        } else {
+            checkIdentifierExistence(etIdentifier.text.toString()) { identifierExists ->
+                if (identifierExists) {
+                    etIdentifier.error = "Identifier already exists"
+                }
+            }
+        }
 
         val selectedMutations = mutableListOf<String?>()
         val spinners = arrayOf(
             btnMutation1, btnMutation2, btnMutation3, btnMutation4, btnMutation5, btnMutation6
         )
 
+
+        val uniqueValues = HashSet<String>()
+
         for (i in spinners.indices) {
             if (spinners[i].visibility == View.VISIBLE) {
-                selectedMutations.add(spinners[i].text.toString())
+                val spinnerText = spinners[i].text.toString()
+
+                if (spinnerText !in uniqueValues) {
+                    selectedMutations.add(spinnerText)
+                    uniqueValues.add(spinnerText)
+                } else {
+                    spinners[i].error = "Duplicate Mutations"
+                    // Spinner has a duplicate value, show an error message
+                    // You might want to replace this with your own error handling logic
+                    Toast.makeText(this, "Duplicate Mutations", Toast.LENGTH_SHORT).show()
+                    return  // You can return or break out of the loop, depending on your requirements
+                }
             } else {
                 selectedMutations.add(null)
             }
@@ -434,7 +483,11 @@ class MoveEggActivity : AppCompatActivity() {
             mutation5 = selectedMutations[4],
             mutation6 = selectedMutations[5],
         )
+        if (birds.mutation1 == "None" || birds.mutation2 == "None" || birds.mutation3 == "None" || birds.mutation4== "None" || birds.mutation5== "None" || birds.mutation6 == "None" ){
+            btnMutation1.error = "Mutation must not be empty"
 
+            return
+        }
 
 
         //toDeleteRef
@@ -454,6 +507,7 @@ class MoveEggActivity : AppCompatActivity() {
             .child(pairBirdFemaleKey).child("Descendants").push()
         val nurseryRef = db.child("Users").child("ID: $currentUserId").child("Nursery Birds")
             .push()
+
 
         val descendantscagefather = db.child("Users").child("ID: $currentUserId").child("Cages")
             .child("Flight Cages").child(pairCageBirdMale.toString()).child("Birds").child(pairCageKeyMale).child("Descendants").push()

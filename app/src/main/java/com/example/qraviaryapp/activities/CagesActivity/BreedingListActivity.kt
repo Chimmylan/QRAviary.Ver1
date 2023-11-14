@@ -346,6 +346,8 @@ class BreedingListActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
     override fun onResume() {
         super.onResume()
 

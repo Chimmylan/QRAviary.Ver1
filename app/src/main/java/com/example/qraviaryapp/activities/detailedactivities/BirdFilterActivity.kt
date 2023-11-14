@@ -2,7 +2,10 @@ package com.example.qraviaryapp.activities.detailedactivities
 
 import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -63,6 +66,9 @@ class BirdFilterActivity : AppCompatActivity() {
     private lateinit var removeBtn: Button
     private lateinit var categoryCheckboxes: List<CheckBox>
     private lateinit var genderCheckboxes: List<CheckBox>
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -75,18 +81,19 @@ class BirdFilterActivity : AppCompatActivity() {
         supportActionBar?.setBackgroundDrawable(
             ColorDrawable(
                 ContextCompat.getColor(
-                    this,
-                    R.color.toolbarcolor
+                    this, R.color.toolbarcolor
                 )
             )
         )
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Birds Filters </font>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
+            "<font color='$abcolortitle'>Birds Filters </font>", HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
+        sharedPreferences = getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
 
 //        btnMutation1 = findViewById(R.id.btnmutation1)
 //        btnMutation2 = findViewById(R.id.btnmutation2)
@@ -142,15 +149,7 @@ class BirdFilterActivity : AppCompatActivity() {
         )
 
         categoryCheckboxes = listOf(
-            cbAvail,
-            cbPaired,
-            cbForSale,
-            cbSold,
-            cbDeceased,
-            cbExchange,
-            cbLost,
-            cbDonated,
-            cbOther
+            cbAvail, cbPaired, cbForSale, cbSold, cbDeceased, cbExchange, cbLost, cbDonated, cbOther
         )
 
 
@@ -171,36 +170,59 @@ class BirdFilterActivity : AppCompatActivity() {
 
                 val i = Intent()
                 // Handle the click event for your menu item here
-                // You can add your logic here.
+
+                // Save category checkboxes state
                 categoryCheckboxes.forEach { checkBox ->
-                    selectedStatus =
-                        categoryCheckboxes.filter { it.isChecked }.map { it.text.toString() }
-                            .toSet()
+                    val checkboxKey = "category_${checkBox.text}"
+                    val isChecked = checkBox.isChecked
+                    if (isChecked){
+                        editor.putString(checkboxKey, checkBox.text.toString())
+                    }
                 }
+
+// Save gender checkboxes state
                 genderCheckboxes.forEach { checkBox ->
-                    selectedGender =
-                        genderCheckboxes.filter { it.isChecked }.map { it.text.toString() }
-                            .toSet()
-                }
-                val selectedStatusList = selectedStatus?.toList()
-                val selectedGenderList = selectedGender?.toList()
-
-                Log.d(TAG, selectedStatusList.toString())
-
-                if (youngest.isChecked){
-                    selectedSort = "Youngest"
-                }else if (oldest.isChecked){
-                    selectedSort = "Oldest"
-                }else if (id.isChecked){
-                    selectedSort = "Id"
-
+                    val checkboxKey = "gender_${checkBox.text}"
+                    val isChecked = checkBox.isChecked
+                    if (isChecked){
+                        editor.putString(checkboxKey, checkBox.text.toString())
+                    }
                 }
 
-                i.putStringArrayListExtra("selectedStatusList",
-                    selectedStatusList?.let { ArrayList(it) })
-                i.putStringArrayListExtra("selectedGenderList",
-                    selectedGenderList?.let { ArrayList(it) })
-                i.putExtra("selectedSort", selectedSort)
+// Apply changes to SharedPreferences
+                editor.apply()
+
+
+                // You can add your logic here.
+//                categoryCheckboxes.forEach { checkBox ->
+//                    selectedStatus =
+//                        categoryCheckboxes.filter { it.isChecked }.map { it.text.toString() }
+//                            .toSet()
+//                }
+//                genderCheckboxes.forEach { checkBox ->
+//                    selectedGender =
+//                        genderCheckboxes.filter { it.isChecked }.map { it.text.toString() }
+//                            .toSet()
+//                }
+//                val selectedStatusList = selectedStatus?.toList()
+//                val selectedGenderList = selectedGender?.toList()
+//
+//                Log.d(TAG, selectedStatusList.toString())
+//
+//                if (youngest.isChecked){
+//                    selectedSort = "Youngest"
+//                }else if (oldest.isChecked){
+//                    selectedSort = "Oldest"
+//                }else if (id.isChecked){
+//                    selectedSort = "Id"
+//
+//                }
+//
+//                i.putStringArrayListExtra("selectedStatusList",
+//                    selectedStatusList?.let { ArrayList(it) })
+//                i.putStringArrayListExtra("selectedGenderList",
+//                    selectedGenderList?.let { ArrayList(it) })
+//                i.putExtra("selectedSort", selectedSort)
 
 
                 setResult(Activity.RESULT_OK, i)

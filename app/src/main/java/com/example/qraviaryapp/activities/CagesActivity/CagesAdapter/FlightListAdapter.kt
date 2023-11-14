@@ -23,7 +23,13 @@ class FlightListAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
-
+    fun getHeaderForPosition(position: Int): String {
+        if (position < 0 || position >= dataList.size) {
+            return ""
+        }
+        // Assuming dataList is sorted by mutation name
+        return dataList[position].month?.substring(0, 4) ?: ""
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_flightlist, parent, false)
 

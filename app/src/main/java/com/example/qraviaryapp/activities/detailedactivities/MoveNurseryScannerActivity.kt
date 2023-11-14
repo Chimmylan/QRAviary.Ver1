@@ -109,9 +109,10 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
             db.child("Users").child("ID: $userId").child("Nursery Birds")
                 .child(nurseryKey.toString())
 
-
+        nurseryref.child("Nursery Key").removeValue()
         nurseryref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+
 
                 dataToCopy = snapshot.value!!
 

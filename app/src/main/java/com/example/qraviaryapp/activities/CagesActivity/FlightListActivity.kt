@@ -20,17 +20,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.FlightListAdapter
 import com.example.qraviaryapp.activities.detailedactivities.QRCodeActivity
+import com.example.qraviaryapp.adapter.BirdListAdapter
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
+import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationflight
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class FlightListActivity : AppCompatActivity() {
     private lateinit var CageKey: String
@@ -67,12 +73,16 @@ class FlightListActivity : AppCompatActivity() {
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         recyclerView = findViewById(R.id.recyclerView_bird_list)
-        val gridLayoutManager = GridLayoutManager(this, 1)
-        recyclerView.layoutManager = gridLayoutManager
+//        val gridLayoutManager = GridLayoutManager(this, 1)
+//        recyclerView.layoutManager = gridLayoutManager
+//        dataList = ArrayList()
+//        adapter = FlightListAdapter(this, dataList)
+//        recyclerView.adapter = adapter
         dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = FlightListAdapter(this, dataList)
         recyclerView.adapter = adapter
-
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationflight(adapter))
         CageName = intent?.getStringExtra("CageName").toString()
         CageKey = intent?.getStringExtra("CageKey").toString()
         val abcolortitle = resources.getColor(R.color.appbar)
@@ -238,6 +248,7 @@ class FlightListActivity : AppCompatActivity() {
                 data.gender = gender
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
+                data.month = extractYearFromDate(dateOfBirth)
                 data.status = status
                 data.mutation1 = mutation1Value
                 data.mutation2 = mutation2Value
@@ -288,11 +299,14 @@ class FlightListActivity : AppCompatActivity() {
             totalBirds.text = dataList.count().toString() + " Bird"
         }
 
-
+        dataList.sortByDescending { it.month }
         dataList
 
     }
-
+    private fun extractYearFromDate(dateString: String): String {
+        val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
+        return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
+    }
     override fun onResume() {
         super.onResume()
 

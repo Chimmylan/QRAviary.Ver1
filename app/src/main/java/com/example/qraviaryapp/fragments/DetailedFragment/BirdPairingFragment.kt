@@ -85,8 +85,7 @@ class BirdPairingFragment : Fragment() {
         return view
     }
 
-    private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO)
-    {
+    private suspend fun getDataFromDatabase(): List<BirdData> = withContext(Dispatchers.IO) {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}").child("Birds")
@@ -98,7 +97,7 @@ class BirdPairingFragment : Fragment() {
             for (itemSnapshot in newRef.children) {
                 val data = itemSnapshot.getValue(BirdData::class.java)
 
-                var pairKey = itemSnapshot.child("Bird Key").value.toString()
+                val pairKey = itemSnapshot.child("Bird Key").value.toString()
                 val Key = itemSnapshot.key
                 if (data != null) {
                     data.birdKey = pairKey

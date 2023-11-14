@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
@@ -13,6 +14,7 @@ import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.ArraySet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -53,7 +55,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class BirdsFragment : Fragment() {
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
@@ -61,13 +62,17 @@ class BirdsFragment : Fragment() {
     private lateinit var adapter: BirdListAdapter
     private lateinit var fab: FloatingActionButton
     private lateinit var totalBirds: TextView
-
+    private var status = ArraySet<String>()
     private var birdCount = 0
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var loadingProgressBar: ProgressBar
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,13 +96,17 @@ class BirdsFragment : Fragment() {
 //        dataList = ArrayList()
 //        adapter = BirdListAdapter(requireContext(), dataList)
 //        recyclerView.adapter = adapter
-            dataList = ArrayList()
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            adapter = BirdListAdapter(requireContext(), dataList)
-            recyclerView.adapter = adapter
-            recyclerView.addItemDecoration(StickyHeaderItemDecorationbirdlist(adapter))
+        dataList = ArrayList()
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = BirdListAdapter(requireContext(), dataList)
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(StickyHeaderItemDecorationbirdlist(adapter))
         mAuth = FirebaseAuth.getInstance()
 
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
 
 
         lifecycleScope.launch {
@@ -263,6 +272,7 @@ class BirdsFragment : Fragment() {
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value
                 val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
                 val motherKeyValue = itemSnapshot.child("Parents").child("MotherKey").value
+                val nurseryType = itemSnapshot.child("Nursery Key").value.toString()
                 /*==++==*/
                 val legband = LegbandValue.toString() ?: ""
                 val identifier = identifierValue.toString() ?: ""
@@ -296,6 +306,8 @@ class BirdsFragment : Fragment() {
 
                 birdCount++
 //                data.bitmap = image
+                data.nurseryType = nurseryType
+                data.flightType = flightKey
                 data.cageKey = cageKey.toString()
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
@@ -372,10 +384,12 @@ class BirdsFragment : Fragment() {
         val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
         return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
     }
+
     private fun extractYearFromDate(dateString: String): String {
         val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
         return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
     }
+
     fun getUrlImage(urlString: String): Bitmap? {
         var inputStream: InputStream? = null
         var bitmap: Bitmap? = null
@@ -444,21 +458,60 @@ class BirdsFragment : Fragment() {
         val receivedStatusSet = selectedStatusList?.toSet() ?: emptySet()
         val receivedGenderSet = selectedGenderList?.toSet() ?: emptySet()
 
+
+        //sharedpref
+
+
+        //category
+        val paired = sharedPreferences.getString("category_Paired", "Paired")
+        val forSale = sharedPreferences.getString("category_For Sale", "For Sale")
+        val deceased = sharedPreferences.getString("category_Deceased", "")
+        val lost = sharedPreferences.getString("category_Lost", "")
+        val sold = sharedPreferences.getString("category_Sold", "")
+        val exchange = sharedPreferences.getString("category_Exchanged", "")
+        val available = sharedPreferences.getString("category_Available", "Available")
+        val donated = sharedPreferences.getString("category_Donated", "")
+        val other = sharedPreferences.getString("category_Other", "")
+
+        //gender
+        val unknown = sharedPreferences.getString("category_Unknown", "Unknown")
+        val male = sharedPreferences.getString("gender_Male", "Male")
+        val female = sharedPreferences.getString("gender_Female", "Female")
+
+        val categoryFilters: Set<String> = setOf(
+            paired,
+            forSale,
+            deceased,
+            lost,
+            sold,
+            exchange,
+            available,
+            donated,
+            other
+        ).filter { it?.isNotBlank()!! }.toSet() as Set<String>
+
+        val genderFilters: Set<String> = setOf(
+            unknown,
+            male,
+            female
+        ).filter { it?.isNotEmpty()!! }.toSet() as Set<String>
+
+
         reloadDataFromDatabase()
 
         var filteredData: Map<String, Set<String>> = mapOf(
-            "status" to receivedStatusSet,
-            "gender" to receivedGenderSet
+            "status" to categoryFilters,
+            "gender" to genderFilters
         )
 
-        Log.d(TAG,filteredData.toString())
+        Log.d(TAG, filteredData.toString())
 
-        if (receivedStatusSet.isNotEmpty() && receivedGenderSet.isNotEmpty()){
+
             adapter.filterData(filteredData)
-            if (selectedSortBy != null) {
-                adapter.filterAge(selectedSortBy)
-            }
-        }
+
+//                adapter.filterAge(selectedSortBy)
+
+
 
 
     }
@@ -479,5 +532,6 @@ class BirdsFragment : Fragment() {
 
                 loadingProgressBar.visibility = View.GONE
             }
-        }}
+        }
+    }
 }

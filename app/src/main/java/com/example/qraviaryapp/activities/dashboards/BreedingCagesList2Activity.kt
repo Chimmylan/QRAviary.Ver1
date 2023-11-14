@@ -379,12 +379,16 @@ class BreedingCagesList2Activity : AppCompatActivity(){
         val snapshot = db.get().await()
         for (itemSnapshot in snapshot.children) {
             val data = itemSnapshot.getValue(CageData::class.java)
+            val birds = itemSnapshot.child("Pair Birds")
             if (data != null) {
 
 
-                val birds = itemSnapshot.child("Pair Birds")
                 for (birdSnapshot in birds.children){
+                    val malemutation =  birdSnapshot.child("Male Mutation").value.toString()
+                    val femalemutation =  birdSnapshot.child("Male Mutation").value.toString()
 
+                    data.cagemalemutation = malemutation
+                    data.cagefemalemutation = femalemutation
                     val pairCount = birds.childrenCount
                     val birdsCount = pairCount * 2
                     data.cagePairBirdCount = pairCount.toString()

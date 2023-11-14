@@ -47,7 +47,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/loginpurple"
+                                android:backgroundTint="@color/toolbarcolor"
                                 android:text="Generate QR"
                                 android:textColor="@color/appbar"
                                 android:textSize="10sp"
