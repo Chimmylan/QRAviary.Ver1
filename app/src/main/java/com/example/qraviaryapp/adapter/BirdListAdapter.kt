@@ -164,7 +164,7 @@ class BirdListAdapter(
         }
     }
 
-    fun filterData(selectedAttributes: Map<String, Set<String>>) {
+    fun filterData(selectedAttributes: Map<String, Set<String>>, age: String) {
 
         val filteredList = originalList.filter { item ->
             selectedAttributes.all { (attribute, selectedValues) ->
@@ -177,17 +177,14 @@ class BirdListAdapter(
                 }
             }
         }
-        val age = true
-        if (age){
-            filteredList.sortedByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
-        }
-        setData(filteredList.toMutableList())
+        setData(filteredList.toMutableList(), age)
     }
 
 
-    private fun setData(newData: MutableList<BirdData>){
+    private fun setData(newData: MutableList<BirdData>, age: String){
         dataList.clear()
         dataList = newData
+        filterAge(age)
         notifyDataSetChanged()
     }
 
@@ -195,14 +192,18 @@ class BirdListAdapter(
         val string = "id"
         if (age == "Youngest"){
             dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+        Log.d(TAG, "Youngest")
         }else if (age == "Oldest"){
-            dataList.sortBy { it.month }
+            dataList.sortBy { it.dateOfBirth }
+            Log.d(TAG, "Oldest")
+
         }
         else{
             dataList.sortBy { it.identifier }
+            Log.d(TAG, "Id")
+
         }
 
-        notifyDataSetChanged()
     }
 
 }

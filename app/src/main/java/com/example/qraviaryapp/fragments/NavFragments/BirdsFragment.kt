@@ -26,7 +26,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -34,8 +33,6 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddBirdActivity
 import com.example.qraviaryapp.activities.AddActivities.AddBirdFlightActivity
 import com.example.qraviaryapp.adapter.BirdListAdapter
-import com.example.qraviaryapp.adapter.HomeGenesAdapter
-import com.example.qraviaryapp.adapter.StickyHeaderItemDecoration
 import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -44,10 +41,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -316,7 +313,6 @@ class BirdsFragment : Fragment() {
                 data.legband = legband
                 data.identifier = identifier
                 data.gender = gender
-                data.gender = gender
                 data.dateOfBanding = dateOfBanding
                 data.dateOfBirth = dateOfBirth
                 data.year = extractYearFromDateString(dateOfBirth)
@@ -373,7 +369,6 @@ class BirdsFragment : Fragment() {
         }
 
         dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
-
         dataList
 
 
@@ -451,32 +446,76 @@ class BirdsFragment : Fragment() {
         super.onResume()
 
         // Call a function to reload data from the database and update the RecyclerView
-        val selectedStatusList = arguments?.getStringArrayList("selectedStatusList")
-        val selectedGenderList = arguments?.getStringArrayList("selectedGenderList")
-        val selectedSortBy = arguments?.getString("selectedSort")
-        Log.d(TAG, selectedStatusList.toString())
-        val receivedStatusSet = selectedStatusList?.toSet() ?: emptySet()
-        val receivedGenderSet = selectedGenderList?.toSet() ?: emptySet()
-
 
         //sharedpref
 
 
         //category
-        val paired = sharedPreferences.getString("category_Paired", "Paired")
-        val forSale = sharedPreferences.getString("category_For Sale", "For Sale")
+        reloadDataFromDatabase()
+
+//                adapter.filterAge(selectedSortBy)
+
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                filterdata()
+
+                adapter.notifyDataSetChanged()
+
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    fun filterdata(){
+
+        val sharedPreferencesFileName = "BirdFilter"
+        val sharedPreferencesFile = File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
+
+
+        if (!sharedPreferencesFile.exists()){
+            editor.putString("category_Available", "Available")
+            editor.putString("category_For Sale", "For Sale")
+            editor.putString("category_Paired", "Paired")
+            editor.putString("gender_Unknown", "Unknown")
+            editor.putString("category_Male", "Male")
+            editor.putString("category_Female", "Female")
+            editor.putString("sort", "Youngest")
+            editor.apply()
+        }
+
+        val paired = sharedPreferences.getString("category_Paired", "")
+        val forSale = sharedPreferences.getString("category_For Sale", "")
         val deceased = sharedPreferences.getString("category_Deceased", "")
         val lost = sharedPreferences.getString("category_Lost", "")
         val sold = sharedPreferences.getString("category_Sold", "")
         val exchange = sharedPreferences.getString("category_Exchanged", "")
-        val available = sharedPreferences.getString("category_Available", "Available")
+        val available = sharedPreferences.getString("category_Available", "")
         val donated = sharedPreferences.getString("category_Donated", "")
         val other = sharedPreferences.getString("category_Other", "")
 
         //gender
-        val unknown = sharedPreferences.getString("category_Unknown", "Unknown")
-        val male = sharedPreferences.getString("gender_Male", "Male")
-        val female = sharedPreferences.getString("gender_Female", "Female")
+        val unknown = sharedPreferences.getString("gender_Unknown", "")
+        val male = sharedPreferences.getString("gender_Male", "")
+        val female = sharedPreferences.getString("gender_Female", "")
+
+        //age
+
+        val sort = sharedPreferences.getString("Sort","Youngest")
+
 
         val categoryFilters: Set<String> = setOf(
             paired,
@@ -496,9 +535,6 @@ class BirdsFragment : Fragment() {
             female
         ).filter { it?.isNotEmpty()!! }.toSet() as Set<String>
 
-
-        reloadDataFromDatabase()
-
         var filteredData: Map<String, Set<String>> = mapOf(
             "status" to categoryFilters,
             "gender" to genderFilters
@@ -507,31 +543,8 @@ class BirdsFragment : Fragment() {
         Log.d(TAG, filteredData.toString())
 
 
-            adapter.filterData(filteredData)
-
-//                adapter.filterAge(selectedSortBy)
-
-
-
-
-    }
-
-    private fun reloadDataFromDatabase() {
-        loadingProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-
-                val data = getDataFromDatabase()
-                dataList.clear()
-                dataList.addAll(data)
-
-                adapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-            } finally {
-
-                loadingProgressBar.visibility = View.GONE
-            }
+        if (sort != null) {
+            adapter.filterData(filteredData, sort)
         }
     }
 }

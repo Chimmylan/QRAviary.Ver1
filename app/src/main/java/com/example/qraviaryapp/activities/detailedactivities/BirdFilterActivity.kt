@@ -128,19 +128,41 @@ class BirdFilterActivity : AppCompatActivity() {
         cbOther = findViewById(R.id.cbOther)
 
 
-        youngest.isChecked = true
-        cbMale.isChecked = true
-        cbFemale.isChecked = true
-        cbUnknown.isChecked = true
-        cbAvail.isChecked = true
-        cbPaired.isChecked = true
-        cbForSale.isChecked = true
-        cbSold.isChecked = false
-        cbDeceased.isChecked = false
-        cbExchange.isChecked = false
-        cbLost.isChecked = false
-        cbDonated.isChecked = false
-        cbOther.isChecked = false
+        if (sharedPreferences.getString("Sort", "") == "Youngest") {
+            youngest.isChecked = true
+        } else if (sharedPreferences.getString("Sort", "") == "Oldest") {
+            oldest.isChecked = true
+        } else if (sharedPreferences.getString("Sort", "") == "Id") {
+            id.isChecked = true
+        }
+
+
+        cbMale.isChecked = sharedPreferences.contains("gender_Male")
+
+        cbFemale.isChecked = sharedPreferences.contains("gender_Female")
+
+        cbUnknown.isChecked = sharedPreferences.contains("gender_Unknown")
+
+        cbAvail.isChecked = sharedPreferences.contains("category_Available")
+
+        cbPaired.isChecked = sharedPreferences.contains("category_Paired")
+
+        cbForSale.isChecked = sharedPreferences.contains("category_For Sale")
+
+        cbSold.isChecked = sharedPreferences.contains("category_Sold")
+
+        cbDeceased.isChecked = sharedPreferences.contains("category_Deceased")
+
+        cbExchange.isChecked = sharedPreferences.contains("category_Exchanged")
+
+        cbLost.isChecked = sharedPreferences.contains("category_Lost")
+
+        cbDonated.isChecked = sharedPreferences.contains("category_Donated")
+
+        cbOther.isChecked = sharedPreferences.contains("category_Other")
+
+
+
 
         genderCheckboxes = listOf(
             cbMale,
@@ -164,9 +186,6 @@ class BirdFilterActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.ic_done -> {
-                var selectedStatus: Set<String>? = null
-                var selectedGender: Set<String>? = null
-                var selectedSort: String? = null
 
                 val i = Intent()
                 // Handle the click event for your menu item here
@@ -175,8 +194,10 @@ class BirdFilterActivity : AppCompatActivity() {
                 categoryCheckboxes.forEach { checkBox ->
                     val checkboxKey = "category_${checkBox.text}"
                     val isChecked = checkBox.isChecked
-                    if (isChecked){
+                    if (isChecked) {
                         editor.putString(checkboxKey, checkBox.text.toString())
+                    } else {
+                        editor.remove(checkboxKey)
                     }
                 }
 
@@ -184,10 +205,23 @@ class BirdFilterActivity : AppCompatActivity() {
                 genderCheckboxes.forEach { checkBox ->
                     val checkboxKey = "gender_${checkBox.text}"
                     val isChecked = checkBox.isChecked
-                    if (isChecked){
+                    if (isChecked) {
                         editor.putString(checkboxKey, checkBox.text.toString())
+                    } else {
+                        editor.remove(checkboxKey)
                     }
                 }
+
+
+                if (youngest.isChecked) {
+                    editor.putString("Sort", "Youngest")
+                } else if (oldest.isChecked) {
+                    editor.putString("Sort", "Oldest")
+                } else if (id.isChecked) {
+                    editor.putString("Sort", "Id")
+
+                }
+
 
 // Apply changes to SharedPreferences
                 editor.apply()
@@ -209,14 +243,7 @@ class BirdFilterActivity : AppCompatActivity() {
 //
 //                Log.d(TAG, selectedStatusList.toString())
 //
-//                if (youngest.isChecked){
-//                    selectedSort = "Youngest"
-//                }else if (oldest.isChecked){
-//                    selectedSort = "Oldest"
-//                }else if (id.isChecked){
-//                    selectedSort = "Id"
-//
-//                }
+
 //
 //                i.putStringArrayListExtra("selectedStatusList",
 //                    selectedStatusList?.let { ArrayList(it) })
@@ -235,8 +262,29 @@ class BirdFilterActivity : AppCompatActivity() {
                 return true
             }
             R.id.ic_erase -> {
-                // Handle the click event for your menu item here
-                // You can add your logic here.
+                cbMale.isChecked = false
+
+                cbFemale.isChecked = false
+
+                cbUnknown.isChecked = false
+
+                cbAvail.isChecked = false
+
+                cbPaired.isChecked = false
+
+                cbForSale.isChecked = false
+
+                cbSold.isChecked = false
+
+                cbDeceased.isChecked = false
+
+                cbExchange.isChecked = false
+
+                cbLost.isChecked = false
+
+                cbDonated.isChecked = false
+
+                cbOther.isChecked = false
                 return true
             }
             android.R.id.home -> {
