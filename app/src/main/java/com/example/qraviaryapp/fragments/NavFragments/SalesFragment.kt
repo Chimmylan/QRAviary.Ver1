@@ -2,6 +2,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -56,6 +57,10 @@ class SalesFragment : Fragment() {
     private var birdCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var loadingProgressBar: ProgressBar
+
+    private var toDate:String? = null
+    private var fromDate:String? = null
+    private var buyer:String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +69,8 @@ class SalesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sales, container, false)
         totalBirds = view.findViewById(R.id.tvBirdCount)
         flightKey = arguments?.getString("FlightKey")
+
+
         mAuth = FirebaseAuth.getInstance()
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -314,6 +321,10 @@ class SalesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        toDate = arguments?.getString("ToDate")
+        fromDate = arguments?.getString("FromDate")
+        buyer = arguments?.getString("Buyer")
+
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
 
@@ -327,7 +338,7 @@ class SalesFragment : Fragment() {
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
-
+                filterData()
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -337,4 +348,10 @@ class SalesFragment : Fragment() {
             }
         }}
 
+    private fun filterData(){
+
+        Log.d(TAG, fromDate.toString())
+        Log.d(TAG, toDate.toString())
+        adapter.filterDataRange(fromDate.toString(),toDate.toString())
+    }
 }

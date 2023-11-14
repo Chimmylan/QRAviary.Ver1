@@ -1,9 +1,11 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Expenses.SalesChartFragment
+import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -23,10 +26,12 @@ class NavSalesFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tablayout: TabLayout
     private lateinit var fragmentAdapter: FragmentAdapter
+
     //    private lateinit var dataList: ArrayList<ExpensesData>
 //    private lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
+
     //    private lateinit var adapter: ExpensesAdapter
 //    private lateinit var fab: FloatingActionButton
     private lateinit var snackbar: Snackbar
@@ -34,6 +39,14 @@ class NavSalesFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
+
+    private var toDate: String? = null
+    private var fromDate: String? = null
+    private var buyer: String? = null
+
+    private lateinit var expensesFragment: SalesFragment
+    private lateinit var salesChartFragment: SalesChartFragment
+    private var bundle = Bundle()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,20 +84,41 @@ class NavSalesFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
         fragmentAdapter = FragmentAdapter(childFragmentManager)
-        val expensesFragment = SalesFragment()
-        val chartFragment = SalesChartFragment()
+        expensesFragment = SalesFragment()
+        salesChartFragment = SalesChartFragment()
         viewPager = view.findViewById(R.id.viewPager)
         tablayout = view.findViewById(R.id.tablayout)
 
+
+
         fragmentAdapter.addFragment(expensesFragment, "SALES")
-        fragmentAdapter.addFragment(chartFragment, "CHART")
+        fragmentAdapter.addFragment(salesChartFragment, "CHART")
         viewPager.adapter = fragmentAdapter
         tablayout.setupWithViewPager(viewPager)
         return view
     }
+
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        fromDate = arguments?.getString("FromDate")
+        toDate = arguments?.getString("ToDate")
+        buyer = arguments?.getString("Buyer")
+
+
+        Log.d(TAG,"NAVSALES" + fromDate.toString())
+
+        bundle.putString("FromDate", fromDate)
+        bundle.putString("ToDate", toDate)
+        bundle.putString("Buyer", buyer)
+
+        expensesFragment.arguments = bundle
+
     }
 
 }
