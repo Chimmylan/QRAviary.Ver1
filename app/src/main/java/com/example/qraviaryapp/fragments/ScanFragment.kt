@@ -1,10 +1,14 @@
 package com.example.qraviaryapp.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,8 +41,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,6 +73,7 @@ class ScanFragment : Fragment() {
     private lateinit var gsc: GoogleSignInClient
     private lateinit var generate: MaterialButton
     private lateinit var options: TextView
+    private lateinit var uploadqr: MaterialButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -82,31 +94,14 @@ class ScanFragment : Fragment() {
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(requireActivity(), gso)
         generate = view.findViewById(R.id.GenerateQR)
-
+        uploadqr = view.findViewById(R.id.UploadQR)
         generate.setOnClickListener {
             startActivity(Intent(requireContext(), GenerateQrActivity::class.java))
         }
-//
 
-//        addmanually.setOnClickListener {
-//            showPopupDialog()
-//        }
         return view
     }
 
-    private fun showLogoutConfirmationDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Logout")
-        builder.setMessage("Are you sure you want to logout?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            signOut()
-        }
-        builder.setNegativeButton("No") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
 
     fun signOut() {
         mAuth.signOut()
@@ -116,30 +111,7 @@ class ScanFragment : Fragment() {
         }
     }
 
-    private fun showCageAddDialog() {
-        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val inflater = layoutInflater
-        val popUp = inflater.inflate(R.layout.dialog_addbird_option, null)
-        val btnNursery = popUp.findViewById<MaterialButton>(R.id.btnNursery)
-        val btnFlight = popUp.findViewById<MaterialButton>(R.id.btnFlight)
 
-        btnNursery.setOnClickListener {
-            val i = Intent(requireContext(), AddBirdActivity::class.java)
-            startActivity(i)
-        }
-        btnFlight.setOnClickListener {
-            val i = Intent(requireContext(), AddBirdFlightActivity::class.java)
-            startActivity(i)
-        }
-
-        builder.setTitle("Add Bird Selection")
-        builder.setView(popUp)
-        val alertDialog = builder.create()
-
-
-        alertDialog.show()
-
-    }
 
     private lateinit var codeScanner: CodeScanner
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -169,10 +141,89 @@ class ScanFragment : Fragment() {
             }
         }
 
+        uploadqr.setOnClickListener {
+            openGalleryForImage()
+        }
+
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
     }
+
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                // Handle the selected image URI
+                decodeQRCodeFromGallery(uri)
+            }
+        }
+    }
+    private fun decodeQRCodeFromGallery(imageUri: Uri) {
+        try {
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
+            if (bitmap != null) {
+                val result = decodeQRCode(bitmap)
+                if (result != null) {
+                    handleDecodedQRCode(result)
+                } else {
+                    showToast("Failed to decode QR code. Result is null.")
+                }
+            } else {
+                showToast("Failed to load image from gallery. Bitmap is null.")
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showToast("Error loading image from gallery: ${e.message}")
+        }
+
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+
+
+    private fun decodeQRCode(bitmap: Bitmap): String? {
+        try {
+            val multiFormatReader = MultiFormatReader()
+            val hints = mapOf(DecodeHintType.TRY_HARDER to true)
+            Log.d(TAG, "Bitmap dimensions: ${bitmap.width} x ${bitmap.height}")
+
+            val luminanceSource = RGBLuminanceSource(bitmap.width, bitmap.height, IntArray(bitmap.width * bitmap.height))
+            val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
+
+            return multiFormatReader.decodeWithState(binaryBitmap).text
+        } catch (e: NotFoundException) {
+            e.printStackTrace()
+            Log.e(TAG, "QR code not found: ${e.message}")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Error decoding QR code: ${e.message}")
+        }
+        return null
+    }
+
+
+    private fun handleDecodedQRCode(result: String) {
+        Log.d(TAG, "Decoded QR Code Result: $result")
+        // Implement the logic to handle the decoded QR code result
+        // You can use your existing methods like eggClutchesScanner, breedinCageScanner, etc.
+        eggClutchesScanner(result)
+        breedinCageScanner(result)
+        flightCageScanner(result)
+        nurseryCageScanner(result)
+        pairScanner(result)
+        clutchesScanner(result)
+        detailedBirdScanner(result)
+    }
+
 
     fun breedinCageScanner(string: String) {
         try {
@@ -519,6 +570,7 @@ class ScanFragment : Fragment() {
     }
 
     companion object {
+        private const val GALLERY_REQUEST_CODE = 1
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
