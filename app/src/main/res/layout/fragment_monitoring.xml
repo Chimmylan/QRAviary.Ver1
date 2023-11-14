@@ -44,10 +44,9 @@
             android:id="@+id/text_view_progress"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center"
-            android:text="25°C" />
+            android:text="00°C" />
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/CircularDeterminateProgressBar"
@@ -55,7 +54,8 @@
         android:padding="20dp"
         android:backgroundTint="@color/loginpurple"
         android:layout_height="150dp"
-        android:progress="25" />
+        android:max="56"
+        android:progress="00" />
 
 
 
@@ -72,7 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp"
-        android:progress="60" />
+        android:max="100"
+        android:progress="00" />
 
     <TextView
         android:id="@+id/text_view_progress2"
@@ -80,7 +81,7 @@
         android:layout_height="match_parent"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:gravity="center"
-        android:text="60%" />
+        android:text="00%" />
 
 
     </androidx.cardview.widget.CardView>
@@ -95,38 +96,45 @@
             android:id="@+id/temperature_text_view"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:gravity="center"
             android:layout_height="match_parent"
-            android:text="Temperature: 25°C"
+            android:text="Temperature"
             />
+
         <TextView
             android:id="@+id/humidity_text_view"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="25sp"
             android:layout_height="match_parent"
-            android:text="Humidity: 60%"
+            android:text="Humidity"
             />
     </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:layout_width="match_parent"
-        android:id="@+id/fan"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:buttonTint="@color/itemimagebg"
-        android:checked="true"
-        android:textColor="@color/black_white"
-        android:textStyle="bold"
-        android:text="FAN">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:orientation="vertical">
 
-    </com.google.android.material.switchmaterial.SwitchMaterial>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fan_text_view"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginStart="40dp"
+        android:text="Fan Unavailable"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fan_text_view2"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginStart="40dp"
+        android:text=""/>
+
 </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -246,14 +254,14 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:layout_height="50dp"
+                    android:layout_height="55dp"
                     app:tint="@color/purpledark"
                     android:src="@drawable/incubatormonitoring"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="3"
                     android:text="Incubator"
-                    android:textSize="20sp"
+                    android:textSize="30sp"
                     android:textColor="@color/loginpurple"
                     android:layout_marginStart="10dp"
                     android:gravity="center|left"
@@ -267,11 +275,13 @@
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/incubatorTextView"
                             android:layout_marginStart="10dp"
+                            android:textSize="20sp"
                             android:padding="5dp"
                             android:textColor="@color/purplelight"
-                            android:text="Temperature: ON"/>
+                            android:text="No Available Incubator!"/>
 
                     </LinearLayout>
                     <LinearLayout
@@ -283,27 +293,33 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:id="@+id/temperature_incubator_text_view"
+                            android:textSize="20sp"
                             android:layout_marginStart="10dp"
                             android:padding="5dp"
                             android:textColor="@color/purplelight"
-                            android:text="Temperature Set: 25°C"/>
+                            android:text="Temperature: 00°C"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/humidity_incubator_text_view"
+                            android:textSize="20sp"
+                            android:layout_marginStart="10dp"
+                            android:padding="5dp"
+                            android:textColor="@color/purplelight"
+                            android:text="Humidity:00%"/>
 
                     </LinearLayout>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_gravity="center"
-                        app:tint="@color/purpledark"
-                        android:padding="10dp"
-                        android:layout_height="60dp"
-                        android:src="@drawable/greaterthan"
-                        />
-                </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
