@@ -1,11 +1,13 @@
 package com.example.qraviaryapp.fragments
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -74,6 +76,7 @@ class ScanFragment : Fragment() {
     private lateinit var generate: MaterialButton
     private lateinit var options: TextView
     private lateinit var uploadqr: MaterialButton
+    private val GALLERY_REQUEST_CODE = 2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -155,75 +158,46 @@ class ScanFragment : Fragment() {
         intent.type = "image/*"
         startActivityForResult(intent, GALLERY_REQUEST_CODE)
     }
+
+    private fun decodeQrCodeFromBitmap(bitmap: Bitmap) {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+        try {
+            val result = MultiFormatReader().decode(binaryBitmap)
+            // Handle the result, e.g., call your existing decodeCallback
+            codeScanner.decodeCallback?.onDecoded(result)
+        } catch (e: NotFoundException) {
+            // Handle exception if QR code is not found in the image
+            Log.e(TAG, "QR code not found in the image")
+        }
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
-                // Handle the selected image URI
-                decodeQRCodeFromGallery(uri)
-            }
-        }
-    }
-    private fun decodeQRCodeFromGallery(imageUri: Uri) {
-        try {
-            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            if (bitmap != null) {
-                val result = decodeQRCode(bitmap)
-                if (result != null) {
-                    handleDecodedQRCode(result)
-                } else {
-                    showToast("Failed to decode QR code. Result is null.")
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> {
+                    data?.data?.let { uri ->
+                        try {
+                            val inputStream = requireActivity().contentResolver.openInputStream(uri)
+                            val bitmap = BitmapFactory.decodeStream(inputStream)
+                            decodeQrCodeFromBitmap(bitmap)
+                        } catch (e: IOException) {
+                            Log.e(TAG, "Error loading image from gallery: ${e.message}")
+                        }
+                    }
                 }
-            } else {
-                showToast("Failed to load image from gallery. Bitmap is null.")
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            showToast("Error loading image from gallery: ${e.message}")
         }
-
     }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-
-
-    private fun decodeQRCode(bitmap: Bitmap): String? {
-        try {
-            val multiFormatReader = MultiFormatReader()
-            val hints = mapOf(DecodeHintType.TRY_HARDER to true)
-            Log.d(TAG, "Bitmap dimensions: ${bitmap.width} x ${bitmap.height}")
-
-            val luminanceSource = RGBLuminanceSource(bitmap.width, bitmap.height, IntArray(bitmap.width * bitmap.height))
-            val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
-
-            return multiFormatReader.decodeWithState(binaryBitmap).text
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-            Log.e(TAG, "QR code not found: ${e.message}")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Error decoding QR code: ${e.message}")
-        }
-        return null
-    }
-
-
-    private fun handleDecodedQRCode(result: String) {
-        Log.d(TAG, "Decoded QR Code Result: $result")
-        // Implement the logic to handle the decoded QR code result
-        // You can use your existing methods like eggClutchesScanner, breedinCageScanner, etc.
-        eggClutchesScanner(result)
-        breedinCageScanner(result)
-        flightCageScanner(result)
-        nurseryCageScanner(result)
-        pairScanner(result)
-        clutchesScanner(result)
-        detailedBirdScanner(result)
-    }
-
 
     fun breedinCageScanner(string: String) {
         try {
@@ -570,7 +544,7 @@ class ScanFragment : Fragment() {
     }
 
     companion object {
-        private const val GALLERY_REQUEST_CODE = 1
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
