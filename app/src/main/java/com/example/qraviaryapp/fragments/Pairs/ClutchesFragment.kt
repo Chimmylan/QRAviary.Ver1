@@ -322,7 +322,7 @@ class ClutchesFragment : Fragment() {
 
                         }
 
-
+                        data.eggKey = key
                         data.pairFlightMaleKey = pairFlightMaleKey
                         data.pairFlightFemaleKey = pairFlightFemaleKey
                         data.pairBirdFemaleKey = pairFemaleKey

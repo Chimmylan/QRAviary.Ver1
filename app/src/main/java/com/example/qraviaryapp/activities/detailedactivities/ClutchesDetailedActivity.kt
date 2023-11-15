@@ -304,6 +304,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+
             R.id.give -> {
                 val i = Intent(this, GiveFosterActivity::class.java)
                 i.putExtra("CageKey", paircagekey)
@@ -313,6 +314,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+
             R.id.menu_scan -> {
                 val i = Intent(this, AddEggScanActivity::class.java)
                 i.putExtra("PairKey", pairKey)
@@ -320,6 +322,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+
             R.id.menu_delete -> {
                 val dbase = FirebaseDatabase.getInstance().reference
                 val deleteClutchRef = dbase.child("Users").child("ID: $currenUserId").child("Pairs")
@@ -331,6 +334,10 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                             Log.d(TAG, pairs.key.toString())
                             val clutch = pairs.child("Clutches")
                             for (clutches in clutch.children) {
+
+                                Log.d(TAG, clutches.key.toString())
+                                Log.d(TAG, "EGGKeeeEY" + eggKey)
+
                                 if (clutches.key.toString() == eggKey) {
                                     Log.d(TAG, "EGGKEY" + eggKey)
                                     clutches.ref.removeValue()
@@ -354,6 +361,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -401,6 +409,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
                 loadingProgressBar.visibility = View.GONE
             }
-        }}
+        }
+    }
 
 }
