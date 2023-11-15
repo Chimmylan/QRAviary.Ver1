@@ -27,6 +27,7 @@ class EditPairActivity : AppCompatActivity() {
     private var pairCageKey: String? = null
     private var cagePairKey: String? = null
     private var pairCage: String? = null
+    private var etcageValue: String? = null
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +67,7 @@ class EditPairActivity : AppCompatActivity() {
         pairCage = bundle?.getString("PairCage")
 
         cage.text = pairCage
+        cageKeyValue = pairCageKey
         cage.setOnClickListener {
             val requestCode = 1
             val i = Intent(this, BreedingCagesListActivity::class.java)
@@ -78,7 +80,7 @@ class EditPairActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                val etcageValue = data?.getStringExtra("CageName").toString()
+                etcageValue = data?.getStringExtra("CageName").toString()
                 cageKeyValue = data?.getStringExtra("CageKey").toString()
                 cage.text = etcageValue
             }
@@ -132,10 +134,12 @@ class EditPairActivity : AppCompatActivity() {
                         val pairRef = db.child("Users").child("ID: $userId").child("Pairs").child(pairKey.toString())
 
                         pairRef.child("Cage Key").setValue(cageKeyValue)
-                        pairRef.child("Cage").setValue(pairCage)
+                        pairRef.child("Cage").setValue(etcageValue)
+
                         newcage.setValue(data)
 
                         newcage.child("Cage Key").setValue(cageKeyValue)
+                        newcage.child("Cage").setValue(etcageValue)
 
                     }
 
@@ -152,7 +156,8 @@ class EditPairActivity : AppCompatActivity() {
 
 
 
-
+                onBackPressed()
+                finish()
                 true
             }
 
