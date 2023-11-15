@@ -332,7 +332,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                             val clutch = pairs.child("Clutches")
                             for (clutches in clutch.children) {
                                 if (clutches.key.toString() == eggKey) {
-                                    Log.d(TAG, eggKey)
+                                    Log.d(TAG, "EGGKEY" + eggKey)
                                     clutches.ref.removeValue()
                                 }
                             }
