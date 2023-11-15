@@ -44,7 +44,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnbeginningdate"
+                        android:id="@+id/btnFrom"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
@@ -63,7 +63,7 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/x"/>
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnseperatedate"
+                        android:id="@+id/btnTo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"

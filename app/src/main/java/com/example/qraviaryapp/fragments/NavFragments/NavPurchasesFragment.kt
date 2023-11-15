@@ -1,9 +1,11 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
+import android.content.ContentValues
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Expenses.PurchaseChartFragment
+import com.example.qraviaryapp.fragments.Expenses.SalesChartFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -35,6 +38,14 @@ class NavPurchasesFragment : Fragment() {
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
 
+    private var toDate: String? = null
+    private var fromDate: String? = null
+    private var buyer: String? = null
+
+    private lateinit var expensesFragment: PurchasesFragment
+    private lateinit var chartFragment: PurchaseChartFragment
+    private var bundle = Bundle()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +58,8 @@ class NavPurchasesFragment : Fragment() {
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+
 
         // Set up NetworkCallback to detect network changes
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -72,8 +85,8 @@ class NavPurchasesFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
         fragmentAdapter = FragmentAdapter(childFragmentManager)
-        val expensesFragment = PurchasesFragment()
-        val chartFragment = PurchaseChartFragment()
+        expensesFragment = PurchasesFragment()
+        chartFragment = PurchaseChartFragment()
         viewPager = view.findViewById(R.id.viewPager)
         tablayout = view.findViewById(R.id.tablayout)
 
@@ -86,6 +99,24 @@ class NavPurchasesFragment : Fragment() {
     private fun showSnackbar(message: String) {
         snackbar.setText(message)
         snackbar.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        fromDate = arguments?.getString("FromDate")
+        toDate = arguments?.getString("ToDate")
+        buyer = arguments?.getString("Buyer")
+
+
+        Log.d(ContentValues.TAG,"NAVSALES" + fromDate.toString())
+
+        bundle.putString("FromDate", fromDate)
+        bundle.putString("ToDate", toDate)
+        bundle.putString("Buyer", buyer)
+
+        expensesFragment.arguments = bundle
+
     }
 
 }

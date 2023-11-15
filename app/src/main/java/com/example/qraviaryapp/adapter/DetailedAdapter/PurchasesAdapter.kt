@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 
@@ -22,6 +23,9 @@ class PurchasesAdapter(
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<PairDescendantsViewHolder>() {
+
+    private var originalList = dataList
+
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -41,6 +45,44 @@ class PurchasesAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
+
+
+    fun filterDataRange(
+        fromDate: String? = null,
+        toDate: String? = null,
+        buyer: String? = null,
+        gender: MutableList<String>? = null
+    ) {
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+
+        val fromDateObj = fromDate?.let { dateFormat.parse(it) }
+        val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+        val filteredList = originalList.filter { bird ->
+            val soldDate = bird.boughtDate
+            val soldBuyer = bird.breederContact
+            val soldGender = bird.gender
+
+            val soldDateObj = soldDate?.let { dateFormat.parse(it) }
+
+            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+            val isBuyerMatch = buyer.isNullOrBlank() || (soldBuyer != null && soldBuyer == buyer)
+            val isGenderMatch = gender.isNullOrEmpty() || (soldGender != null && gender.contains(soldGender))
+
+            isDateInRange && isBuyerMatch && isGenderMatch
+        }
+
+        setData(filteredList.toMutableList())
+    }
+
+
+
+    private fun setData(newData: MutableList<BirdData>) {
+        dataList.clear()
+        dataList.addAll(newData)
+        notifyDataSetChanged()
+    }
+
 
 
     override fun onBindViewHolder(holder: PairDescendantsViewHolder, position: Int) {

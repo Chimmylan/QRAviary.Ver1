@@ -388,15 +388,17 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     }
 
                     is NavPurchasesFragment -> {
+                        val requestCode = 2
                         // Handle the ic_filter action for the BirdsFragment
                         val intent = Intent(this, PurchaseFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
 
                     // Add more cases for other fragments as needed
                     else -> {
+                        val requestCode = 3
                         val intent = Intent(this, ExpensesFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
                 }
                 return true
@@ -436,6 +438,46 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 bundle.putString("FromDate", fromDate)
                 bundle.putString("ToDate", toDate)
                 bundle.putString("Buyer", buyer)
+
+
+                fragment.arguments = bundle
+            }
+        }
+
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val buyer = data?.getStringExtra("Buyer")
+                val bundle = Bundle()
+                Log.d(TAG, " From " + fromDate.toString())
+                Log.d(TAG, " to " + toDate.toString())
+                Log.d(TAG, " buyer " + buyer.toString())
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                bundle.putString("Buyer", buyer)
+
+
+                fragment.arguments = bundle
+            }
+        }
+
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val minimum = data?.getStringExtra("minimum")
+                val maximum = data?.getStringExtra("maximum")
+                val categories = data?.getStringArrayListExtra("checkedCategory")
+                val bundle = Bundle()
+                Log.d(TAG, " From " + fromDate.toString())
+                Log.d(TAG, " to " + toDate.toString())
+                Log.d(TAG, " Categories " + categories.toString())
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                bundle.putString("minimum", minimum)
+                bundle.putString("maximum", maximum)
+                bundle.putStringArrayList("checkedCategory", categories)
 
 
                 fragment.arguments = bundle

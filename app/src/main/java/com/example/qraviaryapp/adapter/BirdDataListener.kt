@@ -107,7 +107,7 @@ data class PairBarChart(
 )
 
 data class CageData(
-    var cageQR:String? =null,
+    var cageQR: String? = null,
     var cage: String? = null,
     var cageId: String? = null,
     var cageCount: String? = null,
@@ -116,8 +116,8 @@ data class CageData(
     var cageBirdsAvailCount: String? = null,
     var cagePairBirdCount: String? = null,
     var cageBirdCount: String? = null,
-    var cagemalemutation: String? =null,
-    var cagefemalemutation: String? =null
+    var cagemalemutation: String? = null,
+    var cagefemalemutation: String? = null
 )
 
 data class MutationData(
@@ -146,8 +146,10 @@ data class ExpensesData(
     var expensesComment: String? = null,
     var expensesDate: String? = null,
     var categorykey: String? = null,
-    var monthyr: String?=null
-    )
+    var monthyr: String? = null,
+    val itemName: String? = null,
+    var isChecked: Boolean? = null
+)
 
 data class PairData(
     var pairfemaleimg: String? = null,
@@ -187,7 +189,7 @@ data class PairData(
     var eggcagebirdFemale: String? = null,
     var pairyearbeg: String? = null
 
-    )
+)
 
 data class EggData(
     var eggStatus: String? = null,

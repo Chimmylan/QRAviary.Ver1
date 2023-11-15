@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +17,7 @@ import com.example.qraviaryapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 
@@ -28,6 +28,7 @@ class ExpensesAdapter(
     : RecyclerView.Adapter<ExpensesViewHolder>() {
     private lateinit var currentUser: String
     private lateinit var Auth: FirebaseAuth
+    private var originalList = dataList
 
     companion object {
         private const val VIEW_TYPE_HEADER = 0
@@ -45,6 +46,42 @@ class ExpensesAdapter(
 
         return ExpensesViewHolder(view, dataList)
     }
+    fun filterDataRange(
+        fromDate: String? = null,
+        toDate: String? = null,
+        minimum: String? = null,
+        maximum: String? = null,
+        categories: MutableList<String>? = null
+    ) {
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+
+        val fromDateObj = fromDate?.let { dateFormat.parse(it) }
+        val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+        val filteredList = originalList.filter { bird ->
+            val buyDate = bird.expensesDate
+            val price = bird.price
+            val category = bird.expenses
+
+            val soldDateObj = buyDate?.let { dateFormat.parse(it) }
+
+            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+            val priceRange = (minimum.isNullOrBlank() || (price != null && price >= minimum.toDouble()))
+                    && (maximum.isNullOrBlank() || (price != null && price <= maximum.toDouble()))
+            val isGenderMatch = category.isNullOrEmpty() || categories.isNullOrEmpty() || (categories.contains(category))
+
+            isDateInRange && priceRange && isGenderMatch
+        }
+
+        setData(filteredList.toMutableList())
+    }
+
+    private fun setData(newData: MutableList<ExpensesData>) {
+        dataList.clear()
+        dataList.addAll(newData)
+        notifyDataSetChanged()
+    }
+
 
     override fun onBindViewHolder(holder: ExpensesViewHolder, position: Int) {
         val expenses = dataList[position]
