@@ -177,14 +177,14 @@ class BirdListAdapter(
                 }
             }
         }
-        setData(filteredList.toMutableList(), age)
+        filterAge(age)
+        setData(filteredList.toMutableList())
     }
 
 
-    private fun setData(newData: MutableList<BirdData>, age: String){
+    private fun setData(newData: MutableList<BirdData>){
         dataList.clear()
-        dataList = newData
-        filterAge(age)
+        dataList.addAll(newData)
         notifyDataSetChanged()
     }
 

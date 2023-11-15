@@ -95,7 +95,7 @@ class BirdFilterActivity : AppCompatActivity() {
 
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-        sharedPreferences = getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("${currentUserId}_BirdFilter", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
 //        btnMutation1 = findViewById(R.id.btnmutation1)
@@ -131,11 +131,11 @@ class BirdFilterActivity : AppCompatActivity() {
         cbOther = findViewById(R.id.cbOther)
 
 
-        if (sharedPreferences.getString("Sort", "") == "Youngest") {
+        if (sharedPreferences.getString("sort", "") == "Youngest") {
             youngest.isChecked = true
-        } else if (sharedPreferences.getString("Sort", "") == "Oldest") {
+        } else if (sharedPreferences.getString("sort", "") == "Oldest") {
             oldest.isChecked = true
-        } else if (sharedPreferences.getString("Sort", "") == "Id") {
+        } else if (sharedPreferences.getString("sort", "") == "Id") {
             id.isChecked = true
         }
 

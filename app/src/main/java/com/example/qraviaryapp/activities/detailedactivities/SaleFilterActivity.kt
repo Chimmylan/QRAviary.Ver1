@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import java.util.Calendar
 
 class SaleFilterActivity : AppCompatActivity() {
@@ -42,6 +43,7 @@ class SaleFilterActivity : AppCompatActivity() {
     private lateinit var unknownCb: CheckBox
     private lateinit var genderCheckboxes: List<CheckBox>
 
+    private var currentUserId: String? = null
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -69,8 +71,9 @@ class SaleFilterActivity : AppCompatActivity() {
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
 
+        currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-        sharedPreferences = getSharedPreferences("SalesFilter", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("${currentUserId}_SalesFilter", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
         fromBtn = findViewById(R.id.btnFrom)
@@ -114,7 +117,7 @@ class SaleFilterActivity : AppCompatActivity() {
 
                 val i = Intent()
                 genderCheckboxes.forEach { checkBox ->
-                    val checkboxKey = "category_${checkBox.text}"
+                    val checkboxKey = "gender_${checkBox.text}"
                     val isChecked = checkBox.isChecked
                     if (isChecked) {
                         editor.putString(checkboxKey, checkBox.text.toString())
@@ -129,7 +132,7 @@ class SaleFilterActivity : AppCompatActivity() {
 
                 i.putExtra("ToDate", toFormattedDate.toString())
                 i.putExtra("FromDate", fromFormattedDate.toString())
-                i.putExtra("Buyer", etBuyer.text)
+                i.putExtra("Buyer", etBuyer.text.toString())
 
                 setResult(Activity.RESULT_OK, i)
                 finish()

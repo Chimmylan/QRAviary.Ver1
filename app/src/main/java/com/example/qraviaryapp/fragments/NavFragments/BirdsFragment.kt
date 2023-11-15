@@ -483,7 +483,8 @@ class BirdsFragment : Fragment() {
 
     fun filterdata(){
 
-        val sharedPreferencesFileName = "BirdFilter"
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val sharedPreferencesFileName = "${currentUserId}_BirdFilter"
         val sharedPreferencesFile = File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
 
 
@@ -492,8 +493,8 @@ class BirdsFragment : Fragment() {
             editor.putString("category_For Sale", "For Sale")
             editor.putString("category_Paired", "Paired")
             editor.putString("gender_Unknown", "Unknown")
-            editor.putString("category_Male", "Male")
-            editor.putString("category_Female", "Female")
+            editor.putString("gender_Male", "Male")
+            editor.putString("gender_Female", "Female")
             editor.putString("sort", "Youngest")
             editor.apply()
         }

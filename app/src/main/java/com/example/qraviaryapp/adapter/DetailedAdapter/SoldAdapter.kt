@@ -3,7 +3,6 @@ package com.example.qraviaryapp.adapter.DetailedAdapter
 import BirdData
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +16,10 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 class SoldAdapter(
@@ -29,6 +32,7 @@ class SoldAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
+
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -36,6 +40,7 @@ class SoldAdapter(
         // Assuming dataList is sorted by mutation name
         return dataList[position].monthyr?.substring(0, 8) ?: ""
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoldViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
@@ -47,35 +52,136 @@ class SoldAdapter(
     }
 
 
-    fun filterDataRange(fromDate: String, toDate: String){
-        Log.d(TAG, fromDate)
-        Log.d(TAG, toDate)
+    fun filterDataRange(
+        fromDate: String? = null,
+        toDate: String? = null,
+        buyer: String? = null,
+        gender: Map<String, Set<String>>? = null
+    ) {
 
 
-        if (fromDate.isEmpty() && toDate.isEmpty()){
-            return
-        }
         val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
 
-        val fromDateObj = dateFormat.parse(fromDate)
-        val toDateObj = dateFormat.parse(toDate)
-
-        val filteredList = originalList.filter {
-            val soldDate = it.soldDate
-            val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
-                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(toDateObj)
+        val fromDateObj = fromDate?.let { dateFormat.parse(it) }
 
 
+        val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+
+        if (fromDate != null && toDate != null && buyer != null && gender != null) {
+            val filteredList = originalList.filter {
+                val soldDate = it.soldDate
+                val soldBuyer = it.saleContact
+                val soldGender = it.gender
+                Log.d(TAG, it.gender.toString())
+                Log.d(TAG, gender.toString())
+
+
+                val soldDateObj = soldDate?.let { it1 ->
+                    dateFormat.parse(it1)
+                }
+
+                soldDateObj?.after(fromDateObj)!! && soldDateObj.before(toDateObj) && soldBuyer == buyer
+                        && gender.all { (attribute, selectedValue) ->
+                    when (attribute) {
+                        "gender" -> soldGender in selectedValue
+                        else -> true
+                    }
+                }
+
+
+            }
+            Log.d(TAG, buyer)
+            Log.d(TAG, "ALL")
+            Log.d(TAG, filteredList.toString())
+
+            setData(filteredList.toMutableList())
+
+        } else if (fromDate != null && toDate != null && buyer == null && gender != null) {
+
+            val filteredList = originalList.filter {
+                val soldDate = it.soldDate
+                val soldBuyer = it.saleContact
+
+
+                val currentTime = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
+
+                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
+                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(toDateObj) && gender.all { (attribute, selectedValue) ->
+                    when (attribute) {
+                        "gender" -> it.gender.toString() in selectedValue
+                        else -> true
+                    }
+                }
+
+            }
+            Log.d(TAG, "NO BUYER")
+
+            setData(filteredList.toMutableList())
+
+        } else if (fromDate != null && toDate == null && buyer != null && gender != null) {
+            val filteredList = originalList.filter {
+                val soldDate = it.soldDate
+                val soldBuyer = it.saleContact
+
+                val currentTime = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
+
+                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
+                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(
+                    dateFormat.parse(
+                        currentTime.format(
+                            formatter
+                        )
+                    )
+                ) && gender.all { (attribute, selectedValue) ->
+                    when (attribute) {
+                        "gender" -> it.gender in selectedValue
+                        else -> true
+                    }
+                }// && soldDateOjb.before(toDateObj)
+            }
+            Log.d(TAG, "NO BUYER NO TO")
+
+            setData(filteredList.toMutableList())
+        } else if (fromDate != null && toDate == null && buyer == null && gender != null) {
+            val filteredList = originalList.filter {
+                val soldDate = it.soldDate
+                val soldBuyer = it.saleContact
+
+                val currentTime = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
+
+                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
+                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(
+                    dateFormat.parse(
+                        currentTime.format(
+                            formatter
+                        )
+                    )
+                ) && gender.all { (attribute, selectedValue) ->
+                    when (attribute) {
+                        "gender" -> it.gender in selectedValue
+                        else -> true
+                    }
+                }// && soldDateOjb.before(toDateObj)
+            }
+            Log.d(TAG, "NO BUYER NO TO")
+
+            setData(filteredList.toMutableList())
         }
 
-        Log.d(TAG,filteredList.toString())
 
-        setData(filteredList.toMutableList())
     }
 
-    private fun setData(newData: MutableList<BirdData>){
+
+    private fun setData(newData: MutableList<BirdData>) {
         dataList.clear()
-        dataList = newData
+        dataList.addAll(newData)
         notifyDataSetChanged()
     }
 
@@ -159,7 +265,7 @@ class SoldAdapter(
 
 class SoldViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
-    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
+    var imageView: ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
