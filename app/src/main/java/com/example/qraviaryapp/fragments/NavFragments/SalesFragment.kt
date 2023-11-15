@@ -107,7 +107,7 @@ class SalesFragment : Fragment() {
         val currentUserId = mAuth.currentUser?.uid
 
         sharedPreferences =
-            requireContext().getSharedPreferences("${currentUserId}_BirdFilter", Context.MODE_PRIVATE)
+            requireContext().getSharedPreferences("${currentUserId}_SalesFilter", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
         // Set up NetworkCallback to detect network changes
@@ -146,6 +146,7 @@ class SalesFragment : Fragment() {
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
                     Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+                    filterData()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -387,12 +388,23 @@ class SalesFragment : Fragment() {
             "gender" to genderFilters
         )
 
+        val filtered = mutableListOf<String>()
 
-        adapter.filterDataRange(
-            fromDate?.toString() ?: "",   // Convert to an empty string if null
-            toDate?.toString() ?: "",     // Convert to an empty string if null
-            buyer?.toString() ?: "",      // Convert to an empty string if null
-            filteredData
-        )
+        if (unknown != null) {
+            filtered.add(unknown)
+        }
+
+        if (male != null) {
+            filtered.add(male)
+        }
+
+        if (female != null) {
+            filtered.add(female)
+        }
+
+
+        Log.d(TAG, fromDate.toString())
+        Log.d(TAG, toDate.toString())
+        adapter.filterDataRange(fromDate,toDate, buyer, filtered)
     }
 }

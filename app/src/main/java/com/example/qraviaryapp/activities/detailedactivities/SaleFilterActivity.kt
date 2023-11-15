@@ -130,8 +130,8 @@ class SaleFilterActivity : AppCompatActivity() {
                 Log.d(TAG, toFormattedDate.toString())
                 Log.d(TAG, fromFormattedDate.toString())
 
-                i.putExtra("ToDate", toFormattedDate.toString())
-                i.putExtra("FromDate", fromFormattedDate.toString())
+                i.putExtra("ToDate", toFormattedDate)
+                i.putExtra("FromDate", fromFormattedDate)
                 i.putExtra("Buyer", etBuyer.text.toString())
 
                 setResult(Activity.RESULT_OK, i)

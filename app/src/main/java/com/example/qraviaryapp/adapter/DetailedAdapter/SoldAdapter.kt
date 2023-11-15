@@ -56,7 +56,7 @@ class SoldAdapter(
         fromDate: String? = null,
         toDate: String? = null,
         buyer: String? = null,
-        gender: Map<String, Set<String>>? = null
+        gender: MutableList<String>? = null
     ) {
 
 
@@ -64,8 +64,9 @@ class SoldAdapter(
 
         val fromDateObj = fromDate?.let { dateFormat.parse(it) }
 
-
         val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+
 
 
         if (fromDate != null && toDate != null && buyer != null && gender != null) {
@@ -77,104 +78,24 @@ class SoldAdapter(
                 Log.d(TAG, gender.toString())
 
 
+                val currentTime = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
                 val soldDateObj = soldDate?.let { it1 ->
                     dateFormat.parse(it1)
                 }
 
-                soldDateObj?.after(fromDateObj)!! && soldDateObj.before(toDateObj) && soldBuyer == buyer
-                        && gender.all { (attribute, selectedValue) ->
-                    when (attribute) {
-                        "gender" -> soldGender in selectedValue
-                        else -> true
-                    }
-                }
+                soldDateObj?.after(fromDateObj)!! && soldDateObj.before(toDateObj) && soldBuyer == buyer && gender.contains(
+                    soldGender
+                )
 
 
             }
             Log.d(TAG, buyer)
             Log.d(TAG, "ALL")
             Log.d(TAG, filteredList.toString())
-
-            setData(filteredList.toMutableList())
-
-        } else if (fromDate != null && toDate != null && buyer == null && gender != null) {
-
-            val filteredList = originalList.filter {
-                val soldDate = it.soldDate
-                val soldBuyer = it.saleContact
-
-
-                val currentTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
-
-
-                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
-                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(toDateObj) && gender.all { (attribute, selectedValue) ->
-                    when (attribute) {
-                        "gender" -> it.gender.toString() in selectedValue
-                        else -> true
-                    }
-                }
-
-            }
-            Log.d(TAG, "NO BUYER")
-
-            setData(filteredList.toMutableList())
-
-        } else if (fromDate != null && toDate == null && buyer != null && gender != null) {
-            val filteredList = originalList.filter {
-                val soldDate = it.soldDate
-                val soldBuyer = it.saleContact
-
-                val currentTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
-
-
-                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
-                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(
-                    dateFormat.parse(
-                        currentTime.format(
-                            formatter
-                        )
-                    )
-                ) && gender.all { (attribute, selectedValue) ->
-                    when (attribute) {
-                        "gender" -> it.gender in selectedValue
-                        else -> true
-                    }
-                }// && soldDateOjb.before(toDateObj)
-            }
-            Log.d(TAG, "NO BUYER NO TO")
-
-            setData(filteredList.toMutableList())
-        } else if (fromDate != null && toDate == null && buyer == null && gender != null) {
-            val filteredList = originalList.filter {
-                val soldDate = it.soldDate
-                val soldBuyer = it.saleContact
-
-                val currentTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
-
-
-                val soldDateOjb = soldDate?.let { it1 -> dateFormat.parse(it1) }
-                soldDateOjb?.after(fromDateObj)!! && soldDateOjb.before(
-                    dateFormat.parse(
-                        currentTime.format(
-                            formatter
-                        )
-                    )
-                ) && gender.all { (attribute, selectedValue) ->
-                    when (attribute) {
-                        "gender" -> it.gender in selectedValue
-                        else -> true
-                    }
-                }// && soldDateOjb.before(toDateObj)
-            }
-            Log.d(TAG, "NO BUYER NO TO")
-
             setData(filteredList.toMutableList())
         }
-
 
     }
 
