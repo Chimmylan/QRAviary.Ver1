@@ -58,46 +58,28 @@ class SoldAdapter(
         buyer: String? = null,
         gender: MutableList<String>? = null
     ) {
-
-
         val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
 
         val fromDateObj = fromDate?.let { dateFormat.parse(it) }
-
         val toDateObj = toDate?.let { dateFormat.parse(it) }
 
+        val filteredList = originalList.filter { bird ->
+            val soldDate = bird.soldDate
+            val soldBuyer = bird.saleContact
+            val soldGender = bird.gender
 
+            val soldDateObj = soldDate?.let { dateFormat.parse(it) }
 
+            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+            val isBuyerMatch = buyer.isNullOrBlank() || (soldBuyer != null && soldBuyer == buyer)
+            val isGenderMatch = gender.isNullOrEmpty() || (soldGender != null && gender.contains(soldGender))
 
-        if (fromDate != null && toDate != null && buyer != null && gender != null) {
-            val filteredList = originalList.filter {
-                val soldDate = it.soldDate
-                val soldBuyer = it.saleContact
-                val soldGender = it.gender
-                Log.d(TAG, it.gender.toString())
-                Log.d(TAG, gender.toString())
-
-
-                val currentTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
-
-                val soldDateObj = soldDate?.let { it1 ->
-                    dateFormat.parse(it1)
-                }
-
-                soldDateObj?.after(fromDateObj)!! && soldDateObj.before(toDateObj) && soldBuyer == buyer && gender.contains(
-                    soldGender
-                )
-
-
-            }
-            Log.d(TAG, buyer)
-            Log.d(TAG, "ALL")
-            Log.d(TAG, filteredList.toString())
-            setData(filteredList.toMutableList())
+            isDateInRange && isBuyerMatch && isGenderMatch
         }
 
+        setData(filteredList.toMutableList())
     }
+
 
 
     private fun setData(newData: MutableList<BirdData>) {
