@@ -100,9 +100,10 @@ class BirdsFragment : Fragment() {
         recyclerView.addItemDecoration(StickyHeaderItemDecorationbirdlist(adapter))
         mAuth = FirebaseAuth.getInstance()
 
+        val currentUserId = mAuth.currentUser?.uid
 
         sharedPreferences =
-            requireContext().getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
+            requireContext().getSharedPreferences("${currentUserId}_BirdFilter", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
 

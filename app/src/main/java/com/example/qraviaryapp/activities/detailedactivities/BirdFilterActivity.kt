@@ -24,6 +24,7 @@ import androidx.core.content.IntentCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 
 class BirdFilterActivity : AppCompatActivity() {
     private lateinit var btnMutation1: MaterialButton
@@ -91,6 +92,8 @@ class BirdFilterActivity : AppCompatActivity() {
         )
         // Check if night mode is enabled
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_white)
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
         sharedPreferences = getSharedPreferences("BirdFilter", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
