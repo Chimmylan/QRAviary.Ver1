@@ -30,7 +30,7 @@
             android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/etAvailCage"
+                android:id="@+id/etPairCage"
                 app:icon="@drawable/drop_down"
                 app:iconGravity="end"
                 app:iconTint="@color/black"

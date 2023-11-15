@@ -66,6 +66,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var currentUserId: String
     private lateinit var CageQR: String
     private lateinit var beginningDate: String
+    private lateinit var newBundle: Bundle
 //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -112,8 +113,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         tablayout = findViewById(R.id.tablayout)
 
 
-
-        val newBundle = Bundle()
+        newBundle = Bundle()
         //Bundle from PairListActivity
         if (bundle != null) {
 //            pairfemaleimg = bundle.getString("PairFemaleImg").toString()
@@ -246,6 +246,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_edit -> {
                 val i = Intent(this, EditPairActivity::class.java)
+                i.putExtras(newBundle)
                 startActivity(i)
                 true
             }

@@ -26,6 +26,7 @@ import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
 import com.example.qraviaryapp.activities.AddActivities.AddEggScanActivity
 import com.example.qraviaryapp.activities.AddActivities.GiveFosterActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -66,6 +67,8 @@ class EggDetailedIncubatingActivity : AppCompatActivity() {
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var currenUserId: String
     private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var femalebtn: MaterialButton
+    private lateinit var malebtn: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +80,8 @@ class EggDetailedIncubatingActivity : AppCompatActivity() {
         supportActionoBar()
         totalegg = findViewById(R.id.tvBirdCount)
         fab = findViewById(R.id.fab)
-
+        malebtn = findViewById(R.id.btnmaleid)
+        femalebtn = findViewById(R.id.btnfemaleid)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -114,11 +118,13 @@ class EggDetailedIncubatingActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+
             Log.d(TAG, " wew $bundle")
 
 
         }
-
+        malebtn.text = pairMaleID
+        femalebtn.text = pairFemaleID
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()

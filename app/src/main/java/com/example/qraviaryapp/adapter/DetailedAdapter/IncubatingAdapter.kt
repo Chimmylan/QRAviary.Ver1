@@ -75,7 +75,6 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
             val bundle = Bundle()
 
             bundle.putString("PairKey", dataList[adapterPosition].pairKey)
-
             bundle.putString("EggKey", dataList[adapterPosition].eggKey)
             bundle.putString("PairFlightMaleKey", dataList[adapterPosition].pairFlightMaleKey)
             bundle.putString("PairFlightFemaleKey", dataList[adapterPosition].pairFlightFemaleKey)
