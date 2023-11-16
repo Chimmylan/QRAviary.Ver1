@@ -10,9 +10,11 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
@@ -25,6 +27,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.mainactivities.HomeActivity
+import com.example.qraviaryapp.activities.mainactivities.NavHomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -51,17 +54,17 @@ class MonitoringFragment : Fragment() {
     private lateinit var day: TextView
     private lateinit var cv_Settemp: CardView
     private lateinit var cv_IncubSetTemp: CardView
-    private lateinit var temperature_text_view: TextView
-    private lateinit var humidity_text_view: TextView
     private lateinit var temperature_incubator_text_view: TextView
     private lateinit var humidity_incubator_text_view: TextView
     private lateinit var incubatorTextView: TextView
-    private lateinit var fanTextView: TextView
+    private lateinit var fanTextView1: TextView
     private lateinit var fanTextView2: TextView
     private lateinit var dbase: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
     private val CHANNEL_ID = "MyNotificationChannel"
-    private var lastTemp = 0.0
+    private var lastTemp: Double = 0.0
+    private var lastTempIncubator: Double = 0.0
+    private lateinit var monitoringView: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,53 +104,59 @@ class MonitoringFragment : Fragment() {
                 val temperature = roomDetails?.get("temperature")
                 val humidity = roomDetails?.get("humidity")
 
-                val temperatureTextView = view.findViewById<TextView>(R.id.temperature_text_view)
-                val humidityTextView = view.findViewById<TextView>(R.id.humidity_text_view)
-
                 if (temperature is Number) {
-                    // Check if it's a Long or Double and then convert to Double
-                    val temperatureDouble =
-                        if (temperature is Long) temperature.toDouble() else temperature.toDouble()
-//                    temperatureTextView.text = "Temperature: ${temperatureDouble.roundToInt()} °C"
-
+                    val temperatureDouble = temperature.toDouble()
                     var maxTemperature: Float = 30.0F
-
-                    if (temperatureDouble >= maxTemperature) {
-                        fanTextView = view.findViewById(R.id.fan_text_view)
-                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
-                        fanTextView.text = "It is too hot!"
-                        fanTextView2.text = "Fan is on."
-                    } else if (temperatureDouble < maxTemperature) {
-                        fanTextView.text = "Normal Temperature."
-                        fanTextView2.text = "Fan is off!"
-                    } else {
-                        fanTextView.text = "Sensor is not working!"
-                        fanTextView2.text = "Fan is Unavailable!"
-                    }
-
-//                    notification
                     val roundedTemp = temperatureDouble.roundToInt()
                     val tempDifference = roundedTemp - lastTemp
                     val tempThreshold = 0.5
 
-                    if(temperatureDouble != null && tempDifference >= tempThreshold){
+                    if (temperatureDouble >= maxTemperature) {
+                        fanTextView1 = view.findViewById(R.id.fan_text_view)
+                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                        fanTextView1.text = "It is too hot!"
+                        fanTextView2.text = "Fan is on."
 
-                        sendTempNotification("High", temperatureDouble)
-                        lastTemp = temperatureDouble
+//                        if (temperatureDouble != null) {
+//                            Log.d("TemperatureDebug", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Round of: $roundedTemp")
+//                            if (roundedTemp > temperatureDouble) {
+//                                Log.d("TemperatureDebug", "Temperature increased beyond the threshold. Sending notification.")
+//                                sendTempNotification("High", temperatureDouble)
+//                            } else if (temperatureDouble < roundedTemp - tempThreshold) {
+//                                Log.d("TemperatureDebug", "Temperature decreased beyond the threshold. Sending notification.")
+//                                sendTempNotification("Low", temperatureDouble)
+//                            }
+//                        }
+                        if (temperatureDouble != null) {
+                            when {
+                                temperatureDouble == 32.0 -> sendTempNotification("High", temperatureDouble)
+                                temperatureDouble == 31.0 -> sendTempNotification("High", temperatureDouble)
+                                temperatureDouble == 33.0 -> sendTempNotification("High", temperatureDouble)
+                            }
+
+                            // Update last temperature after checking
+                            lastTemp = temperatureDouble
+                        }
+                    } else if (temperatureDouble < maxTemperature) {
+                        fanTextView1 = view.findViewById(R.id.fan_text_view)
+                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                        fanTextView1.text = "Normal Temperature."
+                        fanTextView2.text = "Fan is off!"
+
+                        if(temperatureDouble != null && tempDifference >= tempThreshold){
+                            sendTempNotification("High", temperatureDouble)
+                            lastTemp = temperatureDouble
+                        }
+                    } else {
+                        fanTextView1.text = "Sensor is not working!"
+                        fanTextView2.text = "Fan is Unavailable!"
                     }
-
-//                    if(temperatureDouble != null && temperatureDouble > maxTemperature){
-//                        sendTempNotification("High", temperatureDouble)
-//                    }
-
                 }
 
 
                 if (humidity is Number) {
-                    // Check if it's a Long or Double and then convert to Double
                     val humidityDouble =
                         if (humidity is Long) humidity.toDouble() else humidity.toDouble()
-//                    humidityTextView.text = "Humidity: ${humidityDouble.roundToInt()} %"
                 }
 
                 val progressText = view.findViewById<TextView>(R.id.text_view_progress)
@@ -166,7 +175,9 @@ class MonitoringFragment : Fragment() {
 
                 progressText.text = "$temperature °C"
                 progressText2.text = "$humidity %"
-//Incubator
+
+
+// ---------------------------------------Incubator
                 val incubatorDetails = dataSnapshot.child("Incubator")
                     .getValue(object : GenericTypeIndicator<HashMap<String, Any>>() {})
 
@@ -182,11 +193,20 @@ class MonitoringFragment : Fragment() {
                 if (temperatureIncubator is Number) {
                     // Check if it's a Long or Double and then convert to Double
                     incubatorTextView.text = "Incubator is Working"
+                    val temperatureIncubatorDouble = temperatureIncubator.toDouble()
+                    if (temperatureIncubator is Long) temperatureIncubator.toDouble() else temperatureIncubator.toDouble()
+                    temperatureIncubatorTextView.text = "Temperature: $temperatureIncubatorDouble °C"
+                    val roundedTemp = temperatureIncubatorDouble.roundToInt()
+                    val tempDifference = roundedTemp - lastTempIncubator
+                    val tempThreshold = 1.0
 
-                    val temperatureIncubatorDouble =
-                        if (temperatureIncubator is Long) temperatureIncubator.toDouble() else temperatureIncubator.toDouble()
-                    temperatureIncubatorTextView.text =
-                        "Temperature: $temperatureIncubatorDouble °C"
+                    if(temperatureIncubatorDouble != null && tempDifference >= tempThreshold){
+                        sendTempNotificationIncubator("High", temperatureIncubatorDouble)
+
+                        lastTempIncubator = temperatureIncubatorDouble
+                    }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble <= 35.00){
+                        sendTempNotificationIncubator("Normal", temperatureIncubatorDouble)
+                    }
                 }
 
                 if (humidityIncubator is Number) {
@@ -222,29 +242,47 @@ class MonitoringFragment : Fragment() {
         return view
     }
 
+
+
     private fun sendTempNotification(alertType: String, temperatureDouble: Double) {
         val tempHot = 30.0
         val tempNormal = 29.0
 
         when {
             temperatureDouble >= tempHot -> {
-                sendNotification("High", temperatureDouble, "It is too hot! Fan is on.")
+                sendNotificationTemperature("High", temperatureDouble, "Aviary is too hot! Fan is on.")
             }
             temperatureDouble < tempNormal -> {
-                sendNotification("Normal", temperatureDouble, "Normal Temperature, Fan is off.")
+                sendNotificationTemperature("Normal", temperatureDouble, "Aviary is  in normal temperature, Fan is off.")
             }
+
         }
     }
 
-    private fun sendNotification(alertType: String, temperatureDouble: Double, notificationMessage: String) {
-        val intent = Intent(requireContext(), MonitoringFragment::class.java)
+    private fun sendTempNotificationIncubator(alertType: String, temperatureDoubleIncubator: Double) {
+        val tempHot = 36.5
+        val tempNormal = 35.5
+
+        when {
+            temperatureDoubleIncubator >= tempHot -> {
+                sendNotificationTemperature("High", temperatureDoubleIncubator, "Incubator is over 37°C, Light will turn off.")
+            }
+            temperatureDoubleIncubator <= tempNormal -> {
+                sendNotificationTemperature("Normal", temperatureDoubleIncubator, "Incubator is under 35°C, Light will turn on.")
+            }
+
+        }
+    }
+
+    private fun sendNotificationTemperature(alertType: String, temperatureDouble: Double, notificationMessage: String) {
+        val intent = Intent(requireContext(), NavHomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val pendingIntent = PendingIntent.getActivity(requireContext(), 0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentTitle("Temperature Alert")
-            .setContentText("Temperature is $temperatureDouble°C. $notificationMessage")
+            .setContentText("$temperatureDouble°C - $notificationMessage")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -261,8 +299,6 @@ class MonitoringFragment : Fragment() {
         }
         notificationManager.notify(notificationId, builder.build())
     }
-
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "My Notification Channel"
@@ -271,14 +307,11 @@ class MonitoringFragment : Fragment() {
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-//            channel.description = description
-//            channel.enableLights(true)
-//            channel.lightColor = Color.BLUE
-//            channel.enableVibration(true)
-//            val notificationManager = requireContext().getSystemService(NotificationManager::class.java)
-//            notificationManager.createNotificationChannel(channel)
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+            channel.enableVibration(true)
             val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-             }
         }
     }
+}
