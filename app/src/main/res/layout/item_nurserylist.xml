@@ -188,6 +188,7 @@
                 android:id="@+id/tvGender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:padding="2dp"
                 android:text="GENDER"
                 android:textColor="@color/black_white"
@@ -197,31 +198,31 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:padding="2dp"
                 android:text="STATUS"
                 android:textColor="@color/black_white"
                 android:textSize="13sp"/>
+            <LinearLayout
+                android:id="@+id/layoutmovebtn"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/movebtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/itemimagebg"
+                    android:textSize="10sp"
+                    android:textColor="@color/black_white"
+                    android:text="Move"
+                    android:elevation="10dp"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutmovebtn"
-            android:layout_width="0dp"
-            android:visibility="gone"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <Button
-                android:id="@+id/movebtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/bottom_nav_background"
-                android:textSize="10sp"
-                android:textColor="@color/black_white"
-                android:text="Move"
-                android:elevation="10dp"/>
-        </LinearLayout>
+
     </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
