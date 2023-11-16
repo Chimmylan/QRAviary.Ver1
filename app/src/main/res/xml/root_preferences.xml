@@ -2,19 +2,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Contact Us"
-        android:icon="@drawable/ic_email">
+        android:icon="@drawable/settingsemail">
 
         <Preference
             android:summary="Click to Open my website"
             app:title="Our Website">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://th.bing.com/th/id/OIP.twO4CG6kCOxnVhn_jA5-6AHaHT" />
+                android:data="https://qraviary.wixsite.com/my-site" />
         </Preference>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Basics">
+    <PreferenceCategory app:title="Basics"
+        android:icon="@drawable/basics">
 <!--        <CheckBoxPreference-->
 <!--            android:title="icheck mo to kase wala lang"-->
 <!--            app:key="checkbox"-->
@@ -38,7 +39,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Advanced">
+    <PreferenceCategory app:title="Advanced"
+        android:icon="@drawable/advanced">
 
         <ListPreference
             app:defaultValue="@string/dark_mode_def_value"
