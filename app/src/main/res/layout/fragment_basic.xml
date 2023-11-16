@@ -309,12 +309,18 @@
                     <TextView
                         android:id="@+id/tvdatebirth"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="5"
                         android:layout_height="wrap_content"
                         android:text="Date of birth (*)"
                         android:textSize="13sp"
                         android:textStyle="bold" />
-
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="wrap_content"
+                        android:text="Age in days"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
 
@@ -328,7 +334,7 @@
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="5"
                         android:onClick="openDatebirthPicker"
                         android:hint="Pick Date"
                         android:textAlignment="textStart"
@@ -337,6 +343,14 @@
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
                         app:iconTint="@color/itemimagebg" />
+                    <TextView
+                        android:id="@+id/tvAge"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="0"
+                        android:gravity="center"
+                        android:layout_weight="1.5"
+                        android:textSize="12sp"/>
                 </LinearLayout>
         </LinearLayout>
         <LinearLayout
