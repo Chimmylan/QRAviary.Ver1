@@ -45,7 +45,7 @@ class MonitoringFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var day: TextView
-    private lateinit var cv_Settemp: CardView
+
     private lateinit var cv_IncubSetTemp: CardView
     private lateinit var temperature_incubator_text_view: TextView
     private lateinit var humidity_incubator_text_view: TextView
@@ -75,14 +75,9 @@ class MonitoringFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_monitoring, container, false)
         day = view.findViewById(R.id.day)
         incubatorTextView = view.findViewById(R.id.incubatorTextView)
-        cv_Settemp = view.findViewById(R.id.cv_Settemp)
         cv_IncubSetTemp = view.findViewById(R.id.cv_IncubSetTemp)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
-//        cv_Settemp.setOnClickListener{
-//            val intent = Intent(requireContext(), SetTempActivity::class.java)
-//            startActivity(intent)
-//        }
         val currentTime = Calendar.getInstance()
         val currentHour = currentTime.get(Calendar.HOUR_OF_DAY)
         val currentUserId = mAuth.currentUser?.uid

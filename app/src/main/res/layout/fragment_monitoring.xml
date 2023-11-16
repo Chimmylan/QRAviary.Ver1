@@ -3,328 +3,367 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/bottom_nav_background"
+    android:background="@color/monitoring"
     android:layout_height="match_parent">
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white_black"
-        android:layout_margin="5dp"
-        android:elevation="10dp"
-        android:id="@+id/monitoring"
-
-        android:paddingBottom="10dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
+            android:id="@+id/nodevice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/day"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="20sp"
-                android:text="Good Afternoon!"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/white_black"
-                android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/text_view_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:gravity="center"
-                    android:text="00°C" />
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@style/CircularDeterminateProgressBar"
-                    android:layout_width="match_parent"
-                    android:padding="20dp"
-                    android:backgroundTint="@color/loginpurple"
-                    android:layout_height="150dp"
-                    android:max="56"
-                    android:progress="00" />
-
-
-
-
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/white_black"
-                android:layout_height="match_parent">
-                <ProgressBar
-                    android:id="@+id/progress_bar2"
-                    style="@style/CircularDeterminateProgressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp"
-                    android:max="100"
-                    android:progress="00" />
-
-                <TextView
-                    android:id="@+id/text_view_progress2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:gravity="center"
-                    android:text="00%" />
-
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/temperature_text_view"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textSize="25sp"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                android:text="Temperature"
-                />
-
-            <TextView
-                android:id="@+id/humidity_text_view"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:layout_height="match_parent"
-                android:text="Humidity"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fan_text_view"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginStart="40dp"
-                android:text="Fan Unavailable"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fan_text_view2"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginStart="40dp"
-                android:text=""/>
-
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:id="@+id/cv_Settemp"
-            android:clickable="true"
-            android:elevation="20dp"
-            app:cardElevation="20dp"
-            android:foreground="?selectableItemBackground"
-            android:focusable="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="80dp"
-            app:cardCornerRadius="20dp"
-            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp">
+
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="5"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="9"
+                    android:gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvmonitoring"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:padding="10dp"
-                            app:tint="@color/purpledark"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/temperature"/>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:text="Set Max Temperature"
-                            android:textSize="17sp"
-                            android:textColor="@color/loginpurple"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center|left"
-                            android:layout_height="match_parent"/>
+                        android:gravity="center"
+                        android:text="No Device Added"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
 
-                    </LinearLayout>
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:textColor="@color/purplelight"
-                            android:text="Temperature Set: 30°C"/>
-                    </LinearLayout>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_gravity="center"
-                        app:tint="@color/purpledark"
-                        android:padding="10dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/greaterthan"
-                        />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:id="@+id/cv_IncubSetTemp"
-            android:elevation="20dp"
-            android:clickable="true"
-            app:cardElevation="20dp"
-            android:foreground="?selectableItemBackground"
-            android:focusable="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="30dp"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="5"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="30dp"
+                        android:text="To monitor the temperature and humidity of your aviary you will need to add your devices."
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:padding="10dp"
-                            android:layout_height="55dp"
-                            app:tint="@color/purpledark"
-                            android:src="@drawable/incubatormonitoring"/>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:text="Incubator"
-                            android:textSize="30sp"
-                            android:textColor="@color/loginpurple"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center|left"
-                            android:layout_height="50dp"/>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="horizontal">
-                        <TextView
+                        <com.google.android.material.button.MaterialButton
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/incubatorTextView"
-                            android:layout_marginStart="10dp"
-                            android:textSize="20sp"
-                            android:padding="5dp"
-                            android:textColor="@color/purplelight"
-                            android:text="No Available Incubator!"/>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"
-                        android:layout_weight="2"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/temperature_incubator_text_view"
-                            android:textSize="20sp"
-                            android:layout_marginStart="10dp"
-                            android:padding="5dp"
-                            android:textColor="@color/purplelight"
-                            android:text="Temperature: 00°C"/>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"
-                        android:layout_weight="2"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/humidity_incubator_text_view"
-                            android:textSize="20sp"
-                            android:layout_marginStart="10dp"
-                            android:padding="5dp"
-                            android:textColor="@color/purplelight"
-                            android:text="Humidity:00%"/>
-
+                            android:backgroundTint="@color/itemimagebg"
+                            android:paddingEnd="40dp"
+                            android:text="Scan Device QR"
+                            android:textColor="@color/black_white"
+                            app:icon="@drawable/scanner"
+                            app:iconSize="24dp"
+                            app:iconTint="@color/black_white" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".5"
+                    android:gravity="center"
+
+                    android:text="Don't have a device yet?"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/visitwebsite"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".5"
+                    android:gravity="center"
+                    android:text="Visit our Website"
+                    android:textColor="@color/bg1"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
+        <LinearLayout
+
+            android:id="@+id/monitoring"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_black"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/day"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Good Afternoon!"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/white_black">
+
+                        <TextView
+                            android:id="@+id/text_view_progress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="00°C"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            style="@style/CircularDeterminateProgressBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:backgroundTint="@color/loginpurple"
+                            android:max="56"
+                            android:padding="20dp"
+                            android:progress="00" />
+
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/white_black">
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar2"
+                            style="@style/CircularDeterminateProgressBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:max="100"
+                            android:padding="20dp"
+                            android:progress="00" />
+
+                        <TextView
+                            android:id="@+id/text_view_progress2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="00%"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/temperature_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Temperature"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:id="@+id/humidity_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Humidity"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/fan_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Fan Unavailable"
+                        android:textSize="20sp"
+                        android:textColor="@color/black_white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fan_text_view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="20sp"
+
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:background="@color/white_black"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_IncubSetTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="55dp"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:padding="10dp"
+                                    android:src="@drawable/incubatormonitoring"
+                                    app:tint="@color/black_white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+
+                                    android:layout_weight="3"
+                                    android:gravity="center|left"
+                                    android:text="Incubator"
+
+                                    android:textColor="@color/black_white"
+                                    android:textSize="30sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/incubatorTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:padding="5dp"
+                                    android:text="No Available Incubator!"
+                                    android:textColor="@color/purplelight"
+                                    android:textSize="20sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                android:visibility="visible">
+
+                                <TextView
+                                    android:id="@+id/temperature_incubator_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="10dp"
+                                    android:padding="5dp"
+                                    android:text="Temperature: 00°C"
+                                    android:textColor="@color/purplelight"
+                                    android:textSize="20sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                android:visibility="visible">
+
+                                <TextView
+                                    android:id="@+id/humidity_incubator_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="10dp"
+                                    android:padding="5dp"
+                                    android:text="Humidity:00%"
+                                    android:textColor="@color/purplelight"
+                                    android:textSize="20sp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 
 </LinearLayout>
