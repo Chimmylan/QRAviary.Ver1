@@ -10,6 +10,7 @@
     <color name="buttonsetting">#FF000000</color>
     <color name="textsettings">#FFFFFFFF</color>
     <color name="bottom_nav_background">#333333</color>
+    <color name="monitoring">#727272</color>
     <color name="bottom_nav_textbg">#FFFFFFFF</color>
     <color name="appbar">#FFFFFFFF</color>
     <color name="new_appbar_color">#333333</color>
