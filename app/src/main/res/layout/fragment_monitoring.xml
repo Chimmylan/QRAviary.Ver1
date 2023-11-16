@@ -51,24 +51,6 @@
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/itemimagebg"
-                            android:paddingEnd="40dp"
-                            android:text="Scan Device QR"
-                            android:textColor="@color/black_white"
-                            app:icon="@drawable/scanner"
-                            app:iconSize="24dp"
-                            app:iconTint="@color/black_white" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView
