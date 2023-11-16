@@ -57,6 +57,8 @@ class MonitoringFragment : Fragment() {
     private val CHANNEL_ID = "MyNotificationChannel"
     private var lastTemp: Double = 0.0
     private var lastTempIncubator: Double = 0.0
+    private lateinit var monitoringlayout: LinearLayout
+    private lateinit var nodevicelayout: LinearLayout
     private lateinit var monitoringView: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +80,8 @@ class MonitoringFragment : Fragment() {
         cv_IncubSetTemp = view.findViewById(R.id.cv_IncubSetTemp)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
+        nodevicelayout = view.findViewById(R.id.nodevice)
+        monitoringlayout = view.findViewById(R.id.monitoring)
         val currentTime = Calendar.getInstance()
         val currentHour = currentTime.get(Calendar.HOUR_OF_DAY)
         val currentUserId = mAuth.currentUser?.uid
@@ -92,6 +96,15 @@ class MonitoringFragment : Fragment() {
                 val temperature = roomDetails?.get("temperature")
                 val humidity = roomDetails?.get("humidity")
 
+                if (temperature == null) {
+
+                    nodevicelayout.visibility = View.VISIBLE
+                    monitoringlayout.visibility = View.GONE
+                } else {
+
+                    nodevicelayout.visibility = View.GONE
+                    monitoringlayout.visibility = View.VISIBLE
+                }
                 if (temperature is Number) {
                     val temperatureDouble = temperature.toDouble()
                     var maxTemperature: Float = 30.0F
