@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.EditActivities.EditPairActivity
 import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.FragmentAdapter
 import com.example.qraviaryapp.fragments.Pairs.ClutchesFragment
@@ -65,6 +66,7 @@ class PairsDetailedActivity : AppCompatActivity() {
     private lateinit var currentUserId: String
     private lateinit var CageQR: String
     private lateinit var beginningDate: String
+    private lateinit var newBundle: Bundle
 //    private lateinit var pairfemaleimg: String
 //    private lateinit var pairmaleimg: String
 //    private lateinit var totalclutch: TextView
@@ -111,8 +113,7 @@ class PairsDetailedActivity : AppCompatActivity() {
         tablayout = findViewById(R.id.tablayout)
 
 
-
-        val newBundle = Bundle()
+        newBundle = Bundle()
         //Bundle from PairListActivity
         if (bundle != null) {
 //            pairfemaleimg = bundle.getString("PairFemaleImg").toString()
@@ -244,7 +245,9 @@ class PairsDetailedActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_edit -> {
-
+                val i = Intent(this, EditPairActivity::class.java)
+                i.putExtras(newBundle)
+                startActivity(i)
                 true
             }
             R.id.menu_qr -> {

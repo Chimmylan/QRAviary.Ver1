@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <supports-screens android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="false"
+        android:xlargeScreens="false"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -37,6 +40,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.EditActivities.EditPairActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.detailedactivities.EggDetailedIncubatingActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.AddActivities.GiveFosterActivity"
             android:exported="false" />

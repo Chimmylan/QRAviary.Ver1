@@ -164,7 +164,7 @@ class BirdListAdapter(
         }
     }
 
-    fun filterData(selectedAttributes: Map<String, Set<String>>) {
+    fun filterData(selectedAttributes: Map<String, Set<String>>, age: String) {
 
         val filteredList = originalList.filter { item ->
             selectedAttributes.all { (attribute, selectedValues) ->
@@ -177,17 +177,14 @@ class BirdListAdapter(
                 }
             }
         }
-        val age = true
-        if (age){
-            filteredList.sortedByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
-        }
+        filterAge(age)
         setData(filteredList.toMutableList())
     }
 
 
     private fun setData(newData: MutableList<BirdData>){
         dataList.clear()
-        dataList = newData
+        dataList.addAll(newData)
         notifyDataSetChanged()
     }
 
@@ -195,14 +192,18 @@ class BirdListAdapter(
         val string = "id"
         if (age == "Youngest"){
             dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+        Log.d(TAG, "Youngest")
         }else if (age == "Oldest"){
-            dataList.sortBy { it.month }
+            dataList.sortBy { it.dateOfBirth }
+            Log.d(TAG, "Oldest")
+
         }
         else{
             dataList.sortBy { it.identifier }
+            Log.d(TAG, "Id")
+
         }
 
-        notifyDataSetChanged()
     }
 
 }
@@ -248,6 +249,18 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
             bundle.putString("BirdMutation4", dataList[adapterPosition].mutation4)
             bundle.putString("BirdMutation5", dataList[adapterPosition].mutation5)
             bundle.putString("BirdMutation6", dataList[adapterPosition].mutation6)
+            bundle.putString("BirdMaturingDays1", dataList[adapterPosition].maturingdays1)
+            bundle.putString("BirdMaturingDays2", dataList[adapterPosition].maturingdays2)
+            bundle.putString("BirdMaturingDays3", dataList[adapterPosition].maturingdays3)
+            bundle.putString("BirdMaturingDays4", dataList[adapterPosition].maturingdays4)
+            bundle.putString("BirdMaturingDays5", dataList[adapterPosition].maturingdays5)
+            bundle.putString("BirdMaturingDays6", dataList[adapterPosition].maturingdays6)
+            bundle.putString("BirdIncubatingDays1", dataList[adapterPosition].incubatingdays1)
+            bundle.putString("BirdIncubatingDays2", dataList[adapterPosition].incubatingdays2)
+            bundle.putString("BirdIncubatingDays3", dataList[adapterPosition].incubatingdays3)
+            bundle.putString("BirdIncubatingDays4", dataList[adapterPosition].incubatingdays4)
+            bundle.putString("BirdIncubatingDays5", dataList[adapterPosition].incubatingdays5)
+            bundle.putString("BirdIncubatingDays6", dataList[adapterPosition].incubatingdays6)
             bundle.putString("BirdSoldDate", dataList[adapterPosition].soldDate)
             bundle.putString("BirdDeceaseDate", dataList[adapterPosition].deathDate)
             bundle.putString("BirdExchangeDate", dataList[adapterPosition].exDate)

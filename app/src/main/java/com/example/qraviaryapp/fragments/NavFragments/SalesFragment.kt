@@ -2,7 +2,9 @@ package com.example.qraviaryapp.fragments.NavFragments
 
 import BirdData
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
@@ -15,14 +17,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.adapter.BirdListAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.SoldAdapter
-import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationbirdlist
 import com.example.qraviaryapp.adapter.StickyHeaderItemDecorationsold
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -56,6 +56,14 @@ class SalesFragment : Fragment() {
     private var birdCount = 0
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var loadingProgressBar: ProgressBar
+
+    private var toDate:String? = null
+    private var fromDate:String? = null
+    private var buyer:String? = null
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +72,8 @@ class SalesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sales, container, false)
         totalBirds = view.findViewById(R.id.tvBirdCount)
         flightKey = arguments?.getString("FlightKey")
+
+
         mAuth = FirebaseAuth.getInstance()
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -93,6 +103,12 @@ class SalesFragment : Fragment() {
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val currentUserId = mAuth.currentUser?.uid
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("${currentUserId}_SalesFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
 
         // Set up NetworkCallback to detect network changes
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -130,6 +146,7 @@ class SalesFragment : Fragment() {
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
                     Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+                    filterData()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -314,6 +331,10 @@ class SalesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        toDate = arguments?.getString("ToDate")
+        fromDate = arguments?.getString("FromDate")
+        buyer = arguments?.getString("Buyer")
+
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
 
@@ -327,7 +348,7 @@ class SalesFragment : Fragment() {
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
-
+                filterData()
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -337,4 +358,53 @@ class SalesFragment : Fragment() {
             }
         }}
 
+    private fun filterData(){
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val sharedPreferencesFileName = "${currentUserId}_SalesFilter"
+        val sharedPreferencesFile = File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
+
+
+        if (!sharedPreferencesFile.exists()){
+            editor.putString("gender_Unknown", "Unknown")
+            editor.putString("gender_Male", "Male")
+            editor.putString("gender_Female", "Female")
+            editor.apply()
+        }
+
+        //gender
+        val unknown = sharedPreferences.getString("gender_Unknown", "")
+        val male = sharedPreferences.getString("gender_Male", "")
+        val female = sharedPreferences.getString("gender_Female", "")
+
+
+        val genderFilters: Set<String> = setOf(
+            unknown,
+            male,
+            female
+        ).filter { it?.isNotEmpty()!! }.toSet() as Set<String>
+
+        var filteredData: Map<String, Set<String>> = mapOf(
+            "gender" to genderFilters
+        )
+
+        val filtered = mutableListOf<String>()
+
+        if (unknown != null) {
+            filtered.add(unknown)
+        }
+
+        if (male != null) {
+            filtered.add(male)
+        }
+
+        if (female != null) {
+            filtered.add(female)
+        }
+
+
+        Log.d(TAG, fromDate.toString())
+        Log.d(TAG, toDate.toString())
+        adapter.filterDataRange(fromDate,toDate, buyer, filtered)
+    }
 }

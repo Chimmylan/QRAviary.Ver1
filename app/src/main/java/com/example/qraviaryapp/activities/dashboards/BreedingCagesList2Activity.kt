@@ -385,7 +385,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
 
                 for (birdSnapshot in birds.children){
                     val malemutation =  birdSnapshot.child("Male Mutation").value.toString()
-                    val femalemutation =  birdSnapshot.child("Male Mutation").value.toString()
+                    val femalemutation =  birdSnapshot.child("Female Mutation").value.toString()
 
                     data.cagemalemutation = malemutation
                     data.cagefemalemutation = femalemutation

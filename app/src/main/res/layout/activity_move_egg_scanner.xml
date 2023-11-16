@@ -42,26 +42,13 @@
                             android:orientation="horizontal"
                             android:padding="10dp">
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/GenerateQR"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:backgroundTint="@color/toolbarcolor"
-                                android:text="Generate QR"
-                                android:textColor="@color/appbar"
-                                android:textSize="10sp"
-                                app:iconTint="@color/black_white"
-                                app:icon="@drawable/qr"
-                                app:iconGravity="start"
-                                app:iconSize="24dp"/>
+
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/UploadQR"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:layout_marginStart="20dp"
                                 android:text="Upload QR Code"
                                 android:backgroundTint="@color/bottom_nav_background"
                                 android:textColor="@color/appbar"

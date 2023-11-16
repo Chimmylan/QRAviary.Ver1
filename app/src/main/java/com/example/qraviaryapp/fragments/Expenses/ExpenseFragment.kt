@@ -4,6 +4,7 @@ import ExpensesData
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
@@ -36,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -54,6 +56,16 @@ class ExpenseFragment : Fragment() {
     private var expensesCount = 0
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
+
+    private var toDate:String? = null
+    private var fromDate:String? = null
+    private var minimum:String? = null
+    private var maximum:String? = null
+    private var categories: ArrayList<String>? = null
+
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -92,6 +104,12 @@ class ExpenseFragment : Fragment() {
         connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        val currentUserId = mAuth.currentUser?.uid
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("${currentUserId}_ExpensesFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+
         // Set up NetworkCallback to detect network changes
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
@@ -127,6 +145,7 @@ class ExpenseFragment : Fragment() {
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
+                    filterData()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -199,6 +218,14 @@ class ExpenseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+
+
+        toDate = arguments?.getString("ToDate")
+        fromDate = arguments?.getString("FromDate")
+        minimum = arguments?.getString("minimum")
+        maximum = arguments?.getString("maximum")
+        categories = arguments?.getStringArrayList("checkedCategory")
+
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
 
@@ -212,7 +239,7 @@ class ExpenseFragment : Fragment() {
                 val data = getDataFromDataBase()
                 dataList.clear()
                 dataList.addAll(data)
-
+                filterData()
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -221,6 +248,30 @@ class ExpenseFragment : Fragment() {
                 loadingProgressBar.visibility = View.GONE
             }
         }}
+
+    private fun filterData(){
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val sharedPreferencesFileName = "${currentUserId}_ExpensesFilter"
+        val sharedPreferencesFile = File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
+
+
+        if (!sharedPreferencesFile.exists()){
+            editor.putString("gender_Unknown", "Unknown")
+            editor.putString("gender_Male", "Male")
+            editor.putString("gender_Female", "Female")
+            editor.apply()
+        }
+
+        //gender
+
+
+
+        Log.d(ContentValues.TAG, fromDate.toString())
+        Log.d(ContentValues.TAG, toDate.toString())
+        Log.d(ContentValues.TAG, categories.toString())
+        adapter.filterDataRange(fromDate,toDate, minimum,maximum, categories)
+    }
 
     // Move the rest of your code here, including the functions and onOptionsItemSelected
     // Note: Replace "this" with "requireActivity()" where needed

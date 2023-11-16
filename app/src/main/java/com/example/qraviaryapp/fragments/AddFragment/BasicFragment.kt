@@ -177,6 +177,7 @@ class BasicFragment : Fragment() {
     private lateinit var cagescan: CardView
     private lateinit var cagescan1: CardView
     private var status: String? = null
+    private lateinit var tvage: TextView
     private lateinit var cageReference: DatabaseReference
 
     //endregion
@@ -208,7 +209,7 @@ class BasicFragment : Fragment() {
         cageReference = FirebaseDatabase.getInstance().reference
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
-
+        tvage = view.findViewById(R.id.tvAge)
         initDatePickers()
 //        datebandButton.text = getTodaysDate()
 //        datebirthButton.text = getTodaysDate()
@@ -277,6 +278,9 @@ class BasicFragment : Fragment() {
         cagescan1.setOnClickListener {
             startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
         }
+
+
+
         cagescan = view.findViewById(R.id.cagescan)
         cagescan.setOnClickListener {
             startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
@@ -1286,6 +1290,21 @@ class BasicFragment : Fragment() {
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                 birthFormattedDate = makeDateString(day, month + 1, year)
                 datebirthButton.text = birthFormattedDate
+                var calculateage = 0
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val birthDateString = datebirthButton.text.toString()
+
+                if (birthDateString.isNotEmpty()) {
+                    val birthDate = dateFormat.parse(birthDateString)
+                    val currentDate = Calendar.getInstance().time
+
+                    val ageInMillis = currentDate.time - birthDate.time
+                    calculateage = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
+                    tvage.text = calculateage.toString()
+                } else {
+                    tvage.text = "0"
+                }
             }
 
         /*val dateSetListenerBanding =

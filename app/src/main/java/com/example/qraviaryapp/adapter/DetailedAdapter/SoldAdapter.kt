@@ -1,9 +1,10 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
+import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,11 @@ import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 class SoldAdapter(
@@ -21,9 +27,13 @@ class SoldAdapter(
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<SoldViewHolder>() {
+
+    private var originalList = dataList
+
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
+
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -31,6 +41,7 @@ class SoldAdapter(
         // Assuming dataList is sorted by mutation name
         return dataList[position].monthyr?.substring(0, 8) ?: ""
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SoldViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_birdlist, parent, false)
 
@@ -39,6 +50,43 @@ class SoldAdapter(
 
     override fun getItemCount(): Int {
         return dataList.size
+    }
+
+
+    fun filterDataRange(
+        fromDate: String? = null,
+        toDate: String? = null,
+        buyer: String? = null,
+        gender: MutableList<String>? = null
+    ) {
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+
+        val fromDateObj = fromDate?.let { dateFormat.parse(it) }
+        val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+        val filteredList = originalList.filter { bird ->
+            val soldDate = bird.soldDate
+            val soldBuyer = bird.saleContact
+            val soldGender = bird.gender
+
+            val soldDateObj = soldDate?.let { dateFormat.parse(it) }
+
+            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+            val isBuyerMatch = buyer.isNullOrBlank() || (soldBuyer != null && soldBuyer == buyer)
+            val isGenderMatch = gender.isNullOrEmpty() || (soldGender != null && gender.contains(soldGender))
+
+            isDateInRange && isBuyerMatch && isGenderMatch
+        }
+
+        setData(filteredList.toMutableList())
+    }
+
+
+
+    private fun setData(newData: MutableList<BirdData>) {
+        dataList.clear()
+        dataList.addAll(newData)
+        notifyDataSetChanged()
     }
 
 
@@ -121,7 +169,7 @@ class SoldAdapter(
 
 class SoldViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
-    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
+    var imageView: ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)

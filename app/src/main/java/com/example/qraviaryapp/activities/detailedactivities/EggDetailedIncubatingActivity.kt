@@ -26,6 +26,7 @@ import com.example.qraviaryapp.activities.AddActivities.AddEggActivity
 import com.example.qraviaryapp.activities.AddActivities.AddEggScanActivity
 import com.example.qraviaryapp.activities.AddActivities.GiveFosterActivity
 import com.example.qraviaryapp.adapter.EggClutchesListAdapter
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class ClutchesDetailedActivity : AppCompatActivity() {
+class EggDetailedIncubatingActivity : AppCompatActivity() {
 
 
     private lateinit var mAuth: FirebaseAuth
@@ -66,18 +67,21 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var currenUserId: String
     private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var femalebtn: MaterialButton
+    private lateinit var malebtn: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
-        setContentView(R.layout.detailed_activity_clutches)
+        setContentView(R.layout.activity_egg_detailed_incubating)
 
         supportActionoBar()
         totalegg = findViewById(R.id.tvBirdCount)
         fab = findViewById(R.id.fab)
-
+        malebtn = findViewById(R.id.btnmaleid)
+        femalebtn = findViewById(R.id.btnfemaleid)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
@@ -114,11 +118,13 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+
             Log.d(TAG, " wew $bundle")
 
 
         }
-
+        malebtn.text = pairMaleID
+        femalebtn.text = pairFemaleID
         lifecycleScope.launch {
             try {
                 val data = getDataFromDatabase()
@@ -158,6 +164,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
+        Log.d(TAG, "pairkey" + pairKey + eggKey)
         val qrRef = FirebaseDatabase.getInstance().reference.child("Users")
             .child("ID: ${currenUserId.toString()}").child("Pairs")
             .child(pairKey).child("Clutches").child(eggKey)
@@ -304,7 +311,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
-
             R.id.give -> {
                 val i = Intent(this, GiveFosterActivity::class.java)
                 i.putExtra("CageKey", paircagekey)
@@ -314,7 +320,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
-
             R.id.menu_scan -> {
                 val i = Intent(this, AddEggScanActivity::class.java)
                 i.putExtra("PairKey", pairKey)
@@ -322,7 +327,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
-
             R.id.menu_delete -> {
                 val dbase = FirebaseDatabase.getInstance().reference
                 val deleteClutchRef = dbase.child("Users").child("ID: $currenUserId").child("Pairs")
@@ -334,12 +338,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                             Log.d(TAG, pairs.key.toString())
                             val clutch = pairs.child("Clutches")
                             for (clutches in clutch.children) {
-
-                                Log.d(TAG, clutches.key.toString())
-                                Log.d(TAG, "EGGKeeeEY" + eggKey)
-
                                 if (clutches.key.toString() == eggKey) {
-                                    Log.d(TAG, "EGGKEY" + eggKey)
+                                    Log.d(TAG, eggKey)
                                     clutches.ref.removeValue()
                                 }
                             }
@@ -361,7 +361,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -409,7 +408,6 @@ class ClutchesDetailedActivity : AppCompatActivity() {
 
                 loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
 
 }

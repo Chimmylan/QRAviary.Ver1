@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -56,20 +57,7 @@ class IncubatingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_incubating, container, false)
 
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-//                return@OnCompleteListener
-//            }
-//
-//            // Get new FCM registration token
-//            val token = task.result
-//
-//            // Log and toast
-//            val msg = getString(R.string.default_web_client_id, token)
-//            Log.d(TAG, msg)
-//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-//        })
+
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         mAuth = FirebaseAuth.getInstance()
         totalBirds = view.findViewById(R.id.tvBirdCount)
@@ -115,19 +103,19 @@ class IncubatingFragment : Fragment() {
     }
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
-//            lifecycleScope.launch {
-//                try {
-//                    val data = getDataFromDatabase()
-//                    dataList.clear()
-//                    dataList.addAll(data)
-//                    swipeToRefresh.isRefreshing = false
-//                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
-//                    adapter.notifyDataSetChanged()
-//                } catch (e: Exception) {
-//                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-//                }
-//
-//            }
+            lifecycleScope.launch {
+                try {
+                    val data = getDataFromDatabase()
+                    dataList.clear()
+                    dataList.addAll(data)
+                    swipeToRefresh.isRefreshing = false
+                    Toast.makeText(requireContext(), "Refreshed", Toast.LENGTH_SHORT).show()
+                    adapter.notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+                }
+
+            }
             swipeToRefresh.isRefreshing = false
         }
     }
@@ -164,6 +152,10 @@ class IncubatingFragment : Fragment() {
             malegallery = itemsnapshot.child("Male Gallery").value.toString()
             val key = itemsnapshot.key.toString()
             val pairsId = itemsnapshot.child("Pair ID").value.toString()
+            var femalepairId = itemsnapshot.child("Female").value.toString()
+            var malepairId = itemsnapshot.child("Male").value.toString()
+
+
             val cageName = itemsnapshot.child("Cage").value.toString()
             val cageKeyFemale = itemsnapshot.child("CageKeyFemale").value.toString()
             val cageKeyMale = itemsnapshot.child("CageKeyMale").value.toString()
@@ -180,14 +172,17 @@ class IncubatingFragment : Fragment() {
             val pairMaleFlightKey = itemsnapshot.child("Male Flight Key").value.toString()
             val pairFemaleFlightKey = itemsnapshot.child("Female Flight Key").value.toString()
 
-
+            Log.d(TAG, "pairkey incubating " + key)
             data?.pairKey = key
+            data?.pairMaleId = malepairId
+            data?.pairFemaleId = femalepairId
             data?.pairFlightFemaleKey = pairFemaleFlightKey
             data?.pairFlightMaleKey = pairMaleFlightKey
             data?.pairBirdMaleKey = pairMaleKey
             data?.pairBirdFemaleKey = pairFemaleKey
             data?.pairMaleId = male
             data?.pairFemaleId = female
+            data?.cagename = cageName
             data?.eggcagebirdFemale = cageBirdFemale
             data?.eggcagebirdMale = cageBirdMale
             data?.eggcagekeyMale = cageKeyMale
@@ -195,9 +190,9 @@ class IncubatingFragment : Fragment() {
             var clutchCount = 0
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
-                val data = EggData()  // Create a new EggData object for each clutch
+//                val data1 = EggData()  // Create a new EggData object for each clutch
 
-                val key = clutchSnapshot.key.toString()
+                val key1 = clutchSnapshot.key.toString()
                 var eggsCount = 0
 
                 if (data != null) {
@@ -208,7 +203,7 @@ class IncubatingFragment : Fragment() {
 
                         if (eggStatus == "Incubating") {
                             eggsCount++
-                            data.eggKey = key
+                            data.eggKey = key1
                             data.eggCount = eggsCount.toString()
                             data.eggIncubating = eggsCount.toString()
                             data.eggIncubationStartDate = eggDate

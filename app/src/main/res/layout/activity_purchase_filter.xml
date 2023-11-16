@@ -44,7 +44,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnbeginningdate"
+                        android:id="@+id/btnFrom"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
@@ -63,7 +63,7 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/x"/>
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnseperatedate"
+                        android:id="@+id/btnTo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
@@ -112,7 +112,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
                     <EditText
-                        android:id="@+id/etIdentifier"
+                        android:id="@+id/etSeller"
                         android:layout_width="0dp"
                         android:layout_weight="7"
                         android:layout_height="wrap_content" />
@@ -159,6 +159,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
                         <CheckBox
+                            android:id="@+id/maleCb"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -166,6 +167,7 @@
                             android:checked="true"
                             android:textSize="15sp"/>
                         <CheckBox
+                            android:id="@+id/femaleCb"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -173,6 +175,7 @@
                             android:checked="true"
                             android:textSize="15sp"/>
                         <CheckBox
+                            android:id="@+id/unknownCb"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"

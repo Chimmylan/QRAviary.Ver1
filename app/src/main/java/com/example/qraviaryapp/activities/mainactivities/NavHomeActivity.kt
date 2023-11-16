@@ -56,11 +56,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var binding : ActivityNavHomeBinding
+    private lateinit var binding: ActivityNavHomeBinding
     private lateinit var toolbar: MaterialToolbar
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var gso: GoogleSignInOptions
-    private lateinit  var gsc: GoogleSignInClient
+    private lateinit var gsc: GoogleSignInClient
     private lateinit var menu: Menu
     private var currentFragment: Fragment? = null
     private var lastBackPressTime: Long = 0
@@ -82,7 +82,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         mAuth = FirebaseAuth.getInstance()
         val MyFirebaseMessagingService = MyFirebaseMessagingService()
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        gso =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this, gso)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -90,7 +91,13 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawerLayout = binding.drawerLayout
         navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener(this)
-        val toggle = ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open_nav, R.string.close_nav)
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.open_nav,
+            R.string.close_nav
+        )
             .apply {
                 drawerLayout.addDrawerListener(this)
                 syncState()
@@ -121,13 +128,16 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 //            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
         })
 
-        incubating = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_incubating)) as TextView
-        adulting = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_aldulting)) as TextView
+        incubating =
+            MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_incubating)) as TextView
+        adulting =
+            MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_aldulting)) as TextView
 
         initializeCountDrawer()
 
         checkElapsedTime()
     }
+
     private fun initializeCountDrawer() {
         val totalEggCount = sharedPreferences.getInt("totalEggCount", 0)
         incubating.gravity = Gravity.CENTER_VERTICAL
@@ -135,10 +145,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         incubating.setTextColor(resources.getColor(R.color.purpledark))
         incubating.text = totalEggCount.toString()
         adulting.gravity = Gravity.CENTER_VERTICAL
-       adulting.setTypeface(null, Typeface.BOLD)
+        adulting.setTypeface(null, Typeface.BOLD)
         adulting.setTextColor(resources.getColor(R.color.purpledark))
         adulting.text = ""
     }
+
     private fun checkElapsedTime() {
         val appStoppedTime = sharedPreferences.getLong("appStoppedTime", 0)
         val currentTimeMillis = System.currentTimeMillis()
@@ -152,7 +163,8 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 //            finish()
 //        }
     }
-//    private fun initializeCountDrawer() {
+
+    //    private fun initializeCountDrawer() {
 //        // TODO: Implement the count initialization logic
 //    }
     override fun onPause() {
@@ -187,84 +199,100 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 isMonitoringFragment = false
 
             }
+
             R.id.nav_pairs -> {
                 fragment = PairsFragment()
                 title = "Pairs"
                 isMonitoringFragment = false
             }
+
             R.id.nav_cages -> {
                 fragment = CagesFragment()
                 title = "Cages"
                 isMonitoringFragment = false
             }
+
             R.id.nav_statistics -> {
                 fragment = StatisticsFragment()
                 title = "Statistics"
 
                 isMonitoringFragment = false
             }
+
             R.id.nav_mutations -> {
                 fragment = MutationsFragment()
                 title = "Mutations"
                 isMonitoringFragment = false
             }
-            R.id.nav_scanner-> {
+
+            R.id.nav_scanner -> {
                 fragment = ScanFragment()
                 title = "QR Reader"
                 isMonitoringFragment = false
             }
+
             R.id.nav_aldulting -> {
                 fragment = AdultingFragment()
                 title = "Adulting"
                 isMonitoringFragment = false
             }
+
             R.id.nav_expenses -> {
                 fragment = ExpensesFragment()
                 title = "Expenses"
 
                 isMonitoringFragment = true
             }
+
             R.id.nav_sales -> {
                 fragment = NavSalesFragment()
                 title = "Sales"
                 isMonitoringFragment = true
             }
+
             R.id.nav_purchases -> {
                 fragment = NavPurchasesFragment()
                 title = "Purchases"
                 isMonitoringFragment = true
             }
+
             R.id.nav_balance -> {
                 fragment = BalanceFragment()
                 title = "Balance"
 
                 isMonitoringFragment = false
             }
-            R.id.nav_gallery -> {
-                fragment = GalleryFragment()
-                title = "Gallery"
-                isMonitoringFragment = false
-            }
+
+//            R.id.nav_gallery -> {
+//                fragment = GalleryFragment()
+//                title = "Gallery"
+//                isMonitoringFragment = false
+//            }
+
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
                 title = "Incubating"
 
                 isMonitoringFragment = false
             }
+
             R.id.nav_settings -> {
                 fragment = SettingsFragment()
                 title = "Settings"
                 isMonitoringFragment = false
             }
+
             R.id.nav_categories -> {
                 fragment = CategoriesFragment()
                 title = "Categories"
                 isMonitoringFragment = false
             }
+
             R.id.nav_logout -> {
                 showLogoutConfirmationDialog()
                 return true // Early return, no need to continue
             }
+
             else -> {
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
@@ -274,24 +302,31 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         if (!isMonitoringFragment) {
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
-            supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.toolbarcolor)))
+            supportActionBar?.setBackgroundDrawable(
+                ColorDrawable(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.toolbarcolor
+                    )
+                )
+            )
 
         } else {
             toolbar.elevation = 0f
-                supportActionBar?.setBackgroundDrawable(
-                    ColorDrawable(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.toolbarcolor
-                        )
+            supportActionBar?.setBackgroundDrawable(
+                ColorDrawable(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.toolbarcolor
                     )
                 )
+            )
             window.statusBarColor = ContextCompat.getColor(this, R.color.white)
 
         }
-        if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations"||
-                title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
-                title == "Categories"||title == "Settings"|| title == "QR Reader") {
+        if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
+            title == "Categories" || title == "Settings" || title == "QR Reader"
+        ) {
             hideMenuItems()
         } else {
             showMenuItems()
@@ -307,6 +342,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         currentFragment = fragment
         return true
     }
+
     private fun hideMenuItems() {
         menu.findItem(R.id.ic_filter).isVisible = false
         // Add more menu items to hide if needed
@@ -317,12 +353,14 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         // Add more menu items to show if needed
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         this.menu = menu
         hideMenuItems()
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.ic_filter -> {
@@ -334,38 +372,45 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         val intent = Intent(this, BirdFilterActivity::class.java)
                         startActivityForResult(intent, requestCode)
                     }
+
                     is PairsFragment -> {
                         // Handle the ic_filter action for the BirdsFragment
                         val intent = Intent(this, PairFilteringActivity::class.java)
                         startActivity(intent)
                     }
+
                     is NavSalesFragment -> {
                         // Handle the ic_filter action for the BirdsFragment
+                        val requestCode = 1
                         val intent = Intent(this, SaleFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
+
                     is NavPurchasesFragment -> {
+                        val requestCode = 2
                         // Handle the ic_filter action for the BirdsFragment
                         val intent = Intent(this, PurchaseFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
 
                     // Add more cases for other fragments as needed
                     else -> {
+                        val requestCode = 3
                         val intent = Intent(this, ExpensesFilterActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
                 }
                 return true
             }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0){
-            if (resultCode == RESULT_OK){
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
                 val selectedStatus = data?.getStringArrayListExtra("selectedStatusList")
                 val selectedGender = data?.getStringArrayListExtra("selectedGenderList")
                 val selectedSort = data?.getStringExtra("selectedSort")
@@ -377,9 +422,64 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
                 fragment.arguments = bundle
+            }
+        }
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val buyer = data?.getStringExtra("Buyer")
+                val bundle = Bundle()
+                Log.d(TAG, " From " + fromDate.toString())
+                Log.d(TAG, " to " + toDate.toString())
+                Log.d(TAG, " buyer " + buyer.toString())
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                bundle.putString("Buyer", buyer)
 
 
+                fragment.arguments = bundle
+            }
+        }
 
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val buyer = data?.getStringExtra("Buyer")
+                val bundle = Bundle()
+                Log.d(TAG, " From " + fromDate.toString())
+                Log.d(TAG, " to " + toDate.toString())
+                Log.d(TAG, " buyer " + buyer.toString())
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                bundle.putString("Buyer", buyer)
+
+
+                fragment.arguments = bundle
+            }
+        }
+
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val minimum = data?.getStringExtra("minimum")
+                val maximum = data?.getStringExtra("maximum")
+                val categories = data?.getStringArrayListExtra("checkedCategory")
+                val bundle = Bundle()
+                Log.d(TAG, " From " + fromDate.toString())
+                Log.d(TAG, " to " + toDate.toString())
+                Log.d(TAG, " Categories " + categories.toString())
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                bundle.putString("minimum", minimum)
+                bundle.putString("maximum", maximum)
+                bundle.putStringArrayList("checkedCategory", categories)
+
+
+                fragment.arguments = bundle
             }
         }
     }
@@ -401,17 +501,17 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     fun signOut() {
         mAuth.signOut()
         gsc.signOut().addOnCompleteListener {
-            if (isAnyAccountOccupyingASlot()){
+            if (isAnyAccountOccupyingASlot()) {
                 startActivity(Intent(this, SaveLoginActivity::class.java))
                 this.finish()
-            }
-            else{
+            } else {
                 startActivity(Intent(this, LoginActivity::class.java))
                 this.finish()
             }
 
         }
     }
+
     fun isAnyAccountOccupyingASlot(): Boolean {
         val maxAccounts = 4
         for (i in 1..maxAccounts) {
@@ -423,11 +523,12 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         return false
     }
 
-    private fun replaceFragment(fragment : Fragment){
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout,fragment)
+            .replace(R.id.frame_layout, fragment)
             .commit()
     }
+
     override fun onBackPressed() {
         val currentTime = System.currentTimeMillis()
         val doublePressInterval = 2000 // 2 seconds

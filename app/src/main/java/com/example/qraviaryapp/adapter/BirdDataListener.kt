@@ -83,7 +83,19 @@ data class BirdData(
     var month: String? = null,
     var days: String? = null,
     var flightType: String? = null,
-    var nurseryType: String? = null
+    var nurseryType: String? = null,
+    var maturingdays1: String? = null,
+    var maturingdays2: String? = null,
+    var maturingdays3: String? = null,
+    var maturingdays4: String? = null,
+    var maturingdays5: String? = null,
+    var maturingdays6: String? = null,
+    var incubatingdays1: String? = null,
+    var incubatingdays2: String? = null,
+    var incubatingdays3: String? = null,
+    var incubatingdays4: String? = null,
+    var incubatingdays5: String? = null,
+    var incubatingdays6: String? = null,
 )
 
 data class BirdGenderBarChart(
@@ -107,7 +119,7 @@ data class PairBarChart(
 )
 
 data class CageData(
-    var cageQR:String? =null,
+    var cageQR: String? = null,
     var cage: String? = null,
     var cageId: String? = null,
     var cageCount: String? = null,
@@ -116,8 +128,8 @@ data class CageData(
     var cageBirdsAvailCount: String? = null,
     var cagePairBirdCount: String? = null,
     var cageBirdCount: String? = null,
-    var cagemalemutation: String? =null,
-    var cagefemalemutation: String? =null
+    var cagemalemutation: String? = null,
+    var cagefemalemutation: String? = null
 )
 
 data class MutationData(
@@ -146,8 +158,10 @@ data class ExpensesData(
     var expensesComment: String? = null,
     var expensesDate: String? = null,
     var categorykey: String? = null,
-    var monthyr: String?=null
-    )
+    var monthyr: String? = null,
+    val itemName: String? = null,
+    var isChecked: Boolean? = null
+)
 
 data class PairData(
     var pairfemaleimg: String? = null,
@@ -187,7 +201,7 @@ data class PairData(
     var eggcagebirdFemale: String? = null,
     var pairyearbeg: String? = null
 
-    )
+)
 
 data class EggData(
     var eggStatus: String? = null,
@@ -201,6 +215,7 @@ data class EggData(
     var pairMaleId: String? = null,
     var pairFemaleId: String? = null,
     var eggKey: String? = null,
+    var cagename: String? = null,
     var individualEggKey: String? = null,
     var eggCount: String? = null,
     var clutchCount: String? = null,

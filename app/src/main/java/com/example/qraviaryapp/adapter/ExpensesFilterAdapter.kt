@@ -30,6 +30,7 @@ class ExpensesFilterAdapter(
         private const val VIEW_TYPE_HEADER = 0
         private const val VIEW_TYPE_GENE = 1
     }
+
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -37,8 +38,13 @@ class ExpensesFilterAdapter(
         // Assuming dataList is sorted by mutation name
         return dataList[position].expenses?.substring(0, 1)?.toUpperCase() ?: ""
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpensesFilterFragmentViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_category_filter, parent, false)
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ExpensesFilterFragmentViewHolder {
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.item_category_filter, parent, false)
 
         var originalDatalist = dataList
 
@@ -50,6 +56,12 @@ class ExpensesFilterAdapter(
         Auth = FirebaseAuth.getInstance()
         currentUser = Auth.currentUser?.uid.toString()
         holder.geneTextView.text = category.expenses
+
+        holder.geneTextView.setOnCheckedChangeListener { _, isChecked ->
+
+            checkboxClickListener?.invoke(position, isChecked)
+
+        }
 
 
     }
@@ -64,6 +76,8 @@ class ExpensesFilterAdapter(
         return dataList.size
     }
 
+    var checkboxClickListener: ((Int, Boolean) -> Unit)? = null
+
 
     /*  class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
           private val headerTextView: TextView = itemView.findViewById(R.id.headerTextView)
@@ -74,7 +88,10 @@ class ExpensesFilterAdapter(
       }*/
 }
 
-class ExpensesFilterFragmentViewHolder(itemView: View, private val dataList: MutableList<ExpensesData>) :
+class ExpensesFilterFragmentViewHolder(
+    itemView: View,
+    private val dataList: MutableList<ExpensesData>
+) :
     RecyclerView.ViewHolder(itemView) {
     val geneTextView: CheckBox = itemView.findViewById(R.id.category)
 

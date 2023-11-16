@@ -3,6 +3,7 @@ package com.example.qraviaryapp.fragments.NavFragments
 import BirdData
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
@@ -32,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -57,6 +59,14 @@ class PurchasesFragment : Fragment() {
     private var birdCount = 0
     private lateinit var loadingProgressBar: ProgressBar
 
+
+    private var toDate:String? = null
+    private var fromDate:String? = null
+    private var buyer:String? = null
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,6 +90,15 @@ class PurchasesFragment : Fragment() {
         adapter = PurchasesAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(StickyHeaderItemDecorationpurchase(adapter))
+
+
+        val currentUserId = mAuth.currentUser?.uid
+
+
+        sharedPreferences =
+            requireContext().getSharedPreferences("${currentUserId}_PurchasesFilter", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+
         Log.d(ContentValues.TAG, "FLIGHT KEY! THIS SHEYT ${flightKey.toString()}")
         lifecycleScope.launch {
             try {
@@ -130,7 +149,7 @@ class PurchasesFragment : Fragment() {
                     dataList.clear()
                     dataList.addAll(data)
                     swipeToRefresh.isRefreshing = false
-
+                    filterData()
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -322,6 +341,10 @@ class PurchasesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        toDate = arguments?.getString("ToDate")
+        fromDate = arguments?.getString("FromDate")
+        buyer = arguments?.getString("Buyer")
+
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
 
@@ -335,7 +358,7 @@ class PurchasesFragment : Fragment() {
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
-
+                filterData()
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
@@ -344,5 +367,55 @@ class PurchasesFragment : Fragment() {
                 loadingProgressBar.visibility = View.GONE
             }
         }}
+
+    private fun filterData(){
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val sharedPreferencesFileName = "${currentUserId}_PurchasesFilter"
+        val sharedPreferencesFile = File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
+
+
+        if (!sharedPreferencesFile.exists()){
+            editor.putString("gender_Unknown", "Unknown")
+            editor.putString("gender_Male", "Male")
+            editor.putString("gender_Female", "Female")
+            editor.apply()
+        }
+
+        //gender
+        val unknown = sharedPreferences.getString("gender_Unknown", "")
+        val male = sharedPreferences.getString("gender_Male", "")
+        val female = sharedPreferences.getString("gender_Female", "")
+
+
+        val genderFilters: Set<String> = setOf(
+            unknown,
+            male,
+            female
+        ).filter { it?.isNotEmpty()!! }.toSet() as Set<String>
+
+        var filteredData: Map<String, Set<String>> = mapOf(
+            "gender" to genderFilters
+        )
+
+        val filtered = mutableListOf<String>()
+
+        if (unknown != null) {
+            filtered.add(unknown)
+        }
+
+        if (male != null) {
+            filtered.add(male)
+        }
+
+        if (female != null) {
+            filtered.add(female)
+        }
+
+
+        Log.d(ContentValues.TAG, fromDate.toString())
+        Log.d(ContentValues.TAG, toDate.toString())
+        adapter.filterDataRange(fromDate,toDate, buyer, filtered)
+    }
 
 }

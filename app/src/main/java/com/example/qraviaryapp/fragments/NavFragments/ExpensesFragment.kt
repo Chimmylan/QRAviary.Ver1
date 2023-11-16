@@ -1,9 +1,11 @@
 package com.example.qraviaryapp.fragments.NavFragments
 
+import android.content.ContentValues
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlin.math.min
 
 class ExpensesFragment : Fragment() {
     private lateinit var viewPager: ViewPager
@@ -36,6 +39,19 @@ class ExpensesFragment : Fragment() {
     private lateinit var totalBirds: TextView
     private var expensesCount = 0
     private lateinit var options: ImageView
+
+
+
+    private var toDate: String? = null
+    private var fromDate: String? = null
+    private var minimum: String? = null
+    private var maximum: String? = null
+    private var categories: ArrayList<String>? = null
+
+    private var bundle = Bundle()
+
+    private lateinit var expensesFragment: ExpenseFragment
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,7 +89,7 @@ class ExpensesFragment : Fragment() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
         fragmentAdapter = FragmentAdapter(childFragmentManager)
-        val expensesFragment = ExpenseFragment()
+        expensesFragment = ExpenseFragment()
         val chartFragment = ExpensesChartFragment()
         viewPager = view.findViewById(R.id.viewPager)
         tablayout = view.findViewById(R.id.tablayout)
@@ -88,5 +104,31 @@ class ExpensesFragment : Fragment() {
         snackbar.setText(message)
         snackbar.show()
     }
+
+    override fun onResume() {
+        super.onResume()
+
+
+        fromDate = arguments?.getString("FromDate")
+        toDate = arguments?.getString("ToDate")
+        minimum = arguments?.getString("minimum")
+        maximum = arguments?.getString("maximum")
+        categories = arguments?.getStringArrayList("checkedCategory")
+
+
+        Log.d(ContentValues.TAG,"NAVSALES" + fromDate.toString())
+
+        bundle.putString("FromDate", fromDate)
+        bundle.putString("ToDate", toDate)
+        bundle.putString("minimum", minimum)
+        bundle.putString("maximum", maximum)
+        bundle.putStringArrayList("checkedCategory", categories)
+
+        expensesFragment.arguments = bundle
+
+
+
+    }
+
 
 }

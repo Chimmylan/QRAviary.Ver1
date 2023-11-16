@@ -1049,7 +1049,11 @@ class BasicFlightFragment : Fragment() {
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
                     SoldBirdRef.updateChildren(solddata)
-                } else if (deceasedLayout.visibility == View.VISIBLE) {
+                } else {
+                    return
+                }
+            }
+                else if (deceasedLayout.visibility == View.VISIBLE) {
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
                         "Identifier" to birdData.identifier,
@@ -1068,14 +1072,12 @@ class BasicFlightFragment : Fragment() {
                         "Flight Key" to FlightId,
                         "Bird Key" to birdId
                     )
+                    Log.d(TAG,"Deceased")
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
 
-                } else {
-                    return
                 }
-
-            } else if (exchangeLayout.visibility == View.VISIBLE) {
+            else if (exchangeLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
