@@ -10,23 +10,18 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.result.ActivityResult
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
-import com.example.qraviaryapp.activities.mainactivities.HomeActivity
 import com.example.qraviaryapp.activities.mainactivities.NavHomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -35,8 +30,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 import java.util.Calendar
 import kotlin.math.round
 import kotlin.math.roundToInt
@@ -127,24 +120,34 @@ class MonitoringFragment : Fragment() {
 //                                sendTempNotification("Low", temperatureDouble)
 //                            }
 //                        }
-                        if (temperatureDouble != null) {
-                            when {
-                                temperatureDouble == 32.0 -> sendTempNotification("High", temperatureDouble)
-                                temperatureDouble == 31.0 -> sendTempNotification("High", temperatureDouble)
-                                temperatureDouble == 33.0 -> sendTempNotification("High", temperatureDouble)
-                            }
+//                        if (temperatureDouble != null) {
+//                            when {
+//                                temperatureDouble == 32.0 -> sendTempNotification("High", temperatureDouble)
+//                                temperatureDouble == 31.0 -> sendTempNotification("High", temperatureDouble)
+//                                temperatureDouble == 33.0 -> sendTempNotification("High", temperatureDouble)
+//                            }
+//
+//                            // Update last temperature after checking
+//                            lastTemp = temperatureDouble
+//                        }
+                        var notificationSent = false // Initialize the flag
 
-                            // Update last temperature after checking
-                            lastTemp = temperatureDouble
+                        if (temperatureDouble >= 30.00 && temperatureDouble % 1.0 == 0.0 && !notificationSent) {
+                            // Send notification when the decimal part is exactly 00
+                            sendTempNotification("High", temperatureDouble)
+                        }else if(temperatureDouble <= 29.00){
+                            sendTempNotification("Normal", temperatureDouble)
                         }
+
+
                     } else if (temperatureDouble < maxTemperature) {
                         fanTextView1 = view.findViewById(R.id.fan_text_view)
                         fanTextView2 = view.findViewById(R.id.fan_text_view2)
                         fanTextView1.text = "Normal Temperature."
                         fanTextView2.text = "Fan is off!"
 
-                        if(temperatureDouble != null && tempDifference >= tempThreshold){
-                            sendTempNotification("High", temperatureDouble)
+                        if(temperatureDouble != null && temperatureDouble <= 29.00){
+                            sendTempNotification("Normal", temperatureDouble)
                             lastTemp = temperatureDouble
                         }
                     } else {
@@ -200,11 +203,11 @@ class MonitoringFragment : Fragment() {
                     val tempDifference = roundedTemp - lastTempIncubator
                     val tempThreshold = 1.0
 
-                    if(temperatureIncubatorDouble != null && tempDifference >= tempThreshold){
+                    if(temperatureIncubatorDouble != null && temperatureIncubatorDouble >= 36.9){
                         sendTempNotificationIncubator("High", temperatureIncubatorDouble)
 
                         lastTempIncubator = temperatureIncubatorDouble
-                    }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble <= 35.00){
+                    }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble == 35.00){
                         sendTempNotificationIncubator("Normal", temperatureIncubatorDouble)
                     }
                 }
@@ -260,44 +263,51 @@ class MonitoringFragment : Fragment() {
     }
 
     private fun sendTempNotificationIncubator(alertType: String, temperatureDoubleIncubator: Double) {
-        val tempHot = 36.5
-        val tempNormal = 35.5
+        val tempHot = 37.0
+        val tempNormal = 35.0
 
         when {
-            temperatureDoubleIncubator >= tempHot -> {
-                sendNotificationTemperature("High", temperatureDoubleIncubator, "Incubator is over 37°C, Light will turn off.")
+            temperatureDoubleIncubator == tempHot -> {
+                sendNotificationTemperature("High", temperatureDoubleIncubator, "Incubator, Light will turn off.")
             }
-            temperatureDoubleIncubator <= tempNormal -> {
-                sendNotificationTemperature("Normal", temperatureDoubleIncubator, "Incubator is under 35°C, Light will turn on.")
+            temperatureDoubleIncubator == tempNormal -> {
+                sendNotificationTemperature("Normal", temperatureDoubleIncubator, "Incubator, Light will turn on.")
             }
 
         }
     }
 
-    private fun sendNotificationTemperature(alertType: String, temperatureDouble: Double, notificationMessage: String) {
-        val intent = Intent(requireContext(), NavHomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(requireContext(), 0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+    private fun sendNotificationTemperature(context: String, temperatureDouble: Double, notificationMessage: String) {
 
-        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification_icon)
-            .setContentTitle("Temperature Alert")
-            .setContentText("$temperatureDouble°C - $notificationMessage")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
+//        if (context == null) {
+//            return
+//        }
+        if(isAdded){
+            val intent = Intent(requireContext(), NavHomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val pendingIntent = PendingIntent.getActivity(requireContext(), 0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
-        // Show the notification
-        val notificationManager = NotificationManagerCompat.from(requireContext())
-        val notificationId = System.currentTimeMillis().toInt()
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
+            val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentTitle("Temperature Alert")
+                .setContentText("$temperatureDouble°C - $notificationMessage")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+
+            // Show the notification
+            val notificationManager = NotificationManagerCompat.from(requireContext())
+            val notificationId = System.currentTimeMillis().toInt()
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            notificationManager.notify(notificationId, builder.build())
         }
-        notificationManager.notify(notificationId, builder.build())
+
     }
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
