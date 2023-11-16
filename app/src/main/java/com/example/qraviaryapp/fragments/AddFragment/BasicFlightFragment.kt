@@ -121,7 +121,7 @@ class BasicFlightFragment : Fragment() {
 
     private lateinit var addBtn: Button
     private lateinit var removeBtn: Button
-
+    private lateinit var tvage: TextView
 
     /*Edit Text*/
     private lateinit var etExWith: EditText
@@ -220,7 +220,7 @@ class BasicFlightFragment : Fragment() {
         //
 
         //
-
+        tvage = view.findViewById(R.id.tvAge)
         editTextContainer = view.findViewById(R.id.editTextContainer)
         availableLayout = view.findViewById(R.id.availableLayout)
         forSaleLayout = view.findViewById(R.id.forSaleLayout)
@@ -1281,6 +1281,21 @@ class BasicFlightFragment : Fragment() {
                 birthFormattedDate = makeDateString(day, month + 1, year)
                 datebirthButton.text = birthFormattedDate
 
+                var calculateage = 0
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val birthDateString = datebirthButton.text.toString()
+
+                if (birthDateString.isNotEmpty()) {
+                    val birthDate = dateFormat.parse(birthDateString)
+                    val currentDate = Calendar.getInstance().time
+
+                    val ageInMillis = currentDate.time - birthDate.time
+                    calculateage = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
+                    tvage.text = calculateage.toString()
+                } else {
+                    tvage.text = "0"
+                }
             }
 
         /* val dateSetListenerBanding =

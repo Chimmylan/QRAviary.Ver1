@@ -160,7 +160,7 @@ class EditBasicFlightFragment : Fragment() {
     private lateinit var slash3: TextView
     private lateinit var slash4: TextView
     private lateinit var slash5: TextView
-
+    private lateinit var tvage: TextView
     /*Button*/
     private lateinit var btnLostDate: MaterialButton
     private lateinit var btnDeathDate: MaterialButton
@@ -257,7 +257,7 @@ class EditBasicFlightFragment : Fragment() {
         btnLostDate = view.findViewById(R.id.lostDateBtn)
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
-
+        tvage = view.findViewById(R.id.tvAge)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
         initDatePickers()
@@ -1470,6 +1470,21 @@ class EditBasicFlightFragment : Fragment() {
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                 birthFormattedDate = makeDateString(day, month + 1, year)
                 datebirthButton.text = birthFormattedDate
+                var calculateage = 0
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val birthDateString = datebirthButton.text.toString()
+
+                if (birthDateString.isNotEmpty()) {
+                    val birthDate = dateFormat.parse(birthDateString)
+                    val currentDate = Calendar.getInstance().time
+
+                    val ageInMillis = currentDate.time - birthDate.time
+                    calculateage = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
+                    tvage.text = calculateage.toString()
+                } else {
+                    tvage.text = "0"
+                }
             }
 
         /*val dateSetListenerBanding =
