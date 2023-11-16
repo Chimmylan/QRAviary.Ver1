@@ -167,6 +167,7 @@ class BirdsFragment : Fragment() {
                     val data = getDataFromDatabase()
                     dataList.clear()
                     dataList.addAll(data)
+                    filterdata()
                     swipeToRefresh.isRefreshing = false
                     adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
@@ -240,6 +241,66 @@ class BirdsFragment : Fragment() {
                 }
                 val mutation6Value = if (itemSnapshot.hasChild("Mutation6")) {
                     itemSnapshot.child("Mutation6").child("Mutation Name").value.toString()
+                } else {
+                    ""
+                }
+                val mutation1incubatingValue = if (itemSnapshot.hasChild("Mutation1")) {
+                    itemSnapshot.child("Mutation1").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation2incubatingValue = if (itemSnapshot.hasChild("Mutation2")) {
+                    itemSnapshot.child("Mutation2").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation3incubatingValue = if (itemSnapshot.hasChild("Mutation3")) {
+                    itemSnapshot.child("Mutation3").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation4incubatingValue = if (itemSnapshot.hasChild("Mutation4")) {
+                    itemSnapshot.child("Mutation4").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation5incubatingValue = if (itemSnapshot.hasChild("Mutation5")) {
+                    itemSnapshot.child("Mutation5").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation6incubatingValue = if (itemSnapshot.hasChild("Mutation6")) {
+                    itemSnapshot.child("Mutation6").child("Incubating Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation1maturingValue = if (itemSnapshot.hasChild("Mutation1")) {
+                    itemSnapshot.child("Mutation1").child("Maturing Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation2maturingValue = if (itemSnapshot.hasChild("Mutation2")) {
+                    itemSnapshot.child("Mutation2").child("Maturing Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation3maturingValue = if (itemSnapshot.hasChild("Mutation3")) {
+                    itemSnapshot.child("Mutation3").child("Maturing Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation4maturingValue = if (itemSnapshot.hasChild("Mutation4")) {
+                    itemSnapshot.child("Mutation4").child("Maturing Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation5maturingValue = if (itemSnapshot.hasChild("Mutation5")) {
+                    itemSnapshot.child("Mutation5").child("Maturing Days").value.toString()
+                } else {
+                    ""
+                }
+                val mutation6maturingValue = if (itemSnapshot.hasChild("Mutation6")) {
+                    itemSnapshot.child("Mutation6").child("Maturing Days").value.toString()
                 } else {
                     ""
                 }
@@ -325,6 +386,18 @@ class BirdsFragment : Fragment() {
                 data.mutation4 = mutation4Value
                 data.mutation5 = mutation5Value
                 data.mutation6 = mutation6Value
+                data.maturingdays1 = mutation1maturingValue
+                data.maturingdays2 = mutation2maturingValue
+                data.maturingdays3 = mutation3maturingValue
+                data.maturingdays4 = mutation4maturingValue
+                data.maturingdays5 = mutation5maturingValue
+                data.maturingdays6 = mutation6maturingValue
+                data.incubatingdays1 = mutation1incubatingValue
+                data.incubatingdays2 = mutation1incubatingValue
+                data.incubatingdays3 = mutation1incubatingValue
+                data.incubatingdays4 = mutation1incubatingValue
+                data.incubatingdays5 = mutation1incubatingValue
+                data.incubatingdays6 = mutation1incubatingValue
                 data.availCage = availCage
                 data.forSaleCage = forSaleCage
                 data.reqPrice = forSaleRequestedPrice

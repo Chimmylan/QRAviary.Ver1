@@ -303,6 +303,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
                                     purchaseId)
                             }
                             onBackPressed()
+                            onBackPressed()
                             finish()
 
                         }

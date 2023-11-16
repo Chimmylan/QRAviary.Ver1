@@ -211,7 +211,7 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                     } catch (e: NullPointerException) {
                         Toast.makeText(
                             applicationContext,
-                            "Gender and Provenance in Origin tab must not be empty...",
+                            "/Invalid/Empty Inputs",
                             Toast.LENGTH_LONG
                         ).show()
                     }

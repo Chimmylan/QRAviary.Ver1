@@ -83,7 +83,19 @@ data class BirdData(
     var month: String? = null,
     var days: String? = null,
     var flightType: String? = null,
-    var nurseryType: String? = null
+    var nurseryType: String? = null,
+    var maturingdays1: String? = null,
+    var maturingdays2: String? = null,
+    var maturingdays3: String? = null,
+    var maturingdays4: String? = null,
+    var maturingdays5: String? = null,
+    var maturingdays6: String? = null,
+    var incubatingdays1: String? = null,
+    var incubatingdays2: String? = null,
+    var incubatingdays3: String? = null,
+    var incubatingdays4: String? = null,
+    var incubatingdays5: String? = null,
+    var incubatingdays6: String? = null,
 )
 
 data class BirdGenderBarChart(

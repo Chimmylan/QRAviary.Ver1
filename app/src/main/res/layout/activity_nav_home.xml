@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="1dp"
+            android:elevation="4dp"
             app:title="Monitoring"
             app:menu="@menu/menu_toolbar"
             app:titleTextColor="@color/black_white" />

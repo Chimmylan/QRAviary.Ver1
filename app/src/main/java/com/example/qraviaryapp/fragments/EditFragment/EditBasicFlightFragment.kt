@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -88,7 +89,20 @@ class EditBasicFlightFragment : Fragment() {
     private var birdDonatedContact: String? = null
     private var fatherKey: String? = null
     private var motherKey: String? = null
-
+    private var flightkey: String? = null
+    private var nurserykey: String? = null
+    private var BirdIncubatingDays1: String? = null
+    private var BirdIncubatingDays2: String? = null
+    private var BirdIncubatingDays3: String? = null
+    private var BirdIncubatingDays4: String? = null
+    private var BirdIncubatingDays5: String? = null
+    private var BirdIncubatingDays6: String? = null
+    private var BirdMaturingDays1: String? = null
+    private var BirdMaturingDays2: String? = null
+    private var BirdMaturingDays3: String? = null
+    private var BirdMaturingDays4: String? = null
+    private var BirdMaturingDays5: String? = null
+    private var BirdMaturingDays6: String? = null
     private lateinit var bird_gender: ImageView
     private lateinit var bird_id: TextView
     private lateinit var bird_status: TextView
@@ -319,10 +333,11 @@ class EditBasicFlightFragment : Fragment() {
 
         birdKey = arguments?.getString("BirdKey")
         birdGender = arguments?.getString("BirdGender")
+        nurserykey = arguments?.getString("NurseryKey")
+        flightkey = arguments?.getString("FlightKey")
         birdLegband = arguments?.getString("BirdLegband")
         birdStatus = arguments?.getString("BirdStatus")
         birdId = arguments?.getString("BirdId")
-        cageKeyValue = arguments?.getString("CageKey")
         birdDonatedContact = arguments?.getString("BirdDonatedContact")
         birdsalePrice = arguments?.getString("BirdSalePrice")
         birdDateBirth = arguments?.getString("BirdDateBirth")
@@ -354,7 +369,18 @@ class EditBasicFlightFragment : Fragment() {
         motherKey = arguments?.getString("BirdMotherKey")
         val flightType = arguments?.getString("FlightType").toString()
         val nurseryType = arguments?.getString("NurseryType").toString()
-
+        BirdIncubatingDays1 = arguments?.getString("BirdIncubatingDays1")
+        BirdIncubatingDays2 = arguments?.getString("BirdIncubatingDays2")
+        BirdIncubatingDays3= arguments?.getString("BirdIncubatingDays3")
+        BirdIncubatingDays4= arguments?.getString("BirdIncubatingDays4")
+        BirdIncubatingDays5= arguments?.getString("BirdIncubatingDays5")
+        BirdIncubatingDays6= arguments?.getString("BirdIncubatingDays6")
+        BirdMaturingDays1= arguments?.getString("BirdMaturingDays1")
+        BirdMaturingDays2= arguments?.getString("BirdMaturingDays2")
+        BirdMaturingDays3= arguments?.getString("BirdMaturingDays3")
+        BirdMaturingDays4= arguments?.getString("BirdMaturingDays4")
+        BirdMaturingDays5= arguments?.getString("BirdMaturingDays5")
+        BirdMaturingDays6= arguments?.getString("BirdMaturingDays6")
 
         Log.d(ContentValues.TAG, cageKeyValue.toString())
 
@@ -444,12 +470,12 @@ class EditBasicFlightFragment : Fragment() {
         datebirthButton.setText(birdDateBirth)
         birthFormattedDate = birdDateBirth
 
-
-
+        Log.d(TAG, "nurserkey-flightkey" + nurserykey + " " + flightkey)
 
         AddMutation()
         RemoveLastMutation()
         OnActiveSpinner()
+        cageKeyValue = arguments?.getString("CageKey")
 
         if (!birdMutation1.isNullOrEmpty()) {
             btnMutation1.setText(birdMutation1);
@@ -920,6 +946,9 @@ class EditBasicFlightFragment : Fragment() {
 
             validlegbandexist = true
         }
+        else if (dataLegband == birdLegband){
+            validlegbandexist = true
+        }
         else{
             val result = checkLegbandExistence(dataLegband)
             if (result) {
@@ -1021,7 +1050,7 @@ class EditBasicFlightFragment : Fragment() {
         var soldId: String? = null
 
         val parentRef = newBirdPref.child("Parents")
-        val newNurseryPref = NurseryBird.child(birdKey.toString())
+        val newNurseryPref = NurseryBird.child(flightkey.toString())
 
         val birdId = newBirdPref.key
         val FlightId = newNurseryPref.key
@@ -1380,45 +1409,45 @@ class EditBasicFlightFragment : Fragment() {
                 when (p0?.getItemAtPosition(p2).toString()) {
                     "Available" -> {
 
-                        cageKeyValue = null
+                        //cageKeyValue = null
                         availableLayout.visibility = View.VISIBLE
 
                     }
                     "For Sale" -> {
-                        cageKeyValue = null
+                       // cageKeyValue = null
                         forSaleLayout.visibility = View.VISIBLE
                     }
                     "Sold" -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
                         soldLayout.visibility = View.VISIBLE
                     }
                     "Deceased" -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
 
                         deceasedLayout.visibility = View.VISIBLE
                     }
                     "Exchanged" -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
 
                         exchangeLayout.visibility = View.VISIBLE
                     }
                     "Lost" -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
 
                         lostLayout.visibility = View.VISIBLE
                     }
                     "Donated" -> {
-                        cageKeyValue = null
+                       // cageKeyValue = null
 
                         donatedLayout.visibility = View.VISIBLE
                     }
                     "Other" -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
 
                         otherLayout.visibility = View.VISIBLE
                     }
                     else -> {
-                        cageKeyValue = null
+                        //cageKeyValue = null
 
                         editTextContainer.visibility = View.GONE
                     }

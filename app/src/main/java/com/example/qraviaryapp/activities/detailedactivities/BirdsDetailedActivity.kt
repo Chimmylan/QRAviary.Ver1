@@ -72,6 +72,18 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdMutation4: String
     private lateinit var BirdMutation5: String
     private lateinit var BirdMutation6: String
+    private lateinit var BirdIncubatingDays1: String
+    private lateinit var BirdIncubatingDays2: String
+    private lateinit var BirdIncubatingDays3: String
+    private lateinit var BirdIncubatingDays4: String
+    private lateinit var BirdIncubatingDays5: String
+    private lateinit var BirdIncubatingDays6: String
+    private lateinit var BirdMaturingDays1: String
+    private lateinit var BirdMaturingDays2: String
+    private lateinit var BirdMaturingDays3: String
+    private lateinit var BirdMaturingDays4: String
+    private lateinit var BirdMaturingDays5: String
+    private lateinit var BirdMaturingDays6: String
     private lateinit var BirdFather: String
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
@@ -148,6 +160,18 @@ class BirdsDetailedActivity : AppCompatActivity() {
         BirdMutation4 = bundle?.getString("BirdMutation4").toString()//
         BirdMutation5 = bundle?.getString("BirdMutation5").toString()//
         BirdMutation6 = bundle?.getString("BirdMutation6").toString()//
+        BirdMaturingDays1 = bundle?.getString("BirdMaturingDays1").toString()//
+        BirdMaturingDays2 = bundle?.getString("BirdMaturingDays2").toString()//
+        BirdMaturingDays3 = bundle?.getString("BirdMaturingDays3").toString()//
+        BirdMaturingDays4 = bundle?.getString("BirdMaturingDays4").toString()//
+        BirdMaturingDays5 = bundle?.getString("BirdMaturingDays5").toString()//
+        BirdMaturingDays6 = bundle?.getString("BirdMaturingDays6").toString()//
+        BirdIncubatingDays1 = bundle?.getString("BirdIncubatingDays1").toString()//
+        BirdIncubatingDays2 = bundle?.getString("BirdIncubatingDays2").toString()//
+        BirdIncubatingDays3 = bundle?.getString("BirdIncubatingDays3").toString()//
+        BirdIncubatingDays4 = bundle?.getString("BirdIncubatingDays4").toString()//
+        BirdIncubatingDays5 = bundle?.getString("BirdIncubatingDays5").toString()//
+        BirdIncubatingDays6 = bundle?.getString("BirdIncubatingDays6").toString()//
         BirdFather = bundle?.getString("BirdFather").toString()//
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()//
         BirdMother = bundle?.getString("BirdMother").toString()//
@@ -198,6 +222,19 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdMutation4", BirdMutation4)
         newBundle.putString("BirdMutation5", BirdMutation5)
         newBundle.putString("BirdMutation6", BirdMutation6)
+        newBundle.putString("BirdIncubatingDays1", BirdIncubatingDays1)
+        newBundle.putString("BirdIncubatingDays2", BirdIncubatingDays2)
+        newBundle.putString("BirdIncubatingDays3", BirdIncubatingDays3)
+        newBundle.putString("BirdIncubatingDays4", BirdIncubatingDays4)
+        newBundle.putString("BirdIncubatingDays5", BirdIncubatingDays5)
+        newBundle.putString("BirdIncubatingDays6", BirdIncubatingDays6)
+        newBundle.putString("BirdMaturingDays1", BirdMaturingDays1)
+        newBundle.putString("BirdMaturingDays2", BirdMaturingDays2)
+        newBundle.putString("BirdMaturingDays3", BirdMaturingDays3)
+        newBundle.putString("BirdMaturingDays4", BirdMaturingDays4)
+        newBundle.putString("BirdMaturingDays5", BirdMaturingDays5)
+        newBundle.putString("BirdMaturingDays6", BirdMaturingDays6)
+
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)
         newBundle.putString("BirdMother", BirdMother)
@@ -287,11 +324,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_sell -> {
-                val i = Intent(this, SellActivity::class.java)
-                startActivity(i)
-                true
-            }
+//            R.id.menu_sell -> {
+//                val i = Intent(this, SellActivity::class.java)
+//                startActivity(i)
+//                true
+//            }
 
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
@@ -331,11 +368,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.menu_share -> {
-                // Handle the Remove button click here
-                // Implement the logic to remove the item or perform any action you need.
-                true
-            }
+//            R.id.menu_share -> {
+//                // Handle the Remove button click here
+//                // Implement the logic to remove the item or perform any action you need.
+//                true
+//            }
 
             R.id.menu_remove -> {
                 val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds")

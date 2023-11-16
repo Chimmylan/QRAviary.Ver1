@@ -263,11 +263,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 isMonitoringFragment = false
             }
 
-            R.id.nav_gallery -> {
-                fragment = GalleryFragment()
-                title = "Gallery"
-                isMonitoringFragment = false
-            }
+//            R.id.nav_gallery -> {
+//                fragment = GalleryFragment()
+//                title = "Gallery"
+//                isMonitoringFragment = false
+//            }
 
             R.id.nav_incubating -> {
                 fragment = IncubatingFragment()
@@ -324,8 +324,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             window.statusBarColor = ContextCompat.getColor(this, R.color.white)
 
         }
-        if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations" ||
-            title == "Gallery" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
+        if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
             title == "Categories" || title == "Settings" || title == "QR Reader"
         ) {
             hideMenuItems()

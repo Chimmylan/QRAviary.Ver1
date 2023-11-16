@@ -92,25 +92,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
-                    <com.google.android.material.button.MaterialButton
+                    <EditText
                         android:id="@+id/btnBuyerContact"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:minHeight="48dp"
-                        android:textSize="10sp"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:icon="@drawable/drop_down"
-                        app:iconGravity="end"
-                        app:iconTint="@color/black"
-                        android:text="Choose Contact"
-                        android:textColor="@color/black" />
-                    <ImageView
-                        android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:padding="2dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/x"/>
+                        android:layout_height="wrap_content" />
+
 
                 </LinearLayout>
 

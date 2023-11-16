@@ -47,10 +47,7 @@
             android:id="@+id/nav_mutations"
             android:icon="@drawable/dna"
             android:title="Mutations" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/gallery"
-            android:title="Gallery"/>
+
     </group>
     <group android:checkableBehavior="single"
         android:id="@+id/group_item_2">

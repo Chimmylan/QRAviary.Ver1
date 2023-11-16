@@ -16,14 +16,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.google.android.material.button.MaterialButton
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 class SellActivity : AppCompatActivity() {
 
     private lateinit var datePickerDialogBuyDate: DatePickerDialog
 
     private lateinit var btnBuyDate: MaterialButton
-    private lateinit var btnBuyerContact: MaterialButton
+    private lateinit var btnBuyerContact: EditText
     private lateinit var etSellPrice: EditText
     private lateinit var buyFormattedDate: String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,12 +85,20 @@ class SellActivity : AppCompatActivity() {
 
         return true
     }
+        fun save(){
+            var currentDate = LocalDate.now()
+            val formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US)
 
+            val formattedDate = currentDate.format(formatter)
+
+            if (btnBuyDate.text == "TODAY"){
+                btnBuyDate.text = formattedDate
+            }
+        }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                // Handle the Save button click here
-                // Implement the logic to save the bird or perform any action you need.
+
                 true
             }
             android.R.id.home -> {

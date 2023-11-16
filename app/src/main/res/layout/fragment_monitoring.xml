@@ -6,8 +6,65 @@
     android:background="@color/bottom_nav_background"
     android:layout_height="match_parent">
 
-
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvmonitoring"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="9"
+                    android:gravity="center"
+                    android:text="No Device Added"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".5"
+                    android:textSize="15sp"
+
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="Don't Have a Device Yet?"/>
+                <TextView
+                    android:id="@+id/visitwebsite"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".5"
+                    android:textSize="15sp"
+                    android:textColor="@color/purpledark"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="Visit our Website"/>
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+                    android:textColor="@color/purpledark"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/monitoringlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white_black"
@@ -324,7 +381,7 @@
             </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
+    </LinearLayout>
 
 </LinearLayout>
 

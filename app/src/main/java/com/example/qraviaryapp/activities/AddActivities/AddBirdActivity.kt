@@ -219,7 +219,7 @@ class AddBirdActivity : AppCompatActivity(), BirdDataListener {
                         // Handle the exception if needed
                         Toast.makeText(
                             applicationContext,
-                            "Gender and Provenance in Origin tab must not be empty...",
+                            "Invalid/Empty Inputs",
                             Toast.LENGTH_LONG
                         ).show()
                     }

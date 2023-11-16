@@ -27,6 +27,7 @@ class SoldAdapter(
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<SoldViewHolder>() {
+
     private var originalList = dataList
 
     companion object {
