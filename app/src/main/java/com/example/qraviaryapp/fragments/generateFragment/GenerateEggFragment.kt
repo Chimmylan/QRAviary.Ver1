@@ -118,8 +118,8 @@ class GenerateEggFragment : Fragment() {
         showDatePickerDialog(requireContext(), btnIncubating, incubatingDatePickerDialog)
         val sharedPrefs = requireContext().getSharedPreferences("myPrefs", MODE_PRIVATE)
         val edited = sharedPrefs.getBoolean("Edited", false)
-        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
-        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+        val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 100
 
         val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
         val incubatingDays = incubatingValue?.toIntOrNull() ?: 21

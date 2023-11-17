@@ -1003,13 +1003,17 @@ class EditBasicFragment : Fragment() {
 
             val ageInMillis = currentDate.time - birthDate.time
             val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+            val sharedPrefs = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+            val edited = sharedPrefs.getBoolean("Edited", false)
+            val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+            val maturingDays = maturingValue?.toIntOrNull() ?: 100
 
-            if (ageInDays > 50) {
+            if (ageInDays > maturingDays) {
                 // Age is less than 50 days, show an error message
-                datebirthButton.error = "Age must be less than 50 days"
+                datebirthButton.error = "Age must be less than $maturingDays days"
                 Toast.makeText(
                     requireContext(),
-                    "Age must be less than 50 days",
+                    "Age must be less than $maturingDays days",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
