@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import java.util.Calendar
-import kotlin.math.round
 import kotlin.math.roundToInt
 
 
@@ -57,6 +57,7 @@ class MonitoringFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private val CHANNEL_ID = "MyNotificationChannel"
     private var lastTemp: Double = 0.0
+//    private var lastTemp: Int = 0
     private var lastTempIncubator: Double = 0.0
     private lateinit var monitoringlayout: LinearLayout
     private lateinit var nodevicelayout: LinearLayout
@@ -116,59 +117,86 @@ class MonitoringFragment : Fragment() {
                     val temperatureDouble = temperature.toDouble()
                     var maxTemperature: Float = 30.0F
                     val roundedTemp = temperatureDouble.roundToInt()
-                    val tempDifference = roundedTemp - lastTemp
+                    val tempDifference = temperatureDouble - lastTemp
                     val tempThreshold = 0.5
+                    Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, inNumber $roundedTemp")
 
-                    if (temperatureDouble >= maxTemperature) {
-                        fanTextView1 = view.findViewById(R.id.fan_text_view)
-                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
-                        fanTextView1.text = "It is too hot!"
-                        fanTextView2.text = "Fan is on."
-
-//                        if (temperatureDouble != null) {
-//                            Log.d("TemperatureDebug", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Round of: $roundedTemp")
-//                            if (roundedTemp > temperatureDouble) {
-//                                Log.d("TemperatureDebug", "Temperature increased beyond the threshold. Sending notification.")
-//                                sendTempNotification("High", temperatureDouble)
-//                            } else if (temperatureDouble < roundedTemp - tempThreshold) {
-//                                Log.d("TemperatureDebug", "Temperature decreased beyond the threshold. Sending notification.")
-//                                sendTempNotification("Low", temperatureDouble)
-//                            }
-//                        }
-//                        if (temperatureDouble != null) {
-//                            when {
-//                                temperatureDouble == 32.0 -> sendTempNotification("High", temperatureDouble)
-//                                temperatureDouble == 31.0 -> sendTempNotification("High", temperatureDouble)
-//                                temperatureDouble == 33.0 -> sendTempNotification("High", temperatureDouble)
-//                            }
-//
-//                            // Update last temperature after checking
-//                            lastTemp = temperatureDouble
-//                        }
-
-                        if (temperatureDouble >= 30.00 && temperatureDouble % 1.0 == 0.0 && temperatureDouble != lastTemp) {
-                            // Send notification when the decimal part is exactly 00
-                            sendTempNotification("High", temperatureDouble)
-                        }else if(temperatureDouble <= 29.00){
-                            sendTempNotification("Normal", temperatureDouble)
+                    if (temperatureDouble != null) {
+                        if (temperatureDouble >= maxTemperature) {
+                            fanTextView1 = view.findViewById(R.id.fan_text_view)
+                            fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                            fanTextView1.text = "It is too hot!"
+                            fanTextView2.text = "Fan is on."
+                            if ((temperatureDouble % 1.0 == 0.0 || temperatureDouble % 1.0 == 0.5) && temperatureDouble != lastTemp) {
+                                // Send notification when the decimal part is exactly 00
+                                sendTempNotification("High", temperatureDouble)
+                                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Notif")
+                            }
+                        } else if (temperatureDouble < maxTemperature && temperatureDouble > 28.1 ) {
+                            fanTextView1 = view.findViewById(R.id.fan_text_view)
+                            fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                            fanTextView1.text = "Normal Temperature."
+                            fanTextView2.text = " "
+                            if ((temperatureDouble % 1.0 == 0.0 || temperatureDouble % 1.0 == 0.5) && temperatureDouble != lastTemp) {
+                                sendTempNotification("Normal", temperatureDouble)
+                                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Notif Normal")
+                            }
+                            Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Else if Normal Temp")
+                        } else if (temperatureDouble < 28.0) {
+                            fanTextView1 = view.findViewById(R.id.fan_text_view)
+                            fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                            fanTextView1.text = "It is too cold."
+                            fanTextView2.text = "Fan is off."
+                            if (temperatureDouble <= 28.0 && (temperatureDouble % 1.0 == 0.0 || temperatureDouble % 1.0 == 0.5) && temperatureDouble != lastTemp) {
+                                sendTempNotification("Normal", temperatureDouble)
+                                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp")
+                            }
                         }
                         lastTemp = temperatureDouble
-
-
-                    } else if (temperatureDouble < maxTemperature) {
-                        fanTextView1 = view.findViewById(R.id.fan_text_view)
-                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
-                        fanTextView1.text = "Normal Temperature."
-                        fanTextView2.text = "Fan is off!"
-
-                        if(temperatureDouble != null && temperatureDouble <= 29.00){
-                            sendTempNotification("Normal", temperatureDouble)
-                            lastTemp = temperatureDouble
-                        }
-                    } else {
-                        fanTextView1.text = "Sensor is not working!"
-                        fanTextView2.text = "Fan is Unavailable!"
                     }
+
+//
+//
+//                    if (temperatureDouble >= maxTemperature) {
+//                        fanTextView1 = view.findViewById(R.id.fan_text_view)
+//                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
+//                        fanTextView1.text = "It is too hot!"
+//                        fanTextView2.text = "Fan is on."
+//
+//                        if (temperatureDouble != null && temperatureDouble >= 30.00 && temperatureDouble % 1.0 == 0.0 && temperatureDouble != lastTemp) {
+//                            // Send notification when the decimal part is exactly 00
+//                            sendTempNotification("High", temperatureDouble)
+//                            Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp")
+//                        }
+//                    } else if (temperatureDouble < maxTemperature && temperatureDouble > 28.1) {
+//                        fanTextView1 = view.findViewById(R.id.fan_text_view)
+//                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
+//                        fanTextView1.text = "Normal Temperature."
+//                        fanTextView2.text = " "
+//
+//                        val difTemp = temperatureDouble - lastTemp
+//
+//                        if(temperatureDouble != null && temperatureDouble <= 29.9 && temperatureDouble != lastTemp + 0.1){
+//                            sendTempNotification("Normal", temperatureDouble)
+//                            Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, Normal Temp")
+//
+//                        }
+//                    } else if(temperatureDouble < 28.0){
+//                        fanTextView1 = view.findViewById(R.id.fan_text_view)
+//                        fanTextView2 = view.findViewById(R.id.fan_text_view2)
+//                        fanTextView1.text = "It is too cold."
+//                        fanTextView2.text = "Fan is off."
+//
+//                        if(temperatureDouble != null && temperatureDouble <= 28.0 && temperatureDouble != lastTemp){
+//                            sendTempNotification("Normal", temperatureDouble)
+//                            Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp")
+//                        }
+//                    }
+//                    else {
+//                        fanTextView1.text = "Sensor is not working!"
+//                        fanTextView2.text = "Fan is Unavailable!"
+//                    }
+//                    lastTemp = temperatureDouble
                 }
 
 
@@ -217,12 +245,15 @@ class MonitoringFragment : Fragment() {
                     val roundedTemp = temperatureIncubatorDouble.roundToInt()
                     val tempDifference = roundedTemp - lastTempIncubator
                     val tempThreshold = 1.0
+                    val humidityDouble = humidity
 
-                    if(temperatureIncubatorDouble != null && temperatureIncubatorDouble >= 36.9 && temperatureIncubatorDouble != lastTempIncubator){
-                        sendTempNotificationIncubator("High", temperatureIncubatorDouble)
+                    if(temperatureIncubatorDouble != null && temperatureIncubatorDouble == 37.00 && temperatureIncubatorDouble != lastTempIncubator){
+                        sendTempNotificationIncubator("High", temperatureIncubatorDouble,humidity as Double)
 
                     }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble == 35.00 && temperatureIncubatorDouble != lastTempIncubator){
-                        sendTempNotificationIncubator("Normal", temperatureIncubatorDouble)
+                        sendTempNotificationIncubator("Normal", temperatureIncubatorDouble,
+                            humidity as Double
+                        )
                     }
                     lastTempIncubator = temperatureIncubatorDouble
                 }
@@ -264,29 +295,37 @@ class MonitoringFragment : Fragment() {
 
     private fun sendTempNotification(alertType: String, temperatureDouble: Double) {
         val tempHot = 30.0
-        val tempNormal = 29.0
+        val tempNormal = 29.9
 
         when {
             temperatureDouble >= tempHot -> {
                 sendNotificationTemperature("High", temperatureDouble, "Aviary is too hot! Fan is on.")
+                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, privateFun, Turn Onn")
+
             }
-            temperatureDouble < tempNormal -> {
-                sendNotificationTemperature("Normal", temperatureDouble, "Aviary is  in normal temperature, Fan is off.")
+            temperatureDouble < tempNormal && temperatureDouble > 28.1 -> {
+                sendNotificationTemperature("Normal", temperatureDouble, "Aviary is in normal temperature")
+                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, privateFun, Normal")
+            }
+            temperatureDouble < 28.0 ->{
+                sendNotificationTemperature("Cold", temperatureDouble, "Aviary is too cold! Fan is off.")
+                Log.d("AviaryTemp", "Current Temperature: $temperatureDouble, Last Temperature: $lastTemp, privateFun, Turn Off")
+
             }
 
         }
     }
 
-    private fun sendTempNotificationIncubator(alertType: String, temperatureDoubleIncubator: Double) {
+    private fun sendTempNotificationIncubator(alertType: String, temperatureDoubleIncubator: Double,humidity:Double) {
         val tempHot = 37.0
         val tempNormal = 35.0
 
         when {
             temperatureDoubleIncubator == tempHot -> {
-                sendNotificationTemperature("High", temperatureDoubleIncubator, "Incubator, Light will turn off.")
+                sendNotificationTemperature("High", temperatureDoubleIncubator, "Temperature, $humidity % - Humidity in Incubator")
             }
             temperatureDoubleIncubator == tempNormal -> {
-                sendNotificationTemperature("Normal", temperatureDoubleIncubator, "Incubator, Light will turn on.")
+                sendNotificationTemperature("Normal", temperatureDoubleIncubator, "Temperature, $humidity % - Humidity in Incubator")
             }
 
         }
