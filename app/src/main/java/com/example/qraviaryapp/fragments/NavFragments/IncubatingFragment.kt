@@ -177,46 +177,51 @@ class IncubatingFragment : Fragment() {
             var clutchCount = 0
             val clutches = itemsnapshot.child("Clutches")
             for (clutchSnapshot in clutches.children) {
+
                 val data1 = clutchSnapshot.getValue(EggData::class.java)
-                data1?.pairKey = key
-                data1?.pairMaleId = malepairId
-                data1?.pairFemaleId = femalepairId
-                data1?.pairFlightFemaleKey = pairFemaleFlightKey
-                data1?.pairFlightMaleKey = pairMaleFlightKey
-                data1?.pairBirdMaleKey = pairMaleKey
-                data1?.pairBirdFemaleKey = pairFemaleKey
-                data1?.pairMaleId = male
-                data1?.pairFemaleId = female
-                data1?.cagename = cageName
-                data1?.eggcagebirdFemale = cageBirdFemale
-                data1?.eggcagebirdMale = cageBirdMale
-                data1?.eggcagekeyMale = cageKeyMale
-                data1?.eggcagekeyFemale = cageKeyFemale
+                if (!clutchSnapshot.hasChild("Parent")){
+                    data1?.pairKey = key
+                    data1?.pairMaleId = malepairId
+                    data1?.pairFemaleId = femalepairId
+                    data1?.pairFlightFemaleKey = pairFemaleFlightKey
+                    data1?.pairFlightMaleKey = pairMaleFlightKey
+                    data1?.pairBirdMaleKey = pairMaleKey
+                    data1?.pairBirdFemaleKey = pairFemaleKey
+                    data1?.pairMaleId = male
+                    data1?.pairFemaleId = female
+                    data1?.cagename = cageName
+                    data1?.eggcagebirdFemale = cageBirdFemale
+                    data1?.eggcagebirdMale = cageBirdMale
+                    data1?.eggcagekeyMale = cageKeyMale
+                    data1?.eggcagekeyFemale = cageKeyFemale
 //                val data1 = EggData()  // Create a new EggData object for each clutch
 
-                val key1 = clutchSnapshot.key.toString()
-                var eggsCount = 0
+                    val key1 = clutchSnapshot.key.toString()
+                    var eggsCount = 0
 
-                if (data1 != null) {
-                    for (eggSnapshot in clutchSnapshot.children) {
-                        val eggStatus = eggSnapshot.child("Status").value.toString()
-                        val eggDate = eggSnapshot.child("Date").value.toString()
+                    if (data1 != null) {
+                        for (eggSnapshot in clutchSnapshot.children) {
+
+                            val eggStatus = eggSnapshot.child("Status").value.toString()
+                            val eggDate = eggSnapshot.child("Date").value.toString()
 
 
-                        if (eggStatus == "Incubating") {
-                            eggsCount++
+                            if (eggStatus == "Incubating") {
+                                eggsCount++
 
-                            data1.eggKey = key1
-                            data1.eggCount = eggsCount.toString()
-                            data1.eggIncubating = eggsCount.toString()
-                            data1.eggIncubationStartDate = eggDate
+                                data1.eggKey = key1
+                                data1.eggCount = eggsCount.toString()
+                                data1.eggIncubating = eggsCount.toString()
+                                data1.eggIncubationStartDate = eggDate
+                            }
+                        }
+                        // Only add data to the list if it has Incubating eggs
+                        if (data1.eggIncubating != null) {
+                            dataList.add(data1)
                         }
                     }
-                    // Only add data to the list if it has Incubating eggs
-                    if (data1.eggIncubating != null) {
-                        dataList.add(data1)
-                    }
                 }
+
             }
         }
 
