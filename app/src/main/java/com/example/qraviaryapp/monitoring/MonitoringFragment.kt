@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -60,7 +61,7 @@ class MonitoringFragment : Fragment() {
     private lateinit var monitoringlayout: LinearLayout
     private lateinit var nodevicelayout: LinearLayout
     private lateinit var monitoringView: LinearLayout
-
+    private lateinit var visitwebsite: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -87,7 +88,13 @@ class MonitoringFragment : Fragment() {
         val currentUserId = mAuth.currentUser?.uid
         val db = FirebaseDatabase.getInstance().getReference("Users")
             .child("ID: ${currentUserId.toString()}")
+        visitwebsite = view.findViewById(R.id.visitwebsite)
 
+        visitwebsite.setOnClickListener {
+            val websiteUrl = "https://qraviary.wixsite.com/my-site"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
+            startActivity(intent)
+        }
         db.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val roomDetails = dataSnapshot.child("Aviary")
