@@ -323,29 +323,68 @@ class AddPairActivity : AppCompatActivity() {
 
 
         if (validMale && validFemale && validCage && validDate){
-            if (parentAndChild) {
-                val builder = AlertDialog.Builder(this@AddPairActivity)
-                builder.setTitle("Confirmation")
+            val userId = mAuth.currentUser?.uid.toString()
+            val newMaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
+                .child(btnMaleValueKey.toString())
+            val newFemaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
+                .child(btnFemaleValueKey.toString())
 
-                builder.setMessage("They are Parent and Child.\nAre you sure you want to save?")
-                builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
-                    // Execute addPair() when the user clicks "Yes"
-                    addPair()
-
+            //Checking parent ref for the female bird
+            val femaleParentRef = newFemaleBirdsPref.child("Parents")
+            femaleParentRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val fatherKey = snapshot.child("BirdFatherKey").value?.toString()
+                    if (fatherKey == btnMaleValueKey) {
+                        parentAndChild = true
+                    }
+                    checkMaleParent(userId, parentAndChild)
                 }
-                builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
 
-                    dialogInterface.dismiss()
-
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle error
                 }
-                val dialog = builder.create()
-                dialog.show()
-            } else {
-                addPair()
-            }
+            })
          }
     }
+    private fun checkMaleParent(userId: String, femaleParentAndChild: Boolean) {
+        val newMaleBirdsPref = db.child("Users").child("ID: $userId").child("Birds")
+            .child(btnMaleValueKey.toString())
+        val maleParentRef = newMaleBirdsPref.child("Parents")
 
+        maleParentRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val motherKey = snapshot.child("BirdMotherKey").value?.toString()
+                if (motherKey == btnFemaleValueKey) {
+                    parentAndChild = true
+                }
+
+                if (femaleParentAndChild || parentAndChild) {
+                    showParentChildAlertDialog1("Both birds are parent and child. Are you sure you want to save?")
+                } else {
+                    addPair()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
+
+    private final fun showParentChildAlertDialog1(message: String) {
+        val builder = AlertDialog.Builder(this@AddPairActivity)
+        builder.setTitle("Confirmation")
+        builder.setMessage(message)
+        builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+            // Execute addPair() when the user clicks "Yes"
+            addPair()
+        }
+        builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
     fun addPair() {
         val cageValue = etCage.text.toString()
 //        val nestValue = etNest.text.toString()
