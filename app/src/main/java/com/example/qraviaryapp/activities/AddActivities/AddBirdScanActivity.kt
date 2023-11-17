@@ -91,6 +91,7 @@ class AddBirdScanActivity : AppCompatActivity() {
             decodeCallback = DecodeCallback {
                 val jsonData = JSONObject(it.text)
                 if (jsonData.has("AddBirdQR")) {
+                    Log.d(TAG,"ADDSCANQR")
                     val status = jsonData.getString("Status")
                     val i = Intent()
                     i.putExtra("BirdIdentifier", jsonData.getString("Identifier"))
@@ -157,8 +158,8 @@ class AddBirdScanActivity : AppCompatActivity() {
                     i.putExtra("BirdMotherId", jsonData.getString("MotherId"))
                     i.putExtra("BirdMotherKey", jsonData.getString("MotherKey"))
                     i.putExtra("BirdMotherBirdKey", jsonData.getString("MotherBirdKey"))
-                    i.putExtra("BirdCageName", jsonData.getString("CageName"))
-                    i.putExtra("BirdCageKey", jsonData.getString("CageKey"))
+//                    i.putExtra("BirdCageName", jsonData.optString("CageName", ""))
+//                    i.putExtra("BirdCageKey", jsonData.optString("CageKey", ""))
                     if (status == "Available") {
                         i.putExtra("BirdAvailableCage", jsonData.getString("AvailableCage"))
                     } else if (status == "For Sale") {
