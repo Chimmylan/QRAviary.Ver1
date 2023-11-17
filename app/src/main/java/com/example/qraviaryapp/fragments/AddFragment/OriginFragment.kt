@@ -351,24 +351,23 @@ class OriginFragment : Fragment() {
         val descendantsmotherkey = descendantMotherRef.key
 
 
-        if (boughtLayout.visibility == View.VISIBLE) {
-            if (boughtDateBtn.text.isNullOrEmpty()) {
-                // Set the current date and time in MMM d yyyy format
-                val currentDate = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(Date())
-                boughtDateBtn.text = currentDate
-            }
-            if (etBuyPrice.text.isNullOrEmpty()) {
-                etBuyPrice.setText("0")
-            } else {
-
-            }
-        }
 
         if (boughtLayout.visibility == View.VISIBLE) {
 
 
 
             if (successBasic) {
+                if (dataBoughtDate.isNullOrBlank()) {
+                    // Set the current date and time in MMM d yyyy format
+                    val currentDate = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(Date())
+                    boughtDateBtn.text = currentDate
+                }
+
+                if (etBuyPrice.text.isNullOrBlank()) {
+                    // Set the buy price to 0
+                    etBuyPrice.setText("0")
+                }
+
                 purchaseId = purchasesRef.key
                 var date: Date? = null
                 if (!dataBoughtDate.isNullOrBlank()) {
@@ -405,8 +404,8 @@ class OriginFragment : Fragment() {
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
                         "Purchase Id" to purchasekey,
-                        "Buy Price" to etBuyPrice,
-                        "Bought On" to boughtDateBtn,
+                        "Buy Price" to etBuyPrice.text.toString(),
+                        "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
                         "Breeder" to birdBreeder,
                         "Death Date" to birdDeceaseDate,
