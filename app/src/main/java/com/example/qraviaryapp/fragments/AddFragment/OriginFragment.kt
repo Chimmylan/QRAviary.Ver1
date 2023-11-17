@@ -357,13 +357,14 @@ class OriginFragment : Fragment() {
 
 
             if (successBasic) {
+                val buyPriceText = etBuyPrice.text.toString()
                 if (dataBoughtDate.isNullOrBlank()) {
                     // Set the current date and time in MMM d yyyy format
                     val currentDate = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(Date())
                     boughtDateBtn.text = currentDate
                 }
 
-                if (etBuyPrice.text.isNullOrBlank()) {
+                if (buyPriceText.isNullOrBlank()) {
                     // Set the buy price to 0
                     etBuyPrice.setText("0")
                 }
