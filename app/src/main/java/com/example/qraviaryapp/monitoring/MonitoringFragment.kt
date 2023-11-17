@@ -145,14 +145,14 @@ class MonitoringFragment : Fragment() {
 //                            // Update last temperature after checking
 //                            lastTemp = temperatureDouble
 //                        }
-                        var notificationSent = false // Initialize the flag
 
-                        if (temperatureDouble >= 30.00 && temperatureDouble % 1.0 == 0.0 && !notificationSent) {
+                        if (temperatureDouble >= 30.00 && temperatureDouble % 1.0 == 0.0 && temperatureDouble != lastTemp) {
                             // Send notification when the decimal part is exactly 00
                             sendTempNotification("High", temperatureDouble)
                         }else if(temperatureDouble <= 29.00){
                             sendTempNotification("Normal", temperatureDouble)
                         }
+                        lastTemp = temperatureDouble
 
 
                     } else if (temperatureDouble < maxTemperature) {
@@ -218,13 +218,13 @@ class MonitoringFragment : Fragment() {
                     val tempDifference = roundedTemp - lastTempIncubator
                     val tempThreshold = 1.0
 
-                    if(temperatureIncubatorDouble != null && temperatureIncubatorDouble >= 36.9){
+                    if(temperatureIncubatorDouble != null && temperatureIncubatorDouble >= 36.9 && temperatureIncubatorDouble != lastTempIncubator){
                         sendTempNotificationIncubator("High", temperatureIncubatorDouble)
 
-                        lastTempIncubator = temperatureIncubatorDouble
-                    }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble == 35.00){
+                    }else if(temperatureIncubatorDouble != null && temperatureIncubatorDouble == 35.00 && temperatureIncubatorDouble != lastTempIncubator){
                         sendTempNotificationIncubator("Normal", temperatureIncubatorDouble)
                     }
+                    lastTempIncubator = temperatureIncubatorDouble
                 }
 
                 if (humidityIncubator is Number) {
