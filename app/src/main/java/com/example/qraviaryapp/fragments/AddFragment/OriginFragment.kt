@@ -345,29 +345,30 @@ class OriginFragment : Fragment() {
         var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
 
-        var validBought = false
+
 
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
+
+
         if (boughtLayout.visibility == View.VISIBLE) {
-            if (TextUtils.isEmpty(boughtDateBtn.text)) {
-                boughtDateBtn.error = "Pick Bought Date"
-            } else {
-                validBought = true
+            if (boughtDateBtn.text.isNullOrEmpty()) {
+                // Set the current date and time in MMM d yyyy format
+                val currentDate = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(Date())
+                boughtDateBtn.text = currentDate
             }
-            if (TextUtils.isEmpty(etBuyPrice.text)) {
-                etBuyPrice.error = "Enter Price"
-            } else if (!TextUtils.isDigitsOnly(etBuyPrice.text)) {
-                etBuyPrice.error = "Enter a valid price..."
+            if (etBuyPrice.text.isNullOrEmpty()) {
+                etBuyPrice.setText("0")
             } else {
-                validBought = true
+
             }
         }
+
         if (boughtLayout.visibility == View.VISIBLE) {
 
 
 
-            if (validBought && successBasic) {
+            if (successBasic) {
                 purchaseId = purchasesRef.key
                 var date: Date? = null
                 if (!dataBoughtDate.isNullOrBlank()) {
@@ -404,8 +405,8 @@ class OriginFragment : Fragment() {
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
                         "Purchase Id" to purchasekey,
-                        "Buy Price" to birdData.buyPrice,
-                        "Bought On" to birdData.boughtDate,
+                        "Buy Price" to etBuyPrice,
+                        "Bought On" to boughtDateBtn,
                         "Bought Breeder" to birdData.breederContact,
                         "Breeder" to birdBreeder,
                         "Death Date" to birdDeceaseDate,

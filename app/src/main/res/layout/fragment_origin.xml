@@ -133,7 +133,7 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Pick Date"
+                            android:hint="Today"
                             android:textAlignment="textStart"
                             app:icon="@drawable/drop_down"
                             app:iconGravity="end" />
@@ -149,6 +149,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBuyPrice"
                         android:layout_width="match_parent"
+                        android:hint="0.00"
+                        android:inputType="number"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5" />
                     <TextView
