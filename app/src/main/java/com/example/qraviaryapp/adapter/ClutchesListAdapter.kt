@@ -396,6 +396,8 @@ class ClutchesViewHolder(itemView: View, private val dataList: MutableList<EggDa
             bundle.putString("CageKeyMale", dataList[adapterPosition].eggcagekeyMale)
             bundle.putString("CageBirdFemale", dataList[adapterPosition].eggcagebirdFemale)
             bundle.putString("CageBirdMale", dataList[adapterPosition].eggcagebirdMale)
+            dataList[adapterPosition].parentPair?.let { it1 -> bundle.putBoolean("Parent", it1) }
+            dataList[adapterPosition].fosterPair?.let { it1 -> bundle.putBoolean("Foster Pair", it1) }
             val i = Intent(itemView.context, ClutchesDetailedActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)
