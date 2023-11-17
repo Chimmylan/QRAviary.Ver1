@@ -345,30 +345,29 @@ class OriginFragment : Fragment() {
         var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
 
-
+        var validBought = false
 
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
-
-
-
+        if (boughtLayout.visibility == View.VISIBLE) {
+            if (TextUtils.isEmpty(boughtDateBtn.text)) {
+                boughtDateBtn.error = "Pick Bought Date"
+            } else {
+                validBought = true
+            }
+            if (TextUtils.isEmpty(etBuyPrice.text)) {
+                etBuyPrice.error = "Enter Price"
+            } else if (!TextUtils.isDigitsOnly(etBuyPrice.text)) {
+                etBuyPrice.error = "Enter a valid price..."
+            } else {
+                validBought = true
+            }
+        }
         if (boughtLayout.visibility == View.VISIBLE) {
 
 
 
-            if (successBasic) {
-                val buyPriceText = etBuyPrice.text.toString()
-                if (dataBoughtDate.isNullOrBlank()) {
-                    // Set the current date and time in MMM d yyyy format
-                    val currentDate = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(Date())
-                    boughtDateBtn.text = currentDate
-                }
-
-                if (buyPriceText.isNullOrBlank()) {
-                    // Set the buy price to 0
-                    etBuyPrice.setText("0")
-                }
-
+            if (validBought && successBasic) {
                 purchaseId = purchasesRef.key
                 var date: Date? = null
                 if (!dataBoughtDate.isNullOrBlank()) {
@@ -405,7 +404,7 @@ class OriginFragment : Fragment() {
                         "Requested Price" to birdRequestedPrice,
                         "Comments" to birdComment,
                         "Purchase Id" to purchasekey,
-                        "Buy Price" to etBuyPrice.text.toString(),
+                        "Buy Price" to birdData.buyPrice,
                         "Bought On" to birdData.boughtDate,
                         "Bought Breeder" to birdData.breederContact,
                         "Breeder" to birdBreeder,
