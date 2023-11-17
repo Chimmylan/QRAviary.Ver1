@@ -193,7 +193,7 @@ class MutationsActivity : AppCompatActivity(), ClickListener {
         val sharedPreferences = this.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
         val incubatingValue = sharedPreferences.getString("incubatingValue", "21")
-        val maturingValue = sharedPreferences.getString("maturingValue", "50")
+        val maturingValue = sharedPreferences.getString("maturingValue", "100")
         editor.apply()
         btnCancel.setOnClickListener {
             alertDialog.dismiss()
