@@ -137,7 +137,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         adulting =
             MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_aldulting)) as TextView
 
-        initializeCountDrawer()
+//        initializeCountDrawer()
 
         checkElapsedTime()
     }
