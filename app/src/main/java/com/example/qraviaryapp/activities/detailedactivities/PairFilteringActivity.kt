@@ -132,6 +132,8 @@ class PairFilteringActivity : AppCompatActivity() {
 
                 fromBtn.setText("")
                 toBtn.setText("")
+                currentCb.isChecked = false
+                previousCb.isChecked = false
 
                 true
             }

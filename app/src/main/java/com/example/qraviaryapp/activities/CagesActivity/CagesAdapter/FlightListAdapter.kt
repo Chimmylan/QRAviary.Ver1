@@ -3,9 +3,11 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 import BirdData
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class FlightListAdapter(
     val context: android.content.Context,
@@ -61,9 +65,33 @@ class FlightListAdapter(
     }
 
     private fun deleteBird(bird: BirdData, position: Int) {
-        // Implement bird deletion logic here
-        // You may want to update your data list, remove the bird, and notify the adapter
-        // Example:
+        val birdRef = bird.adultingKey
+        val flight = bird.flightKey
+        val cageBirdRef = bird.birdKey
+        val cageKeyRef = bird.cageKey
+
+        Log.d(ContentValues.TAG, birdRef + " " + flight + " " + cageBirdRef + " " + cageKeyRef )
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val birdRefPath =
+            FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
+                .child("Birds")
+                .child(birdRef.toString())
+        val birdCage = birdRefPath.child("Cage").removeValue()
+        val birdCageKey = birdRefPath.child("CageKey").removeValue()
+
+        val nurseryRefPath =
+            FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
+                .child("Flight Birds")
+                .child(flight.toString())
+        val nurseryCage = nurseryRefPath.child("Cage").removeValue()
+        val nirseryCageKey = nurseryRefPath.child("CageKey").removeValue()
+
+        val cagePath =
+            FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
+                .child("Cages").child("Flight Cages").child(cageKeyRef.toString())
+                .child("Birds").child(cageBirdRef.toString()).removeValue()
+
         dataList.removeAt(position)
         notifyItemRemoved(position)
     }

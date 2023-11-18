@@ -148,6 +148,8 @@ class FlightListActivity : AppCompatActivity() {
 
 
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                val birdsKey = itemSnapshot.child("Bird Key").value.toString()
+                val cageKey = itemSnapshot.child("CageKey").value.toString()
                 val birdKey = itemSnapshot.key
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
@@ -243,6 +245,8 @@ class FlightListActivity : AppCompatActivity() {
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
                 data.flightKey = flightKey
+                data.adultingKey = birdsKey
+                data.cageKey = cageKey
                 data.legband = legband
                 data.identifier = identifier
                 data.gender = gender
