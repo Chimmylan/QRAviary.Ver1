@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PairsDetailedActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class BreedingListAdapter(
     private val context: Context,
@@ -47,9 +49,13 @@ class BreedingListAdapter(
     }
 
     private fun deleteBird(bird: PairData, position: Int) {
-        // Implement bird deletion logic here
-        // You may want to update your data list, remove the bird, and notify the adapter
-        // Example:
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        val breedingPath = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
+            .child("Cages").child("Breeding Cages").child(bird.cageKey.toString()).child("Pair Birds")
+            .child(bird.pairCageKey.toString()).removeValue()
+
         dataList.removeAt(position)
         notifyItemRemoved(position)
     }

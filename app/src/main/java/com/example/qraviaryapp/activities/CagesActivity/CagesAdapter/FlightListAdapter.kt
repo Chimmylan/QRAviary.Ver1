@@ -29,6 +29,7 @@ class FlightListAdapter(
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
+
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -36,6 +37,7 @@ class FlightListAdapter(
         // Assuming dataList is sorted by mutation name
         return dataList[position].month?.substring(0, 4) ?: ""
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_flightlist, parent, false)
 
@@ -70,21 +72,21 @@ class FlightListAdapter(
         val cageBirdRef = bird.birdKey
         val cageKeyRef = bird.cageKey
 
-        Log.d(ContentValues.TAG, birdRef + " " + flight + " " + cageBirdRef + " " + cageKeyRef )
+        Log.d(ContentValues.TAG, birdRef + " " + flight + " " + cageBirdRef + " " + cageKeyRef)
 
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         val birdRefPath =
             FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
                 .child("Birds")
                 .child(birdRef.toString())
-        val birdCage = birdRefPath.child("Cage").removeValue()
+        val birdCage = birdRefPath.child("Cage").setValue("None")
         val birdCageKey = birdRefPath.child("CageKey").removeValue()
 
         val nurseryRefPath =
             FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
                 .child("Flight Birds")
                 .child(flight.toString())
-        val nurseryCage = nurseryRefPath.child("Cage").removeValue()
+        val nurseryCage = nurseryRefPath.child("Cage").setValue("None")
         val nirseryCageKey = nurseryRefPath.child("CageKey").removeValue()
 
         val cagePath =
@@ -93,8 +95,9 @@ class FlightListAdapter(
                 .child("Birds").child(cageBirdRef.toString()).removeValue()
 
         dataList.removeAt(position)
-        notifyItemRemoved(position)
+        notifyDataSetChanged()
     }
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val bird = dataList[position]
 
@@ -192,7 +195,7 @@ class FlightListAdapter(
 
 class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) :
     RecyclerView.ViewHolder(itemView) {
-    var imageView : ImageView = itemView.findViewById(R.id.birdImageView)
+    var imageView: ImageView = itemView.findViewById(R.id.birdImageView)
     var tvIdentifier: TextView = itemView.findViewById(R.id.tvIdentifier)
     var tvLegband: TextView = itemView.findViewById(R.id.tvLegband)
     var tvMutation: TextView = itemView.findViewById(R.id.tvMutation)
@@ -200,6 +203,7 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
     var delete: ImageView = itemView.findViewById(R.id.options)
+
     init {
 
         itemView.setOnClickListener {

@@ -138,13 +138,7 @@ class BreedingListActivity : AppCompatActivity() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-        total = totalcurrent + totalprevious
-        if (total>1){
-            totalBirds.text = total.toString() + " Pairs"
-        }
-        else{
-            totalBirds.text = total.toString() + " Pair"
-        }
+
         refreshApp()
     }
     private fun refreshApp() {
@@ -165,6 +159,15 @@ class BreedingListActivity : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                     Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+                }
+
+                loadingProgressBar.visibility = View.GONE
+                total = totalcurrent + totalprevious
+                if (total>1){
+                    totalBirds.text = total.toString() + " Pairs"
+                }
+                else{
+                    totalBirds.text = total.toString() + " Pair"
                 }
             }
             lifecycleScope.launch {
@@ -221,7 +224,10 @@ class BreedingListActivity : AppCompatActivity() {
                     val pairMaleKey = itemSnapshot.child("Male Bird Key").value.toString()
                     val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
                     val separateDate = itemSnapshot.child("Separate Date").value.toString()
-
+                    val pairCageKey = itemSnapshot.child("Pair Cage Key").value.toString()
+                    val cageKey = itemSnapshot.child("Cage Key").value.toString()
+                    data.cageKey = cageKey
+                    data.pairCageKey = pairCageKey
                     data.pairMaleKey = pairMaleKey
                     data.pairFemaleKey = pairFemaleKey
                     data.pairKey = key
@@ -373,6 +379,13 @@ class BreedingListActivity : AppCompatActivity() {
             }
             finally {
                 loadingProgressBar.visibility = View.GONE
+                total = totalcurrent + totalprevious
+                if (total>1){
+                    totalBirds.text = total.toString() + " Pairs"
+                }
+                else{
+                    totalBirds.text = total.toString() + " Pair"
+                }
             }
         }
         lifecycleScope.launch {
@@ -393,6 +406,8 @@ class BreedingListActivity : AppCompatActivity() {
                 loadingProgressBar.visibility = View.GONE
             }
         }
+
+
     }
 
     fun deleteCage() {

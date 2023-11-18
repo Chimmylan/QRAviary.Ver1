@@ -102,14 +102,14 @@ class NurseryListAdapter(
             FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
                 .child("Birds")
                 .child(birdRef.toString())
-        val birdCage = birdRefPath.child("Cage").removeValue()
+        val birdCage = birdRefPath.child("Cage").setValue("None")
         val birdCageKey = birdRefPath.child("CageKey").removeValue()
 
         val nurseryRefPath =
             FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
                 .child("Nursery Birds")
                 .child(nurseryRef.toString())
-        val nurseryCage = nurseryRefPath.child("Cage").removeValue()
+        val nurseryCage = nurseryRefPath.child("Cage").setValue("None")
         val nirseryCageKey = nurseryRefPath.child("CageKey").removeValue()
 
         val cagePath =

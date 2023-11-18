@@ -485,6 +485,13 @@ class AddPairActivity : AppCompatActivity() {
                 val femaleParentRef = newFemaleBirdsPref.child("Parents")
                 val maleParentRef = newMaleBirdsPref.child("Parents")
 
+                val fligpref = db.child("Users").child("ID: $userId").child("Cages").child("Flight Cages").child(cageKeyFlightFemaleValue.toString())
+                    .child(CageBirdKeyMother.toString())
+
+                val femaleflightref = db.child("Users").child("ID: $userId").child("Cages").child("Flight Cages").child(cageKeyFlightFemaleValue.toString())
+                    .child(CageBirdKeyMother.toString())
+
+
 
                 val newPairPref = userBird.push() //pairkey
 
@@ -572,6 +579,17 @@ class AddPairActivity : AppCompatActivity() {
                                 bundleData.put("CageBirdFemale", cageKeyFlightFemaleValue)
                                 bundleData.put("CageBirdMale", cageKeyFlightMaleValue)
                                 bundleData.put("CagePairKey", cageReference.key.toString())
+
+                                fligpref.removeValue()
+                                femaleflightref.removeValue()
+                                newFemaleBirdsPref.child("CageKey").setValue(cageReference.key.toString())
+                                newFemaleFlightBirdsPref.child("CageKey").setValue(cageReference.key.toString())
+                                newMaleBirdsPref.child("CageKey").setValue(cageReference.key.toString())
+                                newMaleFlightBirdsPref.child("CageKey").setValue(cageReference.key.toString())
+                                newFemaleBirdsPref.child("Cage").setValue(bird.pairCage)
+                                newFemaleFlightBirdsPref.child("Cage").setValue(bird.pairCage)
+                                newMaleBirdsPref.child("Cage").setValue(bird.pairCage)
+                                newMaleFlightBirdsPref.child("Cage").setValue(bird.pairCage)
 
                                 newMaleBirdsPref.child("Status").setValue("Paired")
                                 newFemaleBirdsPref.child("Status").setValue("Paired")
