@@ -138,7 +138,16 @@ class SaleFilterActivity : AppCompatActivity() {
                 finish()
                 return true
             }
+            R.id.ic_erase -> {
+                maleCb.isChecked = false
+                femaleCb.isChecked = false
+                unknownCb.isChecked = false
+                etBuyer.setText("")
+                fromBtn.setText("")
+                toBtn.setText("")
 
+                true
+            }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 return true
