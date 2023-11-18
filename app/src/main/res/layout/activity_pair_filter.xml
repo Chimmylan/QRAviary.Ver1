@@ -58,9 +58,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="X"
+                        android:text="-"
                         android:gravity="center"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         android:layout_weight="1"/>
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnmutation2"
@@ -75,13 +75,7 @@
                         app:iconTint="@color/black"
                         android:text="To"
                         android:textColor="@color/black" />
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:padding="2dp"
 
-                        android:layout_height="match_parent"
-                        android:src="@drawable/x"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -127,9 +121,10 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="X"
+                        android:text="-
+"
                         android:gravity="center"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         android:layout_weight="1"/>
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnseperatedate"
@@ -144,13 +139,7 @@
                         app:iconTint="@color/black"
                         android:text="To"
                         android:textColor="@color/black" />
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:padding="2dp"
 
-                        android:layout_height="match_parent"
-                        android:src="@drawable/x"/>
                 </LinearLayout>
 
             </LinearLayout>
