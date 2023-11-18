@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PreviousPairActivity
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PreviousPairAdapter(
     val context: Context,
@@ -70,6 +72,39 @@ class PreviousPairAdapter(
         holder.maleBird.text = pairs.pairMale
         holder.maleMutation.text = pairs.pairMaleMutation
 
+    }
+    private var originalList = dataList
+
+    fun filterDataRange(
+        fromDate: String? = null,
+        toDate: String? = null,
+
+        ) {
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+
+        val fromDateObj = fromDate?.let { dateFormat.parse(it) }
+        val toDateObj = toDate?.let { dateFormat.parse(it) }
+
+        val filteredList = originalList.filter { bird ->
+            val pairDateBeg = bird.pairDateBeg
+
+
+            val soldDateObj = pairDateBeg?.let { dateFormat.parse(it) }
+
+            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+
+            isDateInRange
+        }
+
+        setData(filteredList.toMutableList())
+    }
+
+
+
+    private fun setData(newData: MutableList<PairData>) {
+        dataList.clear()
+        dataList.addAll(newData)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

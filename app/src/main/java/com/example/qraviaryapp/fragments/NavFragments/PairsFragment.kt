@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
@@ -39,6 +40,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -63,6 +65,14 @@ class PairsFragment : Fragment() {
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
+    private var toDate: String? = null
+    private var fromDate: String? = null
+    private var currentPair: Boolean? = null
+    private var previousPair: Boolean? = null
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     var totalcurrent: Int = 0
     var totalprevious: Int = 0
     var total: Int = 0
@@ -80,6 +90,15 @@ class PairsFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
 
+        val currentUserId = mAuth.currentUser?.uid
+
+
+        sharedPreferences =
+            requireContext().getSharedPreferences(
+                "${currentUserId}_PairsFilter",
+                Context.MODE_PRIVATE
+            )
+        editor = sharedPreferences.edit()
 
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 //        val gridLayoutManager1 = GridLayoutManager(requireContext(), 1)
@@ -156,11 +175,12 @@ class PairsFragment : Fragment() {
         // Register the NetworkCallback
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
-            refreshApp()
+        refreshApp()
 
 
         return view
     }
+
     private fun refreshApp() {
         swipeToRefresh.setOnRefreshListener {
             lifecycleScope.launch {
@@ -225,7 +245,8 @@ class PairsFragment : Fragment() {
                     val cageName = itemSnapshot.child("Cage").value.toString()
                     val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
                     val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
-                    val cageBirdFemale = itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
+                    val cageBirdFemale =
+                        itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
                     val cageBirdMale = itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
                     val male = itemSnapshot.child("Male").value.toString()
                     val female = itemSnapshot.child("Female").value.toString()
@@ -236,7 +257,8 @@ class PairsFragment : Fragment() {
                     val pairFemaleKey = itemSnapshot.child("Female Bird Key").value.toString()
                     val separateDate = itemSnapshot.child("Separate Date").value.toString()
                     val pairMaleFlightKey = itemSnapshot.child("Male Flight Key").value.toString()
-                    val pairFemaleFlightKey = itemSnapshot.child("Female Flight Key").value.toString()
+                    val pairFemaleFlightKey =
+                        itemSnapshot.child("Female Flight Key").value.toString()
                     val pairCageKey = itemSnapshot.child("Cage Key").value.toString()
                     val cagePairKey = itemSnapshot.child("Pair Cage Key").value.toString()
 
@@ -259,7 +281,7 @@ class PairsFragment : Fragment() {
 
                     data.pairDateBeg = beginningDate
                     data.pairDateSep = separateDate
-                    data.paircagebirdFemale =cageBirdFemale
+                    data.paircagebirdFemale = cageBirdFemale
                     data.paircagebirdMale = cageBirdMale
                     data.paircagekeyFemale = cageKeyFemale
                     data.paircagekeyMale = cageKeyMale
@@ -279,10 +301,12 @@ class PairsFragment : Fragment() {
         totalcurrent = dataList.size
         dataList
     }
+
     private fun extractYearFromDateString(dateString: String): String {
         val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
         return date?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) } ?: ""
     }
+
     private suspend fun getDataFromDatabasePrevious(): List<PairData> =
         withContext(Dispatchers.IO) {
 
@@ -303,8 +327,10 @@ class PairsFragment : Fragment() {
                         val cageName = itemSnapshot.child("Cage").value.toString()
                         val cageKeyFemale = itemSnapshot.child("CageKeyFemale").value.toString()
                         val cageKeyMale = itemSnapshot.child("CageKeyMale").value.toString()
-                        val cageBirdFemale = itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
-                        val cageBirdMale = itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
+                        val cageBirdFemale =
+                            itemSnapshot.child("CageKeyFlightFemaleValue").value.toString()
+                        val cageBirdMale =
+                            itemSnapshot.child("CageKeyFlightMaleValue").value.toString()
                         val male = itemSnapshot.child("Male").value.toString()
                         val female = itemSnapshot.child("Female").value.toString()
                         val maleMutation = itemSnapshot.child("Male Mutation").value.toString()
@@ -333,7 +359,7 @@ class PairsFragment : Fragment() {
                         data.pairDateBeg = beginningDate
                         data.pairyearbeg = extractYearFromDateString(beginningDate)
                         data.pairDateSep = separateDate
-                        data.paircagebirdFemale =cageBirdFemale
+                        data.paircagebirdFemale = cageBirdFemale
                         data.paircagebirdMale = cageBirdMale
                         data.paircagekeyFemale = cageKeyFemale
                         data.paircagekeyMale = cageKeyMale
@@ -346,7 +372,7 @@ class PairsFragment : Fragment() {
 
                         dataList.add(data)
                     } else {
-                       
+
                     }
                 }
 
@@ -360,6 +386,42 @@ class PairsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        toDate = arguments?.getString("ToDate")
+        fromDate = arguments?.getString("FromDate")
+
+        currentPair = arguments?.getBoolean("current")
+        previousPair = arguments?.getBoolean("previous")
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val sharedPreferencesFileName = "${currentUserId}_PairsFilter"
+        val sharedPreferencesFile =
+            File("/data/data/com.example.qraviaryapp/shared_prefs/$sharedPreferencesFileName.xml")
+
+
+        if (!sharedPreferencesFile.exists()) {
+            editor.putBoolean("pairs_Current Pairs", true)
+            editor.putBoolean("pairs_Previous Pairs", true)
+            editor.apply()
+        }
+
+        //gender
+        val current = sharedPreferences.getBoolean("pairs_Current Pairs", false)
+        val previous = sharedPreferences.getBoolean("pairs_Previous Pairs", false)
+
+        if (!current) {
+            recyclerView.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+        }
+
+        if (!previous) {
+            recyclerView1.visibility = View.GONE
+        } else {
+            recyclerView1.visibility = View.VISIBLE
+
+        }
+
+        Log.d(TAG, "TOOOO DATE :" + toDate)
         // Call a function to reload data from the database and update the RecyclerView
         reloadDataFromDatabase()
 
@@ -380,6 +442,7 @@ class PairsFragment : Fragment() {
 
                 dataList.clear()
                 dataList.addAll(data)
+                filterdata()
                 adapter.notifyDataSetChanged()
                 if (!dataList.isEmpty()) {
                     current.visibility = View.VISIBLE
@@ -389,6 +452,7 @@ class PairsFragment : Fragment() {
 
                 dataList1.clear()
                 dataList1.addAll(dataPrevious)
+                filterdata()
                 adapter1.notifyDataSetChanged()
                 if (!dataList1.isEmpty()) {
                     previous.visibility = View.VISIBLE
@@ -410,5 +474,11 @@ class PairsFragment : Fragment() {
                 loadingProgressBar.visibility = View.GONE
             }
         }
+    }
+
+    fun filterdata() {
+
+        adapter.filterDataRange(fromDate, toDate)
+        adapter1.filterDataRange(fromDate, toDate)
     }
 }

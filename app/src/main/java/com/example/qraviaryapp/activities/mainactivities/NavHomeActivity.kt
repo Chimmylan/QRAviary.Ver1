@@ -377,9 +377,9 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     }
 
                     is PairsFragment -> {
-                        // Handle the ic_filter action for the BirdsFragment
+                        val requestCode = 4
                         val intent = Intent(this, PairFilteringActivity::class.java)
-                        startActivity(intent)
+                        startActivityForResult(intent, requestCode)
                     }
 
                     is NavSalesFragment -> {
@@ -481,6 +481,28 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 bundle.putString("maximum", maximum)
                 bundle.putStringArrayList("checkedCategory", categories)
 
+
+                fragment.arguments = bundle
+            }
+        }
+
+        if (requestCode == 4) {
+            if (resultCode == RESULT_OK) {
+                val fromDate = data?.getStringExtra("FromDate")
+                val toDate = data?.getStringExtra("ToDate")
+                val current = data?.getBooleanExtra("current", false)
+                val previous = data?.getBooleanExtra("previous", false)
+
+                val bundle = Bundle()
+
+                bundle.putString("FromDate", fromDate)
+                bundle.putString("ToDate", toDate)
+                if (current != null) {
+                    bundle.putBoolean("current", current)
+                }
+                if (previous != null){
+                    bundle.putBoolean("previous", previous)
+                }
 
                 fragment.arguments = bundle
             }
