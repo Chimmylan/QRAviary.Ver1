@@ -255,7 +255,7 @@ class MonitoringFragment : Fragment() {
                             humidity as Double
                         )
                     }
-                    lastTempIncubator = temperatureIncubatorDouble
+                    lastTemp  = temperatureIncubatorDouble
                 }
 
                 if (humidityIncubator is Number) {
