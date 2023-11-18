@@ -50,7 +50,10 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -121,8 +124,7 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var etExReason: EditText
     private lateinit var etDeathReason: EditText
     private lateinit var etSoldSalePrice: EditText
-    private lateinit var etAvailCage: MaterialButton
-    private lateinit var etForSaleCage: MaterialButton
+
     private lateinit var etForSaleReqPrice: EditText
     lateinit var etIdentifier: EditText
     private lateinit var etLostDetails: EditText
@@ -164,7 +166,6 @@ class GenerateBirdFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
     private var status: String? = null
-    private lateinit var cageReference: DatabaseReference
 
     //endregion
     private lateinit var sharedPreferences: SharedPreferences
@@ -203,7 +204,6 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var tvBirdMutation: TextView
     private lateinit var tvBirdDateOfBirth: TextView
     private lateinit var tvBirdStatus: TextView
-    private lateinit var tvBirdCage: TextView
     private lateinit var tvBirdFather: TextView
     private lateinit var tvBirdMother: TextView
     private lateinit var tvBirdBuyPrice: TextView
@@ -223,10 +223,9 @@ class GenerateBirdFragment : Fragment() {
     private lateinit var tvBirdRequestedPrice: TextView
     private lateinit var tvBirdComment: TextView
     private lateinit var tvBirdBreederOtherBreed: TextView
+    private lateinit var dllayout: LinearLayout
 
-    private lateinit var cagescan: CardView
-    private lateinit var cagescan1: CardView
-
+    private lateinit var imageqrlayout: LinearLayout
     private lateinit var qrLayout: LinearLayout
 
     var birdData = BirdData()
@@ -253,9 +252,10 @@ class GenerateBirdFragment : Fragment() {
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
         boughtDateBtn = view.findViewById(R.id.boughtDate)
-
+        dllayout=view.findViewById(R.id.dllayout)
         qrLayout = view.findViewById(R.id.qrlayout)
-
+        imageqrlayout = view.findViewById(R.id.qrimagelayout)
+        dllayout.visibility =View.GONE
         initDatePickers()
         showDatePickerDialog(requireContext(), datebirthButton, datePickerDialogBirth)
         /*showDatePickerDialog(requireContext(), datebandButton, datePickerDialogBanding)*/
@@ -297,8 +297,6 @@ class GenerateBirdFragment : Fragment() {
 
         /*EditText*/
         etLegband = view.findViewById(R.id.etLegband)
-        etAvailCage = view.findViewById(R.id.etAvailCage)
-        etForSaleCage = view.findViewById(R.id.etForSaleCage)
         etForSaleReqPrice = view.findViewById(R.id.etForSaleReqPrice)
         etSoldSalePrice = view.findViewById(R.id.soldSalePrice)
         etOtherComm = view.findViewById(R.id.etOthersComm)
@@ -350,7 +348,6 @@ class GenerateBirdFragment : Fragment() {
         tvBirdMutation = view.findViewById(R.id.BirdMutation)
         tvBirdDateOfBirth = view.findViewById(R.id.BirdDateOfBirth)
         tvBirdStatus = view.findViewById(R.id.BirdStatus)
-        tvBirdCage = view.findViewById(R.id.BirdCage)
         tvBirdFather = view.findViewById(R.id.BirdFather)
         tvBirdMother = view.findViewById(R.id.BirdMother)
         tvBirdBuyPrice = view.findViewById(R.id.BirdBuyPrice)
@@ -372,14 +369,7 @@ class GenerateBirdFragment : Fragment() {
         tvBirdBreederOtherBreed = view.findViewById(R.id.BirdOtherBreeder)
 
         rbUnknown.isChecked
-        cagescan = view.findViewById(R.id.cagescan)
-        cagescan.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-        }
-        cagescan1 = view.findViewById(R.id.cagescan1)
-        cagescan1.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-        }
+
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
@@ -417,17 +407,6 @@ class GenerateBirdFragment : Fragment() {
 
         }
 
-        etAvailCage.setOnClickListener {
-            val requestCode = 7 // You can use any integer as the request code
-            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
-            startActivityForResult(intent, requestCode)
-        }
-        etForSaleCage.setOnClickListener {
-            val requestCode = 7 // You can use any integer as the request code
-            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
-            startActivityForResult(intent, requestCode)
-
-        }
 
         boughtLayout.visibility = View.GONE
         otLayout.visibility = View.GONE
@@ -460,14 +439,13 @@ class GenerateBirdFragment : Fragment() {
 
         btnGenerate.setOnClickListener {
             qrLayout.visibility = View.VISIBLE
+            dllayout.visibility=View.VISIBLE
             val selectedOption: Int = rgGender.checkedRadioButtonId
 
 
 
 
             dataSelectedGen = view?.findViewById<RadioButton>(selectedOption)!!
-            val dataAvailCage = getTextFromVisibleMaterialButton(etAvailCage, availableLayout)
-            val dataSaleCage = getTextFromVisibleMaterialButton(etForSaleCage, forSaleLayout)
             val dataReqPrice = getTextFromVisibleEditText(etForSaleReqPrice, forSaleLayout)
             val dataSoldSalePrice = getTextFromVisibleEditText(etSoldSalePrice, soldLayout)
             val dataSoldContact = getTextFromVisibleEditText(etSoldBuyer, soldLayout)
@@ -561,8 +539,6 @@ class GenerateBirdFragment : Fragment() {
             birdData.put("Mutation6Map", mutation6)
             birdData.put("BirthDate", birthFormattedDate)
             birdData.put("Status", status)
-            birdData.put("AvailableCage", dataAvailCage)
-            birdData.put("ForSaleCage", dataSaleCage)
             birdData.put("ForSalePrice", dataReqPrice)
             birdData.put("SoldDate", soldFormattedDate)
             birdData.put("SoldPrice", dataSoldSalePrice)
@@ -583,8 +559,6 @@ class GenerateBirdFragment : Fragment() {
             birdData.put("MotherId", btnMother.text.toString())
             birdData.put("MotherKey", birdMotherKey)
             birdData.put("MotherBirdKey", birdBirdsMotherKey)
-            birdData.put("CageName", cageNameValue)
-            birdData.put("CageKey", cageKeyValue)
             birdData.put("Provenance", dataSelectedProvenence.text.toString())
             birdData.put("BreederContact", etBreederContact.text.toString())
             birdData.put("BreederBuyPrice", etBuyPrice.text.toString())
@@ -655,13 +629,6 @@ class GenerateBirdFragment : Fragment() {
             } else {
                 tvBirdStatus.visibility = View.VISIBLE
                 tvBirdStatus.text = "Status: $status"
-            }
-
-            if (cageNameValue.isNullOrBlank()) {
-                tvBirdCage.visibility = View.GONE
-            } else {
-                tvBirdCage.visibility = View.VISIBLE
-                tvBirdCage.text = "Cage: $cageNameValue"
             }
 
             if (soldFormattedDate.isNullOrBlank()) {
@@ -959,12 +926,12 @@ class GenerateBirdFragment : Fragment() {
 //    }
     fun saveImage() {
         val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
-
         save(layoutBitmap)
     }
 
     fun save(bitmap: Bitmap?) {
-        val displayName = "image.jpg"
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val displayName = "GenerateBirdQR$timeStamp.jpg"
         val mimeType = "image/jpeg"
 
         val contentValues = ContentValues().apply {
@@ -989,14 +956,12 @@ class GenerateBirdFragment : Fragment() {
         }
     }
 
+
     public var birdFatherKey: String? = null
     public var birdMotherKey: String? = null
     private var birdBirdsFatherKey: String? = null
     private var birdBirdsMotherKey: String? = null
 
-
-    private var cageNameValue: String? = null
-    private var cageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -1067,19 +1032,6 @@ class GenerateBirdFragment : Fragment() {
                 mutation6IncubatingDays =
                     data?.getStringExtra("selectedMutationIncubatingDays").toString()
                 btnMutation6.text = btnMutation6Value
-            }
-        }
-        if (requestCode == 7) {
-            if (resultCode == Activity.RESULT_OK) {
-                cageNameValue = data?.getStringExtra("CageName").toString()
-                cageKeyValue = data?.getStringExtra("CageKey").toString()
-                Log.d(ContentValues.TAG, "cage name : $cageNameValue")
-                Log.d(ContentValues.TAG, "cage key : $cageKeyValue")
-                if (availableLayout.visibility == View.VISIBLE) {
-                    etAvailCage.setText(cageNameValue)
-                } else if (forSaleLayout.visibility == View.VISIBLE) {
-                    etForSaleCage.setText(cageNameValue)
-                }
             }
         }
 

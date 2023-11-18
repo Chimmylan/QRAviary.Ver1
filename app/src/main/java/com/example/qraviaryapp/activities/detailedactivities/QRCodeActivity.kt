@@ -239,16 +239,15 @@ class QRCodeActivity : AppCompatActivity() {
     }
     fun saveImage() {
         val layoutBitmap = captureLayoutAsBitmap(qrimageLayout)
-
-        save(layoutBitmap)
+        val uniqueImageName = "qr_image_${System.currentTimeMillis()}.jpg"
+        save(layoutBitmap, uniqueImageName)
     }
 
-    fun save(bitmap: Bitmap?) {
-        val displayName = "image.jpg"
+    fun save(bitmap: Bitmap?, imageName: String) {
         val mimeType = "image/jpeg"
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(MediaStore.Images.Media.DISPLAY_NAME, imageName)
             put(MediaStore.Images.Media.MIME_TYPE, mimeType)
             put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
         }
@@ -263,11 +262,12 @@ class QRCodeActivity : AppCompatActivity() {
                 }
             }
 
-            Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Image saved to gallery as $imageName", Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             Toast.makeText(this, "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

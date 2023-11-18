@@ -1,7 +1,10 @@
 package com.example.qraviaryapp.activities.detailedactivities
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +30,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -40,6 +48,7 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
     private var nurseryKey: String? = null
     private var cageKey: String? = null
     private var nurseryBirdKey: String? = null
+    private lateinit var uploadqr: MaterialButton
     private var age = ""
     private var birdkey = ""
     private var cage = ""
@@ -47,6 +56,7 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
     private var gender = ""
     private var id = ""
     private var legband = ""
+    private val GALLERY_REQUEST_CODE = 2
     private lateinit var mutation1: Map<String, String>
     private lateinit var mutation2: Map<String, String>
     private lateinit var mutation3: Map<String, String>
@@ -76,6 +86,7 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
                 )
             )
         )
+        uploadqr = findViewById(R.id.UploadQR)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
             "<font color='$abcolortitle'>Scan Nursery Cage</font>",
@@ -192,7 +203,7 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
         codeScanner.apply {
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.SINGLE
+            scanMode = ScanMode.CONTINUOUS
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
@@ -245,13 +256,38 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
 
             }
         }
-
+        uploadqr.setOnClickListener {
+            openGalleryForImage()
+        }
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
 
     }
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    }
 
+    private fun decodeQrCodeFromBitmap(bitmap: Bitmap) {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+        try {
+            val result = MultiFormatReader().decode(binaryBitmap)
+            // Handle the result, e.g., call your existing decodeCallback
+            codeScanner.decodeCallback?.onDecoded(result)
+        } catch (e: NotFoundException) {
+            // Handle exception if QR code is not found in the image
+            Log.e(ContentValues.TAG, "QR code not found in the image")
+        }
+    }
 
     fun save() {
 

@@ -50,17 +50,11 @@
             app:title="@string/dark_mode"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreference
+        <PreferenceCategory
             android:defaultValue="true"
             android:summary="Click to On or Off"
             android:title="Notification"
             app:key="switch" />
-
-<!--        <SwitchPreference-->
-<!--            android:defaultValue="true"-->
-<!--            android:summary="Click to On or Off"-->
-<!--            android:title="Auto Increment ID"-->
-<!--            app:key="auto_increment_switch" />-->
 
 
     </PreferenceCategory>

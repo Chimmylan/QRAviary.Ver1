@@ -26,6 +26,7 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -73,7 +74,7 @@ class GenerateEggFragment : Fragment() {
 
     private var status: String? = null
     private val eggData = JSONObject()
-
+    private lateinit var dllayout: LinearLayout
     private lateinit var generateBtn: MaterialButton
 
     // TODO: Rename and change types of parameters
@@ -112,7 +113,7 @@ class GenerateEggFragment : Fragment() {
         btnIncubating = view.findViewById(R.id.btn_incubatingstartdate)
         OnActiveSpinner()
         initDatePickers()
-
+        dllayout=view.findViewById(R.id.dllayout)
 
         showDatePickerDialog(requireContext(), btnHatched, hatchedDatePickerDialog)
         showDatePickerDialog(requireContext(), btnIncubating, incubatingDatePickerDialog)
@@ -125,6 +126,7 @@ class GenerateEggFragment : Fragment() {
         val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
 
         qrimageLayout.visibility = View.GONE
+        dllayout.visibility =View.GONE
         etMaturingDays.setText(maturingDays.toString())
         etIncubatingDays.setText(incubatingDays.toString())
         generateBtn.setOnClickListener {
@@ -190,6 +192,7 @@ class GenerateEggFragment : Fragment() {
 
             qrImage.setImageBitmap(generateQRCodeUri(eggData.toString()))
             qrimageLayout.visibility = View.VISIBLE
+            dllayout.visibility=View.VISIBLE
         }
         btndownload.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
@@ -260,7 +263,8 @@ class GenerateEggFragment : Fragment() {
     }
 
     fun save(bitmap: Bitmap?) {
-        val displayName = "image.jpg"
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val displayName = "image_$timeStamp.jpg"
         val mimeType = "image/jpeg"
 
         val contentValues = ContentValues().apply {
@@ -284,6 +288,7 @@ class GenerateEggFragment : Fragment() {
             Toast.makeText(requireContext(), "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
         }
     }
+
 
 
     private fun generateQRCodeUri(bundleEggData: String): Bitmap? {

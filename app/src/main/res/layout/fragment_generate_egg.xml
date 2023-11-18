@@ -16,13 +16,13 @@
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/qrimagelayout"
         android:layout_height="match_parent"
-        android:visibility="gone"
+
         android:orientation="vertical">
 
         <LinearLayout
-
+            android:id="@+id/qrimagelayout"
+            android:visibility="gone"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:elevation="4dp"
@@ -40,8 +40,8 @@
 
             <ImageView
                 android:id="@+id/QRimage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/qr" />
             <LinearLayout
@@ -102,10 +102,14 @@
         </LinearLayout>
 
         </LinearLayout>
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
+            android:id="@+id/dllayout"
+            android:visibility="gone"
             android:gravity="right">
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
@@ -119,8 +123,6 @@
                 android:textColor="@color/black_white"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        </LinearLayout>
-
 
 
     <LinearLayout
