@@ -467,6 +467,32 @@ class EditBasicFlightFragment : Fragment() {
             rbUnknown.isChecked = true
         }
 
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        val flightRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId")
+            .child("Flight Birds")
+
+        flightRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (birds in snapshot.children){
+                    if (birds.key == flightkey){
+                        if (birds.hasChild("Descendants")){
+                            Log.d(TAG, " HAS DESCENDANTS")
+                            rbFemale.isEnabled = false
+                            rbMale.isEnabled = false
+                            rbUnknown.isEnabled = false
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
         datebirthButton.setText(birdDateBirth)
         birthFormattedDate = birdDateBirth
 

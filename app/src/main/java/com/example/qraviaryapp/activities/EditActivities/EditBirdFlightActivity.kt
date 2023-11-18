@@ -116,6 +116,7 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
 
 
         val bundle = intent.extras
+
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
@@ -158,7 +159,10 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         cageKeyValue = bundle?.getString("CageKey").toString()
         val flightType = bundle?.getString("FlightType").toString()
         val nurseryType = bundle?.getString("NurseryType").toString()
-
+        val clutch = bundle?.getBoolean("Clutch")
+        if (clutch != null) {
+            newBundle.putBoolean("Clutch", clutch)
+        }
         newBundle.putString("NurseryType", nurseryType)
         newBundle.putString("FlightType", flightType)
         newBundle.putString("NurseryKey", nureseryKey)

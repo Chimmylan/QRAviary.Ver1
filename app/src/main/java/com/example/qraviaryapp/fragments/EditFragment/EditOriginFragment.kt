@@ -238,10 +238,10 @@ class EditOriginFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if (arguments?.getString("BirdFatherId")?.isNotEmpty() == true) {
+        if (arguments?.getString("BirdFather")?.isNotEmpty() == true) {
             btnFather.text = arguments?.getString("BirdFatherId")
         }
-        if (arguments?.getString("BirdMotherId")?.isNotEmpty() == true) {
+        if (arguments?.getString("BirdMother")?.isNotEmpty() == true) {
             btnMother.text = arguments?.getString("BirdMotherId")
         }
         if (arguments?.getString("BirdFatherKey")?.isNotEmpty() == true) {
@@ -279,6 +279,19 @@ class EditOriginFragment : Fragment() {
             etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
         }
 
+        val clutch = arguments?.getBoolean("Clutch")
+        Log.d(TAG, clutch.toString())
+        if (arguments?.getBoolean("Clutch") == true){
+            btnMother.text = null
+            btnMother.hint = arguments?.getString("BirdMother")
+            btnFather.text = null
+            btnFather.hint = arguments?.getString("BirdFather")
+            btnFather.isEnabled = false
+            btnMother.isEnabled = false
+            radioButtonBought.isEnabled = false
+            radioButtonMe.isEnabled = false
+            radioButtonOther.isEnabled = false
+        }
 
 
         arguments?.clear()

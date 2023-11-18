@@ -190,6 +190,7 @@ class EggClutchesListAdapter(
             intent.putExtra("CageKeyMale",eggs.eggcagekeyMale)
             intent.putExtra("CageBirdFemale",eggs.eggcagebirdFemale)
             intent.putExtra("CageBirdMale",eggs.eggcagebirdMale)
+            intent.putExtra("Clutch", eggs.clutch)
             context.startActivity(intent)
         }
 

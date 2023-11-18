@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -396,6 +397,8 @@ class EditBasicFragment : Fragment() {
         mutation5IncubatingDays = BirdIncubatingDays5
         mutation6IncubatingDays = BirdIncubatingDays6
 
+
+
         Log.d(ContentValues.TAG, "Mutatiuon" + birdMutation1.toString())
 
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
@@ -480,6 +483,7 @@ class EditBasicFragment : Fragment() {
         else{
             rbUnknown.isChecked = true
         }
+
 
         datebirthButton.setText(birdDateBirth)
         birthFormattedDate = birdDateBirth

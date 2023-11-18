@@ -105,8 +105,10 @@ class MoveEggScannerActivity : AppCompatActivity() {
                             val cagekeymale = intent.getStringExtra("CageKeyMale")
                             val cagebirdfemale = intent.getStringExtra("CageBirdFemale")
                             val cagebirdmale = intent.getStringExtra("CageBirdMale")
+                            val clutch = intent.getBooleanExtra("Clutch", false)
 
                             val intent = Intent(this@MoveEggScannerActivity, MoveEggActivity::class.java)
+                            intent.putExtra("Clutch", clutch)
                             intent.putExtra("CageKey", key)
                             intent.putExtra("CageName", cageNumber)
                             intent.putExtra("IncubatingStartDate",incubatingstartdate)

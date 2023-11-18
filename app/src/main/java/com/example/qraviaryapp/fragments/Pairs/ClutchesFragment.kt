@@ -486,7 +486,8 @@ class ClutchesFragment : Fragment() {
                             "Incubating Days" to incubatingDays,
                             "Maturing Days" to maturingDays,
                             "Estimated Hatching Date" to hatchingDateTime.format(formatter1),
-                            "Alarm ID" to clutchesRandomID
+                            "Alarm ID" to clutchesRandomID,
+                            "Clutch" to true
                         )
 
                         val bundleData = JSONObject()
@@ -528,7 +529,9 @@ class ClutchesFragment : Fragment() {
                             "Status" to defaultStatus,
                             "Date" to formattedDate,
                             "Incubating Days" to incubatingDays,
-                            "Maturing Days" to maturingDays
+                            "Maturing Days" to maturingDays,
+                            "Clutch" to true
+
                         )
                         val bundleData = JSONObject()
                         bundleData.put("IncubatingStartDate",incubatingDays)

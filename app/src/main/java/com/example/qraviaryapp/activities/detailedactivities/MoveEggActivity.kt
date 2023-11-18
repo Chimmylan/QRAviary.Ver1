@@ -103,6 +103,8 @@ class MoveEggActivity : AppCompatActivity() {
     private lateinit var pairCageBirdFemale: String
     private lateinit var hatchingDateTime: LocalDateTime
 
+    private  var clutch: Boolean? = null
+
     private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
 
 
@@ -171,6 +173,7 @@ class MoveEggActivity : AppCompatActivity() {
         pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
         cageNameValue = intent.getStringExtra("CageName").toString()
         cageKeyValue = intent.getStringExtra("CageKey").toString()
+        clutch = intent.getBooleanExtra("Clutch", false)
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {
@@ -589,6 +592,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Avail Cage" to cageNameValue,
             "Cage" to cageNameValue,
             "Legband" to "",
+            "Clutch" to clutch
         )
         val data1: Map<String, Any?> = hashMapOf(
             "Bird Key" to birdKey,
@@ -605,6 +609,7 @@ class MoveEggActivity : AppCompatActivity() {
             "Mutation5" to mutation5,
             "Mutation6" to mutation6,
             "Maturing Days" to maturingStartDate,
+            "Clutch" to clutch,
 
             "Gender" to dataSelectedGen.text.toString(),
             "CageKey" to cageKeyValue,

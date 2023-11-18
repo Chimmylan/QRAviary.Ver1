@@ -223,6 +223,7 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
 
         itemView.setOnClickListener {
             val bundle = Bundle()
+            dataList[adapterPosition].clutch?.let { it1 -> bundle.putBoolean("Clutch", it1) }
             bundle.putString("BirdKey", dataList[adapterPosition].birdKey)//
             bundle.putString("FlightKey", dataList[adapterPosition].flightKey)
             bundle.putString("BirdLegband", dataList[adapterPosition].legband)

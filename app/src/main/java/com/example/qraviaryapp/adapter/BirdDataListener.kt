@@ -96,6 +96,7 @@ data class BirdData(
     var incubatingdays4: String? = null,
     var incubatingdays5: String? = null,
     var incubatingdays6: String? = null,
+    var clutch: Boolean? = null
 )
 
 data class BirdGenderBarChart(
@@ -258,5 +259,6 @@ data class EggData(
     var motherbirdkey: String? = null,
     var status1: String? = null,
     var fosterPair: Boolean? = null,
-    var parentPair: Boolean? = null
+    var parentPair: Boolean? = null,
+    var clutch: Boolean? = null
 )

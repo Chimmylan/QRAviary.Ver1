@@ -180,7 +180,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 if (data != null) {
                     val individualEggKey = eggSnapshot.key.toString()
 
-
+                    val clutch = eggSnapshot.child("Clutch").value.toString().toBoolean()
                     val statusValue = eggSnapshot.child("Status").value.toString()
                     val dateValue = eggSnapshot.child("Date").value.toString()
                     val incubatingDateValue = eggSnapshot.child("Incubating Days").value.toString()
@@ -245,6 +245,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                         data.eggLaidStartDate = dateValue
                     }
                     eggCount = snapshot.childrenCount.toInt()
+                    data.clutch = clutch
                     data.paircagekey = paircagekey
                     data.eggCount = eggCount.toString()
                     data.pairKey = pairKey
