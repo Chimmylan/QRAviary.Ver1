@@ -200,12 +200,7 @@
                     app:iconTint="@color/black"
                     android:text="TODAY"
                     android:textColor="@color/black" />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -241,12 +236,7 @@
                     app:iconTint="@color/black"
                     android:text="TODAY"
                     android:textColor="@color/black" />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
+
             </LinearLayout>
         </LinearLayout>
 
