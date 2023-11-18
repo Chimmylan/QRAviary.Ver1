@@ -150,6 +150,7 @@ class ClutchesFragment : Fragment() {
         pairCageKeyMale = arguments?.getString("CageKeyMale").toString()
         currentUserId = mAuth.currentUser?.uid.toString()
 
+
         fab.setOnClickListener {
             showEggDialog()
         }
@@ -333,6 +334,7 @@ class ClutchesFragment : Fragment() {
                         data.eggcagebirdFemale = pairCageBirdFemale
                         data.eggcagekeyMale = pairCageKeyMale
                         data.eggcagekeyFemale = pairCageKeyFemale
+
                     }
                 }
 

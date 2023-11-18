@@ -39,6 +39,7 @@ class QRCodeActivity : AppCompatActivity() {
     private lateinit var bird_cage: TextView
     private lateinit var cage: TextView
     private lateinit var pair_id: TextView
+    private lateinit var pairclutchid: TextView
     private lateinit var pair_cage: TextView
     private lateinit var pair_mutation: TextView
     private lateinit var pair_date: TextView
@@ -58,6 +59,7 @@ class QRCodeActivity : AppCompatActivity() {
                 )
             )
         )
+        pairclutchid = findViewById(R.id.pairclucthid)
         qrimageLayout = findViewById(R.id.qrimagelayout)
         bird_id = findViewById(R.id.birdid)
         bird_legband = findViewById(R.id.birdlegband)
@@ -82,7 +84,8 @@ class QRCodeActivity : AppCompatActivity() {
         clutchqrdetail = findViewById(R.id.clutchqrdetail)
 
         qrcode = findViewById(R.id.qrcode)
-
+        val pairmaleid = intent?.getStringExtra("PairMaleID")
+        val pairfemaleid = intent?.getStringExtra("PairFemaleID")
         val qr = intent?.getStringExtra("CageQR")
         val birdid = intent?.getStringExtra("BirdId")
         val birdlegband = intent?.getStringExtra("Legband")
@@ -134,6 +137,12 @@ class QRCodeActivity : AppCompatActivity() {
         if (!flightcage.isNullOrEmpty()){
             cageqrdetail.visibility = View.VISIBLE
             cage.text = "F" + flightcage
+        }
+
+        if(!pairmaleid.isNullOrEmpty()){
+            clutchqrdetail.visibility = View.VISIBLE
+            pairclutchid.text = "Pair: " + pairfemaleid + " x " + pairmaleid
+
         }
 
 

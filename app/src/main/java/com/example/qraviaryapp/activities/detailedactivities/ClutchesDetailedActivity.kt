@@ -112,7 +112,7 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairBirdMaleKey = bundle.getString("PairMaleKey").toString()
             pairBirdFemaleKey = bundle.getString("PairFemaleKey").toString()
             pairFemaleID = bundle.getString("PairFemaleID").toString()
-            pairMaleID = bundle.get("PairMaleID").toString()
+            pairMaleID = bundle.getString("PairMaleID").toString()
             pairCageBirdFemale = bundle.getString("CageBirdFemale").toString()
             pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
@@ -318,6 +318,9 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             R.id.menu_qr -> {
                 val i = Intent(this, QRCodeActivity::class.java)
                 i.putExtra("CageQR", CageQR)
+                i.putExtra("PairMaleID", pairMaleID)
+                i.putExtra("PairFemaleID", pairFemaleID)
+
                 startActivity(i)
                 true
             }
