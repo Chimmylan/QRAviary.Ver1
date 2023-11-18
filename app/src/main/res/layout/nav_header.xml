@@ -17,16 +17,20 @@
             android:id="@+id/imageView"
             android:layout_marginTop="15dp"
             android:layout_width="80dp"
+            app:tint="@color/bg1"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/navlogo" />
 
-        <ImageView
+        <TextView
 
             android:layout_marginTop="15dp"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-
-            app:srcCompat="@drawable/navfont" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/bg1"
+            android:textStyle="bold"
+            android:text="QRAviary"/>
 
 
     </LinearLayout>

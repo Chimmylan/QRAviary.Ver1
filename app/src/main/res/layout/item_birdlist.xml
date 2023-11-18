@@ -18,8 +18,8 @@
         <ImageView
             android:id="@+id/birdImageView"
             android:layout_width="100dp"
+
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:background="@color/itemimagebg"
             android:src="@drawable/noimage"
             android:contentDescription="Bird Image"

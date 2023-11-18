@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bottom_nav_background"
+    android:background="@drawable/gradientwhite"
     android:fillViewport="true">
 
     <androidx.core.widget.NestedScrollView
@@ -37,11 +37,13 @@
                     android:textColor="@color/black_white"
                     android:textSize="15sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchbtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
+                    android:checked="true"
+                    android:buttonTint="@color/bg1"
                     android:gravity="center" />
             </LinearLayout>
 
@@ -64,6 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:buttonTint="@color/bg1"
                         android:text="All Birds" />
 
                     <RadioButton
@@ -71,6 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:buttonTint="@color/bg1"
                         android:text="Split" />
 
                     <RadioButton
@@ -78,6 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:buttonTint="@color/bg1"
                         android:text="Not Split" />
                 </RadioGroup>
             </LinearLayout>

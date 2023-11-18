@@ -6,6 +6,8 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -59,6 +61,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var binding: ActivityNavHomeBinding
     private lateinit var toolbar: MaterialToolbar
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerLayout1: DrawerLayout
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
     private lateinit var menu: Menu
@@ -76,6 +79,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusbar)
         }
+
         binding = ActivityNavHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -109,7 +113,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             navigationView.menu.getItem(0).isChecked = true
 
         }
-
+        drawerLayout1 = findViewById(R.id.drawerLayout)
 
 
         sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
@@ -142,7 +146,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val totalEggCount = sharedPreferences.getInt("totalEggCount", 0)
         incubating.gravity = Gravity.CENTER_VERTICAL
         incubating.setTypeface(null, Typeface.BOLD)
-        incubating.setTextColor(resources.getColor(R.color.purpledark))
+        incubating.setTextColor(resources.getColor(R.color.black_white))
         incubating.text = totalEggCount.toString()
         adulting.gravity = Gravity.CENTER_VERTICAL
         adulting.setTypeface(null, Typeface.BOLD)
@@ -279,7 +283,7 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_settings -> {
                 fragment = SettingsFragment()
                 title = "Settings"
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
 
             R.id.nav_categories -> {
@@ -297,32 +301,27 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 fragment = MonitoringFragment() // Default fragment
                 title = "Monitoring" // Default title
                 hideMenuItems()
-                isMonitoringFragment = false
+                isMonitoringFragment = true
             }
         }
         if (!isMonitoringFragment) {
+
             toolbar.elevation = resources.getDimension(R.dimen.toolbar_elevation)
-            supportActionBar?.setBackgroundDrawable(
-                ColorDrawable(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.toolbarcolor
-                    )
-                )
-            )
-
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            drawerLayout1.setBackgroundResource(R.drawable.gradientpurple);
         } else {
-            toolbar.elevation = 0f
-            supportActionBar?.setBackgroundDrawable(
-                ColorDrawable(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.toolbarcolor
-                    )
-                )
-            )
-            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+            if (title == "Monitoring") {
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+//                drawerLayout1.setBackgroundColor(ContextCompat.getColor(this, R.color.bg))
+                drawerLayout1.setBackgroundResource(R.drawable.gradientpurple);
+
+            } else {
+                toolbar.elevation = 0f
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                drawerLayout1.setBackgroundResource(R.drawable.gradientpurple);
+            }
         }
         if (title == "Monitoring" || title == "Cages" || title == "Statistics" || title == "Mutations" || title == "Incubating" || title == "Adulting" || title == "Balance" ||
             title == "Categories" || title == "Settings" || title == "QR Reader"
@@ -349,7 +348,11 @@ class NavHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showMenuItems() {
-        menu.findItem(R.id.ic_filter).isVisible = true
+
+        val filterItem = menu.findItem(R.id.ic_filter)
+        filterItem.isVisible = true
+        // You can customize the color of the menu item icon here if needed
+        filterItem.icon?.setColorFilter(ContextCompat.getColor(this, R.color.black_white), PorterDuff.Mode.SRC_IN)
 
         // Add more menu items to show if needed
     }

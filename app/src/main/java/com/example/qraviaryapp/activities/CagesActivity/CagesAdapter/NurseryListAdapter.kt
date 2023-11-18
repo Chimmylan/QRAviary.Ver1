@@ -40,7 +40,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class NurseryListAdapter(
-    private val context: android.content.Context,
+    val context: android.content.Context,
     private var dataList: MutableList<BirdData>,
     private val maturingDays: Int // Add this parameter
 ) :

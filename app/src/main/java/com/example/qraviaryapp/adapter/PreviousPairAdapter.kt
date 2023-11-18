@@ -15,7 +15,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.PreviousPairActivity
 
 class PreviousPairAdapter(
-    private val context: Context,
+    val context: Context,
     private val dataList: MutableList<PairData>,
 ) : RecyclerView.Adapter<PreviousViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreviousViewHolder {

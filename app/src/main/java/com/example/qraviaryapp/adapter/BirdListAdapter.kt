@@ -17,7 +17,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 
 class BirdListAdapter(
-    private val context: android.content.Context,
+    val context: android.content.Context,
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<MyViewHolder>() {

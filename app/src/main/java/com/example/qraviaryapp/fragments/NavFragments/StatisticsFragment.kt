@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -43,7 +44,7 @@ class StatisticsFragment : Fragment() {
     private var isNetworkAvailable = true
     lateinit var birdList: ArrayList<BirdBarChart>
     lateinit var birdList1: ArrayList<PairBarChart>
-    private lateinit var switch: SwitchCompat
+    private lateinit var switch: SwitchMaterial
     private var isSwitchOn = false
     private lateinit var rball: RadioButton
     private lateinit var rbsplit: RadioButton

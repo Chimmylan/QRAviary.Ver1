@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg"
+    android:background="@drawable/gradientpurple"
     android:layout_height="match_parent"
     tools:context=".activities.mainactivities.ManageUserActivity">
 
@@ -39,7 +39,7 @@
                     android:layout_weight="5"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_white"
                     android:text="Manage Users"
                     android:textStyle="bold"/>
                 <TextView

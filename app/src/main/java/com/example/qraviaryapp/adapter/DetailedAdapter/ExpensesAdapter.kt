@@ -22,7 +22,7 @@ import java.util.Locale
 
 
 class ExpensesAdapter(
-    private val context: Context,
+    val context: Context,
     private val dataList: MutableList<ExpensesData>
 )
     : RecyclerView.Adapter<ExpensesViewHolder>() {

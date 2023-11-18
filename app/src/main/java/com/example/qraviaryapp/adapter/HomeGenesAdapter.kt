@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class HomeGenesAdapter(
-    private val context: Context,
+    val context: Context,
     private val dataList: MutableList<MutationData>
 )
     : RecyclerView.Adapter<HomeGeneViewHolder>() {

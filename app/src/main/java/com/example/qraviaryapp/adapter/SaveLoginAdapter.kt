@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.adapter
 
 import AccountData
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -40,6 +41,7 @@ class SaveLoginAdapter(
             mAuth.signInWithEmailAndPassword(email.toString(),password.toString()).addOnCompleteListener(){
                 if (it.isSuccessful){
                     holder.itemView.context.startActivity(Intent(context, NavHomeActivity::class.java))
+                    (context as Activity).finish()
                 }
 
             }

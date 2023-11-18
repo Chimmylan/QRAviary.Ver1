@@ -235,7 +235,7 @@ class OriginFragment : Fragment() {
         val dataBoughtPrice = etBuyPrice.text.toString()
         val dataBreederOtContact = etOtBreederContact.text.toString()
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
-        val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
+        var dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
@@ -275,7 +275,15 @@ class OriginFragment : Fragment() {
 
         dataSelectedProvenence = view?.findViewById(dataProvenence)
             ?: throw IllegalStateException("RadioButton not found")
-
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+        if (boughtLayout.visibility == View.VISIBLE) {
+            if (boughtDateBtn.text.isNullOrEmpty()){
+                val currentDate = Date()
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                dataBoughtDate = dateFormat.format(currentDate)
+            }
+        }
         birdData = BirdData(
             breederContact = dataBreederContact,
             provenance = dataSelectedProvenence.text.toString(),
@@ -285,8 +293,7 @@ class OriginFragment : Fragment() {
             father = btnFather.text.toString(),
             mother = btnMother.text.toString()
         )
-        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+
 
 
         val userId = mAuth.currentUser?.uid.toString()
@@ -345,36 +352,27 @@ class OriginFragment : Fragment() {
         var purchaseId: String? = null
         val purchaseRef = purchasesRef.child("Parents")
 
-        var validBought = false
+
 
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
+//        if (boughtLayout.visibility == View.VISIBLE) {
+//
+//        }
         if (boughtLayout.visibility == View.VISIBLE) {
-            if (TextUtils.isEmpty(boughtDateBtn.text)) {
-                boughtDateBtn.error = "Pick Bought Date"
-            } else {
-                validBought = true
-            }
+            val defaultBuyPrice = "0"
+
             if (TextUtils.isEmpty(etBuyPrice.text)) {
-                etBuyPrice.error = "Enter Price"
-            } else if (!TextUtils.isDigitsOnly(etBuyPrice.text)) {
-                etBuyPrice.error = "Enter a valid price..."
-            } else {
-                validBought = true
+                birdData.buyPrice = defaultBuyPrice
             }
-        }
-        if (boughtLayout.visibility == View.VISIBLE) {
 
 
-
-            if (validBought && successBasic) {
+            if (successBasic) {
                 purchaseId = purchasesRef.key
                 var date: Date? = null
-                if (!dataBoughtDate.isNullOrBlank()) {
+                if (!dataBoughtDate.isNullOrEmpty()) {
                     date = inputDateFormat.parse(dataBoughtDate)
                     // Do something with the parsed date
-                } else {
-                    // Handle the case when dataBoughtDate is empty or null
                 }
                 val formattedDate = outputDateFormat.format(date)
 
@@ -1002,14 +1000,22 @@ class OriginFragment : Fragment() {
         val dataBoughtPrice = etBuyPrice.text.toString()
         val dataBreederOtContact = etOtBreederContact.text.toString()
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
-        val dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
+        var dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
         Log.d(ContentValues.TAG, "BiRDIDDDD " + birdId)
 
 
         dataSelectedProvenence = view?.findViewById(dataProvenence)
             ?: throw IllegalStateException("RadioButton not found")
-
+        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+        if (boughtLayout.visibility == View.VISIBLE) {
+            if (boughtDateBtn.text.isNullOrEmpty()){
+                val currentDate = Date()
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                dataBoughtDate = dateFormat.format(currentDate)
+            }
+        }
         birdData = BirdData(
             breederContact = dataBreederContact,
             provenance = dataSelectedProvenence.text.toString(),
@@ -1020,8 +1026,6 @@ class OriginFragment : Fragment() {
             mother = btnMother.text.toString()
         )
 
-        val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
 
 
         val birdIdentifier = newBundle.getString("BirdIdentifier")
@@ -1106,24 +1110,15 @@ class OriginFragment : Fragment() {
         val descendantsfatherkey = descendantsFatherRef.key
         val descendantsmotherkey = descendantMotherRef.key
         val purchasekey = purchasesRef.key
-        var validBought = false
         if (boughtLayout.visibility == View.VISIBLE) {
 
-            if (TextUtils.isEmpty(boughtDateBtn.text)) {
-                boughtDateBtn.error = "Pick Bought Date"
-            } else {
-                validBought = true
-            }
+            val defaultBuyPrice = "0"
+
             if (TextUtils.isEmpty(etBuyPrice.text)) {
-                etBuyPrice.error = "Enter Price"
-            }
-            else if(!TextUtils.isDigitsOnly(etBuyPrice.text)){
-                etBuyPrice.error = "Enter a valid price..."
-            }else {
-                validBought = true
+                birdData.buyPrice = defaultBuyPrice
             }
 
-            if (validBought && successBasic) {
+            if (successBasic) {
                 purchaseId = purchasesRef.key
                 val date = inputDateFormat.parse(dataBoughtDate)
                 val formattedDate = outputDateFormat.format(date)

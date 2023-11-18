@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
     android:orientation="vertical"
-    android:background="@drawable/loginbg"
+    android:background="@drawable/gradientpurple"
     tools:context=".activities.mainactivities.LoginActivity">
     <ScrollView
         android:layout_width="match_parent"
@@ -51,23 +51,23 @@
             android:gravity="center"
             android:layout_marginTop="20dp"
             android:orientation="vertical">
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutemail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxStrokeColor="@color/loginpurple"
-            app:startIconDrawable="@drawable/ic_email"
-            app:startIconTint="@color/purpledark"
-            app:boxStrokeWidth="1dp"
-            app:endIconMode="clear_text"
-            android:textColorHint="@color/purplelight"
-            app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusTopStart="10dp"
-            app:boxCornerRadiusBottomStart="10dp"
-            app:boxCornerRadiusTopEnd="10dp"
-            app:boxCornerRadiusBottomEnd="10dp"
-            >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutemail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:boxStrokeErrorColor="#5A0808"
+                app:counterMaxLength="10"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="#5A0808"
+                android:textColorHint="@color/purplelight"
+                app:startIconDrawable="@drawable/ic_email"
+                app:startIconTint="@color/black_white"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusBottomEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etLogEmail"
@@ -81,24 +81,23 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutpass"
-            android:layout_marginTop="4dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:endIconMode="password_toggle"
-            app:startIconDrawable="@drawable/ic_lock"
-            app:startIconTint="@color/purpledark"
-            app:endIconTint="@color/purpledark"
-            app:boxStrokeColor="@color/loginpurple"
-            app:boxStrokeWidth="1dp"
-            app:boxBackgroundColor="@color/white"
-            android:textColorHint="@color/purplelight"
-            app:boxCornerRadiusTopStart="10dp"
-            app:boxCornerRadiusBottomStart="10dp"
-            app:boxCornerRadiusTopEnd="10dp"
-            app:boxCornerRadiusBottomEnd="10dp">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:endIconMode="password_toggle"
+                app:counterEnabled="true"
+                android:id="@+id/layoutpass"
+                app:boxStrokeErrorColor="#5A0808"
+                app:endIconTint="@color/black_white"
+                app:startIconTint="@color/black_white"
+                android:textColorHint="@color/purplelight"
+                app:helperTextTextColor="#5A0808"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusBottomEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etLogPass"
@@ -124,7 +123,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    app:cardBackgroundColor="@color/loginpurple"
+                    app:cardBackgroundColor="@color/purpledark"
                     android:onClick="login">
                     <TextView
                         android:id="@+id/textbtn"
@@ -201,11 +200,11 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?selectableItemBackground"
-                android:background="@android:color/transparent"
+                android:backgroundTint="@color/zxing_transparent"
                 android:id="@+id/google_btn">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:background="@drawable/button_style"
+                    android:background="@drawable/cardview_border1"
                     android:layout_height="match_parent">
                     <LinearLayout
                         android:id="@+id/txtgooglebtn"
@@ -213,7 +212,7 @@
                         android:orientation="horizontal"
                         android:layout_height="wrap_content">
                         <ImageView
-
+                            app:tint="@color/white"
                             android:padding="5dp"
                             android:layout_weight="4"
                             android:layout_width="match_parent"
@@ -227,7 +226,7 @@
                             android:layout_height="match_parent"
                             android:text="Sign in With Google"
                             android:gravity="center"
-                            android:textColor="#1F1E1E"
+                            android:textColor="@color/white"
                             android:textSize="16sp"/>
                         <TextView
                             android:layout_weight="4"
@@ -267,10 +266,10 @@
                 android:layout_height="match_parent"
 
                 android:text="Create new account"
-                android:background="@drawable/cardview_border"
+                android:background="@drawable/cardview_border1"
                 android:gravity="center"
 
-                android:textColor="@color/loginpurple"
+                android:textColor="@color/white"
                 android:textSize="16sp"/>
         </androidx.cardview.widget.CardView>
         </LinearLayout>

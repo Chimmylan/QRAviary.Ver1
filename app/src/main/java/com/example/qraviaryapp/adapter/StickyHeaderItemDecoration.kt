@@ -5,7 +5,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.FlightListAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.example.qraviaryapp.adapter.DetailedAdapter.ExpensesAdapter
@@ -21,8 +23,10 @@ class StickyHeaderItemDecoration(private val adapter: HomeGenesAdapter) : Recycl
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -86,8 +90,10 @@ class StickyHeaderItemDecorationcategories(private val adapter: CategoryFragment
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -151,8 +157,10 @@ class StickyHeaderItemDecoration1(private val adapter: GenesAdapter) : RecyclerV
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -216,8 +224,10 @@ class StickyHeaderItemDecorationbirdlist(private val adapter: BirdListAdapter) :
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -281,8 +291,10 @@ class StickyHeaderItemDecorationpairprev(private val adapter: PreviousPairAdapte
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -346,8 +358,10 @@ class StickyHeaderItemDecorationsold(private val adapter: SoldAdapter) : Recycle
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -411,8 +425,10 @@ class StickyHeaderItemDecorationpurchase(private val adapter: PurchasesAdapter) 
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -476,8 +492,10 @@ class StickyHeaderItemDecorationexpenses(private val adapter: ExpensesAdapter) :
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -541,8 +559,10 @@ class StickyHeaderItemDecorationnursery(private val adapter: NurseryListAdapter)
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -606,8 +626,10 @@ class StickyHeaderItemDecorationflight(private val adapter: FlightListAdapter) :
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#D9DADA"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }
@@ -671,8 +693,10 @@ class StickyHeaderItemDecorationexpensesfilter(private val adapter: ExpensesFilt
     private val headerTextSize = 36f // Adjust the text size as needed
 
     init {
-        headerPaint.setColor(Color.parseColor("#FFFFFFFF"));
-        textPaint.setColor(Color.parseColor("#876EE1"));
+        val headerColor = ContextCompat.getColor(adapter.context, R.color.bottom_nav_background)
+        val textpaint = ContextCompat.getColor(adapter.context, R.color.bg1)
+        headerPaint.color = headerColor
+        textPaint.color = textpaint
         textPaint.textSize = headerTextSize
         textPaint.isAntiAlias = true
     }

@@ -19,7 +19,7 @@ import java.util.Locale
 
 
 class PurchasesAdapter(
-    private val context: android.content.Context,
+    val context: android.content.Context,
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<PairDescendantsViewHolder>() {

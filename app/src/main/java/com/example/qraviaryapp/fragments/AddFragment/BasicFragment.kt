@@ -956,6 +956,8 @@ class BasicFragment : Fragment() {
 //                if (TextUtils.isEmpty(etAvailCage.text)) {
 //                    etAvailCage.error = "Cage must not be empty..."
 //                }
+                Log.d(TAG,"AVAIL")
+
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Legband" to birdData.legband,
@@ -986,6 +988,8 @@ class BasicFragment : Fragment() {
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
+                    Log.d(TAG,"SALE")
+
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
                         "Identifier" to birdData.identifier,
@@ -1021,6 +1025,7 @@ class BasicFragment : Fragment() {
 
 
                 if (validSold) {
+                    Log.d(TAG,"SOLD")
 
                     soldId = SoldBirdRef.key
                     val date = inputDateFormat.parse(dataSoldSaleDate)
@@ -1067,6 +1072,8 @@ class BasicFragment : Fragment() {
                 }
 
             } else if (deceasedLayout.visibility == View.VISIBLE) {
+                Log.d(TAG,"DECEASED")
+
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -1091,6 +1098,8 @@ class BasicFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (exchangeLayout.visibility == View.VISIBLE) {
+                Log.d(TAG,"Exchange")
+
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -1116,6 +1125,8 @@ class BasicFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (lostLayout.visibility == View.VISIBLE) {
+                Log.d(TAG,"LOST")
+
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -1138,6 +1149,8 @@ class BasicFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (donatedLayout.visibility == View.VISIBLE) {
+                Log.d(TAG,"DONATED")
+
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,
@@ -1160,6 +1173,8 @@ class BasicFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
             } else if (otherLayout.visibility == View.VISIBLE) {
+                Log.d(TAG,"OTHEWR")
+
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
                     "Identifier" to birdData.identifier,

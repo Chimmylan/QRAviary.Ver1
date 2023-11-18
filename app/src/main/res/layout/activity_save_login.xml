@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@drawable/gradientpurple"
     tools:context=".activities.mainactivities.SaveLoginActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_gravity="right"
-
+            app:tint="@color/black_white"
             android:src="@drawable/nav_settings" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,7 +67,7 @@
             app:cardCornerRadius="20dp"
             android:clickable="true"
             android:focusable="true"
-            android:backgroundTint="@android:color/transparent"
+            android:backgroundTint="@color/zxing_transparent"
             android:foreground="?selectableItemBackground">
 
             <TextView
@@ -78,7 +78,7 @@
                 android:background="@drawable/cardview_border1"
                 android:gravity="center"
 
-                android:textColor="#595959"
+                android:textColor="@color/white"
                 android:textSize="16sp"/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
@@ -95,15 +95,15 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?selectableItemBackground"
-            android:backgroundTint="@android:color/transparent">
+            android:backgroundTint="@color/zxing_transparent">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Create new account"
-                android:background="@drawable/cardview_border"
+                android:background="@drawable/cardview_border1"
                 android:gravity="center"
-                android:textColor="@color/loginpurple"
+                android:textColor="@color/white"
                 android:textSize="16sp"/>
         </androidx.cardview.widget.CardView>
         </LinearLayout>

@@ -75,6 +75,7 @@ class SaveLoginActivity : AppCompatActivity() {
         Log.d(TAG,dataList.toString())
         if(!isAnyAccountOccupyingASlot()){
             startActivity(Intent(this, LoginActivity::class.java))
+
         }
     }
 

@@ -85,7 +85,6 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/adultimage"
-                        app:tint="@color/black_white"
                         android:contentDescription="Adult Image"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
@@ -121,9 +120,8 @@
         <ImageView
             android:id="@+id/birdImageView"
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="2"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:src="@drawable/noimage"
             android:background="@color/itemimagebg"
             android:contentDescription="Bird Image"

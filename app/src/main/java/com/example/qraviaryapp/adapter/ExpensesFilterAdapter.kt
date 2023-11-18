@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class ExpensesFilterAdapter(
-    private val context: Context,
+    val context: Context,
     private val dataList: MutableList<ExpensesData>
 ) : RecyclerView.Adapter<ExpensesFilterFragmentViewHolder>() {
     private lateinit var currentUser: String

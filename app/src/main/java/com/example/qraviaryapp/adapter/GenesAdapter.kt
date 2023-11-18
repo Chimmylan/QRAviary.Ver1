@@ -13,7 +13,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
 
 class GenesAdapter(
-    private val context: android.content.Context,
+    val context: android.content.Context,
     private val dataList: MutableList<MutationData>,
     private val clickListener: ClickListener
 )
