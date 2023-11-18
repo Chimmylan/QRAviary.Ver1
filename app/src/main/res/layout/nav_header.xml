@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_marginTop="15dp"
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             app:tint="@color/bg1"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/navlogo" />

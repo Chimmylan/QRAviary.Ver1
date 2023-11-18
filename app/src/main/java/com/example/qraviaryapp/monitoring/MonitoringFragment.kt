@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -66,6 +67,7 @@ class MonitoringFragment : Fragment() {
     private lateinit var nodevicelayout: LinearLayout
     private lateinit var monitoringView: LinearLayout
     private lateinit var visitwebsite: TextView
+    private lateinit var sun: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -82,6 +84,7 @@ class MonitoringFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_monitoring, container, false)
         day = view.findViewById(R.id.day)
         incubatorTextView = view.findViewById(R.id.incubatorTextView)
+        sun = view.findViewById(R.id.sun)
         cv_IncubSetTemp = view.findViewById(R.id.cv_IncubSetTemp)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
@@ -266,6 +269,18 @@ class MonitoringFragment : Fragment() {
             currentHour in 0..4 -> "Good night!"
             else -> "Still Sleeping!"
         }
+        val sunImageResource = when {
+            currentHour in 5..8 -> R.drawable.sunrise
+            currentHour in 9..12 -> R.drawable.sun // You can change this to the image for morning
+            currentHour in 13..15 -> R.drawable.sun
+            currentHour in 16..17 -> R.drawable.sunset // You can change this to the image for late afternoon
+            currentHour in 18..19 -> R.drawable.sleeping
+            currentHour in 20..23 -> R.drawable.sleeping
+            currentHour in 0..4 -> R.drawable.sleeping // You can change this to the image for night
+            else -> R.drawable.sleeping // Default image in case the current hour is not in any specified range
+        }
+
+        sun.setImageResource(sunImageResource)
 
 
 

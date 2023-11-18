@@ -88,13 +88,13 @@
         </LinearLayout>
 
         <LinearLayout
-
+            android:visibility="gone"
             android:id="@+id/monitoring"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/gradientpurple"
             android:orientation="vertical"
-            android:visibility="gone">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,6 +110,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/sun"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_weight="1"
