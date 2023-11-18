@@ -219,7 +219,24 @@
                     android:elevation="10dp"/>
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/deletelayout"
 
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight=".5"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/options"
+
+                android:layout_width="match_parent"
+                app:tint="@color/black_white"
+                android:clickable="true"
+                android:layout_height="30dp"
+                android:src="@drawable/bin"/>
+
+        </LinearLayout>
 
     </LinearLayout>
     </LinearLayout>

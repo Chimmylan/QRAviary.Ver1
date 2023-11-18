@@ -3,6 +3,7 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 import BirdData
 import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -47,6 +48,7 @@ class NurseryListAdapter(
     RecyclerView.Adapter<MyViewHolder2>() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: DatabaseReference
+
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -60,7 +62,37 @@ class NurseryListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder2 {
         val view = LayoutInflater.from(context).inflate(R.layout.item_nurserylist, parent, false)
 
+
+
+
         return MyViewHolder2(view, dataList)
+    }
+// Inside NurseryListAdapter class
+
+    private fun showDeleteDialog(bird: BirdData, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Delete Bird")
+        alertDialogBuilder.setMessage("Are you sure you want to remove this bird from the cage?")
+
+        alertDialogBuilder.setPositiveButton("Delete") { _, _ ->
+            // Handle the deletion here
+            deleteBird(bird, position)
+        }
+
+        alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun deleteBird(bird: BirdData, position: Int) {
+        // Implement bird deletion logic here
+        // You may want to update your data list, remove the bird, and notify the adapter
+        // Example:
+        dataList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun getItemCount(): Int {
@@ -238,6 +270,10 @@ class NurseryListAdapter(
         } else {
             holder.tvLegband.text = bird.legband
         }
+        holder.delete.visibility = View.VISIBLE
+        holder.delete.setOnClickListener {
+            showDeleteDialog(bird, position)
+        }
     }
 }
     private fun sendNotification(bird: BirdData, context: Context) {
@@ -301,6 +337,7 @@ class MyViewHolder2(itemView: View, private val dataList: MutableList<BirdData>)
     var chickImg: ImageView = itemView.findViewById(R.id.chickImageView)
     var teenImg: ImageView = itemView.findViewById(R.id.teenImageView)
     var adultImg: ImageView = itemView.findViewById(R.id.adultImageView)
+    var delete: ImageView = itemView.findViewById(R.id.options)
     init {
 
         itemView.setOnClickListener {

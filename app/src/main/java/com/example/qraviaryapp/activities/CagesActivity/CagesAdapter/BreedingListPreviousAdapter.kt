@@ -1,6 +1,7 @@
 package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 import PairData
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -20,12 +21,37 @@ class BreedingListPreviousAdapter(
     private val context: Context,
     private val dataList: MutableList<PairData>,
 ) : RecyclerView.Adapter<PairPreviousBirdViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PairPreviousBirdViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_pairlist, parent, false)
 
         return PairPreviousBirdViewHolder(view, dataList)
     }
+    private fun showDeleteDialog(bird: PairData, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Delete Bird")
+        alertDialogBuilder.setMessage("Are you sure you want to remove this pair from the cage?")
 
+        alertDialogBuilder.setPositiveButton("Delete") { _, _ ->
+            // Handle the deletion here
+            deleteBird(bird, position)
+        }
+
+        alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun deleteBird(bird: PairData, position: Int) {
+        // Implement bird deletion logic here
+        // You may want to update your data list, remove the bird, and notify the adapter
+        // Example:
+        dataList.removeAt(position)
+        notifyItemRemoved(position)
+    }
     override fun onBindViewHolder(holder: PairPreviousBirdViewHolder, position: Int) {
         val pairs = dataList[position]
         val femaleimg = pairs.pairfemaleimg
@@ -69,7 +95,10 @@ class BreedingListPreviousAdapter(
         holder.maleBird.text = pairs.pairMale
         holder.maleMutation.text = pairs.pairMaleMutation
 
-
+        holder.delete.visibility = View.VISIBLE
+        holder.delete.setOnClickListener {
+            showDeleteDialog(pairs, position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -87,6 +116,7 @@ class PairPreviousBirdViewHolder(itemView: View, private val dataList: MutableLi
     var maleMutation: TextView = itemView.findViewById(R.id.tvMaleMutation)
     var femaleMutation: TextView = itemView.findViewById(R.id.tvFemaleMutation)
     var dateId: TextView = itemView.findViewById(R.id.tvDate)
+    var delete: ImageView = itemView.findViewById(R.id.options)
 
     init {
         itemView.setOnClickListener {

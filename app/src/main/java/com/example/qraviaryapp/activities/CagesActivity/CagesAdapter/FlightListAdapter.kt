@@ -2,6 +2,7 @@ package com.example.qraviaryapp.activities.CagesActivity.CagesAdapter
 
 
 import BirdData
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -20,6 +21,7 @@ class FlightListAdapter(
     private var dataList: MutableList<BirdData>
 ) :
     RecyclerView.Adapter<MyViewHolder>() {
+
     companion object {
         const val MAX_MUTATION_LENGTH = 10
     }
@@ -40,7 +42,31 @@ class FlightListAdapter(
         return dataList.size
     }
 
+    private fun showDeleteDialog(bird: BirdData, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Delete Bird")
+        alertDialogBuilder.setMessage("Are you sure you want to remove this bird from the cage?")
 
+        alertDialogBuilder.setPositiveButton("Delete") { _, _ ->
+            // Handle the deletion here
+            deleteBird(bird, position)
+        }
+
+        alertDialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun deleteBird(bird: BirdData, position: Int) {
+        // Implement bird deletion logic here
+        // You may want to update your data list, remove the bird, and notify the adapter
+        // Example:
+        dataList.removeAt(position)
+        notifyItemRemoved(position)
+    }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val bird = dataList[position]
 
@@ -128,6 +154,11 @@ class FlightListAdapter(
         } else {
             holder.tvLegband.text = bird.legband
         }
+
+        holder.delete.visibility = View.VISIBLE
+        holder.delete.setOnClickListener {
+            showDeleteDialog(bird, position)
+        }
     }
 }
 
@@ -140,7 +171,7 @@ class MyViewHolder(itemView: View, private val dataList: MutableList<BirdData>) 
     var tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
-
+    var delete: ImageView = itemView.findViewById(R.id.options)
     init {
 
         itemView.setOnClickListener {
