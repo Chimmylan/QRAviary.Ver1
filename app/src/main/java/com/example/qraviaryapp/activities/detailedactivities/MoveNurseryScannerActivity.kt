@@ -5,6 +5,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -37,6 +38,7 @@ import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 class MoveNurseryScannerActivity : AppCompatActivity() {
 
@@ -286,6 +288,25 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
         } catch (e: NotFoundException) {
             // Handle exception if QR code is not found in the image
             Log.e(ContentValues.TAG, "QR code not found in the image")
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> {
+                    data?.data?.let { uri ->
+                        try {
+                            val inputStream = this.contentResolver.openInputStream(uri)
+                            val bitmap = BitmapFactory.decodeStream(inputStream)
+                            decodeQrCodeFromBitmap(bitmap)
+                        } catch (e: IOException) {
+                            Log.e(ContentValues.TAG, "Error loading image from gallery: ${e.message}")
+                        }
+                    }
+                }
+            }
         }
     }
 
