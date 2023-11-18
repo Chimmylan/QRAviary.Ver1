@@ -175,11 +175,6 @@ class AddBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             cagekeyvalue = receivecagekeyvalue
                             successBasic = true
 
-
-
-
-
-
                         }
                         originFragment.addFlightOrigin(birdId, flightId, newBundle, soldId, successBasic)
                         { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, originBundle ->

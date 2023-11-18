@@ -1212,6 +1212,7 @@ class BasicFragment : Fragment() {
             args.putString("SoldId", soldId)
             args.putString("nurseryId", flightKey)
             Log.d(TAG, birdData.toString())
+
         } else {
             Toast.makeText(requireContext(), "Empty Inputs/Invalid Inputs", Toast.LENGTH_SHORT)
                 .show()
