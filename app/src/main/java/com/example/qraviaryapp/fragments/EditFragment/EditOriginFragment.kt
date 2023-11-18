@@ -258,32 +258,25 @@ class EditOriginFragment : Fragment() {
         }
         val provenance = arguments?.getString("BirdProvenance")
 
-        Log.d(TAG, "PROVENANCE: $birdBoughtOn")
+        Log.d(TAG, "PROVENANCE: $birdBuyPrice")
 
-        if (!birdBoughtOn.isNullOrEmpty()){
+
+        if (birdBoughtOn != "null"){
 
             radioButtonBought.isChecked = true
 
             if (arguments?.getString("BirdBreederContact")?.isNotEmpty() == true) {
                 etBreederContact.setText(arguments?.getString("BirdBreederContact"))
             }
-            if (arguments?.getString("BirdBreederBuyPrice")?.isNotEmpty() == true) {
-                etBuyPrice.setText(arguments?.getString("BirdBreederBuyPrice"))
+            if (arguments?.getString("BirdBuyPrice")?.isNotEmpty() == true) {
+                etBuyPrice.setText(arguments?.getString("BirdBuyPrice"))
             }
             if (arguments?.getString("BirdBoughtOn")?.isNotEmpty() == true) {
                 boughtDateBtn.text = arguments?.getString("BirdBoughtOn")
             }
         }
-
-        when (provenance) {
-            "Bought" -> {
-
-            }
-            "Other" -> {
-                if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
-                    etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
-                }
-            }
+        if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
+            etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
         }
 
 

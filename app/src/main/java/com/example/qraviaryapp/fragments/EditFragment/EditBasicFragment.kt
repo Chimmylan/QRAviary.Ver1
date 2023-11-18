@@ -542,22 +542,50 @@ class EditBasicFragment : Fragment() {
         } else
             slash5.visibility = View.GONE
 
-        if (birdStatus == "Available"){
-            if (etAvailCage.text.isEmpty() && birdAvailCage != "null"){
-                etAvailCage.text = birdAvailCage
-                //cageKeyValue = //
+
+
+
+
+        when(birdStatus){
+            "Available" -> {
+                if (etAvailCage.text.isEmpty() && birdAvailCage != "null"){
+                    etAvailCage.text = birdAvailCage
+                    //cageKeyValue = //
+                }
             }
-        }
-
-
-        if(birdStatus == "For Sale"){
-            if (etForSaleCage.text.isEmpty() && birdForsaleCage != "null"){
-                spinnerStatus.setSelection(1)
-                etForSaleCage.text = birdForsaleCage
-                //cageKeyValue = //
+            "For Sale" -> {
+                if (etForSaleCage.text.isEmpty() && birdForsaleCage != "null"){
+                    spinnerStatus.setSelection(1)
+                    etForSaleCage.text = birdForsaleCage
+                    //cageKeyValue = //
+                }
             }
-        }
+            "Sold" -> {
+                spinnerStatus.setSelection(2)
 
+            }
+            "Deceased" ->{
+                spinnerStatus.setSelection(3)
+
+            }
+            "Exchanged" ->{
+                spinnerStatus.setSelection(4)
+
+            }
+            "Lost" ->{
+                spinnerStatus.setSelection(5)
+
+            }
+            "Donated" ->{
+                spinnerStatus.setSelection(6)
+
+            }
+            "Other" -> {
+                spinnerStatus.setSelection(7)
+
+            }
+
+        }
 
 
         return view

@@ -351,18 +351,42 @@ class BirdsDetailedActivity : AppCompatActivity() {
             R.id.menu_edit -> {
 
                 if (flightType != "null") {
-                    val i = Intent(this, EditBirdFlightActivity::class.java)
-                    Log.d(TAG, flightType.toString())
 
-                    i.putExtras(newBundle)
-                    startActivity(i)
+                    val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds")
+                        .child(FlightKey)
+                    flightRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val isPaired = dataSnapshot.child("Status").value.toString()
+
+                            if (isPaired == "Paired") {
+                                showPairedFlightBirdDialog1()
+                            } else {
+                                val i = Intent(this@BirdsDetailedActivity, EditBirdFlightActivity::class.java)
+                                Log.d(TAG, flightType.toString())
+
+                                i.putExtras(newBundle)
+                                startActivity(i)
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Handle errors or onCancelled event
+                        }
+                    })
+
                 } else {
+
+
+
+
                     val i = Intent(this, EditBirdActivity::class.java)
                     Log.d(TAG, nurseryType.toString())
 
                     i.putExtras(newBundle)
                     startActivity(i)
                 }
+
+
 
 
                 true
@@ -458,6 +482,16 @@ class BirdsDetailedActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
+    fun showPairedFlightBirdDialog1() {
+        // Show a dialog to inform the user that the flight bird is paired and cannot be deleted
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Cannot Edit")
+        alertDialog.setMessage("This flight bird is currently paired")
+        alertDialog.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
     fun showDescendantsDialog() {
         // Show a dialog to inform the user that the flight bird has descendants and cannot be deleted
         val alertDialog = AlertDialog.Builder(this)
