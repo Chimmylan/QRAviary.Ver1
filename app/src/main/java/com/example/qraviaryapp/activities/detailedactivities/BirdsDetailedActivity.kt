@@ -287,7 +287,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
         fragmentAdapter.addFragment(birdBasicFragment, "BASIC")
         fragmentAdapter.addFragment(birdOriginFragment, "RELATIONSHIPS")
-        fragmentAdapter.addFragment(birdBabiesFragment, "DESCENDANTS")
+        fragmentAdapter.addFragment(birdBabiesFragment, "CHILDS")
         fragmentAdapter.addFragment(birdPairingFragment, "PAIRINGS")
         fragmentAdapter.addFragment(birdGalleryFragment, "GALLERY")
         viewPager.adapter = fragmentAdapter

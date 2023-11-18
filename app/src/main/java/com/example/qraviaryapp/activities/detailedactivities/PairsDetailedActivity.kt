@@ -162,7 +162,7 @@ class PairsDetailedActivity : AppCompatActivity() {
             clutchesFragment.arguments = newBundle
             descendantsFragment.arguments = newBundle
             fragmentAdapter.addFragment(clutchesFragment, "CLUTCHES")
-            fragmentAdapter.addFragment(descendantsFragment, "DESCENDANTS")
+            fragmentAdapter.addFragment(descendantsFragment, "CHILDS")
 
             viewPager.adapter = fragmentAdapter
             tablayout.setupWithViewPager(viewPager)

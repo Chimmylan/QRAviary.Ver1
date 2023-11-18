@@ -56,12 +56,14 @@ tools:context=".activities.detailedactivities.BirdFilterActivity">
                     app:iconTint="@color/black"
                     android:text="From"
                     android:textColor="@color/black" />
-                <ImageView
+                <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:padding="2dp"
+                    android:gravity="center"
+                    android:textSize="20sp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
+                    android:text="-"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTo"
                     android:layout_width="0dp"
@@ -75,13 +77,7 @@ tools:context=".activities.detailedactivities.BirdFilterActivity">
                     app:iconTint="@color/black"
                     android:text="To"
                     android:textColor="@color/black" />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
 
-                    android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -116,12 +112,7 @@ tools:context=".activities.detailedactivities.BirdFilterActivity">
                     android:layout_width="0dp"
                     android:layout_weight="7"
                     android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/x"/>
+
 
             </LinearLayout>
 

@@ -78,10 +78,10 @@ class ManageUserAdapter(
 
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menu_edit -> {
-                    // Handle the edit action here
-                    return@setOnMenuItemClickListener true
-                }
+//                R.id.menu_edit -> {
+//                    // Handle the edit action here
+//                    return@setOnMenuItemClickListener true
+//                }
                 R.id.menu_delete -> {
 
                     deleteAccount(dataList.username.toString(), dataList.password.toString(), adapter)

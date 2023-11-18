@@ -160,7 +160,7 @@ class PreviousPairActivity : AppCompatActivity() {
             val descendantsFragment = DescendantsFragment() // Create an instance of DescendantsFragment
             clutchesFragment.arguments = newBundle
             fragmentAdapter.addFragment(clutchesFragment, "CLUTCHES")
-            fragmentAdapter.addFragment(descendantsFragment, "DESCENDANTS")
+            fragmentAdapter.addFragment(descendantsFragment, "CHILDS")
 
             viewPager.adapter = fragmentAdapter
             tablayout.setupWithViewPager(viewPager)
