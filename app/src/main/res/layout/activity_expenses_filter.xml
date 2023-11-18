@@ -54,7 +54,7 @@
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
                         app:iconTint="@color/black"
-                        android:text="From"
+                        android:hint="From"
                         android:textColor="@color/black" />
                     <TextView
                         android:layout_width="0dp"
@@ -75,7 +75,7 @@
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end"
                         app:iconTint="@color/black"
-                        android:text="To"
+                        android:hint="To"
                         android:textColor="@color/black" />
 
                 </LinearLayout>

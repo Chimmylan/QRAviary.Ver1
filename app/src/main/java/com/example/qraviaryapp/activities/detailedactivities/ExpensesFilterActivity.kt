@@ -174,7 +174,15 @@ class ExpensesFilterActivity : AppCompatActivity() {
                 finish()
                 return true
             }
+            R.id.ic_erase -> {
+                etMaximum.setText("")
+                etMinimum.setText("")
 
+                fromBtn.setText("")
+                toBtn.setText("")
+                adapter.clearCheckedItems()
+                true
+            }
             android.R.id.home -> {
                 onBackPressed() // Call this to navigate back to the previous fragment
                 true

@@ -31,6 +31,8 @@ class ExpensesFilterAdapter(
         private const val VIEW_TYPE_GENE = 1
     }
 
+
+
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -50,7 +52,12 @@ class ExpensesFilterAdapter(
 
         return ExpensesFilterFragmentViewHolder(view, dataList)
     }
-
+    fun clearCheckedItems() {
+        for (item in dataList) {
+            item.isChecked = false
+        }
+        notifyDataSetChanged()
+    }
     override fun onBindViewHolder(holder: ExpensesFilterFragmentViewHolder, position: Int) {
         val category = dataList[position]
         Auth = FirebaseAuth.getInstance()
