@@ -280,12 +280,15 @@ class BasicFlightFragment : Fragment() {
 
         cagescan = view.findViewById(R.id.cagescan)
         cagescan.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)
         }
         cagescan1 = view.findViewById(R.id.cagescan1)
         cagescan1.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-        }
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)        }
         btnMutation1.setOnClickListener {
             val requestCode = 1 // You can use any integer as the request code
             val intent = Intent(requireContext(), MutationsActivity::class.java)
@@ -1418,6 +1421,11 @@ class BasicFlightFragment : Fragment() {
         }
         if (arguments?.getString("BirdLegband")?.isNotEmpty() == true) {
             etLegband.setText(arguments?.getString("BirdLegband"))
+        }
+
+        if (arguments?.getString("BirdBirthDate")?.isNotEmpty() == true){
+            datebirthButton.text = arguments?.getString("BirdBirthDate")
+            birthFormattedDate = arguments?.getString("BirdBirthDate")
         }
 
         val sex = arguments?.getString("BirdGender").toString()

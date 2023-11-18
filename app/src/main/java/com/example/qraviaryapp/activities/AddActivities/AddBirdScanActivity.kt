@@ -150,52 +150,66 @@ class AddBirdScanActivity : AppCompatActivity() {
                         i.putExtra("BirdMutationMap6", mutation6MapString)
                     }
 
-                    i.putExtra("BirdBirthDate", jsonData.getString("BirthDate"))
-                    i.putExtra("BirdStatus", jsonData.getString("Status"))
-                    i.putExtra("BirdFatherId", jsonData.getString("FatherId"))
-                    i.putExtra("BirdFatherKey", jsonData.getString("FatherKey"))
-                    i.putExtra("BirdFatherBirdKey", jsonData.getString("FatherBirdKey"))
-                    i.putExtra("BirdMotherId", jsonData.getString("MotherId"))
-                    i.putExtra("BirdMotherKey", jsonData.getString("MotherKey"))
-                    i.putExtra("BirdMotherBirdKey", jsonData.getString("MotherBirdKey"))
-//                    i.putExtra("BirdCageName", jsonData.optString("CageName", ""))
-//                    i.putExtra("BirdCageKey", jsonData.optString("CageKey", ""))
-                    if (status == "Available") {
-                        i.putExtra("BirdAvailableCage", jsonData.getString("AvailableCage"))
-                    } else if (status == "For Sale") {
-                        i.putExtra("BirdForSaleCage", jsonData.getString("ForSaleCage"))
-                        i.putExtra("BirdForSalePrice", jsonData.getString("ForSalePrice"))
-                    } else if (status == "Sold") {
-                        i.putExtra("BirdSoldDate", jsonData.getString("SoldDate"))
-                        i.putExtra("BirdSoldPrice", jsonData.getString("SoldPrice"))
-                        i.putExtra("BirdSoldContact", jsonData.getString("SoldContact"))
-                    } else if (status == "Deceased") {
-                        i.putExtra("BirdDeceasedDate", jsonData.getString("DeceasedDate"))
-                        i.putExtra("BirdDeceasedReason", jsonData.getString("DeceasedReason"))
-                    } else if (status == "Exchanged") {
-                        i.putExtra("BirdExchangeDate", jsonData.getString("ExchangedDate"))
-                        i.putExtra("BirdExchangeReason", jsonData.getString("ExchangedReason"))
-                        i.putExtra("BirdExchangeContact", jsonData.getString("ExchangedContact"))
-                    } else if (status == "Lost") {
-                        i.putExtra("BirdLostDate", jsonData.getString("LostDate"))
-                        i.putExtra("BirdLostDetails", jsonData.getString("LostDetails"))
-                    } else if (status == "Donated") {
-                        i.putExtra("BirdDonatedDate", jsonData.getString("DonatedDate"))
-                        i.putExtra("BirdDonatedContact", jsonData.getString("DonatedContact"))
-                    } else if (status == "Other") {
-                        i.putExtra("BirdOtherComment", jsonData.getString("OtherComment"))
+                    i.putExtra("BirdBirthDate", jsonData.optString("BirthDate", null))
+                    i.putExtra("BirdStatus", status)
+                    i.putExtra("BirdFatherId", jsonData.optString("FatherId", null))
+                    i.putExtra("BirdFatherKey", jsonData.optString("FatherKey", null))
+                    i.putExtra("BirdFatherBirdKey", jsonData.optString("FatherBirdKey", null))
+                    i.putExtra("BirdMotherId", jsonData.optString("MotherId", null))
+                    i.putExtra("BirdMotherKey", jsonData.optString("MotherKey", null))
+                    i.putExtra("BirdMotherBirdKey", jsonData.optString("MotherBirdKey", null))
+
+                    i.putExtra("BirdCageName", jsonData.optString("CageName", null))
+                    i.putExtra("BirdCageKey", jsonData.optString("CageKey", null))
+                    when (status) {
+                        "Available" -> {
+                            i.putExtra("BirdAvailableCage", jsonData.optString("AvailableCage", null))
+                        }
+                        "For Sale" -> {
+                            i.putExtra("BirdForSaleCage", jsonData.optString("ForSaleCage", null))
+                            i.putExtra("BirdForSalePrice", jsonData.optString("ForSalePrice", null))
+                        }
+                        "Sold" -> {
+                            i.putExtra("BirdSoldDate", jsonData.optString("SoldDate", null))
+                            i.putExtra("BirdSoldPrice", jsonData.optString("SoldPrice", null))
+                            i.putExtra("BirdSoldContact", jsonData.optString("SoldContact", null))
+                        }
+                        "Deceased" -> {
+                            i.putExtra("BirdDeceasedDate", jsonData.optString("DeceasedDate", null))
+                            i.putExtra("BirdDeceasedReason", jsonData.optString("DeceasedReason", null))
+                        }
+                        "Exchanged" -> {
+                            i.putExtra("BirdExchangeDate", jsonData.optString("ExchangedDate", null))
+                            i.putExtra("BirdExchangeReason", jsonData.optString("ExchangedReason", null))
+                            i.putExtra("BirdExchangeContact", jsonData.optString("ExchangedContact", null))
+                        }
+                        "Lost" -> {
+                            i.putExtra("BirdLostDate", jsonData.optString("LostDate", null))
+                            i.putExtra("BirdLostDetails", jsonData.optString("LostDetails", null))
+                        }
+                        "Donated" -> {
+                            i.putExtra("BirdDonatedDate", jsonData.optString("DonatedDate", null))
+                            i.putExtra("BirdDonatedContact", jsonData.optString("DonatedContact", null))
+                        }
+                        "Other" -> {
+                            i.putExtra("BirdOtherComment", jsonData.optString("OtherComment", null))
+                        }
+                        else -> {
+                            // Handle the case when 'status' is null or not recognized
+                        }
                     }
 
-                    val provenance = jsonData.getString("Provenance")
-                    if (provenance == "Bought"){
-                        i.putExtra("BirdBreederContact", jsonData.getString("BreederContact"))
-                        i.putExtra("BirdBreederBuyPrice", jsonData.getString("BreederBuyPrice"))
-                        i.putExtra("BirdBreederBuyDate", jsonData.getString("BreederBuyDate"))
-                    }else if (provenance == "Other"){
-                        i.putExtra("BirdOtherOrigin", jsonData.getString("OtherOrigin"))
+                    val provenance = jsonData.optString("Provenance", null)
+                    Log.d(TAG, "SCAN PROVENANCE" + provenance)
+                    if (provenance == "Bought") {
+                        i.putExtra("BirdBreederContact", jsonData.optString("BreederContact", null))
+                        i.putExtra("BirdBreederBuyPrice", jsonData.optString("BreederBuyPrice", null))
+                        i.putExtra("BirdBreederBuyDate", jsonData.optString("BreederBuyDate", null))
+                    } else if (provenance == "Other") {
+                        i.putExtra("BirdOtherOrigin", jsonData.optString("OtherOrigin", null))
                     }
 
-                    i.putExtra("BirdProvenance", jsonData.getString("Provenance"))
+                    i.putExtra("BirdProvenance", provenance)
 
 
                     activity.setResult(Activity.RESULT_OK, i)

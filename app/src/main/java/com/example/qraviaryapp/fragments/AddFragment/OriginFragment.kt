@@ -186,8 +186,10 @@ class OriginFragment : Fragment() {
         }
         val provenance = arguments?.getString("BirdProvenance")
 
+        Log.d(TAG, "provenance $provenance")
         when (provenance) {
             "Bought" -> {
+                radioButtonBought.isChecked = true
                 if (arguments?.getString("BirdBreederContact")?.isNotEmpty() == true) {
                     etBreederContact.setText(arguments?.getString("BirdBreederContact"))
                 }
@@ -199,6 +201,7 @@ class OriginFragment : Fragment() {
                 }
             }
             "Other" -> {
+                radioButtonOther.isChecked = true
                 if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
                     etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
                 }

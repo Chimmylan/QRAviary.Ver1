@@ -275,15 +275,20 @@ class BasicFragment : Fragment() {
         btnMutation6 = view.findViewById(R.id.mutationBtn6)
         spinnerStatus = view.findViewById(R.id.spinnerstatus)
         cagescan1 = view.findViewById(R.id.cagescan1)
+
+
         cagescan1.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
-        }
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)        }
 
 
 
         cagescan = view.findViewById(R.id.cagescan)
         cagescan.setOnClickListener {
-            startActivity(Intent(requireContext(), AddCageScanActivity::class.java))
+            val requestCode = 7 // You can use any integer as the request code
+            val intent = Intent(requireContext(), AddCageScanActivity::class.java)
+            startActivityForResult(intent, requestCode)
         }
         sharedPreferences = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val isCheckBool = sharedPreferences.getBoolean("Check", false)
@@ -581,9 +586,13 @@ class BasicFragment : Fragment() {
                 Log.d(TAG, "cage key : $cageKeyValue")
                 if (availableLayout.visibility == View.VISIBLE) {
                     etAvailCage.setText(cageNameValue)
-                } else if (forSaleLayout.visibility == View.VISIBLE) {
-                    etForSaleCage.setText(cageNameValue)
                 }
+                if (forSaleLayout.visibility == View.VISIBLE) {
+                    etForSaleCage.setText(cageNameValue)
+                    Log.d(TAG, "CAGENAME" + cageNameValue)
+
+                }
+
             }
         }
     }
@@ -1424,6 +1433,16 @@ class BasicFragment : Fragment() {
             etLegband.setText(arguments?.getString("BirdLegband"))
         }
 
+        if (arguments?.getString("BirdBirthDate")?.isNotEmpty() == true){
+            datebirthButton.text = arguments?.getString("BirdBirthDate")
+            birthFormattedDate = arguments?.getString("BirdBirthDate")
+        }
+//
+//        val birdDateofBirth = arguments?.getString("BirdBirthDate")
+//        if (birdDateofBirth?.isNotEmpty() == true && datebirthButton.text == "Pick Date") {
+//            datebirthButton.text = birdDateofBirth
+//        }
+
         val sex = arguments?.getString("BirdGender").toString()
 
         if (sex == "Female") {
@@ -1445,37 +1464,46 @@ class BasicFragment : Fragment() {
             btnMutation1.text = mutation1
             btnMutation1.visibility = View.VISIBLE
             spinnerCount = 0
+
+
         }
         if (mutation2?.isNotEmpty() == true) {
             btnMutation2.text = mutation2
             btnMutation2.visibility = View.VISIBLE
             spinnerCount = 1
+            slash1.visibility = View.VISIBLE
+
         }
         if (mutation3?.isNotEmpty() == true) {
             btnMutation3.text = mutation3
             btnMutation3.visibility = View.VISIBLE
             spinnerCount = 2
+            slash2.visibility = View.VISIBLE
+
         }
         if (mutation4?.isNotEmpty() == true) {
             btnMutation4.text = mutation4
             btnMutation4.visibility = View.VISIBLE
             spinnerCount = 3
+            slash3.visibility = View.VISIBLE
+
         }
         if (mutation5?.isNotEmpty() == true) {
             btnMutation5.text = mutation5
             btnMutation5.visibility = View.VISIBLE
             spinnerCount = 4
+            slash4.visibility = View.VISIBLE
+
         }
         if (mutation6?.isNotEmpty() == true) {
             btnMutation6.text = mutation6
             btnMutation6.visibility = View.VISIBLE
             spinnerCount = 5
+            slash5.visibility = View.VISIBLE
+
         }
 
-        val birdDateofBirth = arguments?.getString("BirdBirthDate")
-        if (birdDateofBirth?.isNotEmpty() == true && datebirthButton.text == "Pick Date") {
-            datebirthButton.text = birdDateofBirth
-        }
+
 
         when (arguments?.getString("BirdStatus")) {
             "Available" -> {
