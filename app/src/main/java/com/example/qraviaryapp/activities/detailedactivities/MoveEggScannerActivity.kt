@@ -75,7 +75,7 @@ class MoveEggScannerActivity : AppCompatActivity() {
         codeScanner.apply {
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
