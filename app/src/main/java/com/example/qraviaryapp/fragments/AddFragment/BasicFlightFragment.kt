@@ -899,7 +899,7 @@ class BasicFlightFragment : Fragment() {
             "Incubating Days" to mutation6IncubatingDays
         )
         val newBundle = Bundle()
-
+        newBundle.putString("SoldRefKey", SoldBirdRef.key.toString())
         newBundle.putString("BirdIdentifier", birdData.identifier)//
         newBundle.putString("BirdLegband", birdData.legband)//
         newBundle.putString("BirdImage", birdData.img)//

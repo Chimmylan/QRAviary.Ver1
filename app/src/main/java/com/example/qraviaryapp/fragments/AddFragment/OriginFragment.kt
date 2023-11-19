@@ -1044,7 +1044,7 @@ class OriginFragment : Fragment() {
         )
 
 
-
+        val soldRefKey = newBundle.getString("SoldRefKey")
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
         val birdLegband = newBundle.getString("BirdLegband")
@@ -1099,6 +1099,12 @@ class OriginFragment : Fragment() {
                 dbase.child("Users").child("ID: $userId").child("Cages")
                     .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString())
                     .child("Parents")
+            }!!
+        }
+
+        if (!soldRefKey.isNullOrEmpty()){
+            soldReference = soldRefKey?.let{
+                dbase.child("Users").child("ID: $userId").child("Sold Items").child(it)
             }!!
         }
 
@@ -1390,6 +1396,8 @@ class OriginFragment : Fragment() {
                     "Bought Date" to birdData.boughtDate,
                     "Purchase Id" to purchasekey,
                 )
+                soldReference.updateChildren(data)
+
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
             } else {
@@ -1569,6 +1577,7 @@ class OriginFragment : Fragment() {
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {
                     soldidref.updateChildren(parentdata)
                 }
+
                 relationshipRef.updateChildren(parentdata)
                 nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -1578,6 +1587,7 @@ class OriginFragment : Fragment() {
                 )
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
+                soldReference.updateChildren(data)
 
 
             } else {
