@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -72,7 +73,7 @@ class PairListAdapter(
         holder.femaleMutation.text = pairs.pairFemaleMutation
         holder.maleBird.text = pairs.pairMale
         holder.maleMutation.text = pairs.pairMaleMutation
-
+        holder.deletelayout.visibility = View.GONE
     }
 
     fun filterDataRange(
@@ -121,7 +122,7 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     var maleMutation: TextView = itemView.findViewById(R.id.tvMaleMutation)
     var femaleMutation: TextView = itemView.findViewById(R.id.tvFemaleMutation)
     var dateId: TextView = itemView.findViewById(R.id.tvDate)
-
+    var deletelayout: LinearLayout = itemView.findViewById(R.id.deletelayout)
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()

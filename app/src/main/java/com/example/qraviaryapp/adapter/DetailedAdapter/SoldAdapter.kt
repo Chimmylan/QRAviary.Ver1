@@ -71,7 +71,8 @@ class SoldAdapter(
 
             val soldDateObj = soldDate?.let { dateFormat.parse(it) }
 
-            val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
+            val isDateInRange = (fromDateObj == null || toDateObj == null ||
+                    (soldDateObj != null && soldDateObj.compareTo(fromDateObj) >= 0 && soldDateObj.compareTo(toDateObj) <= 0))
             val isBuyerMatch = buyer.isNullOrBlank() || (soldBuyer != null && soldBuyer == buyer)
             val isGenderMatch = gender.isNullOrEmpty() || (soldGender != null && gender.contains(soldGender))
 
@@ -80,6 +81,7 @@ class SoldAdapter(
 
         setData(filteredList.toMutableList())
     }
+
 
 
 

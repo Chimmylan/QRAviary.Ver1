@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -15,14 +16,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.adapter.ClutchesListAdapter
 import com.example.qraviaryapp.adapter.PreviousClutchesListAdapter
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,7 +50,7 @@ class PreviousClutchesFragment : Fragment() {
     private lateinit var tvMutations: TextView
     private lateinit var btnMale: MaterialButton
     private lateinit var btnFemale: MaterialButton
-
+    private lateinit var fab: FloatingActionButton
     private lateinit var mAuth: FirebaseAuth
 
     private lateinit var recyclerView: RecyclerView
@@ -60,10 +68,19 @@ class PreviousClutchesFragment : Fragment() {
     private lateinit var pairCageKeyFemale: String
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
+    private lateinit var paircagekey: String
+    private lateinit var cagePairKey: String
     private lateinit var currentUserId: String
     private lateinit var totalclutch: TextView
-    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private var clutchCount = 0
+    private lateinit var clutchkey: String
+    private var key: String = ""
+    private lateinit var hatchingDateTime: LocalDateTime
+    private var storageRef = Firebase.storage.reference
+    private val formatter1 = DateTimeFormatter.ofPattern("MMM d yyyy hh:mm a", Locale.US)
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
+    private lateinit var totalBirds: TextView
+    private lateinit var loadingProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +96,8 @@ class PreviousClutchesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_previous_clutches, container, false)
-
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        totalBirds = view.findViewById(R.id.tvBirdCount)
         mAuth = FirebaseAuth.getInstance()
         dataList = ArrayList()
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -87,9 +105,10 @@ class PreviousClutchesFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         adapter = PreviousClutchesListAdapter(requireContext(), dataList)
         recyclerView.adapter = adapter
-        swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 
-        pairKey = arguments?.getString("BirdKey").toString()
+//        pairKey = arguments?.getString("BirdKey").toString()
+        paircagekey = arguments?.getString("CageKey").toString()
         pairId = arguments?.getString("PairId").toString()
         pairMale = arguments?.getString("MaleID").toString()
         pairFemale = arguments?.getString("FemaleID").toString()
@@ -102,6 +121,8 @@ class PreviousClutchesFragment : Fragment() {
         pairFemaleKey = arguments?.getString("PairFemaleKey").toString()
         pairMaleKey = arguments?.getString("PairMaleKey").toString()
         pairKey =arguments?.getString("PairKey").toString()
+        cagePairKey =arguments?.getString("CagePairKey").toString()
+
         pairCageBirdFemale = arguments?.getString("CageBirdFemale").toString()
         pairCageBirdMale = arguments?.getString("CageBirdFemale").toString()
         pairCageKeyFemale = arguments?.getString("CageKeyFemale").toString()
@@ -148,153 +169,203 @@ class PreviousClutchesFragment : Fragment() {
             .child(pairKey).child("Clutches")
         val dataList = ArrayList<EggData>()
         val snapshot = db.get().await()
+
         for (clutchSnapshot in snapshot.children) {
-            val data = clutchSnapshot.getValue(EggData::class.java)
-            val key = clutchSnapshot.key.toString()
-            var incubatingCount = 0
-            var laidCount = 0
-            var hatchedCount = 0
-            var notFertilizedCount = 0
-            var brokenCount = 0
-            var abandonCount = 0
-            var deadInShellCount = 0
-            var deadBeforeMovingToNurseryCount = 0
-            var eggsCount = 0
+            val data = clutchSnapshot.getValue(EggData::class.java)!!
 
-            if (data != null) {
-                for (eggSnapshot in clutchSnapshot.children) {
-                    val eggData = eggSnapshot.getValue(EggData::class.java)
+            var parentPair = false
+            var fosterPair = false
 
-                    val eggStatus = eggSnapshot.child("Status").value.toString()
-                    val eggDate = eggSnapshot.child("Date").value.toString()
-                    eggsCount++
+            if (clutchSnapshot.key != "QR" || clutchSnapshot.key != "Parent" || clutchSnapshot.key != "Foster Pair"){
 
-                    clutchCount = snapshot.childrenCount.toInt()
-                    data.clutchCount = clutchCount.toString()
-                    if (eggStatus == "Incubating") {
+                key = clutchSnapshot.key.toString()
+                var incubatingCount = 0
+                var laidCount = 0
+                var hatchedCount = 0
+                var notFertilizedCount = 0
+                var brokenCount = 0
+                var abandonCount = 0
+                var deadInShellCount = 0
+                var deadBeforeMovingToNurseryCount = 0
+                var moveCount = 0
+                var eggsCount = 0
 
-                        incubatingCount++
-                        Log.d(ContentValues.TAG, incubatingCount.toString())
-                        data.pairKey = pairKey
+                if (key != "QR"){
+                    for (eggSnapshot in clutchSnapshot.children) {
+
+                        val eggStatus = eggSnapshot.child("Status").value.toString()
+                        val eggDate = eggSnapshot.child("Date").value.toString()
+                        eggsCount++
+
+                        clutchCount = snapshot.childrenCount.toInt()
+                        data.clutchCount = clutchCount.toString()
+                        data.paircagekey = paircagekey
+                        if (eggStatus == "Incubating") {
+
+                            incubatingCount++
+                            Log.d(ContentValues.TAG, incubatingCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggIncubating = incubatingCount.toString()
+                            data.eggIncubationStartDate = eggDate
+                        }
+                        if (eggStatus == "Laid") {
+
+                            laidCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggLaid = laidCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Hatched") {
+
+                            hatchedCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggHatched = hatchedCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Not Fertilized") {
+
+                            notFertilizedCount++
+                            Log.d(ContentValues.TAG, notFertilizedCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggNotFertilized = notFertilizedCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Broken") {
+
+                            brokenCount++
+                            Log.d(ContentValues.TAG, brokenCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggBroken = brokenCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Abandon") {
+
+                            abandonCount++
+                            Log.d(ContentValues.TAG, abandonCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggAbandon = abandonCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Dead in Shell") {
+
+                            deadInShellCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggDeadInShell = deadInShellCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Dead Before Moving To Nursery") {
+
+                            deadBeforeMovingToNurseryCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+                        if (eggStatus == "Moved") {
+
+                            moveCount++
+                            Log.d(ContentValues.TAG, laidCount.toString())
+                            data.pairKey = pairKey
+                            data.eggKey = key
+                            data.eggCount = eggsCount.toString()
+                            data.eggMoved = moveCount.toString()
+                            data.eggLaidStartDate = eggDate
+
+                        }
+
                         data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggIncubating = incubatingCount.toString()
-                        data.eggIncubationStartDate = eggDate
-                    }
-                    if (eggStatus == "Laid") {
-
-                        laidCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggLaid = laidCount.toString()
-                        data.eggLaidStartDate = eggDate
+                        data.pairFlightMaleKey = pairFlightMaleKey
+                        data.pairFlightFemaleKey = pairFlightFemaleKey
+                        data.pairBirdFemaleKey = pairFemaleKey
+                        data.pairBirdMaleKey = pairMaleKey
+                        data.pairFemaleId = pairFemale
+                        data.pairMaleId = pairMale
+                        data.eggcagebirdMale = pairCageBirdMale
+                        data.eggcagebirdFemale = pairCageBirdFemale
+                        data.eggcagekeyMale = pairCageKeyMale
+                        data.eggcagekeyFemale = pairCageKeyFemale
 
                     }
-                    if (eggStatus == "Hatched") {
-
-                        hatchedCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggHatched = hatchedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Not Fertilized") {
-
-                        notFertilizedCount++
-                        Log.d(ContentValues.TAG, notFertilizedCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggNotFertilized = notFertilizedCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Broken") {
-
-                        brokenCount++
-                        Log.d(ContentValues.TAG, brokenCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggBroken = brokenCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Abandon") {
-
-                        abandonCount++
-                        Log.d(ContentValues.TAG, abandonCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggAbandon = abandonCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead in Shell") {
-
-                        deadInShellCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadInShell = deadInShellCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-                    if (eggStatus == "Dead Before Moving To Nursery") {
-
-                        deadBeforeMovingToNurseryCount++
-                        Log.d(ContentValues.TAG, laidCount.toString())
-                        data.pairKey = pairKey
-                        data.eggKey = key
-                        data.eggCount = eggsCount.toString()
-                        data.eggDeadBeforeMovingToNursery = deadBeforeMovingToNurseryCount.toString()
-                        data.eggLaidStartDate = eggDate
-
-                    }
-
-
-                    data.pairFlightMaleKey = pairFlightMaleKey
-                    data.pairFlightFemaleKey = pairFlightFemaleKey
-                    data.pairBirdFemaleKey = pairFemaleKey
-                    data.pairBirdMaleKey = pairMaleKey
-                    data.pairFemaleId = pairFemale
-                    data.pairMaleId = pairMale
-                    data.eggcagebirdMale = pairCageBirdMale
-                    data.eggcagebirdFemale = pairCageBirdFemale
-                    data.eggcagekeyMale = pairCageKeyMale
-                    data.eggcagekeyFemale = pairCageKeyFemale
                 }
+
+
+
+            }
+            if (clutchSnapshot.child("Parent").exists()){
+                parentPair = true
+            }
+            if (clutchSnapshot.child("Foster Pair").exists()){
+                fosterPair = true
             }
 
-            if (data != null) {
-                dataList.add(data)
-            }
+            data.parentPair = parentPair
+            data.fosterPair = fosterPair
 
+
+            dataList.add(data)
         }
-//        totalclutch.text = "Total Clutch: $clutchCount"
+
+        if(dataList.count()>1){
+            totalBirds.text = dataList.count().toString() + " Clutches"
+        }
+        else{
+            totalBirds.text = dataList.count().toString() + " Clutch"
+        }
         dataList
     }
 
+
     override fun onResume() {
         super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
+
                 adapter.notifyDataSetChanged()
-            } catch (e: java.lang.Exception) {
-                Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
             }
-        }
-    }
+        }}
     companion object {
         /**
          * Use this factory method to create a new instance of

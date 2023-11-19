@@ -177,34 +177,42 @@ class BirdListAdapter(
                 }
             }
         }
-        filterAge(age)
-        setData(filteredList.toMutableList())
+        val finalFilteredList = when (age) {
+            "Youngest" -> filteredList.sortedByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+            else -> filteredList.sortedBy { it.month }
+
+        }
+
+        setData(finalFilteredList.toMutableList())
     }
 
-
+//    fun getFilteredItemCount(): Int {
+//        return dataList.size
+//    }
     private fun setData(newData: MutableList<BirdData>){
         dataList.clear()
+
         dataList.addAll(newData)
         notifyDataSetChanged()
     }
 
-    fun filterAge(age: String){
-        val string = "id"
-        if (age == "Youngest"){
-            dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
-        Log.d(TAG, "Youngest")
-        }else if (age == "Oldest"){
-            dataList.sortBy { it.dateOfBirth }
-            Log.d(TAG, "Oldest")
-
-        }
-        else{
-            dataList.sortBy { it.identifier }
-            Log.d(TAG, "Id")
-
-        }
-
-    }
+//    fun filterAge(age: String){
+//        val string = "id"
+//        if (age == "Youngest"){
+//            dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+//        Log.d(TAG, "Youngest")
+//        }else if (age == "Oldest"){
+//            dataList.sortBy { it.dateOfBirth }
+//            Log.d(TAG, "Oldest")
+//
+//        }
+//        else{
+//            dataList.sortBy { it.identifier }
+//            Log.d(TAG, "Id")
+//
+//        }
+//
+//    }
 
 }
 

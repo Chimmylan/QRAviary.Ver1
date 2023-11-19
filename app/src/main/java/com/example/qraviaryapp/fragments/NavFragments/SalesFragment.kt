@@ -315,13 +315,13 @@ class SalesFragment : Fragment() {
             }
 
         }
-        if(dataList.count()>1){
-            totalBirds.text = dataList.count().toString() + " Birds Sale"
-        }
-        else{
-            totalBirds.text = dataList.count().toString() + " Bird Sale"
-        }
-        dataList.sortByDescending { it.soldDate}
+////        if(dataList.count()>1){
+////            totalBirds.text = dataList.count().toString() + " Birds Sale"
+////        }
+////        else{
+////            totalBirds.text = dataList.count().toString() + " Bird Sale"
+////        }
+//        dataList.sortByDescending { it.soldDate}
         dataList
     }
     private fun extractYearFromDateString(dateString: String): String {
@@ -406,5 +406,11 @@ class SalesFragment : Fragment() {
         Log.d(TAG, fromDate.toString())
         Log.d(TAG, toDate.toString())
         adapter.filterDataRange(fromDate,toDate, buyer, filtered)
+
+        if (dataList.size > 1) {
+            totalBirds.text = "${adapter.getItemCount()}  Birds"
+        } else {
+            totalBirds.text = "${adapter.getItemCount()}  Bird"
+        }
     }
 }

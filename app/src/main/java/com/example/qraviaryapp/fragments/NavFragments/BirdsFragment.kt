@@ -113,7 +113,7 @@ class BirdsFragment : Fragment() {
                 val data = getDataFromDatabase()
                 dataList.clear()
                 dataList.addAll(data)
-
+                filterdata()
 
                 adapter.notifyDataSetChanged()
             } catch (e: Exception) {
@@ -439,13 +439,13 @@ class BirdsFragment : Fragment() {
         }
 
 
-        if (dataList.count() > 1) {
-            totalBirds.text = dataList.count().toString() + " Birds"
-        } else {
-            totalBirds.text = dataList.count().toString() + " Bird"
-        }
+//        if (dataList.count() > 1) {
+//            totalBirds.text =  "${adapter.getItemCount()}  Birds"
+//        } else {
+//            totalBirds.text = "${adapter.getItemCount()}  Bird"
+//        }
 
-        dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
+//        dataList.sortByDescending { it.year?.substring(0, 4)?.toIntOrNull() ?: 0 }
         dataList
 
 
@@ -620,9 +620,16 @@ class BirdsFragment : Fragment() {
 
         Log.d(TAG, filteredData.toString())
 
-
         if (sort != null) {
             adapter.filterData(filteredData, sort)
         }
+
+        // Update total bird count
+        if (dataList.size > 1) {
+            totalBirds.text = "${adapter.getItemCount()}  Birds"
+        } else {
+            totalBirds.text = "${adapter.getItemCount()}  Bird"
+        }
     }
+
 }

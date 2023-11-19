@@ -49,7 +49,6 @@ class BirdFilterActivity : AppCompatActivity() {
     private lateinit var rbGroup: RadioGroup
     private lateinit var oldest: RadioButton
     private lateinit var youngest: RadioButton
-    private lateinit var id: RadioButton
     private lateinit var cbMale: CheckBox
     private lateinit var cbFemale: CheckBox
     private lateinit var cbUnknown: CheckBox
@@ -114,7 +113,7 @@ class BirdFilterActivity : AppCompatActivity() {
         rbGroup = findViewById(R.id.rgGroup)
         youngest = findViewById(R.id.youngest)
         oldest = findViewById(R.id.oldest)
-        id = findViewById(R.id.identifier)
+
 
         cbMale = findViewById(R.id.cbMale)
         cbFemale = findViewById(R.id.cbFemale)
@@ -135,8 +134,8 @@ class BirdFilterActivity : AppCompatActivity() {
             youngest.isChecked = true
         } else if (sharedPreferences.getString("sort", "") == "Oldest") {
             oldest.isChecked = true
-        } else if (sharedPreferences.getString("sort", "") == "Id") {
-            id.isChecked = true
+        } else{
+
         }
 
 
@@ -220,9 +219,6 @@ class BirdFilterActivity : AppCompatActivity() {
                     editor.putString("Sort", "Youngest")
                 } else if (oldest.isChecked) {
                     editor.putString("Sort", "Oldest")
-                } else if (id.isChecked) {
-                    editor.putString("Sort", "Id")
-
                 }
 
 
