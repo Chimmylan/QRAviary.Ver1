@@ -306,7 +306,10 @@ class PairsDetailedActivity : AppCompatActivity() {
             .child(pairKey).removeValue()
         val pairBreedingCageRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Cages").child("Breeding Cages")
             .child(pairCageKey).child("Pair Birds").child(cagePairKey).removeValue()
-
+        val pairfemale = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairFemaleKey).child("Pairs").child(pairMaleKey).removeValue()
+        val pairmale = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currentUserId").child("Birds")
+            .child(pairMaleKey).child("Pairs").child(pairFemaleKey).removeValue()
     }
     private fun showSeparateConfirmation() {
         val builder = android.app.AlertDialog.Builder(this)
