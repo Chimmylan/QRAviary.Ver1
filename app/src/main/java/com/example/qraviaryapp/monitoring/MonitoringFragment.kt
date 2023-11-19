@@ -128,9 +128,10 @@ class MonitoringFragment : Fragment() {
                     val tempThreshold = 0.5
 
                     if (temperatureDouble >= maxTemperature) {
-                        fanTextView2.visibility = View.VISIBLE
+
                         fanTextView1 = view.findViewById(R.id.fan_text_view)
                         fanTextView2 = view.findViewById(R.id.fan_text_view2)
+                        fanTextView2.visibility = View.VISIBLE
                         fanTextView1.text = "It is too hot!"
                         fanTextView2.text = "Fan is on."
 

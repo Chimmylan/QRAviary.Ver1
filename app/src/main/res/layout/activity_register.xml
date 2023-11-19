@@ -59,7 +59,6 @@
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:boxStrokeErrorColor="#5A0808"
-                app:counterMaxLength="10"
                 app:endIconMode="clear_text"
                 app:helperTextTextColor="#5A0808"
                 android:textColorHint="@color/purplelight"
