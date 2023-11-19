@@ -1,5 +1,6 @@
 package com.example.qraviaryapp.activities.AddActivities
 
+import BirdData
 import PairData
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -597,8 +598,42 @@ class AddPairActivity : AppCompatActivity() {
                                 newMaleFlightBirdsPref.child("Status").setValue("Paired")
                                 newFemaleFlightBirdsPref.child("Status").setValue("Paired")
                                 cageReference.updateChildren(data)
-                                newFemaleBirdPref.updateChildren(femaleBirdPair)
-                                newMaleBirdPref.updateChildren(maleBirdPair)
+
+                        newMaleBirdsPref.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+
+                                val male = snapshot.value
+
+                                if (male != null) {
+
+                                    newFemaleBirdPref.setValue(male)
+                                    Log.d(ContentValues.TAG, "Male Bird Data: $male")
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                // Handle onCancelled event if needed
+                                Log.e(ContentValues.TAG, "Error fetching male bird data: ${error.message}")
+                            }
+                        })
+                        newFemaleBirdsPref.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+
+                                val female = snapshot.value
+
+                                if (female != null) {
+                                    newMaleBirdPref.setValue(female)
+                                    Log.d(ContentValues.TAG, "Male Bird Data: $female")
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                // Handle onCancelled event if needed
+                                Log.e(ContentValues.TAG, "Error fetching male bird data: ${error.message}")
+                            }
+                        })
+
+
                                 newPairPref.updateChildren(data)
                                 qrAdd(bundleData, newPairPref)
                                 onBackPressed()

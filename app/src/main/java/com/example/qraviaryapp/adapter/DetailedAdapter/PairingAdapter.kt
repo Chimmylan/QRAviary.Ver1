@@ -1,14 +1,18 @@
 package com.example.qraviaryapp.adapter.DetailedAdapter
 
 import BirdData
+import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 
 class PairingAdapter(
     private val context: android.content.Context,
@@ -22,7 +26,20 @@ class PairingAdapter(
 
     override fun onBindViewHolder(holder: PairingsViewHolder, position: Int) {
         val pair = dataList[position]
+        if (pair.img.isNullOrEmpty()) {
+            Glide.with(context)
+                .load(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
 
+        } else {
+            Glide.with(context)
+                .load(pair.img)
+                .placeholder(R.drawable.noimage)
+                .error(R.drawable.noimage)
+                .into(holder.imageView)
+        }
         holder.tvIdentifier.text = pair.identifier
         val mutationList = listOf(
             pair.mutation1,
@@ -113,5 +130,68 @@ class PairingsViewHolder(itemView: View, private val dataList: MutableList<BirdD
     var tvGender: TextView = itemView.findViewById(R.id.tvGender)
     var tvCage: TextView = itemView.findViewById(R.id.tvCage)
     var imageGender: ImageView = itemView.findViewById(R.id.GenderImageView)
+    init {
 
+        itemView.setOnClickListener {
+            val bundle = Bundle()
+            dataList[adapterPosition].clutch?.let { it1 -> bundle.putBoolean("Clutch", it1) }
+            bundle.putString("BirdKey", dataList[adapterPosition].birdKey)//
+            bundle.putString("FlightKey", dataList[adapterPosition].flightKey)
+            bundle.putString("BirdLegband", dataList[adapterPosition].legband)
+            bundle.putString("BirdId", dataList[adapterPosition].identifier)
+            bundle.putString("BirdImage", dataList[adapterPosition].img)
+            bundle.putString("BirdGender", dataList[adapterPosition].gender)
+            bundle.putString("BirdStatus", dataList[adapterPosition].status)
+            bundle.putString("BirdDateBirth", dataList[adapterPosition].dateOfBirth)
+            bundle.putString("BirdSalePrice", dataList[adapterPosition].soldPrice)
+            bundle.putString("BirdBuyer", dataList[adapterPosition].saleContact)
+            bundle.putString("BirdDeathReason", dataList[adapterPosition].deathReason)
+            bundle.putString("BirdExchangeReason", dataList[adapterPosition].exReason)
+            bundle.putString("BirdExchangeWith", dataList[adapterPosition].exContact)
+            bundle.putString("BirdLostDetails", dataList[adapterPosition].lostDetails)
+            bundle.putString("BirdAvailCage", dataList[adapterPosition].availCage)
+            bundle.putString("BirdForsaleCage", dataList[adapterPosition].forSaleCage)
+            bundle.putString("BirdRequestedPrice", dataList[adapterPosition].reqPrice)
+            bundle.putString("BirdBuyPrice", dataList[adapterPosition].buyPrice)
+            bundle.putString("BirdBoughtOn", dataList[adapterPosition].boughtDate)
+            bundle.putString("BirdBoughtBreeder", dataList[adapterPosition].breederContact)
+            bundle.putString("BirdComment",dataList[adapterPosition].otherComments)
+            bundle.putString("BirdMutation1", dataList[adapterPosition].mutation1)
+            bundle.putString("BirdMutation2", dataList[adapterPosition].mutation2)
+            bundle.putString("BirdMutation3", dataList[adapterPosition].mutation3)
+            bundle.putString("BirdMutation4", dataList[adapterPosition].mutation4)
+            bundle.putString("BirdMutation5", dataList[adapterPosition].mutation5)
+            bundle.putString("BirdMutation6", dataList[adapterPosition].mutation6)
+            bundle.putString("BirdMaturingDays1", dataList[adapterPosition].maturingdays1)
+            bundle.putString("BirdMaturingDays2", dataList[adapterPosition].maturingdays2)
+            bundle.putString("BirdMaturingDays3", dataList[adapterPosition].maturingdays3)
+            bundle.putString("BirdMaturingDays4", dataList[adapterPosition].maturingdays4)
+            bundle.putString("BirdMaturingDays5", dataList[adapterPosition].maturingdays5)
+            bundle.putString("BirdMaturingDays6", dataList[adapterPosition].maturingdays6)
+            bundle.putString("BirdIncubatingDays1", dataList[adapterPosition].incubatingdays1)
+            bundle.putString("BirdIncubatingDays2", dataList[adapterPosition].incubatingdays2)
+            bundle.putString("BirdIncubatingDays3", dataList[adapterPosition].incubatingdays3)
+            bundle.putString("BirdIncubatingDays4", dataList[adapterPosition].incubatingdays4)
+            bundle.putString("BirdIncubatingDays5", dataList[adapterPosition].incubatingdays5)
+            bundle.putString("BirdIncubatingDays6", dataList[adapterPosition].incubatingdays6)
+            bundle.putString("BirdSoldDate", dataList[adapterPosition].soldDate)
+            bundle.putString("BirdDeceaseDate", dataList[adapterPosition].deathDate)
+            bundle.putString("BirdExchangeDate", dataList[adapterPosition].exDate)
+            bundle.putString("BirdLostDate", dataList[adapterPosition].lostDate)
+            bundle.putString("BirdDonatedDate", dataList[adapterPosition].donatedDate)
+            bundle.putString("BirdDonatedContact", dataList[adapterPosition].donatedContact)
+            bundle.putString("BirdFather", dataList[adapterPosition].father)
+            bundle.putString("BirdFatherKey", dataList[adapterPosition].fatherKey)
+            bundle.putString("BirdMother", dataList[adapterPosition].mother)
+            bundle.putString("BirdMotherKey", dataList[adapterPosition].motherKey)
+            bundle.putString("CageKeyValue", dataList[adapterPosition].cageKey)
+            bundle.putString("FlightType", dataList[adapterPosition].flightType)
+            bundle.putString("NurseryType", dataList[adapterPosition].nurseryType)
+            bundle.putString("otOther", dataList[adapterPosition].otOtherContact)
+            bundle.putString("CageBirdKey", dataList[adapterPosition].cagebirdkey)
+            val i = Intent(itemView.context, BirdsDetailedActivity::class.java)
+            i.putExtras(bundle)
+            itemView.context.startActivity(i)
+        }
+    }
 }

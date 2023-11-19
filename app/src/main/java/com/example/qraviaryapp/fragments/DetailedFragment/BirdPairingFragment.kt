@@ -118,79 +118,145 @@ class BirdPairingFragment : Fragment() {
                             // Access specific values inside pairData
                             val gallery = snapshot.child("Gallery")
 
-                            val pairIdentifier = snapshot.child("Identifier").value.toString()
-                            val pairLegBand = snapshot.child("Legband").value.toString()
-                            val pairGenderValue = snapshot.child("Gender").value.toString()
                             val mainPic = gallery.children.firstOrNull()?.value.toString()
+                            val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                            val birdKey = itemSnapshot.key
+                            val LegbandValue = itemSnapshot.child("Legband").value
+                            val identifierValue = itemSnapshot.child("Identifier").value
+                            val genderValue = itemSnapshot.child("Gender").value
+                            val clutch = itemSnapshot.child("Clutch").value.toString().toBoolean()
 
-                            val mutation1Value = if (snapshot.hasChild("Mutation1")) {
-                                snapshot.child("Mutation1").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val mutation2Value = if (snapshot.hasChild("Mutation2")) {
-                                snapshot.child("Mutation2").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val mutation3Value = if (snapshot.hasChild("Mutation3")) {
-                                snapshot.child("Mutation3").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val mutation4Value = if (snapshot.hasChild("Mutation4")) {
-                                snapshot.child("Mutation4").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val mutation5Value = if (snapshot.hasChild("Mutation5")) {
-                                snapshot.child("Mutation5").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val mutation6Value = if (snapshot.hasChild("Mutation6")) {
-                                snapshot.child("Mutation6").child("Mutation Name").value.toString()
-                            } else {
-                                ""
-                            }
-                            val dateOfBandingValue = snapshot.child("Date of Banding").value
-                            val dateOfBirthValue = snapshot.child("Date of Birth").value
-                            val statusValue = snapshot.child("Status").value
-                            val availCageValue = snapshot.child("Cage").value
-                            val forSaleCageValue = snapshot.child("Cage").value
-                            val forSaleRequestedPriceValue =
-                                snapshot.child("Requested Price").value
-                            val soldDateValue = snapshot.child("Sold Date").value
-                            val soldPriceValue = snapshot.child("Sale Price").value
-                            val soldContactValue = snapshot.child("Sale Contact").value
-                            val deathDateValue = snapshot.child("Death Date").value
-                            val deathReasonValue = snapshot.child("Death Reason").value
-                            val exDateValue = snapshot.child("Exchange Date").value
-                            val exReasonValue = snapshot.child("Exchange Reason").value
-                            val exContactValue = snapshot.child("Exchange Contact").value
-                            val lostDateValue = snapshot.child("Lost Date").value
-                            val lostDetailsValue = snapshot.child("Lost Details").value
-                            val donatedDateValue = snapshot.child("Donated Date").value
-                            val donatedContactValue = snapshot.child("Donated Contact").value
-                            val otherCommentsValue = snapshot.child("Comments").value
-                            val buyPriceValue = snapshot.child("Buy Price").value
-                            val boughtDateValue = snapshot.child("Bought Date").value
-                            val breederContactValue = snapshot.child("Breeder Contact").value
-                            val FatherValue = snapshot.child("Parents").child("Father").value
-                            val MotherValue = snapshot.child("Parents").child("Mother").value
-                            val fatherKeyValue =
-                                snapshot.child("Parents").child("FatherKey").value
-                            val motherKeyValue =
-                                snapshot.child("Parents").child("MotherKey").value
-                            // You can access other fields in the same way
 
+                            val mutation1Value = if (itemSnapshot.hasChild("Mutation1")) {
+                                itemSnapshot.child("Mutation1").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation2Value = if (itemSnapshot.hasChild("Mutation2")) {
+                                itemSnapshot.child("Mutation2").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation3Value = if (itemSnapshot.hasChild("Mutation3")) {
+                                itemSnapshot.child("Mutation3").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation4Value = if (itemSnapshot.hasChild("Mutation4")) {
+                                itemSnapshot.child("Mutation4").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation5Value = if (itemSnapshot.hasChild("Mutation5")) {
+                                itemSnapshot.child("Mutation5").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation6Value = if (itemSnapshot.hasChild("Mutation6")) {
+                                itemSnapshot.child("Mutation6").child("Mutation Name").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation1incubatingValue = if (itemSnapshot.hasChild("Mutation1")) {
+                                itemSnapshot.child("Mutation1").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation2incubatingValue = if (itemSnapshot.hasChild("Mutation2")) {
+                                itemSnapshot.child("Mutation2").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation3incubatingValue = if (itemSnapshot.hasChild("Mutation3")) {
+                                itemSnapshot.child("Mutation3").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation4incubatingValue = if (itemSnapshot.hasChild("Mutation4")) {
+                                itemSnapshot.child("Mutation4").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation5incubatingValue = if (itemSnapshot.hasChild("Mutation5")) {
+                                itemSnapshot.child("Mutation5").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation6incubatingValue = if (itemSnapshot.hasChild("Mutation6")) {
+                                itemSnapshot.child("Mutation6").child("Incubating Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation1maturingValue = if (itemSnapshot.hasChild("Mutation1")) {
+                                itemSnapshot.child("Mutation1").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation2maturingValue = if (itemSnapshot.hasChild("Mutation2")) {
+                                itemSnapshot.child("Mutation2").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation3maturingValue = if (itemSnapshot.hasChild("Mutation3")) {
+                                itemSnapshot.child("Mutation3").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation4maturingValue = if (itemSnapshot.hasChild("Mutation4")) {
+                                itemSnapshot.child("Mutation4").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation5maturingValue = if (itemSnapshot.hasChild("Mutation5")) {
+                                itemSnapshot.child("Mutation5").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val mutation6maturingValue = if (itemSnapshot.hasChild("Mutation6")) {
+                                itemSnapshot.child("Mutation6").child("Maturing Days").value.toString()
+                            } else {
+                                ""
+                            }
+                            val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
+                            val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
+                            val statusValue = itemSnapshot.child("Status").value
+                            val availCageValue = itemSnapshot.child("Cage").value
+                            val forSaleCageValue = itemSnapshot.child("Cage").value
+                            val cageKey = itemSnapshot.child("CageKey").value
+                            val cageBirdKey = itemSnapshot.child("Cage Bird Key").value
+                            val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
+                            val soldDateValue = itemSnapshot.child("Sold Date").value
+                            val soldPriceValue = itemSnapshot.child("Sale Price").value
+                            val soldContactValue = itemSnapshot.child("Sale Contact").value
+                            val deathDateValue = itemSnapshot.child("Death Date").value
+                            val deathReasonValue = itemSnapshot.child("Death Reason").value
+                            val exDateValue = itemSnapshot.child("Exchange Date").value
+                            val exReasonValue = itemSnapshot.child("Exchange Reason").value
+                            val exContactValue = itemSnapshot.child("Exchange Contact").value
+                            val lostDateValue = itemSnapshot.child("Lost Date").value
+                            val lostDetailsValue = itemSnapshot.child("Lost Details").value
+                            val donatedDateValue = itemSnapshot.child("Donated Date").value
+                            val donatedContactValue = itemSnapshot.child("Donated Contact").value
+                            val otherCommentsValue = itemSnapshot.child("Comments").value
+                            val buyPriceValue = itemSnapshot.child("Buy Price").value
+                            val boughtDateValue = itemSnapshot.child("Bought Date").value
+                            val breederContactValue = itemSnapshot.child("Breeder Contact").value
+                            val otherBreederContact = itemSnapshot.child("Other Breeder Contact").value.toString()
+                            val FatherValue = itemSnapshot.child("Parents").child("Father").value
+                            val MotherValue = itemSnapshot.child("Parents").child("Mother").value
+                            val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
+                            val motherKeyValue = itemSnapshot.child("Parents").child("MotherKey").value
+                            val nurseryType = itemSnapshot.child("Nursery Key").value.toString()
+                            /*==++==*/
+                            val legband = LegbandValue.toString() ?: ""
+                            val identifier = identifierValue.toString() ?: ""
+                            val gender = genderValue.toString() ?: ""
                             val dateOfBanding = dateOfBandingValue.toString() ?: ""
                             val dateOfBirth = dateOfBirthValue.toString() ?: ""
                             val status = statusValue.toString() ?: ""
                             val availCage = availCageValue.toString() ?: ""
                             val forSaleCage = forSaleCageValue.toString() ?: ""
-                            val forSaleRequestedPrice =
-                                forSaleRequestedPriceValue.toString() ?: ""
+                            val forSaleRequestedPrice = forSaleRequestedPriceValue.toString() ?: ""
                             val soldDate = soldDateValue.toString() ?: ""
                             val soldPrice = soldPriceValue.toString() ?: ""
                             val soldContact = soldContactValue.toString() ?: ""
@@ -210,11 +276,19 @@ class BirdPairingFragment : Fragment() {
                             val mother = MotherValue.toString() ?: ""
                             val father = FatherValue.toString() ?: ""
 
+
+                            data?.cagebirdkey = cageBirdKey?.toString()
+                            data?.otOtherContact = otherBreederContact
+                            data?.clutch = clutch
+                            data?.nurseryType = nurseryType
+                            data?.flightType = flightKey
+                            data?.cageKey = cageKey?.toString()
                             data?.img = mainPic
+                            data?.birdKey = birdKey
                             data?.flightKey = flightKey
-                            data?.legband = pairLegBand
-                            data?.identifier = pairIdentifier
-                            data?.gender = pairGenderValue
+                            data?.legband = legband
+                            data?.identifier = identifier
+                            data?.gender = gender
                             data?.dateOfBanding = dateOfBanding
                             data?.dateOfBirth = dateOfBirth
                             data?.status = status
@@ -224,6 +298,18 @@ class BirdPairingFragment : Fragment() {
                             data?.mutation4 = mutation4Value
                             data?.mutation5 = mutation5Value
                             data?.mutation6 = mutation6Value
+                            data?.maturingdays1 = mutation1maturingValue
+                            data?.maturingdays2 = mutation2maturingValue
+                            data?.maturingdays3 = mutation3maturingValue
+                            data?.maturingdays4 = mutation4maturingValue
+                            data?.maturingdays5 = mutation5maturingValue
+                            data?.maturingdays6 = mutation6maturingValue
+                            data?.incubatingdays1 = mutation1incubatingValue
+                            data?.incubatingdays2 = mutation1incubatingValue
+                            data?.incubatingdays3 = mutation1incubatingValue
+                            data?.incubatingdays4 = mutation1incubatingValue
+                            data?.incubatingdays5 = mutation1incubatingValue
+                            data?.incubatingdays6 = mutation1incubatingValue
                             data?.availCage = availCage
                             data?.forSaleCage = forSaleCage
                             data?.reqPrice = forSaleRequestedPrice
@@ -245,8 +331,8 @@ class BirdPairingFragment : Fragment() {
                             data?.breederContact = boughtBreeder
                             data?.father = father
                             data?.mother = mother
-                            data?.fatherKey = fatherKeyValue.toString()
-                            data?.motherKey = motherKeyValue.toString()
+                            data?.fatherKey = fatherKeyValue?.toString()
+                            data?.motherKey = motherKeyValue?.toString()
 
                             if (data != null) {
                                 dataList.add(data)
