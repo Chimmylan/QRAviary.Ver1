@@ -156,6 +156,9 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        val BirdMotherBirdKey = bundle?.getString("BirdMotherBirdKey")
+        val BirdFatherBirdKey = bundle?.getString("BirdFatherBirdKey")
+
         cageKeyValue = bundle?.getString("CageKey").toString()
         val otOther = bundle?.getString("BirdOtherOrigin").toString()
         val flightType = bundle?.getString("FlightType").toString()
@@ -165,6 +168,9 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         if (clutch != null) {
             newBundle.putBoolean("Clutch", clutch)
         }
+
+        Log.d(TAG, BirdFatherBirdKey.toString())
+        Log.d(TAG, BirdMotherBirdKey.toString())
 
         newBundle.putString("CageBirdKey", cageBirdKey)
         newBundle.putString("BirdOtherOrigin", otOther)
@@ -208,8 +214,10 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         newBundle.putString("BirdMutation6", BirdMutation6)
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)
+        newBundle.putString("BirdFatherBirdKey", BirdFatherBirdKey)
         newBundle.putString("BirdMother", BirdMother)
         newBundle.putString("BirdMotherKey", BirdMotherKey)
+        newBundle.putString("BirdMotherBirdKey", BirdMotherBirdKey)
         newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
         newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
 

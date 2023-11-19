@@ -176,8 +176,11 @@ class BirdsDetailedActivity : AppCompatActivity() {
         BirdIncubatingDays6 = bundle?.getString("BirdIncubatingDays6").toString()//
         BirdFather = bundle?.getString("BirdFather").toString()//
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()//
+        val BirdFatherBirdKey = bundle?.getString("BirdFatherBirdKey")
         BirdMother = bundle?.getString("BirdMother").toString()//
         BirdMotherKey = bundle?.getString("BirdMotherKey").toString()//
+        val BirdMotherBirdKey = bundle?.getString("BirdMotherBirdKey")
+
         if (bundle != null) {
             fromFlightAdapter = bundle.getBoolean("fromFlightListAdapter", false)
             fromNurseryAdapter = bundle.getBoolean("fromNurseryListAdapter", false)
@@ -246,8 +249,10 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)
+        newBundle.putString("BirdFatherBirdKey", BirdFatherBirdKey)
         newBundle.putString("BirdMother", BirdMother)
         newBundle.putString("BirdMotherKey", BirdMotherKey)
+        newBundle.putString("BirdMotherBirdKey", BirdMotherBirdKey)
         newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
         newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
         newBundle.putString("NurseryType", nurseryType)

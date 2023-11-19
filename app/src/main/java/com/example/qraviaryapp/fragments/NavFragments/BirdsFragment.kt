@@ -335,6 +335,8 @@ class BirdsFragment : Fragment() {
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value
                 val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
                 val motherKeyValue = itemSnapshot.child("Parents").child("MotherKey").value
+                val birdFatherKeyValue = itemSnapshot.child("Parents").child("BirdFatherKey").value.toString()
+                val birdMotherKeyValue = itemSnapshot.child("Parents").child("BirdMotherKey").value.toString()
                 val nurseryType = itemSnapshot.child("Nursery Key").value.toString()
                 /*==++==*/
                 val legband = LegbandValue.toString() ?: ""
@@ -428,6 +430,8 @@ class BirdsFragment : Fragment() {
                 data.mother = mother
                 data.fatherKey = fatherKeyValue.toString()
                 data.motherKey = motherKeyValue.toString()
+                data.birdfatherKey = birdFatherKeyValue
+                data.birdmotherKey = birdMotherKeyValue
 
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     Log.d(ContentValues.TAG, "Code is running on a background thread")

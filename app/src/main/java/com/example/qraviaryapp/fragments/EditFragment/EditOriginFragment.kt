@@ -240,30 +240,43 @@ class EditOriginFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+
         if (arguments?.getString("BirdFather")?.isNotEmpty() == true) {
-            btnFather.text = arguments?.getString("BirdFatherId")
+            btnFather.text = arguments?.getString("BirdFather")
+            Log.d(TAG, arguments?.getString("BirdFather").toString())
+
         }
         if (arguments?.getString("BirdMother")?.isNotEmpty() == true) {
-            btnMother.text = arguments?.getString("BirdMotherId")
+            btnMother.text = arguments?.getString("BirdMother")
+            Log.d(TAG, arguments?.getString("BirdMother").toString())
+
         }
         if (arguments?.getString("BirdFatherKey")?.isNotEmpty() == true) {
             birdFatherKey = arguments?.getString("BirdFatherKey")
+            Log.d(TAG, arguments?.getString("BirdFatherKey").toString())
+
         }
         if (arguments?.getString("BirdMotherKey")?.isNotEmpty() == true) {
             birdMotherKey = arguments?.getString("BirdMotherKey")
+            Log.d(TAG, arguments?.getString("BirdMotherKey").toString())
+
         }
         if (arguments?.getString("BirdFatherBirdKey")?.isNotEmpty() == true) {
             birdBirdsFatherKey = arguments?.getString("BirdFatherBirdKey")
+            Log.d(TAG, arguments?.getString("BirdFatherBirdKey").toString())
+
         }
         if (arguments?.getString("BirdMotherBirdKey")?.isNotEmpty() == true) {
             birdBirdsMotherKey = arguments?.getString("BirdMotherBirdKey")
+            Log.d(TAG, arguments?.getString("BirdMotherBirdKey").toString())
+
         }
         val provenance = arguments?.getString("BirdOtherOrigin")
 
         Log.d(TAG, "PROVENANCE: $provenance")
 
 
-        if (birdBoughtOn != "null"){
+        if (birdBoughtOn != "null") {
 
             radioButtonBought.isChecked = true
 
@@ -284,7 +297,7 @@ class EditOriginFragment : Fragment() {
 
         val clutch = arguments?.getBoolean("Clutch")
         Log.d(TAG, clutch.toString())
-        if (arguments?.getBoolean("Clutch") == true){
+        if (arguments?.getBoolean("Clutch") == true) {
             btnMother.text = null
             btnMother.hint = arguments?.getString("BirdMother")
             btnFather.text = null
@@ -368,7 +381,7 @@ class EditOriginFragment : Fragment() {
         val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
         if (boughtLayout.visibility == View.VISIBLE) {
-            if (boughtDateBtn.text.isNullOrEmpty()){
+            if (boughtDateBtn.text.isNullOrEmpty()) {
                 val currentDate = Date()
                 val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
                 dataBoughtDate = dateFormat.format(currentDate)
@@ -1109,7 +1122,7 @@ class EditOriginFragment : Fragment() {
         val inputDateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
         if (boughtLayout.visibility == View.VISIBLE) {
-            if (boughtDateBtn.text.isNullOrEmpty()){
+            if (boughtDateBtn.text.isNullOrEmpty()) {
                 val currentDate = Date()
                 val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
                 dataBoughtDate = dateFormat.format(currentDate)
@@ -1179,33 +1192,35 @@ class EditOriginFragment : Fragment() {
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Flight Cages").child(it).child("Birds").child(birdKey.toString())
+                    .child("Flight Cages").child(it).child("Birds").child(cageBirdKey.toString())
                     .child("Parents")
             }!!
         }
 
-        if (!soldRefKey.isNullOrEmpty()){
-            soldReference = soldRefKey?.let{
+        if (!soldRefKey.isNullOrEmpty()) {
+            soldReference = soldRefKey?.let {
                 dbase.child("Users").child("ID: $userId").child("Sold Items").child(it)
             }!!
         }
 
 
-        val birdRef = dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
+        val birdRef =
+            dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
         val relationshipRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdId).child("Parents")
 
         val nurseryRef =
-            dbase.child("Users").child("ID: $userId").child("Flight Birds").child(flightKey.toString())
+            dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                .child(flightKey.toString())
         val nurseryRelationshipRef = nurseryRef.child("Parents")
 //        val descendantsRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
 //            .child(birdFatherKey.toString()).child("Descendants").push()
         val purchasesRef = dbase.child("Users").child("ID: $userId").child("Purchase Items").push()
 
         val descendantsFatherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-            .child(birdFatherKey.toString()).child("Descendants").push()
+            .child(birdFatherKey.toString()).child("Descendants")
         val descendantMotherRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-            .child(birdMotherKey.toString()).child("Descendants").push()
+            .child(birdMotherKey.toString()).child("Descendants")
         val soldidref = dbase.child("Users").child("ID: $userId").child("Sold Items")
             .child(soldId).child("Parents")
         val motherRef = descendantMotherRef.child("Parents")
@@ -1326,7 +1341,9 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantsFatherRef.updateChildren(descendantdata)
+
+
+
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1337,9 +1354,25 @@ class EditOriginFragment : Fragment() {
                         "Bird Key" to birdId
                     )
 
+                    descendantsFatherRef.addListenerForSingleValueEvent(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (bird in snapshot.children){
+                                if (bird.child("ChildKey").value == birdKey.toString()){
+                                    bird.ref.updateChildren(descendantdata)
+                                    fatherRef.updateChildren(fatherRefdata)
+
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                     purchaseRef.updateChildren(fatherRefdata)
                     purchasesRef.updateChildren(descendantdata)
-                    fatherRef.updateChildren(fatherRefdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
@@ -1435,7 +1468,7 @@ class EditOriginFragment : Fragment() {
                         "Year" to year.toFloat()
                     )
                     descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1445,9 +1478,25 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
+                    descendantsFatherRef.addListenerForSingleValueEvent(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (bird in snapshot.children){
+                                if (bird.child("ChildKey").value == birdKey.toString()){
+                                    bird.ref.updateChildren(descendantdata)
+                                    fatherRef.updateChildren(motherRefdata)
+
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                     purchaseRef.updateChildren(motherRefdata)
                     purchasesRef.updateChildren(descendantdata)
-                    fatherRef.updateChildren(motherRefdata)
                     motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
@@ -1675,7 +1724,6 @@ class EditOriginFragment : Fragment() {
                 nurseryRef.updateChildren(data)
 
 
-
             } else {
                 return
             }
@@ -1872,7 +1920,6 @@ class EditOriginFragment : Fragment() {
     }
 
 
-
     interface OriginFragmentCallback {
         fun onOriginDatSaved(
             birdId: String,
@@ -1895,14 +1942,17 @@ class EditOriginFragment : Fragment() {
                     otLayout.visibility = View.GONE
 
                 }
+
                 R.id.radioButtonBought -> {
                     boughtLayout.visibility = View.VISIBLE
                     otLayout.visibility = View.GONE
                 }
+
                 R.id.radioButtonOther -> {
                     otLayout.visibility = View.VISIBLE
                     boughtLayout.visibility = View.GONE
                 }
+
                 else -> {
                     // handle other cases if needed
                 }
