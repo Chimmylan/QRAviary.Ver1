@@ -320,13 +320,13 @@ class PurchasesFragment : Fragment() {
             }
 
         }
-        if(dataList.count()>1){
-            totalBirds.text = dataList.count().toString() + " Birds Purchase"
-        }
-        else{
-            totalBirds.text = dataList.count().toString() + " Bird Purchase"
-        }
-
+//        if(dataList.count()>1){
+//            totalBirds.text = dataList.count().toString() + " Birds Purchase"
+//        }
+//        else{
+//            totalBirds.text = dataList.count().toString() + " Bird Purchase"
+//        }
+//
         dataList.sortByDescending { it.sort}
         dataList
     }
@@ -416,6 +416,11 @@ class PurchasesFragment : Fragment() {
         Log.d(ContentValues.TAG, fromDate.toString())
         Log.d(ContentValues.TAG, toDate.toString())
         adapter.filterDataRange(fromDate,toDate, buyer, filtered)
+        if (dataList.size > 1) {
+            totalBirds.text = "${adapter.getItemCount()}  Birds"
+        } else {
+            totalBirds.text = "${adapter.getItemCount()}  Bird"
+        }
     }
 
 }

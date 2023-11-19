@@ -321,7 +321,7 @@ class SalesFragment : Fragment() {
 ////        else{
 ////            totalBirds.text = dataList.count().toString() + " Bird Sale"
 ////        }
-//        dataList.sortByDescending { it.soldDate}
+        dataList.sortByDescending { it.soldDate}
         dataList
     }
     private fun extractYearFromDateString(dateString: String): String {
