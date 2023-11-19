@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.AdultingAdapter
 import com.example.qraviaryapp.activities.CagesActivity.CagesAdapter.NurseryListAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -48,7 +49,7 @@ class AdultingFragment : Fragment() {
     private var isNetworkAvailable = true
     private lateinit var mAuth: FirebaseAuth
     private lateinit var dataList: ArrayList<BirdData>
-    private lateinit var adapter: NurseryListAdapter
+    private lateinit var adapter: AdultingAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var totalBirds: TextView
@@ -107,7 +108,7 @@ class AdultingFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager
         dataList = ArrayList()
-        adapter = NurseryListAdapter(requireContext(), dataList, maturingDays)
+        adapter = AdultingAdapter(requireContext(), dataList, maturingDays)
         recyclerView.adapter = adapter
 
         mAuth = FirebaseAuth.getInstance()
