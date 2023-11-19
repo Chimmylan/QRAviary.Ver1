@@ -426,6 +426,8 @@ class AddEggActivity : AppCompatActivity() {
             DatePickerDialog(this, style, dateSetListenerIncubating, year, month, day)
         hatchedDatePickerDialog =
             DatePickerDialog(this, style, dateSetListenerHatched, year, month, day)
+        incubatingDatePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+        hatchedDatePickerDialog.datePicker.maxDate = System.currentTimeMillis()
 
     }
 

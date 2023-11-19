@@ -202,13 +202,13 @@ class ExpenseFragment : Fragment() {
                     dataList.add(data)
                 }
             }
-            if(dataList.count()>1){
-                totalBirds.text = dataList.count().toString() + " Expenses"
-            }
-            else{
-                totalBirds.text = dataList.count().toString() + " Expenses"
-            }
-            dataList.sortByDescending { it.expenses}
+//            if(dataList.count()>1){
+//                totalBirds.text = dataList.count().toString() + " Expenses"
+//            }
+//            else{
+//                totalBirds.text = dataList.count().toString() + " Expenses"
+//            }
+            dataList.sortByDescending { it.monthyr}
             dataList
         }
     private fun extractYearFromDateString(dateString: String): String {
@@ -271,6 +271,11 @@ class ExpenseFragment : Fragment() {
         Log.d(ContentValues.TAG, toDate.toString())
         Log.d(ContentValues.TAG, categories.toString())
         adapter.filterDataRange(fromDate,toDate, minimum,maximum, categories)
+        if (dataList.size > 1) {
+            totalBirds.text = "${adapter.getItemCount()}  Expenses"
+        } else {
+            totalBirds.text = "${adapter.getItemCount()}  Expense"
+        }
     }
 
     // Move the rest of your code here, including the functions and onOptionsItemSelected

@@ -1581,18 +1581,27 @@ class EditBasicFragment : Fragment() {
 
         datePickerDialogBirth =
             DatePickerDialog(requireContext(), style, dateSetListenerBirth, year, month, day)
-        /* datePickerDialogBanding =
-             DatePickerDialog(requireContext(), style, dateSetListenerBanding, year, month, day)*/
+        datePickerDialogBirth.datePicker.maxDate = System.currentTimeMillis()
+
         datePickerDialogSoldDate =
             DatePickerDialog(requireContext(), style, dateSetListenerSoldDate, year, month, day)
+        datePickerDialogSoldDate.datePicker.maxDate = System.currentTimeMillis()
+
         datePickerDialogDeathDate =
             DatePickerDialog(requireContext(), style, dateSetListenerDeathDate, year, month, day)
+        datePickerDialogDeathDate.datePicker.maxDate = System.currentTimeMillis()
+
         datePickerDialogExDate =
             DatePickerDialog(requireContext(), style, dateSetListenerExchangeDate, year, month, day)
+        datePickerDialogExDate.datePicker.maxDate = System.currentTimeMillis()
+
         datepickerDialogLostDate =
             DatePickerDialog(requireContext(), style, dateSetListenerLostDate, year, month, day)
+        datepickerDialogLostDate.datePicker.maxDate = System.currentTimeMillis()
+
         datepickerDialogDonatedDate =
             DatePickerDialog(requireContext(), style, dateSetListenerDonatedDate, year, month, day)
+        datepickerDialogDonatedDate.datePicker.maxDate = System.currentTimeMillis()
 
         // You can set the max date for each dialog if needed.
         // For example:

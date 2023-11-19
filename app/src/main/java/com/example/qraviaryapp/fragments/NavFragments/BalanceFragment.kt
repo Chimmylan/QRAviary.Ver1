@@ -15,13 +15,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -183,6 +186,18 @@ class BalanceFragment : Fragment() {
     }
 
     private fun applyDataRangeFilter() {
+        if (fromDateSelected != null && toDateSelected != null) {
+            // Convert date strings to Calendar objects for comparison
+            val fromCalendar = convertDateStringToCalendar(fromDateSelected!!)
+            val toCalendar = convertDateStringToCalendar(toDateSelected!!)
+
+            // Check if 'From' date is later than 'To' date
+            if (fromCalendar.after(toCalendar)) {
+                // Show error toast
+                showToast("Invalid date range. 'From' date should be earlier than 'To' date.")
+                return
+            }
+
         totalBalanceValue = 0.0
         totalSpentValue = 0.0
         totalReceiveValue = 0.0
@@ -202,12 +217,19 @@ class BalanceFragment : Fragment() {
             FirebaseDatabase.getInstance().getReference("Users/ID: $currentUserId/Sold Items")
         if (toDateSelected == null) {
             // If toDateSelected is not specified, set it to the current date or a future date
-            toDateSelected = makeDateString(currentDay, currentMonth + 1, currentYear) // This assumes you have a makeDateString function
+            toDateSelected = makeDateString(
+                currentDay,
+                currentMonth + 1,
+                currentYear
+            ) // This assumes you have a makeDateString function
         }
 
-        val recieve = ReceiveRef.orderByChild("Sold Date").startAt(fromDateSelected).endAt(toDateSelected)
-        val purchase = PurchasesRef.orderByChild("Bought On").startAt(fromDateSelected).endAt(toDateSelected)
-        val expenses = ExpensesRef.orderByChild("Beginning").startAt(fromDateSelected).endAt(toDateSelected)
+        val recieve =
+            ReceiveRef.orderByChild("Sold Date").startAt(fromDateSelected).endAt(toDateSelected)
+        val purchase =
+            PurchasesRef.orderByChild("Bought On").startAt(fromDateSelected).endAt(toDateSelected)
+        val expenses =
+            ExpensesRef.orderByChild("Beginning").startAt(fromDateSelected).endAt(toDateSelected)
 
 
         recieve.addValueEventListener(object : ValueEventListener {
@@ -288,6 +310,17 @@ class BalanceFragment : Fragment() {
             }
         })
     }
+    }
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun convertDateStringToCalendar(dateString: String): Calendar {
+        val cal = Calendar.getInstance()
+        val sdf = SimpleDateFormat("MMM dd yyyy", Locale.getDefault())
+        cal.time = sdf.parse(dateString)!!
+        return cal
+    }
 
 
     private fun calculateTotalBalance() {
@@ -298,40 +331,37 @@ class BalanceFragment : Fragment() {
     }
 
     private fun initDatePickers() {
-        val dateSetListenerBeginning =
-            DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                dateFromFormat = makeDateString(day, month + 1, year)
-                dateFrom.text = dateFromFormat
-                fromDateSelected = dateFrom.text.toString()
-                applyDataRangeFilter()
-            }
-
-        val dateSetListenerEnd =
-            DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                dateToFormat = makeDateString(day, month + 1, year)
-                dateTo.text = dateToFormat
-                toDateSelected = dateTo.text.toString()
-                applyDataRangeFilter()
-
-            }
-
         val cal = Calendar.getInstance()
         val year = cal.get(Calendar.YEAR)
         val month = cal.get(Calendar.MONTH)
         val day = cal.get(Calendar.DAY_OF_MONTH)
 
-        val style = AlertDialog.THEME_HOLO_LIGHT
+        // Set the maximum date to today
+        datePickerDialogBeginning = DatePickerDialog(
+            requireContext(), AlertDialog.THEME_HOLO_LIGHT,
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                dateFromFormat = makeDateString(day, month + 1, year)
+                dateFrom.text = dateFromFormat
+                fromDateSelected = dateFrom.text.toString()
+                applyDataRangeFilter()
+            },
+            year, month, day
+        )
+        datePickerDialogBeginning.datePicker.maxDate = cal.timeInMillis
 
-        datePickerDialogBeginning =
-            DatePickerDialog(
-                requireContext(), style, dateSetListenerBeginning, year, month, day
-            )
-        datePickerDialogEnd =
-            DatePickerDialog(
-                requireContext(), style, dateSetListenerEnd, year, month, day
-            )
-
+        datePickerDialogEnd = DatePickerDialog(
+            requireContext(), AlertDialog.THEME_HOLO_LIGHT,
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                dateToFormat = makeDateString(day, month + 1, year)
+                dateTo.text = dateToFormat
+                toDateSelected = dateTo.text.toString()
+                applyDataRangeFilter()
+            },
+            year, month, day
+        )
+        datePickerDialogEnd.datePicker.maxDate = cal.timeInMillis
     }
+
 
     fun showDatePickerDialog(context: Context, button: Button, datePickerDialog: DatePickerDialog) {
         button.setOnClickListener {

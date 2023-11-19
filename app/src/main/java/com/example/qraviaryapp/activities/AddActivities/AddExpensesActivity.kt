@@ -203,6 +203,7 @@ class AddExpensesActivity : AppCompatActivity() {
             DatePickerDialog(
                 this, style, dateSetListenerBeginning, year, month, day
             )
+        datePickerDialogBeginning.datePicker.maxDate = System.currentTimeMillis()
 
     }
 

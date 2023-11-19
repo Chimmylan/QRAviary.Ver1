@@ -1137,7 +1137,7 @@ class EditOriginFragment : Fragment() {
 
         datePickerDialogBought =
             DatePickerDialog(requireContext(), style, dateSetListenerBought, year, month, day)
-
+        datePickerDialogBought.datePicker.maxDate = System.currentTimeMillis()
     }
 
     fun showDatePickerDialog(

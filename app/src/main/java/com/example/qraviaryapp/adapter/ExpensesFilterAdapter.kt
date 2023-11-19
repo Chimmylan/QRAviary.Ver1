@@ -54,7 +54,7 @@ class ExpensesFilterAdapter(
     }
     fun clearCheckedItems() {
         for (item in dataList) {
-            item.isChecked = false
+            item.isChecked = true
         }
         notifyDataSetChanged()
     }
