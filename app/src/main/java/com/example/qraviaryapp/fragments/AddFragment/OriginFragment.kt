@@ -381,6 +381,7 @@ class OriginFragment : Fragment() {
 
 
             if (successBasic) {
+
                 purchaseId = purchasesRef.key
                 var date: Date? = null
                 if (!dataBoughtDate.isNullOrEmpty()) {
@@ -620,9 +621,7 @@ class OriginFragment : Fragment() {
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(parentdata)
                 }
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                }
+
                 purchaseRef.updateChildren(parentdata)
                 relationshipRef.updateChildren(parentdata)
                 nurseryRelationshipRef.updateChildren(parentdata)
@@ -633,7 +632,10 @@ class OriginFragment : Fragment() {
                     "Bought Date" to birdData.boughtDate,
                     "Purchase Id" to purchasekey
                 )
-                soldReference.updateChildren(data)
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                    soldReference.updateChildren(data)
+                }
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
             } else {
@@ -801,9 +803,7 @@ class OriginFragment : Fragment() {
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(parentdata)
                 }
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                }
+
                 relationshipRef.updateChildren(parentdata)
                 nurseryRelationshipRef.updateChildren(parentdata)
 
@@ -811,7 +811,10 @@ class OriginFragment : Fragment() {
 
                     "Other Breeder Contact" to birdData.otOtherContact
                 )
-                soldidref.updateChildren(data)
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                    soldidref.updateChildren(data)
+                }
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
 
@@ -1382,9 +1385,7 @@ class OriginFragment : Fragment() {
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(parentdata)
                 }
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                }
+
                 purchaseRef.updateChildren(parentdata)
                 relationshipRef.updateChildren(parentdata)
                 nurseryRelationshipRef.updateChildren(parentdata)
@@ -1396,7 +1397,10 @@ class OriginFragment : Fragment() {
                     "Bought Date" to birdData.boughtDate,
                     "Purchase Id" to purchasekey,
                 )
-                soldReference.updateChildren(data)
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                    soldReference.updateChildren(data)
+                }
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
@@ -1574,9 +1578,7 @@ class OriginFragment : Fragment() {
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(parentdata)
                 }
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                }
+
 
                 relationshipRef.updateChildren(parentdata)
                 nurseryRelationshipRef.updateChildren(parentdata)
@@ -1585,9 +1587,14 @@ class OriginFragment : Fragment() {
 
                     "Other Breeder Contact" to birdData.otOtherContact
                 )
+
+                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+                    soldidref.updateChildren(parentdata)
+                    soldReference.updateChildren(data)
+                }
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
-                soldReference.updateChildren(data)
+
 
 
             } else {
