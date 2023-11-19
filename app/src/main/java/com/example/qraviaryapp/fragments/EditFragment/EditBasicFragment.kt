@@ -102,7 +102,7 @@ class EditBasicFragment : Fragment() {
     private var birdDonatedContact: String? = null
     private var fatherKey: String? = null
     private var motherKey: String? = null
-
+    private lateinit var tvage: TextView
     private lateinit var bird_gender: ImageView
     private lateinit var bird_id: TextView
     private lateinit var bird_status: TextView
@@ -257,7 +257,7 @@ class EditBasicFragment : Fragment() {
         btnLostDate = view.findViewById(R.id.lostDateBtn)
         btnDeathDate = view.findViewById(R.id.deathDate)
         btnExDate = view.findViewById(R.id.exDate)
-
+        tvage = view.findViewById(R.id.tvAge)
         dbase = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
         initDatePickers()
@@ -1003,13 +1003,17 @@ class EditBasicFragment : Fragment() {
 
             val ageInMillis = currentDate.time - birthDate.time
             val ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis)
+            val sharedPrefs = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+            val edited = sharedPrefs.getBoolean("Edited", false)
+            val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+            val maturingDays = maturingValue?.toIntOrNull() ?: 100
 
-            if (ageInDays > 50) {
+            if (ageInDays > maturingDays) {
                 // Age is less than 50 days, show an error message
-                datebirthButton.error = "Age must be less than 50 days"
+                datebirthButton.error = "Age must be less than $maturingDays days"
                 Toast.makeText(
                     requireContext(),
-                    "Age must be less than 50 days",
+                    "Age must be less than $maturingDays days",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -1487,6 +1491,21 @@ class EditBasicFragment : Fragment() {
             DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, month: Int, day: Int ->
                 birthFormattedDate = makeDateString(day, month + 1, year)
                 datebirthButton.text = birthFormattedDate
+                var calculateage = 0
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val birthDateString = datebirthButton.text.toString()
+
+                if (birthDateString.isNotEmpty()) {
+                    val birthDate = dateFormat.parse(birthDateString)
+                    val currentDate = Calendar.getInstance().time
+
+                    val ageInMillis = currentDate.time - birthDate.time
+                    calculateage = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
+                    tvage.text = calculateage.toString()
+                } else {
+                    tvage.text = "0"
+                }
             }
 
         /*val dateSetListenerBanding =

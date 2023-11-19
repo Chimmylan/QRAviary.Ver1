@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlin.properties.Delegates
 
 class ClutchesDetailedActivity : AppCompatActivity() {
 
@@ -59,6 +60,8 @@ class ClutchesDetailedActivity : AppCompatActivity() {
     private lateinit var pairCageKeyFemale: String
     private lateinit var pairCageBirdMale: String
     private lateinit var pairCageBirdFemale: String
+    private var fosterPair = false
+    private var parent = false
     private lateinit var totalegg: TextView
     private var eggCount = 0
     private var storageRef = Firebase.storage.reference
@@ -114,10 +117,16 @@ class ClutchesDetailedActivity : AppCompatActivity() {
             pairCageBirdMale = bundle.getString("CageBirdMale").toString()
             pairCageKeyFemale = bundle.getString("CageKeyFemale").toString()
             pairCageKeyMale = bundle.getString("CageKeyMale").toString()
+            fosterPair = bundle.getBoolean("Foster Pair")
+            parent = bundle.getBoolean("Parent")
             Log.d(TAG, " wew $bundle")
 
 
         }
+
+        Log.d(TAG, "Parent: $parent")
+        Log.d(TAG, "Foster: $fosterPair")
+
 
         lifecycleScope.launch {
             try {
@@ -287,12 +296,19 @@ class ClutchesDetailedActivity : AppCompatActivity() {
         }
         dataList
     }
+    private var optionMenu : Menu? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.qr_option, menu)
 
+        optionMenu = menu
 
+        if (parent || fosterPair){
 
+        }else{
+            optionMenu?.findItem(R.id.unassigned)?.isVisible = false
+
+        }
         return true
     }
 
@@ -312,6 +328,53 @@ class ClutchesDetailedActivity : AppCompatActivity() {
                 i.putExtra("ClutchKey", eggKey)
                 Log.d(TAG, "Cage key pair" + paircagekey)
                 startActivity(i)
+                true
+            }
+
+
+            R.id.unassigned -> {
+                val db = FirebaseDatabase.getInstance().reference.child("Users").child("ID: $currenUserId").child("Pairs")
+                Log.d(TAG, "Parent Unassigned: $parent")
+
+                db.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for(pairs in snapshot.children){
+                            val pairkey = pairs.key
+                            val clutch = pairs.child("Clutches")
+                            for (clutches in clutch.children){
+                                Log.d(TAG, "Parent: $parent")
+                                if (parent){
+                                        val clutchkey = clutches.key
+                                        val parent = clutches.child("Parent").child("ParentKey").value.toString()
+                                        if (eggKey == clutchkey){
+                                            clutches.ref.removeValue()
+                                          //  val ref = FirebaseDatabase.getInstance().reference.child("Users").child("ID $currenUserId").child("Pairs")
+//                                        .child(pairkey.toString()).child("Clutches").child(clutchkey.toString()).removeValue()
+                                            val parentRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID $currenUserId").child("Pairs")
+                                                .child(parent).child("Clutches").child(clutchkey.toString()).removeValue()
+                                        }
+                                }
+                                if (fosterPair){
+                                    val clutchkey = clutches.key
+                                    val parent = clutches.child("Foster Pair").child("FosterPairKey").value.toString()
+                                    if (eggKey == clutchkey){
+                                        clutches.ref.removeValue()
+//                                        val ref = FirebaseDatabase.getInstance().reference.child("Users").child("ID $currenUserId").child("Pairs")
+//                                        .child(pairkey.toString()).child("Clutches").child(clutchkey.toString()).removeValue()
+                                        val parentRef = FirebaseDatabase.getInstance().reference.child("Users").child("ID $currenUserId").child("Pairs")
+                                            .child(parent).child("Clutches").child(clutchkey.toString()).removeValue()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
                 true
             }
 

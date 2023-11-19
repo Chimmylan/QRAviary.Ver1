@@ -3,6 +3,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.example.qraviaryapp.R
@@ -14,6 +15,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private lateinit var darkModeString: String
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+
+        val etincubating: EditTextPreference? = findPreference("incubating")
+        val etmaturing: EditTextPreference? = findPreference("maturing")
+        val sharedPrefs = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val edited = sharedPrefs.getBoolean("Edited", false)
+        val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 100
+
+        val incubatingValue = sharedPrefs.getString("incubatingValue", "21")
+        val incubatingDays = incubatingValue?.toIntOrNull() ?: 21
+
+        etincubating?.text = incubatingDays.toString()
+        etmaturing?.text = maturingDays.toString()
     }
 
     override fun onAttach(context: Context) {
@@ -22,6 +37,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         sharedPreferencess.registerOnSharedPreferenceChangeListener(this)
         darkModeString = getString(R.string.dark_mode)
         sharedPreferencess = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

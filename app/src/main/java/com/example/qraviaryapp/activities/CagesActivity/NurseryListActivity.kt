@@ -70,8 +70,8 @@ class NurseryListActivity : AppCompatActivity() {
         totalBirds = findViewById(R.id.tvBirdCount)
         swipeToRefresh = findViewById(R.id.swipeToRefresh)
         val sharedPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val maturingValue = sharedPrefs.getString("maturingValue", "50") // Default to 50 if not set
-        val maturingDays = maturingValue?.toIntOrNull() ?: 50
+        val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+        val maturingDays = maturingValue?.toIntOrNull() ?: 100
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
 
 

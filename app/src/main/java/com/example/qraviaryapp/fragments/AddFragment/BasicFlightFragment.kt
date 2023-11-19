@@ -121,7 +121,7 @@ class BasicFlightFragment : Fragment() {
 
     private lateinit var addBtn: Button
     private lateinit var removeBtn: Button
-
+    private lateinit var tvage: TextView
 
     /*Edit Text*/
     private lateinit var etExWith: EditText
@@ -220,7 +220,7 @@ class BasicFlightFragment : Fragment() {
         //
 
         //
-
+        tvage = view.findViewById(R.id.tvAge)
         editTextContainer = view.findViewById(R.id.editTextContainer)
         availableLayout = view.findViewById(R.id.availableLayout)
         forSaleLayout = view.findViewById(R.id.forSaleLayout)
@@ -789,14 +789,17 @@ class BasicFlightFragment : Fragment() {
 
             val ageInMillis = currentDate.time - birthDate.time
             ageInDays = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+            val sharedPrefs = requireContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+            val edited = sharedPrefs.getBoolean("Edited", false)
+            val maturingValue = sharedPrefs.getString("maturingValue", "100") // Default to 50 if not set
+            val maturingDays = maturingValue?.toIntOrNull() ?: 100
 
-
-            if (ageInDays < 50) {
+            if (ageInDays < maturingDays) {
                 // Age is less than 50 days, show an error message
-                datebirthButton.error = "Age must be greater than 50 days"
+                datebirthButton.error = "Age must be greater than $maturingDays days"
                 Toast.makeText(
                     requireContext(),
-                    "Age must be greater than 50 days",
+                    "Age must be greater than $maturingDays days",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -1184,7 +1187,7 @@ class BasicFlightFragment : Fragment() {
             }
             Log.d(TAG, birdData.toString())
         } else {
-            Toast.makeText(requireContext(), "No Id found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Invalid/Empty Inputs", Toast.LENGTH_SHORT).show()
         }
 
         args.putString("birdId", birdId)
@@ -1281,6 +1284,21 @@ class BasicFlightFragment : Fragment() {
                 birthFormattedDate = makeDateString(day, month + 1, year)
                 datebirthButton.text = birthFormattedDate
 
+                var calculateage = 0
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.US)
+                val birthDateString = datebirthButton.text.toString()
+
+                if (birthDateString.isNotEmpty()) {
+                    val birthDate = dateFormat.parse(birthDateString)
+                    val currentDate = Calendar.getInstance().time
+
+                    val ageInMillis = currentDate.time - birthDate.time
+                    calculateage = TimeUnit.MILLISECONDS.toDays(ageInMillis).toInt()
+
+                    tvage.text = calculateage.toString()
+                } else {
+                    tvage.text = "0"
+                }
             }
 
         /* val dateSetListenerBanding =

@@ -122,8 +122,9 @@ class NurseryListAdapter(
 
         if (ageInDays >= bird.maturingDays?.toInt()!!) {
             holder.layoutmovebtn.visibility = View.VISIBLE
-
-            var progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
+            holder.tvGender.visibility =View.GONE
+            holder.tvStatus.visibility = View.GONE
+            var progressPercentage = (ageInDays.toFloat() / bird.maturingDays!!.toFloat() * 100).toInt()
 
             if (progressPercentage >= 100) {
                 progressPercentage = 100
@@ -161,7 +162,7 @@ class NurseryListAdapter(
             holder.layoutmovebtn.visibility = View.GONE
             holder.tvprogressbar.visibility = View.VISIBLE
 
-            val progressPercentage = (ageInDays.toInt() / bird.maturingDays?.toInt()!! * 100).toInt()
+            val progressPercentage = (ageInDays.toFloat() / bird.maturingDays!!.toFloat() * 100).toInt()
 
 
             holder.tvpercentage.text = "$progressPercentage%"

@@ -10,6 +10,12 @@
         android:id="@+id/give"
         android:title="Give to Foster pair"
         android:icon="@drawable/scanner"/>
+
+    <item
+        android:id="@+id/unassigned"
+        android:title="Unassigned to Foster pair"
+        android:icon="@drawable/scanner"/>
+
     <item
         android:id="@+id/menu_qr"
         android:title="QR Code"/>
