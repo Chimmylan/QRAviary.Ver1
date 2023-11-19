@@ -585,6 +585,7 @@ class EditBasicFlightFragment : Fragment() {
                 spinnerStatus.setSelection(4)
                 btnExDate.text = birdExchangeDate
                 etExReason.setText(birdExchangeReason)
+                Log.d(TAG, birdExchangeReason.toString())
                 etExWith.setText(birdExchangeWith)
 
             }
@@ -1119,6 +1120,21 @@ class EditBasicFlightFragment : Fragment() {
 
         val pairRef = dbase.child("Users").child("ID: $userId").child("Pairs")
 
+
+        //editreferences
+
+        val parentEdiRef = dbase.child("Users").child("ID: $userId").child("Birds")
+        val parentEditFlightRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+        val parentCageFlightRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Flight Cages")
+        val parentCageNurseryRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages")
+        val parentCageBreedingRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Breeding Cages")
+        val parentSoldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
+        val parentpurchasesRef = dbase.child("Users").child("ID: $userId").child("Purchase Items")
+
+        val cageFlightRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Flight Cages")
+
+        //
+
         val parentRef = newBirdPref.child("Parents")
         val newNurseryPref = NurseryBird.child(flightkey.toString())
 
@@ -1253,6 +1269,29 @@ class EditBasicFlightFragment : Fragment() {
                             }
                             if (pair.child("Male Bird Key").value.toString() == birdKey){
                                 pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+                parentEdiRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (bird in snapshot.children){
+
+                            if (bird.child("BirdMotherKey").value.toString() == birdKey){
+                                bird.ref.child("Mother").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (bird.child("BirdFatherKey").value.toString() == birdKey){
+                                bird.ref.child("Father").setValue(birdData.identifier)
                                 Log.d(TAG,"MALE " + birdKey)
 
                             }

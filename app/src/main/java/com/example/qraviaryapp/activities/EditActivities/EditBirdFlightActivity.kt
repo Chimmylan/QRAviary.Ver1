@@ -133,7 +133,7 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         BirdLostDetails = bundle?.getString("BirdLostDetails").toString()
         BirdAvailCage = bundle?.getString("BirdAvailCage").toString()
         BirdForsaleCage = bundle?.getString("BirdForsaleCage").toString()
-        BirdExchangeReason = bundle?.getString("BirdDeathReason").toString()
+        BirdExchangeReason = bundle?.getString("BirdExchangeReason").toString()
         BirdRequestedPrice = bundle?.getString("BirdRequestedPrice").toString()
         BirdComment = bundle?.getString("BirdComment").toString()
         BirdBuyPrice = bundle?.getString("BirdBuyPrice").toString()
@@ -157,12 +157,17 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
         cageKeyValue = bundle?.getString("CageKey").toString()
+        val otOther = bundle?.getString("BirdOtherOrigin").toString()
         val flightType = bundle?.getString("FlightType").toString()
         val nurseryType = bundle?.getString("NurseryType").toString()
         val clutch = bundle?.getBoolean("Clutch")
+        val cageBirdKey =bundle?.getString("CageBirdKey")
         if (clutch != null) {
             newBundle.putBoolean("Clutch", clutch)
         }
+
+        newBundle.putString("CageBirdKey", cageBirdKey)
+        newBundle.putString("BirdOtherOrigin", otOther)
         newBundle.putString("NurseryType", nurseryType)
         newBundle.putString("FlightType", flightType)
         newBundle.putString("NurseryKey", nureseryKey)
@@ -296,7 +301,7 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
                             cagebirdkey = receivecagebirdkey
                             cagekeyvalue = receivecagekeyvalue
                             successBasic = true
-                            originFragment.addOirigin(birdId, nurseryId, newBundle, soldId,successBasic)
+                            originFragment.addFlightOrigin(birdId, nurseryId, newBundle, soldId,successBasic)
                             { callBackMotherKey, callBackFatherKey, descendantfatherkey, descendantmotherkey, purchaseId, newOriginalBundle->
                                 galleryFragment.FlightuploadImageToStorage(birdId,
                                     nurseryId,

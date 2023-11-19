@@ -185,10 +185,15 @@ class BirdsDetailedActivity : AppCompatActivity() {
         cageKeyValue = bundle?.getString("CageKeyValue").toString()//
         flightType = bundle?.getString("FlightType")
         nurseryType = bundle?.getString("NurseryType")
+        val otOhter = bundle?.getString("otOther")
+        val cageBirdKey = bundle?.getString("CageBirdKey")
 
-        Log.d(TAG, "BIRDKEY NEW $BirdKey" + cageKeyValue)
+
+        Log.d(TAG, "BIRDKEY NEW $otOhter" + cageKeyValue)
 
         Clutch?.let { newBundle.putBoolean("Clutch", it) }
+        newBundle.putString("CageBirdKey", cageBirdKey)
+        newBundle.putString("BirdOtherOrigin", otOhter)
         newBundle.putString("NurseryKey", NurseryKey)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
@@ -237,6 +242,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdMaturingDays4", BirdMaturingDays4)
         newBundle.putString("BirdMaturingDays5", BirdMaturingDays5)
         newBundle.putString("BirdMaturingDays6", BirdMaturingDays6)
+
 
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)

@@ -153,9 +153,15 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
         cageKeyValue = bundle?.getString("CageKey").toString()
+        val otOther = bundle?.getString("BirdOtherOrigin").toString()
+        val cageBirdKey =bundle?.getString("CageBirdKey")
+
         val flightType = bundle?.getString("FlightType").toString()
         val nurseryType = bundle?.getString("NurseryType").toString()
 
+        newBundle.putString("CageBirdKey", cageBirdKey)
+
+        newBundle.putString("BirdOtherOrigin", otOther)
         newBundle.putString("NurseryType", nurseryType)
         newBundle.putString("FlightType", flightType)
         newBundle.putString("NurseryKey", nureseryKey)

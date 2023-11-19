@@ -95,6 +95,7 @@ class BirdBasicFragment : Fragment() {
     private lateinit var bird_exchangedate: TextView
     private lateinit var bird_donatedcontact: TextView
     private lateinit var bird_legband: TextView
+    private lateinit var otherComment: TextView
     private lateinit var snackbar: Snackbar
     private lateinit var connectivityManager: ConnectivityManager
     private var isNetworkAvailable = true
@@ -138,6 +139,7 @@ class BirdBasicFragment : Fragment() {
         bird_donateddate = view.findViewById(R.id.tvDonatedDate)
         bird_donatedcontact = view.findViewById(R.id.tvDonatedContact)
         bird_legband = view.findViewById(R.id.tvLegband)
+        otherComment = view.findViewById(R.id.tvotOtherComment)
 
         birdKey = arguments?.getString("BirdKey")
         birdGender = arguments?.getString("BirdGender")
@@ -195,9 +197,11 @@ class BirdBasicFragment : Fragment() {
             "Male" -> {
                 R.drawable.baseline_male_24
             }
+
             "Female" -> {
                 R.drawable.female_logo
             }
+
             else -> {
                 R.drawable.unknown
             }
@@ -243,67 +247,67 @@ class BirdBasicFragment : Fragment() {
         }
 
         if (birdLegband.isNullOrEmpty() || birdLegband == "null") {
-            bird_legband.visibility = View.GONE
+            bird_legband.visibility = GONE
         } else {
             bird_legband.text = birdLegband
         }
 
         if (birdAvailCage.isNullOrEmpty() || birdAvailCage == "null") {
-            bird_availcage.visibility = View.GONE
+            bird_availcage.visibility = GONE
         } else {
             bird_availcage.text = "Cage: " + birdAvailCage
         }
         if (birdForsaleCage.isNullOrEmpty() || birdForsaleCage == "null") {
-            bird_availcage.visibility = View.GONE
+            bird_availcage.visibility = GONE
         } else {
             bird_availcage.text = "Cage: " + birdForsaleCage
         }
 
         if (birdRequestedPrice.isNullOrEmpty() || birdRequestedPrice == "null") {
-            bird_requestedprice.visibility = View.GONE
+            bird_requestedprice.visibility = GONE
         } else {
             val price = birdRequestedPrice?.toDouble()
             bird_requestedprice.text = "Requested Price: " + currencyFormat.format(price)
         }
 
         if (birdBuyPrice.isNullOrEmpty() || birdBuyPrice == "null") {
-            bird_buyprice.visibility = View.GONE
+            bird_buyprice.visibility = GONE
         } else {
             val price = birdBuyPrice?.toDouble()
             bird_buyprice.text = "Buy Price: " + currencyFormat.format(price)
         }
 
         if (birdBoughtOn.isNullOrEmpty() || birdBoughtOn == "null") {
-            bird_boughton.visibility = View.GONE
+            bird_boughton.visibility = GONE
         } else {
             bird_boughton.text = "Bought On: " + birdBoughtOn
         }
 
         if (birdBoughtBreeder.isNullOrEmpty() || birdBoughtBreeder == "null") {
-            bird_boughtbreeder.visibility = View.GONE
+            bird_boughtbreeder.visibility = GONE
         } else {
             bird_boughtbreeder.text = "Bought to Breeder: " + birdBoughtBreeder
         }
 
         if (birdSoldDate.isNullOrEmpty() || birdSoldDate == "null") {
-            bird_solddate.visibility = View.GONE
+            bird_solddate.visibility = GONE
         } else {
             bird_solddate.text = "Sale Date: " + birdSoldDate
         }
         if (birdsalePrice.isNullOrEmpty() || birdsalePrice == "null") {
-            bird_salePrice.visibility = View.GONE
+            bird_salePrice.visibility = GONE
         } else {
             val price = birdsalePrice?.toDouble()
             bird_salePrice.text = "Sale Price: " + currencyFormat.format(price)
         }
         if (birdBuyer.isNullOrEmpty() || birdBuyer == "null") {
-            bird_buyer.visibility = View.GONE
+            bird_buyer.visibility = GONE
         } else {
             bird_buyer.text = "Buyer: " + birdBuyer
         }
 
         if (birdDeceaseDate.isNullOrEmpty() || birdDeceaseDate == "null") {
-            bird_deceasedate.visibility = View.GONE
+            bird_deceasedate.visibility = GONE
         } else {
             bird_deceasedate.text = "Death Date: " + birdDeceaseDate
         }
@@ -314,19 +318,19 @@ class BirdBasicFragment : Fragment() {
             bird_deathreason.text = "Death Reason: " + birdDeathReason
         }
         if (birdDonatedDate.isNullOrEmpty() || birdDonatedDate == "null") {
-            bird_donateddate.visibility = View.GONE
+            bird_donateddate.visibility = GONE
         } else {
             bird_donateddate.text = "Donate Date: " + birdDonatedDate
 
         }
         if (birdDonatedContact.isNullOrEmpty() || birdDonatedContact == "null") {
-            bird_donatedcontact.visibility = View.GONE
+            bird_donatedcontact.visibility = GONE
         } else {
             bird_donatedcontact.text = "Donate Contact: " + birdDonatedContact
 
         }
         if (birdExchangeDate.isNullOrEmpty() || birdExchangeDate == "null") {
-            bird_exchangedate.visibility = View.GONE
+            bird_exchangedate.visibility = GONE
         } else {
             bird_exchangedate.text = "Exchanged Date: " + birdExchangeDate
         }
@@ -350,20 +354,32 @@ class BirdBasicFragment : Fragment() {
 
 
         if (birdLostDate.isNullOrEmpty() || birdLostDate == "null") {
-            bird_lostdate.visibility = View.GONE
+            bird_lostdate.visibility = GONE
         } else {
             bird_lostdate.text = "Lost Date: " + birdLostDate
         }
         if (birdLostDetails.isNullOrEmpty() || birdLostDetails == "null") {
             bird_lostdetails.visibility = GONE
         } else {
-            bird_lostdetails.text =  "Lost Details: " + birdLostDetails
+            bird_lostdetails.text = "Lost Details: " + birdLostDetails
         }
 
         if (birdComment.isNullOrEmpty() || birdComment == "null") {
-            bird_comment.visibility = View.GONE
+            bird_comment.visibility = GONE
         } else {
-            bird_comment.text = "Comment: " + birdRequestedPrice
+            bird_comment.text = "Comment: " + birdComment
+        }
+
+        val otOther = arguments?.getString("BirdOtherOrigin")
+
+        if (otOther.isNullOrEmpty() ||
+            otOther == "null"
+        ) {
+            otherComment.visibility = GONE
+
+        } else {
+            otherComment.text = "Other Comment: " + arguments?.getString("BirdOtherOrigin")
+
         }
 
         return view

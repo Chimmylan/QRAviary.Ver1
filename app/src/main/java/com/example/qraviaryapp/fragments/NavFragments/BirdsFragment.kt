@@ -310,8 +310,9 @@ class BirdsFragment : Fragment() {
                 val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Cage").value
-                val forSaleCageValue = itemSnapshot.child("Cage").value
+                val forSaleCageValue = itemSnapshot.child("Cage Bird Keu").value
                 val cageKey = itemSnapshot.child("CageKey").value
+                val cageBirdKey = itemSnapshot.child("CageKey").value
                 val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
                 val soldDateValue = itemSnapshot.child("Sold Date").value
                 val soldPriceValue = itemSnapshot.child("Sale Price").value
@@ -329,6 +330,7 @@ class BirdsFragment : Fragment() {
                 val buyPriceValue = itemSnapshot.child("Buy Price").value
                 val boughtDateValue = itemSnapshot.child("Bought Date").value
                 val breederContactValue = itemSnapshot.child("Breeder Contact").value
+                val otherBreederContact = itemSnapshot.child("Other Breeder Contact").value.toString()
                 val FatherValue = itemSnapshot.child("Parents").child("Father").value
                 val MotherValue = itemSnapshot.child("Parents").child("Mother").value
                 val fatherKeyValue = itemSnapshot.child("Parents").child("FatherKey").value
@@ -367,6 +369,8 @@ class BirdsFragment : Fragment() {
 
                 birdCount++
 //                data.bitmap = image
+                data.cagebirdkey = cageBirdKey.toString()
+                data.otOtherContact = otherBreederContact
                 data.clutch = clutch
                 data.nurseryType = nurseryType
                 data.flightType = flightKey
