@@ -561,32 +561,44 @@ class EditBasicFragment : Fragment() {
                 if (etForSaleCage.text.isEmpty() && birdForsaleCage != "null"){
                     spinnerStatus.setSelection(1)
                     etForSaleCage.text = birdForsaleCage
+                    Log.d(TAG, "PRICE" + birdRequestedPrice)
+                    etForSaleReqPrice.setText(birdRequestedPrice)
                     //cageKeyValue = //
                 }
             }
             "Sold" -> {
                 spinnerStatus.setSelection(2)
+                btnSoldSaleDate.text = birdSoldDate
+                etSoldSalePrice.setText(birdsalePrice)
+                etSoldBuyer.setText(birdBuyer)
 
             }
             "Deceased" ->{
                 spinnerStatus.setSelection(3)
+                btnDeathDate.text = birdDeceaseDate
+                etDeathReason.setText(birdDeathReason)
 
             }
             "Exchanged" ->{
                 spinnerStatus.setSelection(4)
+                btnExDate.text = birdExchangeDate
+                etExReason.setText(birdExchangeReason)
+                etExWith.setText(birdExchangeWith)
 
             }
             "Lost" ->{
                 spinnerStatus.setSelection(5)
-
+                btnLostDate.text = birdLostDate
+                etLostDetails.setText(birdLostDetails)
             }
             "Donated" ->{
                 spinnerStatus.setSelection(6)
-
+                btnDonatedDate.text = birdDonatedDate
+                etDonateChooseContract.setText(birdDonatedContact)
             }
             "Other" -> {
                 spinnerStatus.setSelection(7)
-
+                etOtherComm.setText(birdComment)
             }
 
         }
