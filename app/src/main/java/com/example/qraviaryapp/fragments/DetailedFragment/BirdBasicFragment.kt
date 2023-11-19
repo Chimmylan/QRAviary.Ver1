@@ -357,7 +357,7 @@ class BirdBasicFragment : Fragment() {
         if (birdLostDetails.isNullOrEmpty() || birdLostDetails == "null") {
             bird_lostdetails.visibility = GONE
         } else {
-            bird_lostdetails.text = birdLostDetails
+            bird_lostdetails.text =  "Lost Details: " + birdLostDetails
         }
 
         if (birdComment.isNullOrEmpty() || birdComment == "null") {
