@@ -80,6 +80,8 @@ class OriginFragment : Fragment() {
     var birdData = BirdData()
     private lateinit var cageReference: DatabaseReference
 
+    private lateinit var soldReference: DatabaseReference
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -240,6 +242,8 @@ class OriginFragment : Fragment() {
         val dataProvenence: Int = radioGroup.checkedRadioButtonId
         var dataBoughtDate = getTextFromVisibleDatePicker(boughtDateBtn, boughtLayout)
 
+
+        val soldRefKey = newBundle.getString("SoldRefKey")
         val birdIdentifier = newBundle.getString("BirdIdentifier")
         val birdGender = newBundle.getString("BirdGender")
         val birdLegband = newBundle.getString("BirdLegband")
@@ -332,6 +336,12 @@ class OriginFragment : Fragment() {
                 dbase.child("Users").child("ID: $userId").child("Cages")
                     .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString())
                     .child("Parents")
+            }!!
+        }
+
+        if (!soldRefKey.isNullOrEmpty()){
+            soldReference = soldRefKey?.let{
+                dbase.child("Users").child("ID: $userId").child("Sold Items").child(it)
             }!!
         }
 
@@ -623,6 +633,7 @@ class OriginFragment : Fragment() {
                     "Bought Date" to birdData.boughtDate,
                     "Purchase Id" to purchasekey
                 )
+                soldReference.updateChildren(data)
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
             } else {
@@ -800,6 +811,7 @@ class OriginFragment : Fragment() {
 
                     "Other Breeder Contact" to birdData.otOtherContact
                 )
+                soldidref.updateChildren(data)
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
 
@@ -966,6 +978,8 @@ class OriginFragment : Fragment() {
                 if (!cageKeyValue.isNullOrEmpty()) {
                     cageReference.updateChildren(data)
                 }
+
+
                 relationshipRef.updateChildren(data)
                 nurseryRelationshipRef.updateChildren(data)
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {

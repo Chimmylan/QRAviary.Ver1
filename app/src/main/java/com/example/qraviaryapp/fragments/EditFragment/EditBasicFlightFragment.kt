@@ -1103,6 +1103,10 @@ class EditBasicFlightFragment : Fragment() {
         val SoldBirdRef = SoldRef.push()
         var soldId: String? = null
 
+        //pair
+
+        val pairRef = dbase.child("Users").child("ID: $userId").child("Pairs")
+
         val parentRef = newBirdPref.child("Parents")
         val newNurseryPref = NurseryBird.child(flightkey.toString())
 
@@ -1226,6 +1230,29 @@ class EditBasicFlightFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
+                pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pair in snapshot.children){
+
+                            if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Female").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
@@ -1256,6 +1283,30 @@ class EditBasicFlightFragment : Fragment() {
                     }
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
+
+                    pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (pair in snapshot.children){
+
+                                if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Female").setValue(birdData.identifier)
+                                    Log.d(TAG,"FEMALE " + birdKey)
+
+                                }
+                                if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Male").setValue(birdData.identifier)
+                                    Log.d(TAG,"MALE " + birdKey)
+
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+
                 } else {
                     return
                 }
@@ -1298,6 +1349,30 @@ class EditBasicFlightFragment : Fragment() {
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
                     SoldBirdRef.updateChildren(solddata)
+
+                    pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (pair in snapshot.children){
+
+                                if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Female").setValue(birdData.identifier)
+                                    Log.d(TAG,"FEMALE " + birdKey)
+
+                                }
+                                if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Male").setValue(birdData.identifier)
+                                    Log.d(TAG,"MALE " + birdKey)
+
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+
                 } else if (deceasedLayout.visibility == View.VISIBLE) {
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
@@ -1319,7 +1394,28 @@ class EditBasicFlightFragment : Fragment() {
                     )
                     newBirdPref.updateChildren(data)
                     newNurseryPref.updateChildren(data)
+                    pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (pair in snapshot.children){
 
+                                if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Female").setValue(birdData.identifier)
+                                    Log.d(TAG,"FEMALE " + birdKey)
+
+                                }
+                                if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                    pair.ref.child("Male").setValue(birdData.identifier)
+                                    Log.d(TAG,"MALE " + birdKey)
+
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                 } else {
                     return
                 }
@@ -1347,6 +1443,29 @@ class EditBasicFlightFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
+                pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pair in snapshot.children){
+
+                            if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Female").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
             } else if (lostLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -1369,6 +1488,29 @@ class EditBasicFlightFragment : Fragment() {
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
 
+                pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pair in snapshot.children){
+
+                            if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Female").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
             } else if (donatedLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -1390,6 +1532,28 @@ class EditBasicFlightFragment : Fragment() {
                 )
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
+                pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pair in snapshot.children){
+
+                            if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Female").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
 
             } else if (otherLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
@@ -1411,6 +1575,28 @@ class EditBasicFlightFragment : Fragment() {
                 )
                 newBirdPref.updateChildren(data)
                 newNurseryPref.updateChildren(data)
+                pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pair in snapshot.children){
+
+                            if (pair.child("Female Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Female").setValue(birdData.identifier)
+                                Log.d(TAG,"FEMALE " + birdKey)
+
+                            }
+                            if (pair.child("Male Bird Key").value.toString() == birdKey){
+                                pair.ref.child("Male").setValue(birdData.identifier)
+                                Log.d(TAG,"MALE " + birdKey)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
 
             }
 

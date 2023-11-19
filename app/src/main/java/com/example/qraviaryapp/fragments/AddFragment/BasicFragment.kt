@@ -911,6 +911,7 @@ class BasicFragment : Fragment() {
             "Maturing Days" to mutation6MaturingDays,
             "Incubating Days" to mutation6IncubatingDays
         )
+        newBundle.putString("SoldRefKey", SoldBirdRef.key.toString())
         newBundle.putString("BirdIdentifier", birdData.identifier)//
         newBundle.putString("BirdLegband", birdData.legband)//
         newBundle.putString("BirdImage", birdData.img)//
