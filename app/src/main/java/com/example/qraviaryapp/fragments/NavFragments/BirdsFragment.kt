@@ -310,9 +310,9 @@ class BirdsFragment : Fragment() {
                 val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
                 val availCageValue = itemSnapshot.child("Cage").value
-                val forSaleCageValue = itemSnapshot.child("Cage Bird Keu").value
+                val forSaleCageValue = itemSnapshot.child("Cage").value
                 val cageKey = itemSnapshot.child("CageKey").value
-                val cageBirdKey = itemSnapshot.child("CageKey").value
+                val cageBirdKey = itemSnapshot.child("Cage Bird Key").value
                 val forSaleRequestedPriceValue = itemSnapshot.child("Requested Price").value
                 val soldDateValue = itemSnapshot.child("Sold Date").value
                 val soldPriceValue = itemSnapshot.child("Sale Price").value

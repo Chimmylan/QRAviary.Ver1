@@ -225,6 +225,7 @@ class EditBasicFlightFragment : Fragment() {
     private var mutation5MaturingDays: String? = null
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
+    private var CageBirdKey: String? = null
 
     private lateinit var cagescan: CardView
     private lateinit var cagescan1: CardView
@@ -330,7 +331,7 @@ class EditBasicFlightFragment : Fragment() {
         slash4 = view.findViewById(R.id.slash4)
         slash5 = view.findViewById(R.id.slash5)
 
-
+        CageBirdKey = arguments?.getString("CageBirdKey")
         birdKey = arguments?.getString("BirdKey")
         birdGender = arguments?.getString("BirdGender")
         nurserykey = arguments?.getString("NurseryKey")
@@ -1102,7 +1103,7 @@ class EditBasicFlightFragment : Fragment() {
         if (!cageKeyValue.isNullOrEmpty()) {
             cageReference = cageKeyValue?.let {
                 dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Flight Cages").child(it).child("Birds").push()
+                    .child("Flight Cages").child(it).child("Birds").child(CageBirdKey.toString())
             }!!
 
             cageBirdKey = cageReference.key.toString()
@@ -1284,15 +1285,15 @@ class EditBasicFlightFragment : Fragment() {
                 parentEdiRef.addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (bird in snapshot.children){
+                            Log.d(TAG,"FEMALE " + birdKey)
+                            Log.d(TAG,"MALE " + birdKey)
 
-                            if (bird.child("BirdMotherKey").value.toString() == birdKey){
-                                bird.ref.child("Mother").setValue(birdData.identifier)
-                                Log.d(TAG,"FEMALE " + birdKey)
+                            if (bird.child("Parents").child("BirdMotherKey").value.toString() == birdKey){
+                                bird.ref.child("Parents").child("Mother").setValue(birdData.identifier)
 
                             }
-                            if (bird.child("BirdFatherKey").value.toString() == birdKey){
-                                bird.ref.child("Father").setValue(birdData.identifier)
-                                Log.d(TAG,"MALE " + birdKey)
+                            if (bird.child("Parents").child("BirdFatherKey").value.toString() == birdKey){
+                                bird.ref.child("Parents").child("Father").setValue(birdData.identifier)
 
                             }
                         }
@@ -1304,6 +1305,31 @@ class EditBasicFlightFragment : Fragment() {
 
                 })
 
+                parentEditFlightRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (bird in snapshot.children){
+                            Log.d(TAG,"FEMALE " + birdKey)
+                            Log.d(TAG,"MALE " + birdKey)
+
+                            if (bird.child("Parents").child("BirdMotherKey").value.toString() == birdKey){
+                                bird.ref.child("Parents").child("Mother").setValue(birdData.identifier)
+
+                            }
+                            if (bird.child("Parents").child("BirdFatherKey").value.toString() == birdKey){
+                                bird.ref.child("Parents").child("Father").setValue(birdData.identifier)
+
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+
+//                /*==============================================//////////=====================================================*/
 
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
