@@ -441,6 +441,8 @@ class EditOriginFragment : Fragment() {
 
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
+
+
         val relationshipRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
                 .child("Parents")
