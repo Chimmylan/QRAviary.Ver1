@@ -20,6 +20,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.qraviaryapp.R
@@ -116,7 +117,7 @@ class EditOriginFragment : Fragment() {
     var birdData = BirdData()
     private lateinit var cageReference: DatabaseReference
     private lateinit var soldReference: DatabaseReference
-
+    private lateinit var note: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -143,7 +144,7 @@ class EditOriginFragment : Fragment() {
         etOtBreederContact = view.findViewById(R.id.otherContact)
         btnFather = view.findViewById(R.id.btnFather)
         btnMother = view.findViewById(R.id.btnMother)
-
+        note = view.findViewById<TextView>(R.id.note)
         birdKey = arguments?.getString("BirdKey")
         flightKey = arguments?.getString("FlightKey")
         nuerseryKey = arguments?.getString("NureseryKey")
@@ -300,6 +301,8 @@ class EditOriginFragment : Fragment() {
         val clutch = arguments?.getBoolean("Clutch")
         Log.d(TAG, clutch.toString())
         if (arguments?.getBoolean("Clutch") == true) {
+
+            note.visibility = View.VISIBLE
             btnMother.text = null
             btnMother.hint = arguments?.getString("BirdMother")
             btnFather.text = null

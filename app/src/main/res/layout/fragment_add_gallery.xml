@@ -35,8 +35,9 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/new_appbar_color"
+        app:backgroundTint="@color/itemimagebg"
         app:srcCompat="@drawable/camera"
         android:onClick="fab"
+        app:tint="@color/black_white"
         tools:ignore="SpeakableTextPresentCheck" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

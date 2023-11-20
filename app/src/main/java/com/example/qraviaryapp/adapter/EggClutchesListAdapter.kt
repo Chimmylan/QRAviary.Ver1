@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.EditActivities.EditEggActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
+import com.example.qraviaryapp.activities.detailedactivities.MoveEggCageActivity
 import com.example.qraviaryapp.activities.detailedactivities.MoveEggScannerActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -173,7 +174,7 @@ class EggClutchesListAdapter(
         }
 
         holder.movebtn.setOnClickListener{
-            val intent = Intent(context, MoveEggScannerActivity::class.java)
+            val intent = Intent(context, MoveEggCageActivity::class.java)
             intent.putExtra("IncubatingStartDate", eggs.eggIncubationStartDate)
             intent.putExtra("MaturingStartDate", eggs.eggMaturingStartDate)
             intent.putExtra("EggKey", eggs.eggKey)

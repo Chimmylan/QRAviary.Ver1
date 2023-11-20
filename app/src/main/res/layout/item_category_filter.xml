@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:textSize="18sp"
-
         android:textColor="@color/black_white"
         android:text="Your text here" />
 

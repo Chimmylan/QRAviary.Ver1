@@ -400,7 +400,8 @@ class MoveEggActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
 
         val saveMenuItem = menu.findItem(R.id.action_save)
-
+        val menuqr = menu.findItem(R.id.menu_qr)
+        menuqr.isVisible = false
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode
@@ -643,8 +644,15 @@ class MoveEggActivity : AppCompatActivity() {
         setAlarmForEgg(this, hatchingDateTime.format(formatter1),eggRandomID)
 
         onBackPressed()
-        finish()
 
+
+    }
+
+    override fun onBackPressed() {
+        val i = Intent(this, ClutchesDetailedActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(i)
+        finish()
     }
 
     fun setAlarmForEgg(context: Context, estimatedHatchDate: String, eggIndex: Int) {

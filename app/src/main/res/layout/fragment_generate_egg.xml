@@ -161,6 +161,7 @@
 
                 <Spinner
                     android:id="@+id/eggspinnerstatus"
+                    android:backgroundTint="@color/black_white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp" />
@@ -264,6 +265,7 @@
             <EditText
                 android:id="@+id/etincubationdays"
                 android:layout_width="match_parent"
+                android:textColor="@color/black_white"
                 android:layout_height="match_parent"
                 android:inputType="number"
                 />
@@ -294,6 +296,7 @@
             <EditText
                 android:id="@+id/etmaturingdays"
                 android:layout_width="match_parent"
+                android:textColor="@color/black_white"
                 android:layout_height="match_parent"
                 android:inputType="number"
                 />

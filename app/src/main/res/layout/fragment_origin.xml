@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/bottom_nav_background"
+    android:orientation="vertical"
     tools:context=".fragments.AddFragment.OriginFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,8 +21,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="Note: this bird cannot be modified because this is descended from a pairing"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/tvfather"
                     android:layout_width="match_parent"
@@ -32,16 +42,15 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnFather"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    app:icon="@drawable/drop_down"
-                    android:textAlignment="textStart"
-                    app:iconGravity="end"
-                    app:iconTint="@color/black"
                     android:text="None"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black_white"
-                    />
+                    app:icon="@drawable/drop_down"
+                    app:iconGravity="end"
+                    app:iconTint="@color/black_white" />
 
                 <TextView
                     android:id="@+id/tvmother"
@@ -49,21 +58,20 @@
                     android:layout_height="wrap_content"
                     android:text="Mother "
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMother"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:text="None"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black_white"
                     app:icon="@drawable/drop_down"
                     app:iconGravity="end"
-                    android:textAlignment="textStart"
-                    app:iconTint="@color/black"
-                    android:text="None"
-                    android:textColor="@color/black_white"/>
+                    app:iconTint="@color/black_white" />
 
                 <TextView
                     android:id="@+id/tvprovenance"
@@ -71,8 +79,7 @@
                     android:layout_height="wrap_content"
                     android:text="Provenance "
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                  />
+                    android:textStyle="bold" />
 
                 <RadioGroup
                     android:id="@+id/radioGroupprovenance"
@@ -91,30 +98,25 @@
                     <RadioButton
                         android:id="@+id/radioButtonBought"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="Bought" />
 
                     <RadioButton
                         android:id="@+id/radioButtonOther"
-                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="Other" />
 
                 </RadioGroup>
-
-
-
 
 
                 <LinearLayout
                     android:id="@+id/boughtLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-
+                    android:orientation="vertical">
 
 
                     <LinearLayout
@@ -122,12 +124,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:weightSum="1">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Bought Date (*)"
                             android:textSize="13sp"
                             android:textStyle="bold" />
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/boughtDate"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -135,24 +139,33 @@
                             android:layout_height="wrap_content"
                             android:hint="Today"
                             android:textAlignment="textStart"
+                            android:textColor="@color/black_white"
+                            android:textColorHint="@color/black_white"
                             app:icon="@drawable/drop_down"
-                            app:iconGravity="end" />
+                            app:iconGravity="end"
+                            app:iconTint="@color/black_white" />
 
 
                     </LinearLayout>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Buy Price (*)"
                         android:textSize="13sp"
                         android:textStyle="bold" />
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBuyPrice"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="0.5"
                         android:hint="0.00"
                         android:inputType="number"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5" />
+                        android:textColor="@color/black_white"
+                        android:textColorHint="@color/black_white" />
+
                     <TextView
 
                         android:layout_width="match_parent"
@@ -160,11 +173,13 @@
                         android:text="Breeder Contact"
                         android:textSize="13sp"
                         android:textStyle="bold" />
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBreederContact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="textStart"
+                        android:textColor="@color/black_white"
                         app:iconGravity="end" />
                 </LinearLayout>
 
@@ -172,26 +187,27 @@
                     android:id="@+id/otLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Breeder Contact"
                         android:textSize="13sp"
                         android:textStyle="bold" />
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/otherContact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/soldBuyer"
                         android:textAlignment="textStart"
+                        android:textColor="@color/black_white"
                         app:iconGravity="end" />
 
                 </LinearLayout>
 
             </LinearLayout>
-
 
 
         </LinearLayout>

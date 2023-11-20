@@ -68,7 +68,7 @@ class ExpensesAdapter(
             val isDateInRange = (fromDateObj == null || toDateObj == null || (soldDateObj != null && soldDateObj.after(fromDateObj) && soldDateObj.before(toDateObj)))
             val priceRange = (minimum.isNullOrBlank() || (price != null && price >= minimum.toDouble())) &&
                     (maximum.isNullOrBlank() || (price != null && price <= maximum.toDouble()))
-            val isGenderMatch = category.isNullOrEmpty() || categories.isNullOrEmpty() || (categories.contains(category))
+            val isGenderMatch = category.isNullOrEmpty() || (categories?.contains(category)!!)
 
             isDateInRange && priceRange && isGenderMatch
         }

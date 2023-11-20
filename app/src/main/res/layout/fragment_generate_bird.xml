@@ -548,7 +548,7 @@
                         android:layout_height="wrap_content"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/black_white"
                         android:text="None"
                         android:textColor="@color/black_white"
                         />
@@ -568,7 +568,7 @@
                         android:textColor="@color/black_white"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black" />
+                        app:iconTint="@color/black_white"/>
                     <TextView
                         android:id="@+id/slash2"
                         android:layout_width="match_parent"
@@ -582,7 +582,7 @@
                         android:layout_height="wrap_content"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/black_white"
                         android:text="None"
                         android:textColor="@color/black_white"/>
                     <TextView
@@ -598,7 +598,8 @@
                         android:layout_height="wrap_content"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/black_white"
+
                         android:text="None"
                         android:textColor="@color/black_white"/>
                     <TextView
@@ -614,7 +615,8 @@
                         android:layout_height="wrap_content"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/black_white"
+
                         android:text="None"
                         android:textColor="@color/black_white"/>
                     <TextView
@@ -630,7 +632,7 @@
                         android:layout_height="wrap_content"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="textEnd"
-                        app:iconTint="@color/black"
+                        app:iconTint="@color/black_white"
                         android:text="None"
                         android:textColor="@color/black_white"/>
 
@@ -674,7 +676,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Pick Date"
-                    app:iconTint="@color/itemimagebg"
+                    app:iconTint="@color/black_white"
                     android:textSize="12sp"
                     android:textAlignment="textStart"
                     app:icon="@drawable/drop_down"
@@ -701,7 +703,7 @@
                 android:id="@+id/spinnerstatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/itemimagebg"
+                android:backgroundTint="@color/black_white"
                 android:minHeight="48dp" />
         </LinearLayout>
         <LinearLayout
@@ -1071,6 +1073,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Father "
+
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -1080,9 +1083,10 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 app:icon="@drawable/drop_down"
+
                 android:textAlignment="textStart"
                 app:iconGravity="end"
-                app:iconTint="@color/black"
+                app:iconTint="@color/black_white"
                 android:text="None"
                 android:textColor="@color/black_white"
                 />
@@ -1104,8 +1108,9 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 app:icon="@drawable/drop_down"
                 app:iconGravity="end"
+
                 android:textAlignment="textStart"
-                app:iconTint="@color/black"
+                app:iconTint="@color/black_white"
                 android:text="None"
                 android:textColor="@color/black_white"/>
 
@@ -1178,6 +1183,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Pick Date"
+                        android:textColorHint="@color/black_white"
+                        app:iconTint="@color/black_white"
                         android:textAlignment="textStart"
                         app:icon="@drawable/drop_down"
                         app:iconGravity="end" />

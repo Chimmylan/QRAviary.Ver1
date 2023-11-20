@@ -314,32 +314,7 @@ class NurseryListActivity : AppCompatActivity() {
         val date = SimpleDateFormat("MMM d yyyy", Locale.getDefault()).parse(dateString)
         return date?.let { SimpleDateFormat("yyyy MM d", Locale.getDefault()).format(it) } ?: ""
     }
-    override fun onResume() {
-        super.onResume()
 
-        // Call a function to reload data from the database and update the RecyclerView
-        reloadDataFromDatabase()
-
-    }
-
-    private fun reloadDataFromDatabase() {
-        loadingProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-
-                val data = getDataFromDatabase()
-                dataList.clear()
-                dataList.addAll(data)
-
-                adapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
-            } finally {
-
-                loadingProgressBar.visibility = View.GONE
-            }
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cageoption, menu)
@@ -423,5 +398,32 @@ class NurseryListActivity : AppCompatActivity() {
         onBackPressed()
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Call a function to reload data from the database and update the RecyclerView
+        reloadDataFromDatabase()
+
+    }
+
+    private fun reloadDataFromDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            try {
+
+                val data = getDataFromDatabase()
+                dataList.clear()
+                dataList.addAll(data)
+
+                adapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, "Error reloading data: ${e.message}")
+            } finally {
+
+                loadingProgressBar.visibility = View.GONE
+            }
+        }
     }
 }

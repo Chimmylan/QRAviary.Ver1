@@ -297,7 +297,7 @@ class EditBasicFlightFragment : Fragment() {
         rbMale = view.findViewById(R.id.radioButtonMale)
         rbFemale = view.findViewById(R.id.radioButtonFemale)
         rbUnknown = view.findViewById(R.id.radioButtonUnknown)
-
+        val note = view.findViewById<TextView>(R.id.note)
 
         /*EditText*/
         etLegband = view.findViewById(R.id.etLegband)
@@ -484,6 +484,8 @@ class EditBasicFlightFragment : Fragment() {
                     if (birds.key == flightkey){
                         if (birds.hasChild("Descendants")){
                             Log.d(TAG, " HAS DESCENDANTS")
+
+                            note.visibility = View.VISIBLE
                             rbFemale.isEnabled = false
                             rbMale.isEnabled = false
                             rbUnknown.isEnabled = false

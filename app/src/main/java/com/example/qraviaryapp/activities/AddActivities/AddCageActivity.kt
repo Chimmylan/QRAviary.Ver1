@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayout
 class AddCageActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     private lateinit var tablayout: TabLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

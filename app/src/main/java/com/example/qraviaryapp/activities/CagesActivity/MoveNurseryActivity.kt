@@ -78,7 +78,6 @@ class MoveNurseryActivity : AppCompatActivity() {
             val intent = Intent(this, FlightCagesListActivity::class.java)
             startActivityForResult(intent, requestCode)
 
-
         }
 
 

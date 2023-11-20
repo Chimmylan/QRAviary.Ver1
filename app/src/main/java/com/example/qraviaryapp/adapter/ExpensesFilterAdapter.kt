@@ -32,7 +32,6 @@ class ExpensesFilterAdapter(
     }
 
 
-
     fun getHeaderForPosition(position: Int): String {
         if (position < 0 || position >= dataList.size) {
             return ""
@@ -52,17 +51,25 @@ class ExpensesFilterAdapter(
 
         return ExpensesFilterFragmentViewHolder(view, dataList)
     }
+
     fun clearCheckedItems() {
         for (item in dataList) {
             item.isChecked = true
         }
         notifyDataSetChanged()
     }
+
     override fun onBindViewHolder(holder: ExpensesFilterFragmentViewHolder, position: Int) {
         val category = dataList[position]
         Auth = FirebaseAuth.getInstance()
         currentUser = Auth.currentUser?.uid.toString()
         holder.geneTextView.text = category.expenses
+
+        holder.geneTextView.isChecked = true
+
+        if (holder.geneTextView.isChecked) {
+            checkboxClickListener?.invoke(position, true)
+        }
 
         holder.geneTextView.setOnCheckedChangeListener { _, isChecked ->
 
