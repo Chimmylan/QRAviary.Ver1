@@ -24,6 +24,7 @@ import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.AddActivities.AddCageScanActivity
 import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
 import com.example.qraviaryapp.activities.dashboards.MutationsActivity
+import com.example.qraviaryapp.activities.dashboards.NurseryCagesListActivity
 import com.example.qraviaryapp.fragments.AddFragment.OriginFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -457,12 +458,12 @@ class EditBasicFragment : Fragment() {
 
         etAvailCage.setOnClickListener {
             val requestCode = 7 // You can use any integer as the request code
-            val intent = Intent(requireContext(), FlightCagesListActivity::class.java)
+            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
             startActivityForResult(intent, requestCode)
         }
         etForSaleCage.setOnClickListener {
             val requestCode = 7 // You can use any integer as the request code
-            val intent = Intent(requireContext(), FlightCagesListActivity::class.java)
+            val intent = Intent(requireContext(), NurseryCagesListActivity::class.java)
             startActivityForResult(intent, requestCode)
         }
         cagescan.setOnClickListener {
@@ -503,6 +504,7 @@ class EditBasicFragment : Fragment() {
 
         if (!birdMutation1.isNullOrEmpty()) {
             btnMutation1.setText(birdMutation1);
+            spinnerCount = 0
         } else {
             btnMutation1.visibility = View.GONE
         }
@@ -511,45 +513,56 @@ class EditBasicFragment : Fragment() {
             btnMutation2.setText(birdMutation2);
             slash1.visibility = View.VISIBLE
             btnMutation2.visibility = View.VISIBLE
+            spinnerCount = 1
         } else {
             slash1.visibility = View.GONE
             btnMutation2.visibility = View.GONE
+
         }
 
         if (!birdMutation3.isNullOrEmpty()) {
             btnMutation3.setText(birdMutation3);
             btnMutation3.visibility = View.VISIBLE
             slash2.visibility = View.VISIBLE
+            spinnerCount = 2
         } else {
             slash2.visibility = View.GONE
             btnMutation3.visibility = View.GONE
+
         }
 
         if (!birdMutation4.isNullOrEmpty()) {
             btnMutation4.setText(birdMutation4);
             slash3.visibility = View.VISIBLE
             btnMutation4.visibility = View.VISIBLE
+            spinnerCount = 3
         } else {
             slash3.visibility = View.GONE
             btnMutation4.visibility = View.GONE
+
         }
 
         if (!birdMutation5.isNullOrEmpty()) {
             btnMutation5.setText(birdMutation5);
             slash4.visibility = View.VISIBLE
             btnMutation5.visibility = View.VISIBLE
+            spinnerCount = 4
         } else {
             slash4.visibility = View.GONE
             btnMutation5.visibility = View.GONE
+
         }
 
         if (!birdMutation6.isNullOrEmpty()) {
             btnMutation6.setText(birdMutation6);
             slash5.visibility = View.VISIBLE
             btnMutation6.visibility = View.VISIBLE
-        } else
+            spinnerCount = 5
+        } else {
             slash5.visibility = View.GONE
+            btnMutation6.visibility = View.GONE
 
+        }
 
 
 
@@ -1123,6 +1136,10 @@ class EditBasicFragment : Fragment() {
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
         val nurseryRef =  dbase.child("Users").child("ID: $userId").child("Nursery Birds").child(nurserykey.toString())
+        val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(cageKeyValue.toString()).child("Birds")
+            .child(CageBirdKey.toString())
+
+
         val args = Bundle()
 
         val originFragment = OriginFragment()
@@ -1237,7 +1254,9 @@ class EditBasicFragment : Fragment() {
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
-
+              if(!cageKeyValue.isNullOrEmpty()){
+                  cageRef.updateChildren(data)
+              }
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
                     val data: Map<String, Any?> = hashMapOf(
@@ -1264,7 +1283,9 @@ class EditBasicFragment : Fragment() {
                     )
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
-
+                    if(!cageKeyValue.isNullOrEmpty()){
+                        cageRef.updateChildren(data)
+                    }
                 } else {
                     return
                 }

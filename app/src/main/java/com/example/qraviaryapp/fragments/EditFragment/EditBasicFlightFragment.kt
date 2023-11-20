@@ -512,52 +512,65 @@ class EditBasicFlightFragment : Fragment() {
 
         if (!birdMutation1.isNullOrEmpty()) {
             btnMutation1.setText(birdMutation1);
+            spinnerCount = 0
         } else {
             btnMutation1.visibility = View.GONE
+
         }
 
         if (!birdMutation2.isNullOrEmpty()) {
             btnMutation2.setText(birdMutation2);
             slash1.visibility = View.VISIBLE
             btnMutation2.visibility = View.VISIBLE
+            spinnerCount = 1
         } else {
             slash1.visibility = View.GONE
             btnMutation2.visibility = View.GONE
+
         }
 
         if (!birdMutation3.isNullOrEmpty()) {
             btnMutation3.setText(birdMutation3);
             btnMutation3.visibility = View.VISIBLE
             slash2.visibility = View.VISIBLE
+            spinnerCount = 2
         } else {
             slash2.visibility = View.GONE
             btnMutation3.visibility = View.GONE
+
         }
 
         if (!birdMutation4.isNullOrEmpty()) {
             btnMutation4.setText(birdMutation4);
             slash3.visibility = View.VISIBLE
             btnMutation4.visibility = View.VISIBLE
+            spinnerCount = 3
         } else {
             slash3.visibility = View.GONE
             btnMutation4.visibility = View.GONE
+
         }
 
         if (!birdMutation5.isNullOrEmpty()) {
             btnMutation5.setText(birdMutation5);
             slash4.visibility = View.VISIBLE
             btnMutation5.visibility = View.VISIBLE
+            spinnerCount = 4
         } else {
             slash4.visibility = View.GONE
             btnMutation5.visibility = View.GONE
+
         }
 
         if (!birdMutation6.isNullOrEmpty()) {
             btnMutation6.setText(birdMutation6);
             slash5.visibility = View.VISIBLE
             btnMutation6.visibility = View.VISIBLE
-        } else
+            spinnerCount = 5
+        } else {
             slash5.visibility = View.GONE
+            btnMutation6.visibility = View.GONE
+        }
 
         when(birdStatus){
             "Available" -> {
@@ -1107,8 +1120,9 @@ class EditBasicFlightFragment : Fragment() {
         val userId = mAuth.currentUser?.uid.toString()
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
-        val flightRef =  dbase.child("Users").child("ID: $userId").child("Flight Birds").child(nurserykey.toString())
-
+        val flightRef =  dbase.child("Users").child("ID: $userId").child("Flight Birds").child(flightkey.toString())
+        val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Flight Cages").child(cageKeyValue.toString()).child("Birds")
+            .child(CageBirdKey.toString())
         //pair
 
         val pairRef = dbase.child("Users").child("ID: $userId").child("Pairs")
@@ -1241,6 +1255,9 @@ class EditBasicFlightFragment : Fragment() {
                 )
                 birdRef.updateChildren(data)
                 flightRef.updateChildren(data)
+                if(!cageKeyValue.isNullOrEmpty()){
+                    cageRef.updateChildren(data)
+                }
                 pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for (pair in snapshot.children){
@@ -1421,6 +1438,9 @@ class EditBasicFlightFragment : Fragment() {
 
                     birdRef.updateChildren(data)
                     flightRef.updateChildren(data)
+                    if(!cageKeyValue.isNullOrEmpty()){
+                        cageRef.updateChildren(data)
+                    }
                     pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (pair in snapshot.children){
