@@ -1263,6 +1263,41 @@ class EditBasicFragment : Fragment() {
                   cageRef.updateChildren(data)
                   delcageRef.removeValue()
               }
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+                }
+                if(!birdComment.isNullOrEmpty()){
+                    birdRef.child("Comment").removeValue()
+                    nurseryRef.child("Comment").removeValue()
+                }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
+                birdRef.child("Death Date").removeValue()
+                nurseryRef.child("Date Reason").removeValue()
+                nurseryRef.child("Death Date").removeValue()
+                birdRef.child("Date Reason").removeValue()
+                birdRef.child("Donated Date").removeValue()
+                nurseryRef.child("Donated Contact").removeValue()
+                nurseryRef.child("Donated Date").removeValue()
+                birdRef.child("Date Contact").removeValue()
+                birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Date").removeValue()
+                nurseryRef.child("Lost Details").removeValue()
+                nurseryRef.child("Lost Date").removeValue()
+                birdRef.child("Exchange Reason").removeValue()
+                birdRef.child("Exchange Date").removeValue()
+                birdRef.child("Exchange Contact").removeValue()
+                nurseryRef.child("Exchange Reason").removeValue()
+                nurseryRef.child("Exchange Date").removeValue()
+                nurseryRef.child("Exchange Contact").removeValue()
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
                     val data: Map<String, Any?> = hashMapOf(
@@ -1294,14 +1329,50 @@ class EditBasicFragment : Fragment() {
                         cageRef.updateChildren(data)
                         delcageRef.removeValue()
                     }
+                    if (!birdSoldid.isNullOrEmpty()) {
+                        soldRef.removeValue()
+                        birdRef.child("Sale Contact").removeValue()
+                        birdRef.child("Sold Date").removeValue()
+                        birdRef.child("Sold Id").removeValue()
+                        birdRef.child("Sale Price").removeValue()
+                        nurseryRef.child("Sale Contact").removeValue()
+                        nurseryRef.child("Sold Date").removeValue()
+                        nurseryRef.child("Sold Id").removeValue()
+                        nurseryRef.child("Sale Price").removeValue()
+                    }
+                    if(!birdComment.isNullOrEmpty()){
+                        birdRef.child("Comment").removeValue()
+                        nurseryRef.child("Comment").removeValue()
+                    }
+                    birdRef.child("Requested Price").removeValue()
+                    nurseryRef.child("Requested Price").removeValue()
+                    birdRef.child("Death Date").removeValue()
+                    nurseryRef.child("Date Reason").removeValue()
+                    nurseryRef.child("Death Date").removeValue()
+                    birdRef.child("Date Reason").removeValue()
+                    birdRef.child("Donated Date").removeValue()
+                    nurseryRef.child("Donated Contact").removeValue()
+                    nurseryRef.child("Donated Date").removeValue()
+                    birdRef.child("Date Contact").removeValue()
+                    birdRef.child("Lost Details").removeValue()
+                    birdRef.child("Lost Date").removeValue()
+                    nurseryRef.child("Lost Details").removeValue()
+                    nurseryRef.child("Lost Date").removeValue()
+                    birdRef.child("Exchange Reason").removeValue()
+                    birdRef.child("Exchange Date").removeValue()
+                    birdRef.child("Exchange Contact").removeValue()
+                    nurseryRef.child("Exchange Reason").removeValue()
+                    nurseryRef.child("Exchange Date").removeValue()
+                    nurseryRef.child("Exchange Contact").removeValue()
                 } else {
                     return
                 }
             } else if (soldLayout.visibility == View.VISIBLE) {
                 if (validSold) {
 
-                    if(birdSoldid.isNullOrEmpty() || birdSoldid == "null"){
-                        val soldItem = dbase.child("Users").child("ID: $userId").child("Sold Items").push()
+                    if (birdSoldid.isNullOrEmpty() || birdSoldid == "null") {
+                        val soldItem =
+                            dbase.child("Users").child("ID: $userId").child("Sold Items").push()
 
                         val date = inputDateFormat.parse(dataSoldSaleDate)
                         val formattedDate = outputDateFormat.format(date)
@@ -1338,9 +1409,11 @@ class EditBasicFragment : Fragment() {
                         birdRef.updateChildren(data)
                         nurseryRef.updateChildren(data)
                         soldItem.updateChildren(data)
-                    Log.d(TAG, "IF")
-                    }
-                    else {
+                        cageRef.removeValue()
+                        birdRef.child("Cage").setValue("")
+                        nurseryRef.child("Cage").setValue("")
+                        Log.d(TAG, "IF")
+                    } else {
                         Log.d(TAG, "ELSE")
                         val date = inputDateFormat.parse(dataSoldSaleDate)
                         val formattedDate = outputDateFormat.format(date)
@@ -1378,8 +1451,35 @@ class EditBasicFragment : Fragment() {
                         nurseryRef.updateChildren(data)
                         if (!birdSoldid.isNullOrEmpty()) {
                             soldRef.updateChildren(data)
+                            cageRef.removeValue()
                         }
                     }
+                    if (!birdComment.isNullOrEmpty()) {
+                        birdRef.child("Comment").removeValue()
+                        nurseryRef.child("Comment").removeValue()
+                    }
+                    birdRef.child("Requested Price").removeValue()
+                    nurseryRef.child("Requested Price").removeValue()
+                    birdRef.child("Death Date").removeValue()
+                    nurseryRef.child("Date Reason").removeValue()
+                    nurseryRef.child("Death Date").removeValue()
+                    birdRef.child("Date Reason").removeValue()
+
+                    birdRef.child("Donated Date").removeValue()
+                    nurseryRef.child("Donated Contact").removeValue()
+                    nurseryRef.child("Donated Date").removeValue()
+                    birdRef.child("Date Contact").removeValue()
+                    birdRef.child("Lost Details").removeValue()
+                    birdRef.child("Lost Date").removeValue()
+                    nurseryRef.child("Lost Details").removeValue()
+                    nurseryRef.child("Lost Date").removeValue()
+                    birdRef.child("Exchange Reason").removeValue()
+                    birdRef.child("Exchange Date").removeValue()
+                    birdRef.child("Exchange Contact").removeValue()
+                    nurseryRef.child("Exchange Reason").removeValue()
+                    nurseryRef.child("Exchange Date").removeValue()
+                    nurseryRef.child("Exchange Contact").removeValue()
+                }
                 } else if (deceasedLayout.visibility == View.VISIBLE) {
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
@@ -1402,11 +1502,38 @@ class EditBasicFragment : Fragment() {
 
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
+                    if (!birdSoldid.isNullOrEmpty()) {
+                        soldRef.removeValue()
+                        birdRef.child("Sale Contact").removeValue()
+                        birdRef.child("Sold Date").removeValue()
+                        birdRef.child("Sold Id").removeValue()
+                        birdRef.child("Sale Price").removeValue()
+                        nurseryRef.child("Sale Contact").removeValue()
+                        nurseryRef.child("Sold Date").removeValue()
+                        nurseryRef.child("Sold Id").removeValue()
+                        nurseryRef.child("Sale Price").removeValue()
+                    }
+                    if(!birdComment.isNullOrEmpty()) {
+                        birdRef.child("Comment").removeValue()
+                        nurseryRef.child("Comment").removeValue()
+                    }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
 
-                } else {
-                    return
-                }
-
+                birdRef.child("Donated Date").removeValue()
+                nurseryRef.child("Donated Contact").removeValue()
+                nurseryRef.child("Donated Date").removeValue()
+                birdRef.child("Date Contact").removeValue()
+                birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Date").removeValue()
+                nurseryRef.child("Lost Details").removeValue()
+                nurseryRef.child("Lost Date").removeValue()
+                birdRef.child("Exchange Reason").removeValue()
+                birdRef.child("Exchange Date").removeValue()
+                birdRef.child("Exchange Contact").removeValue()
+                nurseryRef.child("Exchange Reason").removeValue()
+                nurseryRef.child("Exchange Date").removeValue()
+                nurseryRef.child("Exchange Contact").removeValue()
             } else if (exchangeLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -1426,10 +1553,42 @@ class EditBasicFragment : Fragment() {
                     "Exchange Contact" to birdData.exContact,
                     "Nursery Key" to nurserykey,
                     "Bird Key" to birdKey
+
                 )
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+
+                }
+                if(!birdComment.isNullOrEmpty()){
+                    birdRef.child("Comment").removeValue()
+                    nurseryRef.child("Comment").removeValue()
+                }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
+                birdRef.child("Death Date").removeValue()
+                nurseryRef.child("Date Reason").removeValue()
+                nurseryRef.child("Death Date").removeValue()
+                birdRef.child("Date Reason").removeValue()
+
+                birdRef.child("Donated Date").removeValue()
+                nurseryRef.child("Donated Contact").removeValue()
+                nurseryRef.child("Donated Date").removeValue()
+                birdRef.child("Date Contact").removeValue()
+                birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Date").removeValue()
+                nurseryRef.child("Lost Details").removeValue()
+                nurseryRef.child("Lost Date").removeValue()
 
             } else if (lostLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
@@ -1453,7 +1612,37 @@ class EditBasicFragment : Fragment() {
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
-
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+                }
+                if(!birdComment.isNullOrEmpty()){
+                    birdRef.child("Comment").removeValue()
+                    nurseryRef.child("Comment").removeValue()
+                }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
+                birdRef.child("Death Date").removeValue()
+                nurseryRef.child("Date Reason").removeValue()
+                nurseryRef.child("Death Date").removeValue()
+                birdRef.child("Date Reason").removeValue()
+                birdRef.child("Donated Date").removeValue()
+                nurseryRef.child("Donated Contact").removeValue()
+                nurseryRef.child("Donated Date").removeValue()
+                birdRef.child("Date Contact").removeValue()
+                birdRef.child("Exchange Reason").removeValue()
+                birdRef.child("Exchange Date").removeValue()
+                birdRef.child("Exchange Contact").removeValue()
+                nurseryRef.child("Exchange Reason").removeValue()
+                nurseryRef.child("Exchange Date").removeValue()
+                nurseryRef.child("Exchange Contact").removeValue()
             } else if (donatedLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -1476,7 +1665,37 @@ class EditBasicFragment : Fragment() {
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
-
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+                }
+                if(!birdComment.isNullOrEmpty()){
+                    birdRef.child("Comment").removeValue()
+                    nurseryRef.child("Comment").removeValue()
+                }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
+                birdRef.child("Death Date").removeValue()
+                nurseryRef.child("Date Reason").removeValue()
+                nurseryRef.child("Death Date").removeValue()
+                birdRef.child("Date Reason").removeValue()
+                birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Date").removeValue()
+                nurseryRef.child("Lost Details").removeValue()
+                nurseryRef.child("Lost Date").removeValue()
+                birdRef.child("Exchange Reason").removeValue()
+                birdRef.child("Exchange Date").removeValue()
+                birdRef.child("Exchange Contact").removeValue()
+                nurseryRef.child("Exchange Reason").removeValue()
+                nurseryRef.child("Exchange Date").removeValue()
+                nurseryRef.child("Exchange Contact").removeValue()
             } else if (otherLayout.visibility == View.VISIBLE) {
                 val data: Map<String, Any?> = hashMapOf(
                     "Legband" to birdData.legband,
@@ -1498,7 +1717,39 @@ class EditBasicFragment : Fragment() {
 
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+                }
+                birdRef.child("Requested Price").removeValue()
+                nurseryRef.child("Requested Price").removeValue()
+                birdRef.child("Death Date").removeValue()
+                nurseryRef.child("Date Reason").removeValue()
+                nurseryRef.child("Death Date").removeValue()
+                birdRef.child("Date Reason").removeValue()
+                birdRef.child("Donated Date").removeValue()
+                nurseryRef.child("Donated Contact").removeValue()
+                nurseryRef.child("Donated Date").removeValue()
+                birdRef.child("Date Contact").removeValue()
 
+               birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Date").removeValue()
+                nurseryRef.child("Lost Details").removeValue()
+                nurseryRef.child("Lost Date").removeValue()
+
+                birdRef.child("Exchange Reason").removeValue()
+                birdRef.child("Exchange Date").removeValue()
+                birdRef.child("Exchange Contact").removeValue()
+                nurseryRef.child("Exchange Reason").removeValue()
+                nurseryRef.child("Exchange Date").removeValue()
+                nurseryRef.child("Exchange Contact").removeValue()
             }
 
 
