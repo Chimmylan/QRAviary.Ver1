@@ -89,6 +89,7 @@ class EditBasicFlightFragment : Fragment() {
     private var birdDonatedContact: String? = null
     private var fatherKey: String? = null
     private var birdfatherKey: String? = null
+    private var birdSoldid: String? = null
     private var motherKey: String? = null
     private var birdmotherKey: String? = null
     private var flightkey: String? = null
@@ -333,6 +334,7 @@ class EditBasicFlightFragment : Fragment() {
         slash4 = view.findViewById(R.id.slash4)
         slash5 = view.findViewById(R.id.slash5)
 
+        birdSoldid = arguments?.getString("SoldId")
         birdfatherKey = arguments?.getString("BirdFatherBirdKey")
         birdmotherKey = arguments?.getString("BirdMotherBirdKey")
         CageBirdKey = arguments?.getString("CageBirdKey")
@@ -508,6 +510,7 @@ class EditBasicFlightFragment : Fragment() {
         AddMutation()
         RemoveLastMutation()
         OnActiveSpinner()
+        oldcageKeyValue = arguments?.getString("CageKey")
         cageKeyValue = arguments?.getString("CageKey")
 
         if (!birdMutation1.isNullOrEmpty()) {
@@ -659,6 +662,7 @@ class EditBasicFlightFragment : Fragment() {
 
     private lateinit var cageNameValue: String
     private var cageKeyValue: String? = null
+    private var oldcageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -1123,6 +1127,11 @@ class EditBasicFlightFragment : Fragment() {
         val flightRef =  dbase.child("Users").child("ID: $userId").child("Flight Birds").child(flightkey.toString())
         val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Flight Cages").child(cageKeyValue.toString()).child("Birds")
             .child(CageBirdKey.toString())
+        val delcageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Flight Cages").child(oldcageKeyValue.toString()).child("Birds")
+            .child(CageBirdKey.toString())
+        val soldRef = dbase.child("Users").child("ID: $userId").child("Sold Items").child(birdSoldid.toString())
+
+        val PurchaseRef = dbase.child("Users").child("ID: $userId").child("Purchase Items")
         //pair
 
         val pairRef = dbase.child("Users").child("ID: $userId").child("Pairs")
@@ -1256,7 +1265,9 @@ class EditBasicFlightFragment : Fragment() {
                 birdRef.updateChildren(data)
                 flightRef.updateChildren(data)
                 if(!cageKeyValue.isNullOrEmpty()){
+                    delcageRef.removeValue()
                     cageRef.updateChildren(data)
+
                 }
                 pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -1439,7 +1450,9 @@ class EditBasicFlightFragment : Fragment() {
                     birdRef.updateChildren(data)
                     flightRef.updateChildren(data)
                     if(!cageKeyValue.isNullOrEmpty()){
+                        delcageRef.removeValue()
                         cageRef.updateChildren(data)
+
                     }
                     pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -1494,7 +1507,7 @@ class EditBasicFlightFragment : Fragment() {
                         "Sale Contact" to birdData.saleContact,
                         "Flight Key" to flightkey,
                         "Bird Key" to birdKey,
-                        "Sold Id" to birdKey,//placeholder
+                        "Sold Id" to birdSoldid,//placeholder
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
@@ -1503,7 +1516,9 @@ class EditBasicFlightFragment : Fragment() {
                     )
                     birdRef.updateChildren(data)
                     flightRef.updateChildren(data)
-
+                    if (!birdSoldid.isNullOrEmpty()){
+                        soldRef.updateChildren(data)
+                    }
                     pairRef.addListenerForSingleValueEvent(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (pair in snapshot.children){
@@ -1761,7 +1776,7 @@ class EditBasicFlightFragment : Fragment() {
                         birdKey!!,
                         flightkey!!,
                         newBundle,
-                        birdKey!!,
+                        birdSoldid!!,
                         CageBirdKey!!,
                         cageKeyValue.toString()
                     )
@@ -1775,7 +1790,7 @@ class EditBasicFlightFragment : Fragment() {
 
         args.putString("birdId", birdKey)
         args.putString("nurseryId", flightkey)
-        args.putString("SoldId", birdKey)
+        args.putString("SoldId", birdSoldid)
     }
 
     fun OnActiveSpinner() {

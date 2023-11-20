@@ -57,6 +57,7 @@ class EditBasicFragment : Fragment() {
     private lateinit var dbase: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
     private var birdKey: String? = null
+    private var birdSoldid: String? = null
     private var birdLegband: String? = null
     private var birdGender: String? = null
     private var birdStatus: String? = null
@@ -338,7 +339,7 @@ class EditBasicFragment : Fragment() {
         slash5 = view.findViewById(R.id.slash5)
 
         CageBirdKey = arguments?.getString("CageBirdKey")
-
+        birdSoldid = arguments?.getString("SoldId")
         birdKey = arguments?.getString("BirdKey")
         birdGender = arguments?.getString("BirdGender")
         nurserykey = arguments?.getString("NurseryKey")
@@ -499,7 +500,7 @@ class EditBasicFragment : Fragment() {
         AddMutation()
         RemoveLastMutation()
         OnActiveSpinner()
-
+        oldcageKeyValue = arguments?.getString("CageKey")
         cageKeyValue = arguments?.getString("CageKey")
 
         if (!birdMutation1.isNullOrEmpty()) {
@@ -660,6 +661,7 @@ class EditBasicFragment : Fragment() {
 
     private lateinit var cageNameValue: String
     private var cageKeyValue: String? = null
+    private var oldcageKeyValue: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -1136,9 +1138,12 @@ class EditBasicFragment : Fragment() {
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
         val nurseryRef =  dbase.child("Users").child("ID: $userId").child("Nursery Birds").child(nurserykey.toString())
+        val delcageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(oldcageKeyValue.toString()).child("Birds")
+            .child(CageBirdKey.toString())
         val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(cageKeyValue.toString()).child("Birds")
             .child(CageBirdKey.toString())
-
+        val soldRef = dbase.child("Users").child("ID: $userId").child("Sold Items").child(birdSoldid.toString())
+        val PurchaseRef = dbase.child("Users").child("ID: $userId").child("Purchase Items")
 
         val args = Bundle()
 
@@ -1256,6 +1261,7 @@ class EditBasicFragment : Fragment() {
                 nurseryRef.updateChildren(data)
               if(!cageKeyValue.isNullOrEmpty()){
                   cageRef.updateChildren(data)
+                  delcageRef.removeValue()
               }
             } else if (forSaleLayout.visibility == View.VISIBLE) {
                 if (validforsale) {
@@ -1284,7 +1290,9 @@ class EditBasicFragment : Fragment() {
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
                     if(!cageKeyValue.isNullOrEmpty()){
+
                         cageRef.updateChildren(data)
+                        delcageRef.removeValue()
                     }
                 } else {
                     return
@@ -1292,41 +1300,86 @@ class EditBasicFragment : Fragment() {
             } else if (soldLayout.visibility == View.VISIBLE) {
                 if (validSold) {
 
-                    val date = inputDateFormat.parse(dataSoldSaleDate)
-                    val formattedDate = outputDateFormat.format(date)
+                    if(birdSoldid.isNullOrEmpty() || birdSoldid == "null"){
+                        val soldItem = dbase.child("Users").child("ID: $userId").child("Sold Items").push()
 
-                    val monthYearParts = formattedDate.split(" - ")
-                    val day = monthYearParts[0]
-                    val month = monthYearParts[1]
-                    val year = monthYearParts[2]
-                    val data: Map<String, Any?> = hashMapOf(
-                        "Legband" to birdData.legband,
-                        "Identifier" to birdData.identifier,
-                        "Gender" to birdData.gender,
-                        "Mutation1" to mutation1,
-                        "Mutation2" to mutation2,
-                        "Mutation3" to mutation3,
-                        "Mutation4" to mutation4,
-                        "Mutation5" to mutation5,
-                        "Mutation6" to mutation6,
-                        /*"Date of Banding" to birdData.dateOfBanding,*/
-                        "Date of Birth" to birdData.dateOfBirth,
-                        "Status" to birdData.status,
-                        "Sold Date" to birdData.soldDate,
-                        "Sale Price" to birdData.soldPrice,
-                        "Sale Contact" to birdData.saleContact,
-                        "Nursery Key" to nurserykey,
-                        "Bird Key" to birdKey,
-//                        "Sold Id" to,
-                        "Month" to month.toFloat(),
-                        "Year" to year.toFloat()
-                    )
-                    val solddata: Map<String, Any?> = hashMapOf(
-                        "Bird Id" to birdId
-                    )
-                    birdRef.updateChildren(data)
-                    nurseryRef.updateChildren(data)
+                        val date = inputDateFormat.parse(dataSoldSaleDate)
+                        val formattedDate = outputDateFormat.format(date)
 
+                        val monthYearParts = formattedDate.split(" - ")
+                        val day = monthYearParts[0]
+                        val month = monthYearParts[1]
+                        val year = monthYearParts[2]
+                        val data: Map<String, Any?> = hashMapOf(
+                            "Legband" to birdData.legband,
+                            "Identifier" to birdData.identifier,
+                            "Gender" to birdData.gender,
+                            "Mutation1" to mutation1,
+                            "Mutation2" to mutation2,
+                            "Mutation3" to mutation3,
+                            "Mutation4" to mutation4,
+                            "Mutation5" to mutation5,
+                            "Mutation6" to mutation6,
+                            /*"Date of Banding" to birdData.dateOfBanding,*/
+                            "Date of Birth" to birdData.dateOfBirth,
+                            "Status" to birdData.status,
+                            "Sold Date" to birdData.soldDate,
+                            "Sale Price" to birdData.soldPrice,
+                            "Sale Contact" to birdData.saleContact,
+                            "Nursery Key" to nurserykey,
+                            "Bird Key" to birdKey,
+                            "Sold Id" to soldItem.key.toString(),
+                            "Month" to month.toFloat(),
+                            "Year" to year.toFloat()
+                        )
+                        val solddata: Map<String, Any?> = hashMapOf(
+                            "Bird Id" to birdId
+                        )
+                        birdRef.updateChildren(data)
+                        nurseryRef.updateChildren(data)
+                        soldItem.updateChildren(data)
+                    Log.d(TAG, "IF")
+                    }
+                    else {
+                        Log.d(TAG, "ELSE")
+                        val date = inputDateFormat.parse(dataSoldSaleDate)
+                        val formattedDate = outputDateFormat.format(date)
+
+                        val monthYearParts = formattedDate.split(" - ")
+                        val day = monthYearParts[0]
+                        val month = monthYearParts[1]
+                        val year = monthYearParts[2]
+                        val data: Map<String, Any?> = hashMapOf(
+                            "Legband" to birdData.legband,
+                            "Identifier" to birdData.identifier,
+                            "Gender" to birdData.gender,
+                            "Mutation1" to mutation1,
+                            "Mutation2" to mutation2,
+                            "Mutation3" to mutation3,
+                            "Mutation4" to mutation4,
+                            "Mutation5" to mutation5,
+                            "Mutation6" to mutation6,
+                            /*"Date of Banding" to birdData.dateOfBanding,*/
+                            "Date of Birth" to birdData.dateOfBirth,
+                            "Status" to birdData.status,
+                            "Sold Date" to birdData.soldDate,
+                            "Sale Price" to birdData.soldPrice,
+                            "Sale Contact" to birdData.saleContact,
+                            "Nursery Key" to nurserykey,
+                            "Bird Key" to birdKey,
+                            "Sold Id" to birdSoldid,
+                            "Month" to month.toFloat(),
+                            "Year" to year.toFloat()
+                        )
+                        val solddata: Map<String, Any?> = hashMapOf(
+                            "Bird Id" to birdId
+                        )
+                        birdRef.updateChildren(data)
+                        nurseryRef.updateChildren(data)
+                        if (!birdSoldid.isNullOrEmpty()) {
+                            soldRef.updateChildren(data)
+                        }
+                    }
                 } else if (deceasedLayout.visibility == View.VISIBLE) {
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
@@ -1456,7 +1509,7 @@ class EditBasicFragment : Fragment() {
                         birdKey!!,
                         nurserykey!!,
                         newBundle,
-                        birdKey!!, ///placeholder of soldid
+                        birdSoldid!!, ///placeholder of soldid
                         CageBirdKey!!,
                         cageKeyValue.toString()
                     )
@@ -1470,7 +1523,7 @@ class EditBasicFragment : Fragment() {
 
         args.putString("birdId", birdKey)
         args.putString("nurseryId", nurserykey)
-        args.putString("SoldId", birdKey)//placeholder of soldid
+        args.putString("SoldId", birdSoldid)//placeholder of soldid
     }
 
     fun OnActiveSpinner() {

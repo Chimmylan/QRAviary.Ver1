@@ -307,6 +307,7 @@ class BirdsFragment : Fragment() {
                 } else {
                     ""
                 }
+                val soldIdValue = itemSnapshot.child("Sold Id").value
                 val dateOfBandingValue = itemSnapshot.child("Date of Banding").value
                 val dateOfBirthValue = itemSnapshot.child("Date of Birth").value
                 val statusValue = itemSnapshot.child("Status").value
@@ -367,7 +368,7 @@ class BirdsFragment : Fragment() {
                 val boughtBreeder = breederContactValue.toString() ?: ""
                 val mother = MotherValue.toString() ?: ""
                 val father = FatherValue.toString() ?: ""
-
+                val soldid = soldIdValue.toString()
 //                val image = getUrlImage(imageUrl)
 
                 birdCount++
@@ -378,6 +379,7 @@ class BirdsFragment : Fragment() {
                 data.nurseryType = nurseryType
                 data.flightType = flightKey
                 data.cageKey = cageKey.toString()
+                data.soldid = soldid
                 data.img = mainPic
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey

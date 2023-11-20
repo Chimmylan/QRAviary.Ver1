@@ -73,6 +73,7 @@ data class BirdData(
     var otOtherContact: String? = null,
     var birdCount: String? = null,
     var cageKey: String? = null,
+    var soldid: String? = null,
     var ageindays: String? = null,
     var cagekeyvalue: String? = null,
     var cagebirdkey: String? = null,

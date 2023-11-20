@@ -57,6 +57,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdRequestedPrice: String
     private lateinit var BirdComment: String
     private lateinit var BirdBuyPrice: String
+    private lateinit var BirdSoldId: String
     private lateinit var BirdBoughtOn: String
     private lateinit var BirdBoughtBreeder: String
     private lateinit var BirdBreeder: String
@@ -125,7 +126,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
 
         mAuth = FirebaseAuth.getInstance()
-
+        BirdSoldId= bundle?.getString("SoldId").toString()
         Clutch = bundle?.getBoolean("Clutch")
         BirdId = bundle?.getString("BirdId").toString()//
         BirdLegband = bundle?.getString("BirdLegband").toString()//
@@ -198,6 +199,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("CageBirdKey", cageBirdKey)
         newBundle.putString("BirdOtherOrigin", otOhter)
         newBundle.putString("NurseryKey", NurseryKey)
+        newBundle.putString("SoldId", BirdSoldId)
         newBundle.putString("CageKey", cageKeyValue)
         newBundle.putString("BirdKey", BirdKey)
         newBundle.putString("FlightKey", FlightKey)
