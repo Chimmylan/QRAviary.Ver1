@@ -290,9 +290,11 @@ class EditOriginFragment : Fragment() {
                 boughtDateBtn.text = arguments?.getString("BirdBoughtOn")
             }
         }
-        if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
-            radioButtonOther.isChecked = true
-            etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
+        if(birdBreeder != "null") {
+            if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
+                radioButtonOther.isChecked = true
+                etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
+            }
         }
 
         val clutch = arguments?.getBoolean("Clutch")
