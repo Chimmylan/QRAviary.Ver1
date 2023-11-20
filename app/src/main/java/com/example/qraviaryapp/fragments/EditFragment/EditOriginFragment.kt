@@ -300,13 +300,13 @@ class EditOriginFragment : Fragment() {
 
         val clutch = arguments?.getBoolean("Clutch")
         Log.d(TAG, clutch.toString())
-        if (arguments?.getBoolean("Clutch") == true) {
+        if (arguments?.getBoolean("Clutch") == false) {
 
             note.visibility = View.VISIBLE
             btnMother.text = null
-            btnMother.hint = arguments?.getString("BirdMother")
+            btnMother.setHint(arguments?.getString("BirdMother"))
             btnFather.text = null
-            btnFather.hint = arguments?.getString("BirdFather")
+            btnFather.setHint(arguments?.getString("BirdFather"))
             btnFather.isEnabled = false
             btnMother.isEnabled = false
             radioButtonBought.isEnabled = false

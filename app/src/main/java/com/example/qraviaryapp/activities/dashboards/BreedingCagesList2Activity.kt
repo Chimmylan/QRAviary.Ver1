@@ -248,7 +248,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                     Handler(Looper.getMainLooper()).postDelayed({
                         alertDialog.dismiss()
                         progressbar.visibility = View.GONE
-                    }, 1500)
+                    }, 2500)
                 }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -303,7 +303,7 @@ class BreedingCagesList2Activity : AppCompatActivity(){
                             Handler(Looper.getMainLooper()).postDelayed({
                                 alertDialog.dismiss()
                                 progressbar.visibility = View.GONE
-                            }, 1500)
+                            }, 2500)
 
                         }
 

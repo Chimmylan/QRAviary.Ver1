@@ -160,7 +160,7 @@ class MoveEggCageActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_save -> {
                 val intent = Intent(this, MoveEggActivity::class.java)
-                intent.putExtra("Clutch", false)
+                intent.putExtra("Clutch", clutch)
                 intent.putExtra("CageKey", cageKeyValue)
                 intent.putExtra("CageName", etcageValue)
                 intent.putExtra("IncubatingStartDate", incubatingStartDate)

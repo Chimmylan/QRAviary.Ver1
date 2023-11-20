@@ -173,7 +173,7 @@ class MoveEggActivity : AppCompatActivity() {
         pairCageKeyFemale= intent.getStringExtra("CageKeyFemale").toString()
         cageNameValue = intent.getStringExtra("CageName").toString()
         cageKeyValue = intent.getStringExtra("CageKey").toString()
-        clutch = intent.getBooleanExtra("Clutch", false)
+        clutch = intent.getBooleanExtra("Clutch", true)
 
         rbUnknown.isChecked = true
         btnMutation1.setOnClickListener {

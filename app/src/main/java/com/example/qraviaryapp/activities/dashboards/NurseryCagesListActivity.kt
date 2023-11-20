@@ -288,7 +288,7 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                             addButton.isEnabled = true
                             alertDialog.dismiss()
                             progressbar.visibility = View.GONE
-                        }, 1500)
+                        }, 2500)
                     }else{
                     // Find the highest numbered cage and increment it
                     db.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -344,7 +344,7 @@ private fun generateQRCodeUri(bundleCageData: String): Uri? {
                                 addButton.isEnabled = true
                                 alertDialog.dismiss()
                                 progressbar.visibility = View.GONE
-                            }, 1500)
+                            }, 2500)
                         }
 
                         override fun onCancelled(error: DatabaseError) {

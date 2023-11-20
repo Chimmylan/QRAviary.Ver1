@@ -122,7 +122,7 @@ class AdultingFragment : Fragment() {
                 Log.e(ContentValues.TAG, "Error retrieving data: ${e.message}")
             }
         }
-        refreshApp()
+//        refreshApp()
         return rootView
     }
     private fun refreshApp() {
