@@ -24,6 +24,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.fragments.CAMERA_REQUEST_CODE
+import com.example.qraviaryapp.fragments.NavFragments.AdultingFragment
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -91,7 +92,7 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
         uploadqr = findViewById(R.id.UploadQR)
         val abcolortitle = resources.getColor(R.color.appbar)
         supportActionBar?.title = HtmlCompat.fromHtml(
-            "<font color='$abcolortitle'>Scan Nursery Cage</font>",
+            "<font color='$abcolortitle'>Scan Flight Cage</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         // Check if night mode is enabled
@@ -246,7 +247,14 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
                             newFlightRef.updateChildren(updateData)
                             flightCageRef.setValue(dataToCopy)
                             flightCageRef.updateChildren(updateData)
+                            onBackPressed()
+                            finish()
                         }
+                        else{
+                            Toast.makeText(applicationContext, "Not a Flight Cage", Toast.LENGTH_LONG).show()
+                            onBackPressed()
+                        }
+
                     }
 
                     //if has cagekey
@@ -339,7 +347,11 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
         }
 
     }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
 
+        finish()
+    }
     private fun makeRequest() {
         ActivityCompat.requestPermissions(
             this,
@@ -377,8 +389,5 @@ class MoveNurseryScannerActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-    override fun onBackPressed() {
 
-        finish()
-    }
 }
