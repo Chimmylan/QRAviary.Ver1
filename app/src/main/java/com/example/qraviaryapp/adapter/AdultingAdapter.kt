@@ -26,6 +26,7 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.qraviaryapp.R
+import com.example.qraviaryapp.activities.CagesActivity.MoveNurseryActivity
 import com.example.qraviaryapp.activities.detailedactivities.BirdsDetailedActivity
 import com.example.qraviaryapp.activities.detailedactivities.MoveNurseryScannerActivity
 import com.example.qraviaryapp.adapter.channelId
@@ -213,7 +214,7 @@ class AdultingAdapter(
             holder.movebtn.setOnClickListener {
 
 
-                val intent = Intent(context, MoveNurseryScannerActivity::class.java)
+                val intent = Intent(context, MoveNurseryActivity::class.java)
                 intent.putExtra("Nursery Key", bird.nurseryKey)
                 intent.putExtra("CageKeyValue", bird.cageKey)
                 intent.putExtra("BirdKey", bird.adultingKey)

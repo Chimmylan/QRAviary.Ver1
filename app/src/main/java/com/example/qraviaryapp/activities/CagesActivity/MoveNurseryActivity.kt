@@ -12,10 +12,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.example.qraviaryapp.R
 import com.example.qraviaryapp.activities.dashboards.FlightCagesListActivity
+import com.example.qraviaryapp.activities.detailedactivities.MoveNurseryScannerActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -51,6 +53,7 @@ class MoveNurseryActivity : AppCompatActivity() {
     private var status = ""
     private lateinit var dataToCopy: Any
     var userId = ""
+    private lateinit var cagescan: CardView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -70,8 +73,8 @@ class MoveNurseryActivity : AppCompatActivity() {
         )
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
-        choosecage = findViewById(R.id.btnflightcage)
-
+        choosecage = findViewById(R.id.etPairCage)
+        cagescan = findViewById(R.id.cagescan)
 
         choosecage.setOnClickListener {
             val requestCode = 7
@@ -91,6 +94,13 @@ class MoveNurseryActivity : AppCompatActivity() {
         nurseryKey = intent.getStringExtra("Nursery Key")
         cageKey = intent.getStringExtra("CageKeyValue")
         nurseryBirdKey = intent.getStringExtra("BirdKey")
+        cagescan.setOnClickListener {
+            val intent = Intent(this, MoveNurseryScannerActivity::class.java)
+            intent.putExtra("Nursery Key", nurseryKey)
+            intent.putExtra("CageKeyValue", cageKey)
+            intent.putExtra("BirdKey", nurseryBirdKey)
+            startActivity(intent)
+        }
         userId = mAuth.currentUser?.uid.toString()
         val nurseryref =
             db.child("Users").child("ID: $userId").child("Nursery Birds")
@@ -179,7 +189,8 @@ class MoveNurseryActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_add_bird, menu)
 
         val saveMenuItem = menu.findItem(R.id.action_save)
-
+        val menuqr = menu.findItem(R.id.menu_qr)
+        menuqr.isVisible = false
         // Check if night mode is enabled
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             // Set the text color to white for night mode

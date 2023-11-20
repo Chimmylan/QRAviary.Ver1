@@ -103,7 +103,7 @@ class AdultingFragment : Fragment() {
         val maturingDays = maturingValue?.toIntOrNull() ?: 50
         loadingProgressBar = rootView.findViewById(R.id.loadingProgressBar)
         totalBirds = rootView.findViewById(R.id.tvBirdCount)
-        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
+//        swipeToRefresh = rootView.findViewById(R.id.swipeToRefresh)
         recyclerView = rootView.findViewById(R.id.RecyclerView)
         val gridLayoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.layoutManager = gridLayoutManager

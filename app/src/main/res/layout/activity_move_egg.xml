@@ -28,9 +28,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Identifier (*)"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:text="Identifier/Name (*)"
+                    android:textStyle="bold"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                         android:text="add +"
                         android:textSize="10sp"
                         android:textColor="@color/black_white"
-                        android:backgroundTint="@color/new_appbar_color"
+                        android:backgroundTint="@color/itemimagebg"
                         android:textAlignment="center"
 
                         app:iconGravity="textEnd" />
@@ -134,7 +134,7 @@
                         android:text="Del -"
                         android:textSize="10sp"
                         android:textColor="@color/black_white"
-                        android:backgroundTint="@color/new_appbar_color"
+                        android:backgroundTint="@color/itemimagebg"
                         android:textAlignment="center"
                         app:iconGravity="textEnd" />
 
