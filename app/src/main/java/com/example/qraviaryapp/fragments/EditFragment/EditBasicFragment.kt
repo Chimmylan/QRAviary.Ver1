@@ -1236,70 +1236,8 @@ class EditBasicFragment : Fragment() {
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
-
-                val data: Map<String, Any?> = hashMapOf(
-                    "Legband" to birdData.legband,
-                    "Identifier" to birdData.identifier,
-                    "Gender" to birdData.gender,
-                    "Mutation1" to mutation1,
-                    "Mutation2" to mutation2,
-                    "Mutation3" to mutation3,
-                    "Mutation4" to mutation4,
-                    "Mutation5" to mutation5,
-                    "Mutation6" to mutation6,
-                    /* "Date of Banding" to birdData.dateOfBanding,*/
-                    "Date of Birth" to birdData.dateOfBirth,
-                    "Status" to birdData.status,
-                    "Cage" to birdData.availCage,
-                    "Nursery Key" to nurserykey,
-                    "Bird Key" to birdKey,
-                    "CageKey" to cageKeyValue,
-                    "Cage Bird Key" to CageBirdKey
-                )
-
-                birdRef.updateChildren(data)
-                nurseryRef.updateChildren(data)
-              if(!cageKeyValue.isNullOrEmpty()){
-                  cageRef.updateChildren(data)
-                  delcageRef.removeValue()
-              }
-                if (!birdSoldid.isNullOrEmpty()) {
-                    soldRef.removeValue()
-                    birdRef.child("Sale Contact").removeValue()
-                    birdRef.child("Sold Date").removeValue()
-                    birdRef.child("Sold Id").removeValue()
-                    birdRef.child("Sale Price").removeValue()
-                    nurseryRef.child("Sale Contact").removeValue()
-                    nurseryRef.child("Sold Date").removeValue()
-                    nurseryRef.child("Sold Id").removeValue()
-                    nurseryRef.child("Sale Price").removeValue()
-                }
-                if(!birdComment.isNullOrEmpty()){
-                    birdRef.child("Comment").removeValue()
-                    nurseryRef.child("Comment").removeValue()
-                }
-                birdRef.child("Requested Price").removeValue()
-                nurseryRef.child("Requested Price").removeValue()
-                birdRef.child("Death Date").removeValue()
-                nurseryRef.child("Date Reason").removeValue()
-                nurseryRef.child("Death Date").removeValue()
-                birdRef.child("Date Reason").removeValue()
-                birdRef.child("Donated Date").removeValue()
-                nurseryRef.child("Donated Contact").removeValue()
-                nurseryRef.child("Donated Date").removeValue()
-                birdRef.child("Date Contact").removeValue()
-                birdRef.child("Lost Details").removeValue()
-                birdRef.child("Lost Date").removeValue()
-                nurseryRef.child("Lost Details").removeValue()
-                nurseryRef.child("Lost Date").removeValue()
-                birdRef.child("Exchange Reason").removeValue()
-                birdRef.child("Exchange Date").removeValue()
-                birdRef.child("Exchange Contact").removeValue()
-                nurseryRef.child("Exchange Reason").removeValue()
-                nurseryRef.child("Exchange Date").removeValue()
-                nurseryRef.child("Exchange Contact").removeValue()
-            } else if (forSaleLayout.visibility == View.VISIBLE) {
-                if (validforsale) {
+                if (CageBirdKey.isNullOrEmpty() || CageBirdKey == "null"){
+                    val cageItem = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(cageKeyValue.toString()).child("Birds").push()
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
                         "Identifier" to birdData.identifier,
@@ -1310,25 +1248,21 @@ class EditBasicFragment : Fragment() {
                         "Mutation4" to mutation4,
                         "Mutation5" to mutation5,
                         "Mutation6" to mutation6,
-                        /*"Date of Banding" to birdData.dateOfBanding,*/
+                        /* "Date of Banding" to birdData.dateOfBanding,*/
                         "Date of Birth" to birdData.dateOfBirth,
                         "Status" to birdData.status,
-                        "Cage" to birdData.forSaleCage,
-                        "Requested Price" to birdData.reqPrice,
+                        "Cage" to birdData.availCage,
                         "Nursery Key" to nurserykey,
                         "Bird Key" to birdKey,
                         "CageKey" to cageKeyValue,
-                        "Cage Bird Key" to CageBirdKey
-
-
+                        "Cage Bird Key" to cageItem.key.toString()
                     )
+
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
-                    if(!cageKeyValue.isNullOrEmpty()){
+                    cageItem.updateChildren(data)
+                    delcageRef.removeValue()
 
-                        cageRef.updateChildren(data)
-                        delcageRef.removeValue()
-                    }
                     if (!birdSoldid.isNullOrEmpty()) {
                         soldRef.removeValue()
                         birdRef.child("Sale Contact").removeValue()
@@ -1340,7 +1274,7 @@ class EditBasicFragment : Fragment() {
                         nurseryRef.child("Sold Id").removeValue()
                         nurseryRef.child("Sale Price").removeValue()
                     }
-                    if(!birdComment.isNullOrEmpty()){
+                    if (!birdComment.isNullOrEmpty()) {
                         birdRef.child("Comment").removeValue()
                         nurseryRef.child("Comment").removeValue()
                     }
@@ -1364,6 +1298,205 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Exchange Reason").removeValue()
                     nurseryRef.child("Exchange Date").removeValue()
                     nurseryRef.child("Exchange Contact").removeValue()
+                }
+                else {
+                    val data: Map<String, Any?> = hashMapOf(
+                        "Legband" to birdData.legband,
+                        "Identifier" to birdData.identifier,
+                        "Gender" to birdData.gender,
+                        "Mutation1" to mutation1,
+                        "Mutation2" to mutation2,
+                        "Mutation3" to mutation3,
+                        "Mutation4" to mutation4,
+                        "Mutation5" to mutation5,
+                        "Mutation6" to mutation6,
+                        /* "Date of Banding" to birdData.dateOfBanding,*/
+                        "Date of Birth" to birdData.dateOfBirth,
+                        "Status" to birdData.status,
+                        "Cage" to birdData.availCage,
+                        "Nursery Key" to nurserykey,
+                        "Bird Key" to birdKey,
+                        "CageKey" to cageKeyValue,
+                        "Cage Bird Key" to CageBirdKey
+                    )
+
+                    birdRef.updateChildren(data)
+                    nurseryRef.updateChildren(data)
+                    if (!cageKeyValue.isNullOrEmpty()) {
+                        cageRef.updateChildren(data)
+                        delcageRef.removeValue()
+                    }
+                    if (!birdSoldid.isNullOrEmpty()) {
+                        soldRef.removeValue()
+                        birdRef.child("Sale Contact").removeValue()
+                        birdRef.child("Sold Date").removeValue()
+                        birdRef.child("Sold Id").removeValue()
+                        birdRef.child("Sale Price").removeValue()
+                        nurseryRef.child("Sale Contact").removeValue()
+                        nurseryRef.child("Sold Date").removeValue()
+                        nurseryRef.child("Sold Id").removeValue()
+                        nurseryRef.child("Sale Price").removeValue()
+                    }
+                    if (!birdComment.isNullOrEmpty()) {
+                        birdRef.child("Comment").removeValue()
+                        nurseryRef.child("Comment").removeValue()
+                    }
+                    birdRef.child("Requested Price").removeValue()
+                    nurseryRef.child("Requested Price").removeValue()
+                    birdRef.child("Death Date").removeValue()
+                    nurseryRef.child("Date Reason").removeValue()
+                    nurseryRef.child("Death Date").removeValue()
+                    birdRef.child("Date Reason").removeValue()
+                    birdRef.child("Donated Date").removeValue()
+                    nurseryRef.child("Donated Contact").removeValue()
+                    nurseryRef.child("Donated Date").removeValue()
+                    birdRef.child("Date Contact").removeValue()
+                    birdRef.child("Lost Details").removeValue()
+                    birdRef.child("Lost Date").removeValue()
+                    nurseryRef.child("Lost Details").removeValue()
+                    nurseryRef.child("Lost Date").removeValue()
+                    birdRef.child("Exchange Reason").removeValue()
+                    birdRef.child("Exchange Date").removeValue()
+                    birdRef.child("Exchange Contact").removeValue()
+                    nurseryRef.child("Exchange Reason").removeValue()
+                    nurseryRef.child("Exchange Date").removeValue()
+                    nurseryRef.child("Exchange Contact").removeValue()
+                }
+            } else if (forSaleLayout.visibility == View.VISIBLE) {
+                if (validforsale) {
+
+                    if (CageBirdKey.isNullOrEmpty() || CageBirdKey == "null") {
+                        val cageItem = dbase.child("Users").child("ID: $userId").child("Cages")
+                            .child("Nursery Cages").child(cageKeyValue.toString()).child("Birds")
+                            .push()
+                        val data: Map<String, Any?> = hashMapOf(
+                            "Legband" to birdData.legband,
+                            "Identifier" to birdData.identifier,
+                            "Gender" to birdData.gender,
+                            "Mutation1" to mutation1,
+                            "Mutation2" to mutation2,
+                            "Mutation3" to mutation3,
+                            "Mutation4" to mutation4,
+                            "Mutation5" to mutation5,
+                            "Mutation6" to mutation6,
+                            /*"Date of Banding" to birdData.dateOfBanding,*/
+                            "Date of Birth" to birdData.dateOfBirth,
+                            "Status" to birdData.status,
+                            "Cage" to birdData.forSaleCage,
+                            "Requested Price" to birdData.reqPrice,
+                            "Nursery Key" to nurserykey,
+                            "Bird Key" to birdKey,
+                            "CageKey" to cageKeyValue,
+                            "Cage Bird Key" to cageItem.key.toString()
+
+
+                        )
+                        birdRef.updateChildren(data)
+                        nurseryRef.updateChildren(data)
+                            cageItem.updateChildren(data)
+                            delcageRef.removeValue()
+                        if (!birdSoldid.isNullOrEmpty()) {
+                            soldRef.removeValue()
+                            birdRef.child("Sale Contact").removeValue()
+                            birdRef.child("Sold Date").removeValue()
+                            birdRef.child("Sold Id").removeValue()
+                            birdRef.child("Sale Price").removeValue()
+                            nurseryRef.child("Sale Contact").removeValue()
+                            nurseryRef.child("Sold Date").removeValue()
+                            nurseryRef.child("Sold Id").removeValue()
+                            nurseryRef.child("Sale Price").removeValue()
+                        }
+                        if (!birdComment.isNullOrEmpty()) {
+                            birdRef.child("Comment").removeValue()
+                            nurseryRef.child("Comment").removeValue()
+                        }
+                        birdRef.child("Requested Price").removeValue()
+                        nurseryRef.child("Requested Price").removeValue()
+                        birdRef.child("Death Date").removeValue()
+                        nurseryRef.child("Date Reason").removeValue()
+                        nurseryRef.child("Death Date").removeValue()
+                        birdRef.child("Date Reason").removeValue()
+                        birdRef.child("Donated Date").removeValue()
+                        nurseryRef.child("Donated Contact").removeValue()
+                        nurseryRef.child("Donated Date").removeValue()
+                        birdRef.child("Date Contact").removeValue()
+                        birdRef.child("Lost Details").removeValue()
+                        birdRef.child("Lost Date").removeValue()
+                        nurseryRef.child("Lost Details").removeValue()
+                        nurseryRef.child("Lost Date").removeValue()
+                        birdRef.child("Exchange Reason").removeValue()
+                        birdRef.child("Exchange Date").removeValue()
+                        birdRef.child("Exchange Contact").removeValue()
+                        nurseryRef.child("Exchange Reason").removeValue()
+                        nurseryRef.child("Exchange Date").removeValue()
+                        nurseryRef.child("Exchange Contact").removeValue()
+                    }
+                    else {
+                        val data: Map<String, Any?> = hashMapOf(
+                            "Legband" to birdData.legband,
+                            "Identifier" to birdData.identifier,
+                            "Gender" to birdData.gender,
+                            "Mutation1" to mutation1,
+                            "Mutation2" to mutation2,
+                            "Mutation3" to mutation3,
+                            "Mutation4" to mutation4,
+                            "Mutation5" to mutation5,
+                            "Mutation6" to mutation6,
+                            /*"Date of Banding" to birdData.dateOfBanding,*/
+                            "Date of Birth" to birdData.dateOfBirth,
+                            "Status" to birdData.status,
+                            "Cage" to birdData.forSaleCage,
+                            "Requested Price" to birdData.reqPrice,
+                            "Nursery Key" to nurserykey,
+                            "Bird Key" to birdKey,
+                            "CageKey" to cageKeyValue,
+                            "Cage Bird Key" to CageBirdKey
+
+
+                        )
+                        birdRef.updateChildren(data)
+                        nurseryRef.updateChildren(data)
+                        if (!cageKeyValue.isNullOrEmpty()) {
+
+                            cageRef.updateChildren(data)
+                            delcageRef.removeValue()
+                        }
+                        if (!birdSoldid.isNullOrEmpty()) {
+                            soldRef.removeValue()
+                            birdRef.child("Sale Contact").removeValue()
+                            birdRef.child("Sold Date").removeValue()
+                            birdRef.child("Sold Id").removeValue()
+                            birdRef.child("Sale Price").removeValue()
+                            nurseryRef.child("Sale Contact").removeValue()
+                            nurseryRef.child("Sold Date").removeValue()
+                            nurseryRef.child("Sold Id").removeValue()
+                            nurseryRef.child("Sale Price").removeValue()
+                        }
+                        if (!birdComment.isNullOrEmpty()) {
+                            birdRef.child("Comment").removeValue()
+                            nurseryRef.child("Comment").removeValue()
+                        }
+                        birdRef.child("Requested Price").removeValue()
+                        nurseryRef.child("Requested Price").removeValue()
+                        birdRef.child("Death Date").removeValue()
+                        nurseryRef.child("Date Reason").removeValue()
+                        nurseryRef.child("Death Date").removeValue()
+                        birdRef.child("Date Reason").removeValue()
+                        birdRef.child("Donated Date").removeValue()
+                        nurseryRef.child("Donated Contact").removeValue()
+                        nurseryRef.child("Donated Date").removeValue()
+                        birdRef.child("Date Contact").removeValue()
+                        birdRef.child("Lost Details").removeValue()
+                        birdRef.child("Lost Date").removeValue()
+                        nurseryRef.child("Lost Details").removeValue()
+                        nurseryRef.child("Lost Date").removeValue()
+                        birdRef.child("Exchange Reason").removeValue()
+                        birdRef.child("Exchange Date").removeValue()
+                        birdRef.child("Exchange Contact").removeValue()
+                        nurseryRef.child("Exchange Reason").removeValue()
+                        nurseryRef.child("Exchange Date").removeValue()
+                        nurseryRef.child("Exchange Contact").removeValue()
+                    }
                 } else {
                     return
                 }
