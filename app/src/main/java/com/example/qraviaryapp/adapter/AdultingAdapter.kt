@@ -187,7 +187,7 @@ class AdultingAdapter(
 
             if (progressPercentage >= 100) {
                 progressPercentage = 100
-                sendNotification(bird, context)
+//                sendNotification(bird, context)
 
                 val statusRef =
                     db.child("Users").child("ID: ${currentUserId.toString()}").child("Cages")
@@ -200,6 +200,7 @@ class AdultingAdapter(
                 holder.chickImg.setImageResource(R.drawable.hatchcolor)
                 holder.teenImg.setImageResource(R.drawable.chickcolor)
                 holder.adultImg.setImageResource(R.drawable.adultcolor)
+
             }
             holder.tvpercentage.text = "$progressPercentage%"
 
@@ -301,7 +302,9 @@ class AdultingAdapter(
             holder.tvLegband.text = bird.legband
         }
 
+
     }
+
 }
 
 private fun sendNotification(bird: BirdData, context: Context) {
