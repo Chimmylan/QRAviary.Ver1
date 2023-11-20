@@ -148,6 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Comment"
+                    android:visibility="gone"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -156,6 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:counterEnabled="true"
+                    android:visibility="gone"
                     app:counterMaxLength="50"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="#5A0808"

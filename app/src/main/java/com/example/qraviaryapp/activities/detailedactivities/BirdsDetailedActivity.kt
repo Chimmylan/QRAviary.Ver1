@@ -297,7 +297,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
 
         Log.d(TAG, "NewFatherKey: $BirdFatherKey")
-
+        Log.d(TAG, "NurseryKEY: $NurseryKey")
 
         fragmentAdapter.addFragment(birdBasicFragment, "BASIC")
         fragmentAdapter.addFragment(birdOriginFragment, "RELATIONSHIPS")

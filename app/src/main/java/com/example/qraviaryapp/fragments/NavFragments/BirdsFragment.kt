@@ -209,6 +209,7 @@ class BirdsFragment : Fragment() {
                 val mainPic = gallery.children.firstOrNull()?.value.toString()
 //                val imageUrl = "$mainPic?timestamp=${System.currentTimeMillis()}"
                 val flightKey = itemSnapshot.child("Flight Key").value.toString()
+                val nurseryKey = itemSnapshot.child("Nursery Key").value.toString()
                 val birdKey = itemSnapshot.key
                 val LegbandValue = itemSnapshot.child("Legband").value
                 val identifierValue = itemSnapshot.child("Identifier").value
@@ -381,6 +382,7 @@ class BirdsFragment : Fragment() {
                 data.birdCount = birdCount.toString()
                 data.birdKey = birdKey
                 data.flightKey = flightKey
+                data.nurseryKey = nurseryKey
                 data.legband = legband
                 data.identifier = identifier
                 data.gender = gender

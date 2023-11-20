@@ -548,8 +548,8 @@ class EditOriginFragment : Fragment() {
                         "Bird Key" to birdId
                     )
 
-                    purchaseRef.updateChildren(fatherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
+//                    purchaseRef.updateChildren(fatherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
 //                fatherRef.updateChildren(fatherRefdata)
 
 
@@ -592,7 +592,7 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -602,9 +602,9 @@ class EditOriginFragment : Fragment() {
                         "MotherKey" to birdMotherKey
                     )
 
-                    purchaseRef.updateChildren(fatherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
-                    fatherRef.updateChildren(fatherRefdata)
+//                    purchaseRef.updateChildren(fatherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
+//                    fatherRef.updateChildren(fatherRefdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
@@ -645,7 +645,7 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -654,9 +654,9 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    purchaseRef.updateChildren(motherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
+//                    purchaseRef.updateChildren(motherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!!")
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -696,8 +696,8 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -706,10 +706,10 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    purchaseRef.updateChildren(motherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
-                    fatherRef.updateChildren(motherRefdata)
+//                    purchaseRef.updateChildren(motherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
+//                    motherRef.updateChildren(motherRefdata)
+//                    fatherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
 
@@ -728,9 +728,9 @@ class EditOriginFragment : Fragment() {
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {
                     soldidref.updateChildren(parentdata)
                 }
-                purchaseRef.updateChildren(parentdata)
-                relationshipRef.updateChildren(parentdata)
-                nurseryRelationshipRef.updateChildren(parentdata)
+//                purchaseRef.updateChildren(parentdata)
+//                relationshipRef.updateChildren(parentdata)
+//                nurseryRelationshipRef.updateChildren(parentdata)
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Breeder Contact" to birdData.breederContact,
@@ -738,8 +738,8 @@ class EditOriginFragment : Fragment() {
                     "Bought Date" to birdData.boughtDate,
                     "Purchase Id" to purchasekey
                 )
-                birdRef.updateChildren(data)
-                nurseryRef.updateChildren(data)
+//                birdRef.updateChildren(data)
+//                nurseryRef.updateChildren(data)
             } else {
                 return
             }
@@ -786,7 +786,7 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -795,7 +795,7 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    fatherRef.updateChildren(fatherRefdata)
+//                    fatherRef.updateChildren(fatherRefdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
@@ -833,7 +833,7 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -842,7 +842,7 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    motherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!!")
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -879,8 +879,8 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -889,8 +889,8 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    motherRef.updateChildren(motherRefdata)
-                    fatherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
+//                    fatherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
                 val parentdata: Map<String, Any?> = hashMapOf(
@@ -902,21 +902,21 @@ class EditOriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(parentdata)
-                }
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                }
-                relationshipRef.updateChildren(parentdata)
-                nurseryRelationshipRef.updateChildren(parentdata)
+//                if (!cageKeyValue.isNullOrEmpty()) {
+//                    cageReference.updateChildren(parentdata)
+//                }
+//                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+//                    soldidref.updateChildren(parentdata)
+//                }
+//                relationshipRef.updateChildren(parentdata)
+//                nurseryRelationshipRef.updateChildren(parentdata)
 
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Other Breeder Contact" to birdData.otOtherContact
                 )
-                birdRef.updateChildren(data)
-                nurseryRef.updateChildren(data)
+//                birdRef.updateChildren(data)
+//                nurseryRef.updateChildren(data)
 
             } else {
                 return
@@ -963,7 +963,7 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -972,7 +972,7 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    fatherRef.updateChildren(fatherRefdata)
+//                    fatherRef.updateChildren(fatherRefdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
@@ -1010,7 +1010,7 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1019,7 +1019,7 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    motherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!!")
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -1056,8 +1056,8 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1066,8 +1066,8 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "MotherKey" to birdMotherKey
                     )
-                    motherRef.updateChildren(motherRefdata)
-                    fatherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
+//                    fatherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
                 val data: Map<String, Any?> = hashMapOf(
@@ -1078,14 +1078,14 @@ class EditOriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(data)
-                }
-                relationshipRef.updateChildren(data)
-                nurseryRelationshipRef.updateChildren(data)
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(data)
-                }
+//                if (!cageKeyValue.isNullOrEmpty()) {
+//                    cageReference.updateChildren(data)
+//                }
+//                relationshipRef.updateChildren(data)
+//                nurseryRelationshipRef.updateChildren(data)
+//                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+//                    soldidref.updateChildren(data)
+//                }
             } else {
                 return
             }
@@ -1303,8 +1303,8 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
-                    purchaseRef.updateChildren(fatherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
+//                    purchaseRef.updateChildren(fatherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
 //                fatherRef.updateChildren(fatherRefdata)
                 } else if (btnFather.text != "None" && btnMother.text == "None") {
                     // Update descendantsFatherRef
@@ -1376,8 +1376,8 @@ class EditOriginFragment : Fragment() {
                         }
 
                     })
-                    purchaseRef.updateChildren(fatherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
+//                    purchaseRef.updateChildren(fatherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
                     Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
                     // Update descendantMotherRef
@@ -1419,7 +1419,7 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1429,9 +1429,9 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
-                    purchaseRef.updateChildren(motherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
+//                    purchaseRef.updateChildren(motherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!!")
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -1472,7 +1472,7 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
 
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
@@ -1500,9 +1500,9 @@ class EditOriginFragment : Fragment() {
                         }
 
                     })
-                    purchaseRef.updateChildren(motherRefdata)
-                    purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
+//                    purchaseRef.updateChildren(motherRefdata)
+//                    purchasesRef.updateChildren(descendantdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
 
@@ -1519,9 +1519,9 @@ class EditOriginFragment : Fragment() {
                     cageReference.updateChildren(parentdata)
                 }
 
-                purchaseRef.updateChildren(parentdata)
-                relationshipRef.updateChildren(parentdata)
-                nurseryRelationshipRef.updateChildren(parentdata)
+//                purchaseRef.updateChildren(parentdata)
+//                relationshipRef.updateChildren(parentdata)
+//                nurseryRelationshipRef.updateChildren(parentdata)
 
                 val data: Map<String, Any?> = hashMapOf(
 
@@ -1535,8 +1535,8 @@ class EditOriginFragment : Fragment() {
                     soldReference.updateChildren(data)
                 }
 
-                birdRef.updateChildren(data)
-                nurseryRef.updateChildren(data)
+//                birdRef.updateChildren(data)
+//                nurseryRef.updateChildren(data)
             } else {
                 return
             }
@@ -1584,7 +1584,7 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantsFatherRef.updateChildren(descendantdata)
+//                        descendantsFatherRef.updateChildren(descendantdata)
                         val fatherRefdata: Map<String, Any?> = hashMapOf(
                             "Father" to birdData.father,
                             "Mother" to birdData.mother,
@@ -1594,7 +1594,7 @@ class EditOriginFragment : Fragment() {
                             "BirdMotherKey" to birdBirdsMotherKey,
                             "Bird Key" to birdId
                         )
-                        fatherRef.updateChildren(fatherRefdata)
+//                        fatherRef.updateChildren(fatherRefdata)
                         Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                     }
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
@@ -1635,7 +1635,7 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantMotherRef.updateChildren(descendantdata)
+//                        descendantMotherRef.updateChildren(descendantdata)
                         val motherRefdata: Map<String, Any?> = hashMapOf(
                             "Father" to birdData.father,
                             "Mother" to birdData.mother,
@@ -1645,7 +1645,7 @@ class EditOriginFragment : Fragment() {
                             "BirdMotherKey" to birdBirdsMotherKey,
                             "Bird Key" to birdId
                         )
-                        motherRef.updateChildren(motherRefdata)
+//                        motherRef.updateChildren(motherRefdata)
                         Log.d(TAG, "MotherRef!!")
                     }
                 } else {
@@ -1684,8 +1684,8 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1695,8 +1695,8 @@ class EditOriginFragment : Fragment() {
                         "BirdMotherKey" to birdBirdsMotherKey,
                         "Bird Key" to birdId
                     )
-                    fatherRef.updateChildren(motherRefdata)
-                    motherRef.updateChildren(motherRefdata)
+//                    fatherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
 
@@ -1708,25 +1708,25 @@ class EditOriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(parentdata)
-                }
-
-
-                relationshipRef.updateChildren(parentdata)
-                nurseryRelationshipRef.updateChildren(parentdata)
+//                if (!cageKeyValue.isNullOrEmpty()) {
+//                    cageReference.updateChildren(parentdata)
+//                }
+//
+//
+//                relationshipRef.updateChildren(parentdata)
+//                nurseryRelationshipRef.updateChildren(parentdata)
 
                 val data: Map<String, Any?> = hashMapOf(
 
                     "Other Breeder Contact" to birdData.otOtherContact
                 )
 
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(parentdata)
-                    soldReference.updateChildren(data)
-                }
-                birdRef.updateChildren(data)
-                nurseryRef.updateChildren(data)
+//                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+//                    soldidref.updateChildren(parentdata)
+//                    soldReference.updateChildren(data)
+//                }
+//                birdRef.updateChildren(data)
+//                nurseryRef.updateChildren(data)
 
 
             } else {
@@ -1745,14 +1745,14 @@ class EditOriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(data)
-                }
-                relationshipRef.updateChildren(data)
-                nurseryRelationshipRef.updateChildren(data)
-                if (soldId != "null" && !soldId.isNullOrEmpty()) {
-                    soldidref.updateChildren(data)
-                }
+//                if (!cageKeyValue.isNullOrEmpty()) {
+//                    cageReference.updateChildren(data)
+//                }
+//                relationshipRef.updateChildren(data)
+//                nurseryRelationshipRef.updateChildren(data)
+//                if (soldId != "null" && !soldId.isNullOrEmpty()) {
+//                    soldidref.updateChildren(data)
+//                }
                 if (btnFather.text == "None" && btnMother.text == "None") {
                     Log.d(TAG, "NONEEE")
                 } else if (btnFather.text != "None" && btnMother.text == "None") {
@@ -1792,7 +1792,7 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantsFatherRef.updateChildren(descendantdata)
+//                        descendantsFatherRef.updateChildren(descendantdata)
                         val fatherRefdata: Map<String, Any?> = hashMapOf(
                             "Father" to birdData.father,
                             "Mother" to birdData.mother,
@@ -1802,7 +1802,7 @@ class EditOriginFragment : Fragment() {
                             "BirdMotherKey" to birdBirdsMotherKey,
                             "Bird Key" to birdId
                         )
-                        fatherRef.updateChildren(fatherRefdata)
+//                        fatherRef.updateChildren(fatherRefdata)
                         Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                     }
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
@@ -1843,7 +1843,7 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantMotherRef.updateChildren(descendantdata)
+//                        descendantMotherRef.updateChildren(descendantdata)
                         val motherRefdata: Map<String, Any?> = hashMapOf(
                             "Father" to birdData.father,
                             "Mother" to birdData.mother,
@@ -1853,7 +1853,7 @@ class EditOriginFragment : Fragment() {
                             "BirdMotherKey" to birdBirdsMotherKey,
                             "Bird Key" to birdId
                         )
-                        motherRef.updateChildren(motherRefdata)
+//                        motherRef.updateChildren(motherRefdata)
                         Log.d(TAG, "MotherRef!!")
                     }
                 } else {
@@ -1892,8 +1892,8 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
+//                    descendantMotherRef.updateChildren(descendantdata)
+//                    descendantsFatherRef.updateChildren(descendantdata)
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1904,8 +1904,8 @@ class EditOriginFragment : Fragment() {
                         "Bird Key" to birdId
                     )
 
-                    fatherRef.updateChildren(motherRefdata)
-                    motherRef.updateChildren(motherRefdata)
+//                    fatherRef.updateChildren(motherRefdata)
+//                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
             } else {
