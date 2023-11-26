@@ -44,6 +44,9 @@
         android:theme="@style/Theme.QRAviaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.detailedactivities.PreviousClutchedDetailedActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.detailedactivities.MoveEggCageActivity"
             android:exported="false" />
         <activity

@@ -1,48 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@color/bottom_nav_background"
-    tools:context=".fragments.Pairs.ClutchesFragment">
+    tools:context=".activities.detailedactivities.ClutchesDetailedActivity">
 
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeToRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvBirdCount"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:background="@color/totals"
-                    android:gravity="center"
-                    android:text=" "
-                    android:textColor="@color/black_white"
-                    android:textSize="16sp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tvBirdCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:background="@color/totals"
+                        android:textColor="@color/black_white"
+                        android:gravity="center"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- Add your content here -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false"
-                        android:scrollbarStyle="outsideInset" />
+                        android:scrollbars="none"/>
 
                 </LinearLayout>
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ProgressBar
         android:id="@+id/loadingProgressBar"
@@ -60,6 +74,5 @@
         android:layout_marginBottom="50dp"
         app:backgroundTint="@color/fab"
         app:srcCompat="@drawable/ic_add"
-        app:tint="@color/black_white"
         tools:ignore="SpeakableTextPresentCheck" />
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
