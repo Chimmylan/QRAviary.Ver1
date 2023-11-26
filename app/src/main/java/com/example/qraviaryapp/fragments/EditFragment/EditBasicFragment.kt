@@ -1375,7 +1375,6 @@ class EditBasicFragment : Fragment() {
 
                     if (!cageKeyValue.isNullOrEmpty()) {
                         cageRef.updateChildren(data)
-                        delcageRef.removeValue()
                     }
                     if (!birdSoldid.isNullOrEmpty()) {
                         soldRef.removeValue()
