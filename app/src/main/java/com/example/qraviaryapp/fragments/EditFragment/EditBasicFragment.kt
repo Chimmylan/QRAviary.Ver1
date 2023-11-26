@@ -1137,14 +1137,20 @@ class EditBasicFragment : Fragment() {
 
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
-        val nurseryRef =  dbase.child("Users").child("ID: $userId").child("Nursery Birds").child(nurserykey.toString())
-        val delcageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(oldcageKeyValue.toString()).child("Birds")
-            .child(CageBirdKey.toString())
-        val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(cageKeyValue.toString()).child("Birds")
-            .child(CageBirdKey.toString())
-        val soldRef = dbase.child("Users").child("ID: $userId").child("Sold Items").child(birdSoldid.toString())
+        val nurseryRef = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
+            .child(nurserykey.toString())
+        val delcageRef =
+            dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages")
+                .child(oldcageKeyValue.toString()).child("Birds")
+                .child(CageBirdKey.toString())
+        val cageRef =
+            dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages")
+                .child(cageKeyValue.toString()).child("Birds")
+                .child(CageBirdKey.toString())
+        val soldRef = dbase.child("Users").child("ID: $userId").child("Sold Items")
+            .child(birdSoldid.toString())
         val PurchaseRef = dbase.child("Users").child("ID: $userId").child("Purchase Items")
-        val birdDescendants = dbase.child("Users").child("ID: $userId").child("Pairs").child("Descendants")
+        val birdDescendants = dbase.child("Users").child("ID: $userId").child("Pairs")
 
         val args = Bundle()
 
@@ -1237,8 +1243,9 @@ class EditBasicFragment : Fragment() {
 
         if (validInputs) {
             if (availableLayout.visibility == View.VISIBLE) {
-                if (CageBirdKey.isNullOrEmpty() || CageBirdKey == "null"){
-                    val cageItem = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages").child(cageKeyValue.toString()).child("Birds").push()
+                if (CageBirdKey.isNullOrEmpty() || CageBirdKey == "null") {
+                    val cageItem = dbase.child("Users").child("ID: $userId").child("Cages")
+                        .child("Nursery Cages").child(cageKeyValue.toString()).child("Birds").push()
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
                         "Identifier" to birdData.identifier,
@@ -1263,6 +1270,28 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.updateChildren(data)
                     cageItem.updateChildren(data)
                     delcageRef.removeValue()
+
+                    //
+                    birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (pairs in snapshot.children) {//loop through paires
+                                val desc = pairs.child("Descendants")
+
+                                for (descendants in desc.children) {
+                                    Log.d(TAG, "Desc" + descendants.key.toString())
+                                    if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                        Log.d(TAG, "Descendants" + descendants.key.toString())
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+                    //
 
                     if (!birdSoldid.isNullOrEmpty()) {
                         soldRef.removeValue()
@@ -1299,8 +1328,7 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Exchange Reason").removeValue()
                     nurseryRef.child("Exchange Date").removeValue()
                     nurseryRef.child("Exchange Contact").removeValue()
-                }
-                else {
+                } else {
                     val data: Map<String, Any?> = hashMapOf(
                         "Legband" to birdData.legband,
                         "Identifier" to birdData.identifier,
@@ -1323,6 +1351,28 @@ class EditBasicFragment : Fragment() {
 
                     birdRef.updateChildren(data)
                     nurseryRef.updateChildren(data)
+
+                    //descRefPairRef
+                    birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (pairs in snapshot.children) {//loop through paires
+                                val desc = pairs.child("Descendants")
+
+                                for (descendants in desc.children) {
+                                    Log.d(TAG, "Desc" + descendants.key.toString())
+                                    if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+
                     if (!cageKeyValue.isNullOrEmpty()) {
                         cageRef.updateChildren(data)
                         delcageRef.removeValue()
@@ -1394,8 +1444,31 @@ class EditBasicFragment : Fragment() {
                         )
                         birdRef.updateChildren(data)
                         nurseryRef.updateChildren(data)
-                            cageItem.updateChildren(data)
-                            delcageRef.removeValue()
+                        cageItem.updateChildren(data)
+                        delcageRef.removeValue()
+
+                        //descRefPairRef
+                        birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (pairs in snapshot.children) {//loop through paires
+                                    val desc = pairs.child("Descendants")
+
+                                    for (descendants in desc.children) {
+                                        Log.d(TAG, "Desc" + descendants.key.toString())
+                                        if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                            descendants.ref.updateChildren(data)
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
+
                         if (!birdSoldid.isNullOrEmpty()) {
                             soldRef.removeValue()
                             birdRef.child("Sale Contact").removeValue()
@@ -1431,8 +1504,7 @@ class EditBasicFragment : Fragment() {
                         nurseryRef.child("Exchange Reason").removeValue()
                         nurseryRef.child("Exchange Date").removeValue()
                         nurseryRef.child("Exchange Contact").removeValue()
-                    }
-                    else {
+                    } else {
                         val data: Map<String, Any?> = hashMapOf(
                             "Legband" to birdData.legband,
                             "Identifier" to birdData.identifier,
@@ -1455,6 +1527,26 @@ class EditBasicFragment : Fragment() {
 
 
                         )
+                        //descRefPairRef
+                        birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (pairs in snapshot.children) {//loop through paires
+                                    val desc = pairs.child("Descendants")
+
+                                    for (descendants in desc.children) {
+                                        Log.d(TAG, "Desc" + descendants.key.toString())
+                                        if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                            descendants.ref.updateChildren(data)
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
                         birdRef.updateChildren(data)
                         nurseryRef.updateChildren(data)
                         if (!cageKeyValue.isNullOrEmpty()) {
@@ -1547,6 +1639,28 @@ class EditBasicFragment : Fragment() {
                         birdRef.child("Cage").setValue("")
                         nurseryRef.child("Cage").setValue("")
                         Log.d(TAG, "IF")
+
+                        //descRefPairRef
+                        birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (pairs in snapshot.children) {//loop through paires
+                                    val desc = pairs.child("Descendants")
+
+                                    for (descendants in desc.children) {
+                                        Log.d(TAG, "Desc" + descendants.key.toString())
+                                        if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                            descendants.ref.updateChildren(data)
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
                     } else {
                         Log.d(TAG, "ELSE")
                         val date = inputDateFormat.parse(dataSoldSaleDate)
@@ -1578,6 +1692,29 @@ class EditBasicFragment : Fragment() {
                             "Month" to month.toFloat(),
                             "Year" to year.toFloat()
                         )
+
+
+                        //descRefPairRef
+                        birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (pairs in snapshot.children) {//loop through paires
+                                    val desc = pairs.child("Descendants")
+
+                                    for (descendants in desc.children) {
+                                        Log.d(TAG, "Desc" + descendants.key.toString())
+                                        if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                            descendants.ref.updateChildren(data)
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
                         val solddata: Map<String, Any?> = hashMapOf(
                             "Bird Id" to birdId
                         )
@@ -1614,43 +1751,64 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Exchange Date").removeValue()
                     nurseryRef.child("Exchange Contact").removeValue()
                 }
-                } else if (deceasedLayout.visibility == View.VISIBLE) {
-                    val data: Map<String, Any?> = hashMapOf(
-                        "Legband" to birdData.legband,
-                        "Identifier" to birdData.identifier,
-                        "Gender" to birdData.gender,
-                        "Mutation1" to mutation1,
-                        "Mutation2" to mutation2,
-                        "Mutation3" to mutation3,
-                        "Mutation4" to mutation4,
-                        "Mutation5" to mutation5,
-                        "Mutation6" to mutation6,
-                        /*    "Date of Banding" to birdData.dateOfBanding,*/
-                        "Date of Birth" to birdData.dateOfBirth,
-                        "Status" to birdData.status,
-                        "Death Date" to birdData.deathDate,
-                        "Death Reason" to birdData.deathReason,
-                        "Nursery Key" to nurserykey,
-                        "Bird Key" to birdKey
-                    )
+            } else if (deceasedLayout.visibility == View.VISIBLE) {
+                val data: Map<String, Any?> = hashMapOf(
+                    "Legband" to birdData.legband,
+                    "Identifier" to birdData.identifier,
+                    "Gender" to birdData.gender,
+                    "Mutation1" to mutation1,
+                    "Mutation2" to mutation2,
+                    "Mutation3" to mutation3,
+                    "Mutation4" to mutation4,
+                    "Mutation5" to mutation5,
+                    "Mutation6" to mutation6,
+                    /*    "Date of Banding" to birdData.dateOfBanding,*/
+                    "Date of Birth" to birdData.dateOfBirth,
+                    "Status" to birdData.status,
+                    "Death Date" to birdData.deathDate,
+                    "Death Reason" to birdData.deathReason,
+                    "Nursery Key" to nurserykey,
+                    "Bird Key" to birdKey
+                )
 
-                    birdRef.updateChildren(data)
-                    nurseryRef.updateChildren(data)
-                    if (!birdSoldid.isNullOrEmpty()) {
-                        soldRef.removeValue()
-                        birdRef.child("Sale Contact").removeValue()
-                        birdRef.child("Sold Date").removeValue()
-                        birdRef.child("Sold Id").removeValue()
-                        birdRef.child("Sale Price").removeValue()
-                        nurseryRef.child("Sale Contact").removeValue()
-                        nurseryRef.child("Sold Date").removeValue()
-                        nurseryRef.child("Sold Id").removeValue()
-                        nurseryRef.child("Sale Price").removeValue()
+                //descRefPairRef
+                birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pairs in snapshot.children) {//loop through paires
+                            val desc = pairs.child("Descendants")
+
+                            for (descendants in desc.children) {
+                                Log.d(TAG, "Desc" + descendants.key.toString())
+                                if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                }
+                            }
+                        }
                     }
-                    if(!birdComment.isNullOrEmpty()) {
-                        birdRef.child("Comment").removeValue()
-                        nurseryRef.child("Comment").removeValue()
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
                     }
+
+                })
+
+                birdRef.updateChildren(data)
+                nurseryRef.updateChildren(data)
+                if (!birdSoldid.isNullOrEmpty()) {
+                    soldRef.removeValue()
+                    birdRef.child("Sale Contact").removeValue()
+                    birdRef.child("Sold Date").removeValue()
+                    birdRef.child("Sold Id").removeValue()
+                    birdRef.child("Sale Price").removeValue()
+                    nurseryRef.child("Sale Contact").removeValue()
+                    nurseryRef.child("Sold Date").removeValue()
+                    nurseryRef.child("Sold Id").removeValue()
+                    nurseryRef.child("Sale Price").removeValue()
+                }
+                if (!birdComment.isNullOrEmpty()) {
+                    birdRef.child("Comment").removeValue()
+                    nurseryRef.child("Comment").removeValue()
+                }
                 birdRef.child("Requested Price").removeValue()
                 nurseryRef.child("Requested Price").removeValue()
 
@@ -1690,6 +1848,27 @@ class EditBasicFragment : Fragment() {
 
                 )
 
+                //descRefPairRef
+                birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pairs in snapshot.children) {//loop through paires
+                            val desc = pairs.child("Descendants")
+
+                            for (descendants in desc.children) {
+                                Log.d(TAG, "Desc" + descendants.key.toString())
+                                if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
                 if (!birdSoldid.isNullOrEmpty()) {
@@ -1704,7 +1883,7 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Sale Price").removeValue()
 
                 }
-                if(!birdComment.isNullOrEmpty()){
+                if (!birdComment.isNullOrEmpty()) {
                     birdRef.child("Comment").removeValue()
                     nurseryRef.child("Comment").removeValue()
                 }
@@ -1744,6 +1923,27 @@ class EditBasicFragment : Fragment() {
                     "Bird Key" to birdKey
                 )
 
+                //descRefPairRef
+                birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pairs in snapshot.children) {//loop through paires
+                            val desc = pairs.child("Descendants")
+
+                            for (descendants in desc.children) {
+                                Log.d(TAG, "Desc" + descendants.key.toString())
+                                if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
                 if (!birdSoldid.isNullOrEmpty()) {
@@ -1757,7 +1957,7 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Sold Id").removeValue()
                     nurseryRef.child("Sale Price").removeValue()
                 }
-                if(!birdComment.isNullOrEmpty()){
+                if (!birdComment.isNullOrEmpty()) {
                     birdRef.child("Comment").removeValue()
                     nurseryRef.child("Comment").removeValue()
                 }
@@ -1797,6 +1997,27 @@ class EditBasicFragment : Fragment() {
                     "Bird Key" to birdKey
                 )
 
+                //descRefPairRef
+                birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pairs in snapshot.children) {//loop through paires
+                            val desc = pairs.child("Descendants")
+
+                            for (descendants in desc.children) {
+                                Log.d(TAG, "Desc" + descendants.key.toString())
+                                if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
                 if (!birdSoldid.isNullOrEmpty()) {
@@ -1810,7 +2031,7 @@ class EditBasicFragment : Fragment() {
                     nurseryRef.child("Sold Id").removeValue()
                     nurseryRef.child("Sale Price").removeValue()
                 }
-                if(!birdComment.isNullOrEmpty()){
+                if (!birdComment.isNullOrEmpty()) {
                     birdRef.child("Comment").removeValue()
                     nurseryRef.child("Comment").removeValue()
                 }
@@ -1849,6 +2070,27 @@ class EditBasicFragment : Fragment() {
                     "Bird Key" to birdKey
                 )
 
+                //descRefPairRef
+                birdDescendants.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (pairs in snapshot.children) {//loop through paires
+                            val desc = pairs.child("Descendants")
+
+                            for (descendants in desc.children) {
+                                Log.d(TAG, "Desc" + descendants.key.toString())
+                                if (birdKey == descendants.child("Bird Key").value.toString()) {
+                                    descendants.ref.updateChildren(data)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
                 birdRef.updateChildren(data)
                 nurseryRef.updateChildren(data)
                 if (!birdSoldid.isNullOrEmpty()) {
@@ -1873,7 +2115,7 @@ class EditBasicFragment : Fragment() {
                 nurseryRef.child("Donated Date").removeValue()
                 birdRef.child("Date Contact").removeValue()
 
-               birdRef.child("Lost Details").removeValue()
+                birdRef.child("Lost Details").removeValue()
                 birdRef.child("Lost Date").removeValue()
                 nurseryRef.child("Lost Details").removeValue()
                 nurseryRef.child("Lost Date").removeValue()
