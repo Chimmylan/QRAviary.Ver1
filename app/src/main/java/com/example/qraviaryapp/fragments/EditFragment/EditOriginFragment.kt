@@ -95,6 +95,9 @@ class EditOriginFragment : Fragment() {
     private var fatherKey: String? = null
     private var motherKey: String? = null
 
+    private var cageKey: String? = null
+    private var cageBirdKey: String? = null
+
     private var boughtFormattedDate: String? = null
     private lateinit var datePickerDialogBought: DatePickerDialog
 
@@ -147,7 +150,7 @@ class EditOriginFragment : Fragment() {
         note = view.findViewById<TextView>(R.id.note)
         birdKey = arguments?.getString("BirdKey")
         flightKey = arguments?.getString("FlightKey")
-        nuerseryKey = arguments?.getString("NureseryKey")
+        nuerseryKey = arguments?.getString("NurseryKey")
         birdGender = arguments?.getString("BirdGender")
         birdLegband = arguments?.getString("BirdLegband")
         birdStatus = arguments?.getString("BirdStatus")
@@ -181,6 +184,8 @@ class EditOriginFragment : Fragment() {
         birdMutation6 = arguments?.getString("BirdMutation6")
         fatherKey = arguments?.getString("BirdFatherKey")
         motherKey = arguments?.getString("BirdMotherKey")
+        cageKey = arguments?.getString("CageKey")
+        cageBirdKey = arguments?.getString("CageBirdKey")
 
         boughtLayout.visibility = View.GONE
         otLayout.visibility = View.GONE
@@ -196,7 +201,7 @@ class EditOriginFragment : Fragment() {
             startActivityForResult(i, requestCode)
         }
 
-
+        Log.d(TAG, "Cages "+cageKey + cageBirdKey)
 
         initDatePickers()
         showDatePickerDialog(requireContext(), boughtDateBtn, datePickerDialogBought)
@@ -291,7 +296,7 @@ class EditOriginFragment : Fragment() {
                 boughtDateBtn.text = arguments?.getString("BirdBoughtOn")
             }
         }
-        if(birdBreeder != "null") {
+        if (birdBreeder != "null") {
             if (arguments?.getString("BirdOtherOrigin")?.isNotEmpty() == true) {
                 radioButtonOther.isChecked = true
                 etOtBreederContact.setText(arguments?.getString("BirdOtherOrigin"))
@@ -432,13 +437,9 @@ class EditOriginFragment : Fragment() {
 
 
 
-        if (!cageKeyValue.isNullOrEmpty()) {
-            cageReference = cageKeyValue?.let {
-                dbase.child("Users").child("ID: $userId").child("Cages")
-                    .child("Nursery Cages").child(it).child("Birds").child(cageBirdKey.toString())
-                    .child("Parents")
-            }!!
-        }
+        val cageRef = dbase.child("Users").child("ID: $userId").child("Cages").child("Nursery Cages")
+            .child(cageKey.toString()).child("Birds").child(cageBirdKey.toString()).child("Parents")
+
 
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
@@ -448,15 +449,11 @@ class EditOriginFragment : Fragment() {
 
         var nurseryRef = FirebaseDatabase.getInstance().reference
 
+        nurseryRef = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
+            .child(nuerseryKey.toString())
 
-        if (nuerseryKey != null) {
-            nurseryRef = dbase.child("Users").child("ID: $userId").child("Nursery Birds")
-                .child(birdKey.toString())
-        } else if (flightKey != null)
-            nurseryRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                .child(birdKey.toString())
 
-        Log.d(TAG, "RefKey " + flightKey + " " + nuerseryKey)
+
 
 
         val nurseryRelationshipRef = nurseryRef.child("Parents")
@@ -723,9 +720,9 @@ class EditOriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(parentdata)
-                }
+                //CageRefParentTODO
+                cageRef.updateChildren(parentdata)
+
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {
                     soldidref.updateChildren(parentdata)
                 }
@@ -903,9 +900,9 @@ class EditOriginFragment : Fragment() {
                     "MotherKey" to birdMotherKey
                 )
 
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(parentdata)
-                }
+               //TODOparentCage
+                cageRef.updateChildren(parentdata)
+
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {
                     soldidref.updateChildren(parentdata)
                 }
@@ -1079,9 +1076,10 @@ class EditOriginFragment : Fragment() {
                     "BirdMotherKey" to birdBirdsMotherKey,
                     "MotherKey" to birdMotherKey
                 )
-                if (!cageKeyValue.isNullOrEmpty()) {
-                    cageReference.updateChildren(data)
-                }
+
+                //cageParentTODO
+                cageRef.updateChildren(data)
+
                 relationshipRef.updateChildren(data)
                 nurseryRelationshipRef.updateChildren(data)
                 if (soldId != "null" && !soldId.isNullOrEmpty()) {
@@ -1213,11 +1211,14 @@ class EditOriginFragment : Fragment() {
         val birdRef =
             dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString())
         val relationshipRef =
-            dbase.child("Users").child("ID: $userId").child("Birds").child(birdId).child("Parents")
+            dbase.child("Users").child("ID: $userId").child("Birds").child(birdKey.toString()).child("Parents")
 
         val nurseryRef =
             dbase.child("Users").child("ID: $userId").child("Flight Birds")
                 .child(flightKey.toString())
+
+
+
         val nurseryRelationshipRef = nurseryRef.child("Parents")
 //        val descendantsRef = dbase.child("Users").child("ID: $userId").child("Flight Birds")
 //            .child(birdFatherKey.toString()).child("Descendants").push()
@@ -1349,7 +1350,6 @@ class EditOriginFragment : Fragment() {
                     )
 
 
-
                     val fatherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -1363,8 +1363,8 @@ class EditOriginFragment : Fragment() {
                     descendantsFatherRef.addListenerForSingleValueEvent(object :
                         ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            for (bird in snapshot.children){
-                                if (bird.child("ChildKey").value == birdKey.toString()){
+                            for (bird in snapshot.children) {
+                                if (bird.child("ChildKey").value == birdKey.toString()) {
                                     bird.ref.updateChildren(descendantdata)
                                     fatherRef.updateChildren(fatherRefdata)
 
@@ -1487,8 +1487,8 @@ class EditOriginFragment : Fragment() {
                     descendantsFatherRef.addListenerForSingleValueEvent(object :
                         ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            for (bird in snapshot.children){
-                                if (bird.child("ChildKey").value == birdKey.toString()){
+                            for (bird in snapshot.children) {
+                                if (bird.child("ChildKey").value == birdKey.toString()) {
                                     bird.ref.updateChildren(descendantdata)
                                     fatherRef.updateChildren(motherRefdata)
 

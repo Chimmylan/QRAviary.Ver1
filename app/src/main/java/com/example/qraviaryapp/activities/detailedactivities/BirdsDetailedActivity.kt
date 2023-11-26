@@ -195,7 +195,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         val cageBirdKey = bundle?.getString("CageBirdKey")
 
 
-        Log.d(TAG, "BIRDKEY NEW $otOhter" + cageKeyValue)
+        Log.d(TAG, "BIRDKEY NEW $BirdFatherBirdKey" + BirdMotherBirdKey)
 
         Clutch?.let { newBundle.putBoolean("Clutch", it) }
         newBundle.putString("CageBirdKey", cageBirdKey)

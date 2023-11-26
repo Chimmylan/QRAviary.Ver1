@@ -73,8 +73,10 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     private lateinit var BirdMutation6: String
     private lateinit var BirdFather: String
     private lateinit var BirdFatherKey: String
+    private lateinit var BirdFatherBirdKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+    private lateinit var BirdMotherBirdKey: String
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
@@ -151,14 +153,21 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         BirdMutation6 = bundle?.getString("BirdMutation6").toString()
         BirdFather = bundle?.getString("BirdFather").toString()
         BirdFatherKey = bundle?.getString("BirdFatherKey").toString()
+        BirdFatherBirdKey = bundle?.getString("BirdFatherBirdKey").toString()
         BirdMother= bundle?.getString("BirdMother").toString()
         BirdMotherKey= bundle?.getString("BirdMotherKey").toString()
+        BirdMotherBirdKey= bundle?.getString("BirdMotherBirdKey").toString()
         cageKeyValue = bundle?.getString("CageKey").toString()
         val otOther = bundle?.getString("BirdOtherOrigin").toString()
         val cageBirdKey =bundle?.getString("CageBirdKey")
         val soldid =bundle?.getString("SoldId")
         val flightType = bundle?.getString("FlightType").toString()
         val nurseryType = bundle?.getString("NurseryType").toString()
+        val clutch = bundle?.getBoolean("Clutch")
+
+        if (clutch != null) {
+            newBundle.putBoolean("Clutch", clutch)
+        }
 
         newBundle.putString("CageBirdKey", cageBirdKey)
         newBundle.putString("SoldId", soldid)
@@ -203,8 +212,10 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
         newBundle.putString("BirdMutation6", BirdMutation6)
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)
+        newBundle.putString("BirdFatherBirdKey", BirdFatherBirdKey)
         newBundle.putString("BirdMother", BirdMother)
         newBundle.putString("BirdMotherKey", BirdMotherKey)
+        newBundle.putString("BirdMotherBirdKey", BirdMotherBirdKey)
         newBundle.putBoolean("fromFlightListAdapter", fromFlightAdapter)
         newBundle.putBoolean("fromNurseryListAdapter", fromNurseryAdapter)
 
@@ -324,11 +335,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
                     } catch (e: NullPointerException) {
                         // Handle the exception if needed
-                        Toast.makeText(
-                            applicationContext,
-                            "Gender and Provenance in Origin tab must not be empty...",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Log.e(TAG, e.toString())
                     }
                 }
 
