@@ -229,6 +229,7 @@ class EditBasicFlightFragment : Fragment() {
     private var mutation6IncubatingDays: String? = null
     private var mutation6MaturingDays: String? = null
     private var CageBirdKey: String? = null
+    private var pairkey: String? = null
 
     private lateinit var cagescan: CardView
     private lateinit var cagescan1: CardView
@@ -335,6 +336,7 @@ class EditBasicFlightFragment : Fragment() {
         slash5 = view.findViewById(R.id.slash5)
 
         birdSoldid = arguments?.getString("SoldId")
+        pairkey = arguments?.getString("PairKey")
         birdfatherKey = arguments?.getString("BirdFatherBirdKey")
         birdmotherKey = arguments?.getString("BirdMotherBirdKey")
         CageBirdKey = arguments?.getString("CageBirdKey")

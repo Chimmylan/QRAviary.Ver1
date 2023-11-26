@@ -66,6 +66,7 @@ data class BirdData(
     var mother: String? = null,
     var motherKey: String? = null,
     var birdmotherKey: String? = null,
+    var pairKey: String? = null,
     var provenance: String? = null,
     var breederContact: String? = null,
     var buyPrice: String? = null,

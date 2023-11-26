@@ -291,7 +291,7 @@ class DescendantsFragment : Fragment() {
                 data.mother = mother
                 data.fatherKey = fatherKeyValue.toString()
                 data.motherKey = motherKeyValue.toString()
-
+                data.pairKey = pairKey
 
                 dataList.add(data)
 

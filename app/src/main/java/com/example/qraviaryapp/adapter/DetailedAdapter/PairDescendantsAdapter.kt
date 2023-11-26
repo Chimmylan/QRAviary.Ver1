@@ -176,6 +176,7 @@ class PairDescendantsViewHolder(itemView: View, private val dataList: MutableLis
             bundle.putString("BirdFatherKey", dataList[adapterPosition].fatherKey)
             bundle.putString("BirdMother", dataList[adapterPosition].mother)
             bundle.putString("BirdMotherKey", dataList[adapterPosition].motherKey)
+            bundle.putString("PairKey", dataList[adapterPosition].pairKey)
             val i = Intent(itemView.context, BirdsDetailedActivity::class.java)
             i.putExtras(bundle)
             itemView.context.startActivity(i)

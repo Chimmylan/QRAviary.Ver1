@@ -89,6 +89,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
     private lateinit var BirdFatherKey: String
     private lateinit var BirdMother: String
     private lateinit var BirdMotherKey: String
+    private lateinit var PairKey: String
     private var Clutch: Boolean? = null
     private lateinit var mAuth: FirebaseAuth
     private var flightType: String? = null
@@ -130,6 +131,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         Clutch = bundle?.getBoolean("Clutch")
         BirdId = bundle?.getString("BirdId").toString()//
         BirdLegband = bundle?.getString("BirdLegband").toString()//
+        PairKey = bundle?.getString("PairKey").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
         NurseryKey = bundle?.getString("NurseryKey").toString()
         FlightKey = bundle?.getString("FlightKey").toString()
@@ -247,7 +249,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         newBundle.putString("BirdMaturingDays4", BirdMaturingDays4)
         newBundle.putString("BirdMaturingDays5", BirdMaturingDays5)
         newBundle.putString("BirdMaturingDays6", BirdMaturingDays6)
-
+        newBundle.putString("PairKey", PairKey)
 
         newBundle.putString("BirdFather", BirdFather)
         newBundle.putString("BirdFatherKey", BirdFatherKey)

@@ -81,7 +81,7 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
-
+    private lateinit var pairkey: String
 
 
     private lateinit var databaseReference: DatabaseReference
@@ -120,6 +120,7 @@ class EditBirdFlightActivity : AppCompatActivity(), BirdDataListener {
         BirdId = bundle?.getString("BirdId").toString()
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
+        pairkey = bundle?.getString("PairKey").toString()
         val nureseryKey = bundle?.getString("NurseryKey")
         FlightKey = bundle?.getString("FlightKey").toString()
         BirdImage = bundle?.getString("BirdImage").toString()

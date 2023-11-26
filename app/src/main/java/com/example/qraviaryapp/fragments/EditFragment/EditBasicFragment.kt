@@ -1144,6 +1144,7 @@ class EditBasicFragment : Fragment() {
             .child(CageBirdKey.toString())
         val soldRef = dbase.child("Users").child("ID: $userId").child("Sold Items").child(birdSoldid.toString())
         val PurchaseRef = dbase.child("Users").child("ID: $userId").child("Purchase Items")
+        val birdDescendants = dbase.child("Users").child("ID: $userId").child("Pairs").child("Descendants")
 
         val args = Bundle()
 

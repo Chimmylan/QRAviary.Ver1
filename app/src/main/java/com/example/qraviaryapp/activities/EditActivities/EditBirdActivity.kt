@@ -78,7 +78,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
     private var fromFlightAdapter: Boolean = false
     private var fromNurseryAdapter: Boolean = false
     private lateinit var cageKeyValue: String
-
+    private lateinit var pairkey: String
 
 
     private lateinit var databaseReference: DatabaseReference
@@ -114,6 +114,7 @@ class EditBirdActivity : AppCompatActivity(), BirdDataListener {
 
         val bundle = intent.extras
         BirdId = bundle?.getString("BirdId").toString()
+
         BirdLegband = bundle?.getString("BirdLegband").toString()
         BirdKey = bundle?.getString("BirdKey").toString()
         val nureseryKey = bundle?.getString("NurseryKey")
