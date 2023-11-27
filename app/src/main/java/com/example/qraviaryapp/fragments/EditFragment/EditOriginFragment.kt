@@ -745,9 +745,9 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if(oldFatherKey != birdFatherKey){
+                                        if(oldMotherKey != birdMotherKey){
                                             val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                                 override fun onDataChange(snapshot: DataSnapshot) {
                                                     for (desc in snapshot.children){
@@ -782,9 +782,9 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if(oldFatherKey != birdFatherKey){
+                                if(oldMotherKey != birdMotherKey){
                                     val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children){
@@ -876,9 +876,9 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if(oldFatherKey != birdFatherKey){
+                                        if(oldMotherKey != birdMotherKey){
                                             val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                                 override fun onDataChange(snapshot: DataSnapshot) {
                                                     for (desc in snapshot.children){
@@ -913,9 +913,9 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if(oldFatherKey != birdFatherKey){
+                                if(oldMotherKey != birdMotherKey){
                                     val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children){
@@ -1246,9 +1246,9 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if(oldFatherKey != birdFatherKey){
+                                        if(oldMotherKey != birdMotherKey){
                                             val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                                 override fun onDataChange(snapshot: DataSnapshot) {
                                                     for (desc in snapshot.children){
@@ -1283,9 +1283,9 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if(oldFatherKey != birdFatherKey){
+                                if(oldMotherKey != birdMotherKey){
                                     val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children){
@@ -1364,9 +1364,9 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if(oldFatherKey != birdFatherKey){
+                                        if(oldMotherKey != birdMotherKey){
                                             val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                                 override fun onDataChange(snapshot: DataSnapshot) {
                                                     for (desc in snapshot.children){
@@ -1401,9 +1401,9 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if(oldFatherKey != birdFatherKey){
+                                if(oldMotherKey != birdMotherKey){
                                     val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener{
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children){
@@ -1723,10 +1723,10 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if (oldFatherKey != birdFatherKey) {
+                                        if (oldMotherKey != birdMotherKey) {
                                             val ref = dbase.child("Users").child("ID: $userId")
                                                 .child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object :
                                                 ValueEventListener {
                                                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -1762,10 +1762,10 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if (oldFatherKey != birdFatherKey) {
+                                if (oldMotherKey != birdMotherKey) {
                                     val ref = dbase.child("Users").child("ID: $userId")
                                         .child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener {
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children) {
@@ -1844,10 +1844,10 @@ class EditOriginFragment : Fragment() {
                                         )
                                         child.ref.child("Parents").updateChildren(motherRefdata)
                                         Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
-                                        if (oldFatherKey != birdFatherKey) {
+                                        if (oldMotherKey != birdMotherKey) {
                                             val ref = dbase.child("Users").child("ID: $userId")
                                                 .child("Flight Birds")
-                                                .child(oldFatherKey.toString()).child("Descendants")
+                                                .child(oldMotherKey.toString()).child("Descendants")
                                             ref.addListenerForSingleValueEvent(object :
                                                 ValueEventListener {
                                                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -1883,10 +1883,10 @@ class EditOriginFragment : Fragment() {
                                 )
                                 newDesc.ref.child("Parents").updateChildren(motherRefdata)
 
-                                if (oldFatherKey != birdFatherKey) {
+                                if (oldMotherKey != birdMotherKey) {
                                     val ref = dbase.child("Users").child("ID: $userId")
                                         .child("Flight Birds")
-                                        .child(oldFatherKey.toString()).child("Descendants")
+                                        .child(oldMotherKey.toString()).child("Descendants")
                                     ref.addListenerForSingleValueEvent(object : ValueEventListener {
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             for (desc in snapshot.children) {
@@ -2293,11 +2293,76 @@ class EditOriginFragment : Fragment() {
                     descendantsFatherRef.addListenerForSingleValueEvent(object :
                         ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            for (bird in snapshot.children) {
-                                if (bird.child("ChildKey").value == birdKey.toString()) {
-                                    bird.ref.updateChildren(descendantdata)
-                                    fatherRef.updateChildren(fatherRefdata)
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldFatherKey != birdFatherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldFatherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
 
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldFatherKey != birdFatherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldFatherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
                                 }
                             }
                         }
@@ -2350,7 +2415,87 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldMotherKey != birdMotherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldMotherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldMotherKey != birdMotherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldMotherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
                         "Mother" to birdData.mother,
@@ -2362,7 +2507,7 @@ class EditOriginFragment : Fragment() {
                     )
                     purchaseRef.updateChildren(motherRefdata)
                     purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
+
                     Log.d(TAG, "MotherRef!!")
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -2403,7 +2548,87 @@ class EditOriginFragment : Fragment() {
                         "Month" to month.toFloat(),
                         "Year" to year.toFloat()
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
+                    descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldMotherKey != birdMotherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldMotherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldMotherKey != birdMotherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldMotherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
 
                     val motherRefdata: Map<String, Any?> = hashMapOf(
                         "Father" to birdData.father,
@@ -2417,11 +2642,76 @@ class EditOriginFragment : Fragment() {
                     descendantsFatherRef.addListenerForSingleValueEvent(object :
                         ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            for (bird in snapshot.children) {
-                                if (bird.child("ChildKey").value == birdKey.toString()) {
-                                    bird.ref.updateChildren(descendantdata)
-                                    fatherRef.updateChildren(motherRefdata)
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldFatherKey != birdFatherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldFatherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
 
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldFatherKey != birdFatherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldFatherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
                                 }
                             }
                         }
@@ -2433,7 +2723,6 @@ class EditOriginFragment : Fragment() {
                     })
                     purchaseRef.updateChildren(motherRefdata)
                     purchasesRef.updateChildren(descendantdata)
-                    motherRef.updateChildren(motherRefdata)
                     Log.d(TAG, "MotherRef!! and FatherRef!!")
                 }
 
@@ -2514,17 +2803,89 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantsFatherRef.updateChildren(descendantdata)
-                        val fatherRefdata: Map<String, Any?> = hashMapOf(
-                            "Father" to birdData.father,
-                            "Mother" to birdData.mother,
-                            "FatherKey" to birdFatherKey,
-                            "MotherKey" to birdMotherKey,
-                            "BirdFatherKey" to birdBirdsFatherKey,
-                            "BirdMotherKey" to birdBirdsMotherKey,
-                            "Bird Key" to birdId
-                        )
-                        fatherRef.updateChildren(fatherRefdata)
+                        descendantsFatherRef.addListenerForSingleValueEvent(object :
+                            ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.hasChildren()){
+                                    for (child in snapshot.children) {
+                                        if (child.child("ChildKey").value.toString() == birdKey) {
+                                            child.ref.updateChildren(descendantdata)
+                                            val motherRefdata: Map<String, Any?> = hashMapOf(
+                                                "Father" to birdData.father,
+                                                "Mother" to birdData.mother,
+                                                "FatherKey" to birdFatherKey,
+                                                "BirdFatherKey" to birdBirdsFatherKey,
+                                                "BirdMotherKey" to birdBirdsMotherKey,
+                                                "MotherKey" to birdMotherKey
+                                            )
+                                            child.ref.child("Parents").updateChildren(motherRefdata)
+                                            Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                            if(oldFatherKey != birdFatherKey){
+                                                val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                    .child(oldFatherKey.toString()).child("Descendants")
+                                                ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        for (desc in snapshot.children){
+                                                            Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                            if (desc.child("ChildKey").value.toString() == birdKey){
+                                                                desc.ref.removeValue()
+                                                            }
+                                                        }
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        TODO("Not yet implemented")
+                                                    }
+
+                                                })
+                                            }
+
+
+                                        }
+                                    }
+                                }else{
+                                    val newDesc = snapshot.ref.push()
+                                    newDesc.updateChildren(descendantdata)
+                                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                                        "Father" to birdData.father,
+                                        "Mother" to birdData.mother,
+                                        "FatherKey" to birdFatherKey,
+                                        "BirdFatherKey" to birdBirdsFatherKey,
+                                        "BirdMotherKey" to birdBirdsMotherKey,
+                                        "MotherKey" to birdMotherKey
+                                    )
+                                    newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                    if(oldFatherKey != birdFatherKey){
+                                        val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                            .child(oldFatherKey.toString()).child("Descendants")
+                                        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                for (desc in snapshot.children){
+                                                    Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                    if (desc.child("ChildKey").value.toString() == birdKey){
+                                                        desc.ref.removeValue()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+
+                                        })
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
                         Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                     }
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
@@ -2565,18 +2926,88 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantMotherRef.updateChildren(descendantdata)
-                        val motherRefdata: Map<String, Any?> = hashMapOf(
-                            "Father" to birdData.father,
-                            "Mother" to birdData.mother,
-                            "FatherKey" to birdFatherKey,
-                            "MotherKey" to birdMotherKey,
-                            "BirdFatherKey" to birdBirdsFatherKey,
-                            "BirdMotherKey" to birdBirdsMotherKey,
-                            "Bird Key" to birdId
-                        )
-                        motherRef.updateChildren(motherRefdata)
-                        Log.d(TAG, "MotherRef!!")
+                        descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.hasChildren()){
+                                    for (child in snapshot.children) {
+                                        if (child.child("ChildKey").value.toString() == birdKey) {
+                                            child.ref.updateChildren(descendantdata)
+                                            val motherRefdata: Map<String, Any?> = hashMapOf(
+                                                "Father" to birdData.father,
+                                                "Mother" to birdData.mother,
+                                                "FatherKey" to birdFatherKey,
+                                                "BirdFatherKey" to birdBirdsFatherKey,
+                                                "BirdMotherKey" to birdBirdsMotherKey,
+                                                "MotherKey" to birdMotherKey
+                                            )
+                                            child.ref.child("Parents").updateChildren(motherRefdata)
+                                            Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                            if(oldMotherKey != birdMotherKey){
+                                                val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                    .child(oldMotherKey.toString()).child("Descendants")
+                                                ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        for (desc in snapshot.children){
+                                                            Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                            if (desc.child("ChildKey").value.toString() == birdKey){
+                                                                desc.ref.removeValue()
+                                                            }
+                                                        }
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        TODO("Not yet implemented")
+                                                    }
+
+                                                })
+                                            }
+
+
+                                        }
+                                    }
+                                }else{
+                                    val newDesc = snapshot.ref.push()
+                                    newDesc.updateChildren(descendantdata)
+                                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                                        "Father" to birdData.father,
+                                        "Mother" to birdData.mother,
+                                        "FatherKey" to birdFatherKey,
+                                        "BirdFatherKey" to birdBirdsFatherKey,
+                                        "BirdMotherKey" to birdBirdsMotherKey,
+                                        "MotherKey" to birdMotherKey
+                                    )
+                                    newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                    if(oldMotherKey != birdMotherKey){
+                                        val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                            .child(oldMotherKey.toString()).child("Descendants")
+                                        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                for (desc in snapshot.children){
+                                                    Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                    if (desc.child("ChildKey").value.toString() == birdKey){
+                                                        desc.ref.removeValue()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+
+                                        })
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
                     }
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -2614,20 +3045,170 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
-                    val motherRefdata: Map<String, Any?> = hashMapOf(
-                        "Father" to birdData.father,
-                        "Mother" to birdData.mother,
-                        "FatherKey" to birdFatherKey,
-                        "MotherKey" to birdMotherKey,
-                        "BirdFatherKey" to birdBirdsFatherKey,
-                        "BirdMotherKey" to birdBirdsMotherKey,
-                        "Bird Key" to birdId
-                    )
-                    fatherRef.updateChildren(motherRefdata)
-                    motherRef.updateChildren(motherRefdata)
-                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                    descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldMotherKey != birdMotherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldMotherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldMotherKey != birdMotherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldMotherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+                    descendantsFatherRef.addListenerForSingleValueEvent(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldFatherKey != birdFatherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldFatherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldFatherKey != birdFatherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldFatherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+
                 }
 
                 val parentdata: Map<String, Any?> = hashMapOf(
@@ -2724,17 +3305,89 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantsFatherRef.updateChildren(descendantdata)
-                        val fatherRefdata: Map<String, Any?> = hashMapOf(
-                            "Father" to birdData.father,
-                            "Mother" to birdData.mother,
-                            "FatherKey" to birdFatherKey,
-                            "MotherKey" to birdMotherKey,
-                            "BirdFatherKey" to birdBirdsFatherKey,
-                            "BirdMotherKey" to birdBirdsMotherKey,
-                            "Bird Key" to birdId
-                        )
-                        fatherRef.updateChildren(fatherRefdata)
+                        descendantsFatherRef.addListenerForSingleValueEvent(object :
+                            ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.hasChildren()){
+                                    for (child in snapshot.children) {
+                                        if (child.child("ChildKey").value.toString() == birdKey) {
+                                            child.ref.updateChildren(descendantdata)
+                                            val motherRefdata: Map<String, Any?> = hashMapOf(
+                                                "Father" to birdData.father,
+                                                "Mother" to birdData.mother,
+                                                "FatherKey" to birdFatherKey,
+                                                "BirdFatherKey" to birdBirdsFatherKey,
+                                                "BirdMotherKey" to birdBirdsMotherKey,
+                                                "MotherKey" to birdMotherKey
+                                            )
+                                            child.ref.child("Parents").updateChildren(motherRefdata)
+                                            Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                            if(oldFatherKey != birdFatherKey){
+                                                val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                    .child(oldFatherKey.toString()).child("Descendants")
+                                                ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        for (desc in snapshot.children){
+                                                            Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                            if (desc.child("ChildKey").value.toString() == birdKey){
+                                                                desc.ref.removeValue()
+                                                            }
+                                                        }
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        TODO("Not yet implemented")
+                                                    }
+
+                                                })
+                                            }
+
+
+                                        }
+                                    }
+                                }else{
+                                    val newDesc = snapshot.ref.push()
+                                    newDesc.updateChildren(descendantdata)
+                                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                                        "Father" to birdData.father,
+                                        "Mother" to birdData.mother,
+                                        "FatherKey" to birdFatherKey,
+                                        "BirdFatherKey" to birdBirdsFatherKey,
+                                        "BirdMotherKey" to birdBirdsMotherKey,
+                                        "MotherKey" to birdMotherKey
+                                    )
+                                    newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                    if(oldFatherKey != birdFatherKey){
+                                        val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                            .child(oldFatherKey.toString()).child("Descendants")
+                                        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                for (desc in snapshot.children){
+                                                    Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                    if (desc.child("ChildKey").value.toString() == birdKey){
+                                                        desc.ref.removeValue()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+
+                                        })
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
                         Log.d(TAG, "FatherRef! ${btnFather.text}  ${btnMother.text} ")
                     }
                 } else if (btnMother.text != "None" && btnFather.text == "None") {
@@ -2775,18 +3428,87 @@ class EditOriginFragment : Fragment() {
                             "Mutation5" to birdMutation5,
                             "Mutation6" to birdMutation6,
                         )
-                        descendantMotherRef.updateChildren(descendantdata)
-                        val motherRefdata: Map<String, Any?> = hashMapOf(
-                            "Father" to birdData.father,
-                            "Mother" to birdData.mother,
-                            "FatherKey" to birdFatherKey,
-                            "MotherKey" to birdMotherKey,
-                            "BirdFatherKey" to birdBirdsFatherKey,
-                            "BirdMotherKey" to birdBirdsMotherKey,
-                            "Bird Key" to birdId
-                        )
-                        motherRef.updateChildren(motherRefdata)
-                        Log.d(TAG, "MotherRef!!")
+                        descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.hasChildren()){
+                                    for (child in snapshot.children) {
+                                        if (child.child("ChildKey").value.toString() == birdKey) {
+                                            child.ref.updateChildren(descendantdata)
+                                            val motherRefdata: Map<String, Any?> = hashMapOf(
+                                                "Father" to birdData.father,
+                                                "Mother" to birdData.mother,
+                                                "FatherKey" to birdFatherKey,
+                                                "BirdFatherKey" to birdBirdsFatherKey,
+                                                "BirdMotherKey" to birdBirdsMotherKey,
+                                                "MotherKey" to birdMotherKey
+                                            )
+                                            child.ref.child("Parents").updateChildren(motherRefdata)
+                                            Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                            if(oldMotherKey != birdMotherKey){
+                                                val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                    .child(oldMotherKey.toString()).child("Descendants")
+                                                ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        for (desc in snapshot.children){
+                                                            Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                            if (desc.child("ChildKey").value.toString() == birdKey){
+                                                                desc.ref.removeValue()
+                                                            }
+                                                        }
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        TODO("Not yet implemented")
+                                                    }
+
+                                                })
+                                            }
+
+
+                                        }
+                                    }
+                                }else{
+                                    val newDesc = snapshot.ref.push()
+                                    newDesc.updateChildren(descendantdata)
+                                    val motherRefdata: Map<String, Any?> = hashMapOf(
+                                        "Father" to birdData.father,
+                                        "Mother" to birdData.mother,
+                                        "FatherKey" to birdFatherKey,
+                                        "BirdFatherKey" to birdBirdsFatherKey,
+                                        "BirdMotherKey" to birdBirdsMotherKey,
+                                        "MotherKey" to birdMotherKey
+                                    )
+                                    newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                    if(oldMotherKey != birdMotherKey){
+                                        val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                            .child(oldMotherKey.toString()).child("Descendants")
+                                        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                for (desc in snapshot.children){
+                                                    Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                    if (desc.child("ChildKey").value.toString() == birdKey){
+                                                        desc.ref.removeValue()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+
+                                        })
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
                     }
                 } else {
                     val descendantdata: Map<String, Any?> = hashMapOf(
@@ -2824,21 +3546,170 @@ class EditOriginFragment : Fragment() {
                         "Mutation5" to birdMutation5,
                         "Mutation6" to birdMutation6,
                     )
-                    descendantMotherRef.updateChildren(descendantdata)
-                    descendantsFatherRef.updateChildren(descendantdata)
-                    val motherRefdata: Map<String, Any?> = hashMapOf(
-                        "Father" to birdData.father,
-                        "Mother" to birdData.mother,
-                        "FatherKey" to birdFatherKey,
-                        "MotherKey" to birdMotherKey,
-                        "BirdFatherKey" to birdBirdsFatherKey,
-                        "BirdMotherKey" to birdBirdsMotherKey,
-                        "Bird Key" to birdId
-                    )
+                    descendantMotherRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldMotherKey != birdMotherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldMotherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
 
-                    fatherRef.updateChildren(motherRefdata)
-                    motherRef.updateChildren(motherRefdata)
-                    Log.d(TAG, "MotherRef!! and FatherRef!!")
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldMotherKey != birdMotherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldMotherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+                    descendantsFatherRef.addListenerForSingleValueEvent(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.hasChildren()){
+                                for (child in snapshot.children) {
+                                    if (child.child("ChildKey").value.toString() == birdKey) {
+                                        child.ref.updateChildren(descendantdata)
+                                        val motherRefdata: Map<String, Any?> = hashMapOf(
+                                            "Father" to birdData.father,
+                                            "Mother" to birdData.mother,
+                                            "FatherKey" to birdFatherKey,
+                                            "BirdFatherKey" to birdBirdsFatherKey,
+                                            "BirdMotherKey" to birdBirdsMotherKey,
+                                            "MotherKey" to birdMotherKey
+                                        )
+                                        child.ref.child("Parents").updateChildren(motherRefdata)
+                                        Log.d(TAG, "old $oldFatherKey new $birdFatherKey")
+                                        if(oldFatherKey != birdFatherKey){
+                                            val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                                .child(oldFatherKey.toString()).child("Descendants")
+                                            ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    for (desc in snapshot.children){
+                                                        Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                        if (desc.child("ChildKey").value.toString() == birdKey){
+                                                            desc.ref.removeValue()
+                                                        }
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
+                                        }
+
+
+                                    }
+                                }
+                            }else{
+                                val newDesc = snapshot.ref.push()
+                                newDesc.updateChildren(descendantdata)
+                                val motherRefdata: Map<String, Any?> = hashMapOf(
+                                    "Father" to birdData.father,
+                                    "Mother" to birdData.mother,
+                                    "FatherKey" to birdFatherKey,
+                                    "BirdFatherKey" to birdBirdsFatherKey,
+                                    "BirdMotherKey" to birdBirdsMotherKey,
+                                    "MotherKey" to birdMotherKey
+                                )
+                                newDesc.ref.child("Parents").updateChildren(motherRefdata)
+
+                                if(oldFatherKey != birdFatherKey){
+                                    val ref = dbase.child("Users").child("ID: $userId").child("Flight Birds")
+                                        .child(oldFatherKey.toString()).child("Descendants")
+                                    ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            for (desc in snapshot.children){
+                                                Log.d(TAG, "DescKey"+desc.key.toString())
+
+                                                if (desc.child("ChildKey").value.toString() == birdKey){
+                                                    desc.ref.removeValue()
+                                                }
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    })
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+
                 }
             } else {
                 return
