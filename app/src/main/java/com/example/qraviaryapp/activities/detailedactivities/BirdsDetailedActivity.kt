@@ -127,7 +127,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
 
         mAuth = FirebaseAuth.getInstance()
-        BirdSoldId= bundle?.getString("SoldId").toString()
+        BirdSoldId = bundle?.getString("SoldId").toString()
         Clutch = bundle?.getBoolean("Clutch")
         BirdId = bundle?.getString("BirdId").toString()//
         BirdLegband = bundle?.getString("BirdLegband").toString()//
@@ -370,21 +370,22 @@ class BirdsDetailedActivity : AppCompatActivity() {
 
                 if (flightType != "null") {
 
-                    val flightRef = databaseReference.child("ID: $currentUser").child("Flight Birds")
-                        .child(FlightKey)
+                    val flightRef =
+                        databaseReference.child("ID: $currentUser").child("Flight Birds")
+                            .child(FlightKey)
                     flightRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             val isPaired = dataSnapshot.child("Status").value.toString()
 
-                            if (isPaired == "Paired") {
-                                showPairedFlightBirdDialog1()
-                            } else {
-                                val i = Intent(this@BirdsDetailedActivity, EditBirdFlightActivity::class.java)
-                                Log.d(TAG, flightType.toString())
+                            val i = Intent(
+                                this@BirdsDetailedActivity,
+                                EditBirdFlightActivity::class.java
+                            )
+                            Log.d(TAG, flightType.toString())
 
-                                i.putExtras(newBundle)
-                                startActivity(i)
-                            }
+                            i.putExtras(newBundle)
+                            startActivity(i)
+
                         }
 
                         override fun onCancelled(databaseError: DatabaseError) {
@@ -393,8 +394,6 @@ class BirdsDetailedActivity : AppCompatActivity() {
                     })
 
                 } else {
-
-
 
 
                     val i = Intent(this, EditBirdActivity::class.java)
@@ -510,6 +509,7 @@ class BirdsDetailedActivity : AppCompatActivity() {
         }
         alertDialog.show()
     }
+
     fun showDescendantsDialog() {
         // Show a dialog to inform the user that the flight bird has descendants and cannot be deleted
         val alertDialog = AlertDialog.Builder(this)

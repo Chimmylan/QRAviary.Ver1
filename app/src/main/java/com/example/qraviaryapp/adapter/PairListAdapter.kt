@@ -74,6 +74,8 @@ class PairListAdapter(
         holder.maleBird.text = pairs.pairMale
         holder.maleMutation.text = pairs.pairMaleMutation
         holder.deletelayout.visibility = View.GONE
+        holder.comment.text = "Comment: ${pairs.pairComment}"
+
     }
 
     fun filterDataRange(
@@ -123,6 +125,7 @@ class PairBirdViewHolder(itemView: View, private val dataList: MutableList<PairD
     var femaleMutation: TextView = itemView.findViewById(R.id.tvFemaleMutation)
     var dateId: TextView = itemView.findViewById(R.id.tvDate)
     var deletelayout: LinearLayout = itemView.findViewById(R.id.deletelayout)
+    var comment: TextView = itemView.findViewById(R.id.commentTv)
     init {
         itemView.setOnClickListener {
             val bundle = Bundle()

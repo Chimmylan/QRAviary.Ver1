@@ -72,6 +72,8 @@ class PreviousPairAdapter(
         holder.maleBird.text = pairs.pairMale
         holder.maleMutation.text = pairs.pairMaleMutation
 
+        holder.comment.text = "Comment: ${pairs.pairComment}"
+
     }
     private var originalList = dataList
 
@@ -121,6 +123,8 @@ class PreviousViewHolder(itemView: View, private val dataList: MutableList<PairD
     var maleMutation: TextView = itemView.findViewById(R.id.tvMaleMutation)
     var femaleMutation: TextView = itemView.findViewById(R.id.tvFemaleMutation)
     var dateId: TextView = itemView.findViewById(R.id.tvDate)
+    var comment: TextView = itemView.findViewById(R.id.commentTv)
+
 
     init {
         itemView.setOnClickListener {

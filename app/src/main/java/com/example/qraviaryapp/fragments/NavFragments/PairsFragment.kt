@@ -261,7 +261,8 @@ class PairsFragment : Fragment() {
                         itemSnapshot.child("Female Flight Key").value.toString()
                     val pairCageKey = itemSnapshot.child("Cage Key").value.toString()
                     val cagePairKey = itemSnapshot.child("Pair Cage Key").value.toString()
-
+                    val comment = itemSnapshot.child("Comment").value.toString()
+                    data.pairComment = comment
                     data.cagePairKey = cagePairKey
 
                     data.pairCageKey = pairCageKey
@@ -341,7 +342,8 @@ class PairsFragment : Fragment() {
                         val separateDate = itemSnapshot.child("Separate Date").value.toString()
                         val pairCageKey = itemSnapshot.child("Cage Key").value.toString()
                         val cagePairKey = itemSnapshot.child("Pair Cage Key").value.toString()
-
+                        val comment = itemSnapshot.child("Comment").value.toString()
+                        data.pairComment = comment
                         data.cagePairKey = cagePairKey
 
                         data.pairCageKey = pairCageKey
