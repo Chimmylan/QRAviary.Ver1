@@ -15,17 +15,18 @@
     <color name="appbar">#FFFFFFFF</color>
     <color name="new_appbar_color">#333333</color>
     <color name="white_black">#272727</color>
-    <color name="titlebg">#27005D</color>
+    <color name="titlebg">#304913</color>
     <color name="black_white">#FFFFFF</color>
-    <color name="bg">#27005D</color>
-    <color name="bg1">#876EE1</color>
-    <color name="toolbarcolor">#27005D</color>
-    <color name="totals">#463853</color>
-    <color name="statusbar">#27005D</color>
-    <color name="fab">#27005D</color>
+    <color name="bg">#1E5631</color>
+    <color name="bg1">#4C9A2A</color>
+    <color name="toolbarcolor">#1E5631</color>
+    <color name="totals">#1B853E</color>
+    <color name="statusbar">#1E5631</color>
+    <color name="fab">#1E5631</color>
     <color name="totalbirds">#D8D9DA</color>
     <color name="filter">#DCD9D9</color>
-    <color name="itemimagebg">#463B59</color>
-
+    <color name="itemimagebg">#385539</color>
+    <color name="statusgreen">#1E5631</color>
+    <color name="greentotal">#1B853E</color>
     <color name="colorDarkSemiTransparent">#C6000000</color>
 </resources>

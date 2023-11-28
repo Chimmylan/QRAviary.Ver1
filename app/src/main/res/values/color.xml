@@ -3,7 +3,7 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#470CAF</color>
+    <color name="teal_200">#7DB57F</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -20,19 +20,24 @@
     <color name="new_appbar_color">#D9DADA</color>
     <color name="item_category">#F1F1F1</color>
     <color name="appbar_color">#D9DADA</color>
-    <color name="toolbarcolor">#876EE1</color>
-    <color name="totals">#8A77CC</color>
-    <color name="loginpurple">#876EE1</color>
-    <color name="statusbar">#876EE1</color>
-    <color name="bg">#876EE1</color>
-    <color name="bg1">#27005D</color>
-    <color name="titlebg">#BEADFA</color>
-    <color name="purplelight">#BEADFA</color>
-    <color name="purpledark">#27005D</color>
-    <color name="fab">#BEADFA</color>
+    <color name="toolbarcolor">#4C9A2A</color>
+    <color name="totals">#ACDF87</color>
+    <color name="loginpurple">#4C9A2A</color>
+    <color name="statusbar">#4C9A2A</color>
+    <color name="bg">#4C9A2A</color>
+    <color name="bg1">#1E5631</color>
+    <color name="titlebg">#DFF8C1</color>
+    <color name="purplelight">#418325</color>
+    <color name="purpledark">#1E5631</color>
+    <color name="fab">#4C9A2A</color>
     <color name="totalbirds">#D8D9DA</color>
     <color name="filter">#DCD9D9</color>
     <color name="colorDarkSemiTransparent">#C6000000</color>
     <color name="green">#186F65</color>
-    <color name="itemimagebg">#D2C3EC</color>
+    <color name="itemimagebg">#B1D18C</color>
+    <color name="statusgreen">#4C9A2A</color>
+    <color name="green1">#4C9A2A</color>
+    <color name="darkgreen">#1E5631</color>
+    <color name="greentotal">#ACDF87</color>
+
 </resources>

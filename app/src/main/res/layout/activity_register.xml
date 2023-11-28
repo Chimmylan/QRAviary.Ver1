@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
-    android:background="@drawable/regbg"
+    android:background="@drawable/greenreg"
 
     tools:context=".activities.mainactivities.RegisterActivity">
 
@@ -47,15 +47,16 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Create your account"
+
                     android:textColor="@color/loginpurple"
                     android:textSize="20sp"
+                    android:layout_marginBottom="10dp"
                     android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutemail"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/loginpurple"
+                    app:boxStrokeColor="@color/darkgreen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
@@ -65,10 +66,11 @@
                     app:endIconMode="clear_text"
                     app:helperTextEnabled="true"
                     app:helperTextTextColor="#5A0808"
-                    android:textColorHint="@color/purplelight"
+
+                    android:textColorHint="@color/green1"
                     app:placeholderText="ex:qraviary@gmail.com"
                     app:startIconDrawable="@drawable/ic_email"
-                    app:startIconTint="@color/purpledark"
+                    app:startIconTint="@color/darkgreen"
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -90,9 +92,10 @@
                     app:counterMaxLength="10"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="#5A0808"
-                    android:textColorHint="@color/purplelight"
+                    android:textColorHint="@color/green1"
+                    app:boxStrokeColor="@color/darkgreen"
                     app:startIconDrawable="@drawable/person_fill0_wght400_grad0_opsz48"
-                    app:startIconTint="@color/purpledark"
+                    app:startIconTint="@color/darkgreen"
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -113,9 +116,10 @@
                     app:endIconMode="password_toggle"
                     app:counterEnabled="true"
                     android:id="@+id/layoutpass"
-                    app:endIconTint="@color/purpledark"
-                    app:startIconTint="@color/purpledark"
-                    android:textColorHint="@color/purplelight"
+                    app:endIconTint="@color/darkgreen"
+                    app:startIconTint="@color/darkgreen"
+                    app:boxStrokeColor="@color/darkgreen"
+                    android:textColorHint="@color/green1"
                     app:helperTextTextColor="#5A0808"
                     app:startIconDrawable="@drawable/ic_lock"
                     app:boxCornerRadiusTopStart="10dp"
@@ -139,9 +143,10 @@
                     app:endIconMode="password_toggle"
                     app:counterEnabled="true"
                     android:id="@+id/layoutconpass"
-                    app:endIconTint="@color/purpledark"
-                    app:startIconTint="@color/purpledark"
-                    android:textColorHint="@color/purplelight"
+                    app:endIconTint="@color/darkgreen"
+                    app:boxStrokeColor="@color/darkgreen"
+                    app:startIconTint="@color/darkgreen"
+                    android:textColorHint="@color/green1"
                     app:helperTextTextColor="#5A0808"
                     app:startIconDrawable="@drawable/ic_lock"
                     app:boxCornerRadiusTopStart="10dp"
@@ -169,7 +174,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?selectableItemBackground"
-                        app:cardBackgroundColor="@color/loginpurple"
+                        app:cardBackgroundColor="@color/green1"
                         android:onClick="reg">
 
                         <TextView
@@ -202,7 +207,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textColor="@color/purplelight"
+                        android:textColor="@color/green1"
                         android:layout_marginBottom="10dp"
                         android:text="____________ or sign up with ___________"
                         android:textSize="16sp" />
@@ -291,7 +296,7 @@
                             android:background="@drawable/cardview_border"
                             android:gravity="center"
 
-                            android:textColor="@color/loginpurple"
+                            android:textColor="@color/darkgreen"
                             android:textSize="16sp"/>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
