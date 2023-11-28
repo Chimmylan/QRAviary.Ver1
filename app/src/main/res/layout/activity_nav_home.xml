@@ -38,6 +38,9 @@
         android:fitsSystemWindows="true"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        app:itemIconTint="@color/toolbarcolor"
+       android:background="@color/white"
+        app:itemTextColor="@color/darkgreen"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"/>
